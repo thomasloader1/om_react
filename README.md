@@ -1,70 +1,70 @@
-# Getting Started with Create React App
+# Oceano Medicina Ecommerce ReactJS
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Proyecto construido con [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+Antes de comenzar con cualquier tarea instalar las dependencias
 
-In the project directory, you can run:
+```console
+npm i
+```
+
+## Estructura de carpetas
+*Por cada componente que se crea debe de tener esta estructura en el proyecto*
+```
+src
+└─── components
+│   └───Component
+│       │   index.jsx
+│       │   Component.test.jsx
+│       │   Component.stories.jsx
+│       │   Component.stories.mdx
+│ ...
+```
+
+
+## Listado de complementos
+[Formik](https://formik.org/docs/overview)
+[Storybook](https://storybook.js.org/docs/react/get-started/introduction)
+[ESLint](https://eslint.org/docs/latest/user-guide/getting-started)
+
+## Scripts Disponibles
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Correr la aplicacion en modo dev [http://localhost:3000](http://localhost:3000)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Ejecuta los test's de la app y queda en modo "watch" para seguir verificando.
+
+Referencia de [Create React App - Running Tests](https://facebook.github.io/create-react-app/docs/running-tests)
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Compila toda la aplicacion para lanzarla a Produccion
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Referencia de [Create React App - Deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### `npm run storybook`
 
-### `npm run eject`
+Corre la aplicacion de storybook en modo dev [http://localhost:6006](http://localhost:6006)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### `npm run lint`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Corrije los errores de sintaxis y muestra por consola los errores que no puede modificar
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Referencias de complementos
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+#### Entendiendo Storybook
+Lista de videos [La Cocina del Codigo](https://www.youtube.com/watch?v=WgsaTWmzvFE&list=PLfWyZ8S-Xzeed53YOiAa1U5WUSA4cRxFQ)
+Video tutorial con Atomic [Guillermo Rodas 1h 38min](https://www.youtube.com/watch?v=zfxP2VvP_Dw)
 
-## Learn More
+#### Testing en componentes (React Testing Library & Jest)
+[Doc Testing Library](https://testing-library.com/)
+[Doc Jest](https://jestjs.io/docs/getting-started)
+Video tutorial [Midudev 37min](https://www.youtube.com/watch?v=KYjjtRgg_H0)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### ESLint
+Video tutorial ESLint Airbnb [Leo Medina 15min](https://www.youtube.com/watch?v=4Md0Rdekt78)
+Video tutorial de configuracion para usar ESLint con Prettier [MonkeyWit 21min](https://www.youtube.com/watch?v=1tYJqTDkvUQ)
