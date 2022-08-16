@@ -1,9 +1,10 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useState } from 'react';
 
 import Header from '../Header/index';
 import './page.css';
 
-const Page = () => {
+function Page() {
   const [user, setUser] = useState('');
   return (
     <article>
@@ -71,6 +72,6 @@ const Page = () => {
       </section>
     </article>
   );
-};
+}
 
 export default Page;

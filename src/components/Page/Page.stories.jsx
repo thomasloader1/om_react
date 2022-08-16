@@ -6,12 +6,12 @@ import { within, userEvent } from '@storybook/testing-library';
 import Page from './index';
 
 export default {
-  title: 'components/Page',
+  title: 'example/Page',
   component: Page,
   parameters: {
     // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout
-    layout: 'fullscreen',
-  },
+    layout: 'fullscreen'
+  }
 };
 
 function Template(args) {

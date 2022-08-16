@@ -1,12 +1,12 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '../Button/index';
 import './header.css';
 
-// eslint-disable-next-line object-curly-newline
-const Header = ({ user, onLogin, onLogout, onCreateAccount }) => (
-  <header>
+function Header({ user, onLogin, onLogout, onCreateAccount }) {
+  return <header>
     <div className="wrapper">
       <div>
         <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
@@ -44,7 +44,7 @@ const Header = ({ user, onLogin, onLogout, onCreateAccount }) => (
       </div>
     </div>
   </header>
-);
+}
 
 Header.propTypes = {
   user: PropTypes.shape({}),
