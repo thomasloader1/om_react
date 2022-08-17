@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 // import PropTypes from 'prop-types';
-import '../../scss/pasarela-de-cobros.scss';
+import '../../../scss/pasarela-de-cobros.scss';
 
 /**
  * Primary UI component for user interaction
@@ -9,7 +9,7 @@ import '../../scss/pasarela-de-cobros.scss';
 function PasarelaDePago() {
 
   return (
-<p>asd</p>
+    <p>asd</p>
   );
 }
 
