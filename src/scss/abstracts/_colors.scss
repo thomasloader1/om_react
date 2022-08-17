@@ -1,0 +1,84 @@
+$colors: (
+   primary: (
+      -light: hsl(340, 100%, 65%),
+      "": hsl(340, 100%, 57%),
+      -dark: hsl(340, 100%, 52%),
+   ),
+   accent: (
+      -light: hsl(191, 100%, 54%),
+      "": hsl(191, 100%, 44%),
+      -dark: hsl(191, 100%, 34%),
+   ),
+   medicina: (
+      "-light": hsl(209, 100%, 42%),
+      "": hsl(209, 100%, 32%),
+      "-dark": hsl(209, 100%, 22%),
+   ),
+   enfermeria: (
+      "-light": hsl(168, 100%, 35%),
+      "": hsl(168, 100%, 25%),
+      "-dark": hsl(168, 100%, 20%),
+   ),
+   bibliografias: (
+      -light: hsl(26, 85%, 71%),
+      "": hsl(26, 85%, 61%),
+      -dark: hsl(26, 85%, 55%),
+   ),
+   actualidad: (
+      -light: hsl(216, 100%, 76%),
+      "": hsl(216, 100%, 66%),
+      -dark: hsl(216, 100%, 56%),
+   ),
+   e-health: (
+      -light: hsl(87, 52%, 71%),
+      "": hsl(87, 52%, 61%),
+      -dark: hsl(87, 52%, 51%),
+   ),
+   f-de-guardia: (
+      -light: hsl(168, 80%, 54%),
+      "": hsl(168, 80%, 44%),
+      -dark: hsl(168, 80%, 34%),
+   ),
+   texto: (
+      -light: hsl(0, 0%, 34%),
+      "": hsl(0, 0%, 15%),
+   ),
+);
+
+//:root {
+//  @each $color, $shades in $colors {
+//    @each $shade, $value in $shades {
+//      --clr-#{$color}-#{$shade}: #{$value};
+//      --bg-#{$color}-#{$shade}: #{$value};
+//    }
+//  }
+//}
+
+@function color($keys...) {
+   $value: $colors;
+
+   @each $key in $keys {
+      $value: map-get($value, $key);
+   }
+
+   @return $value;
+}
+
+@each $color, $shades in $colors {
+   @each $shade, $value in $shades {
+      .#{$color}#{$shade} {
+         color: $value;
+      }
+   }
+}
+@each $color, $shades in $colors {
+   @each $shade, $value in $shades {
+      .bg-#{$color}#{$shade} {
+         background-color: $value;
+      }
+   }
+}
+
+//@function c($color, $shade) {
+//   @return map-get($colors, $color, $shade);
+//}

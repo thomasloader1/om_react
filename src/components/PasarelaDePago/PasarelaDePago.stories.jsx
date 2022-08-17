@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import Card from './index';
+import PasarelaDePago from './index';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: 'components/Card',
-  component: Card,
+  title: 'layouts/PasarelaDePago',
+  component: PasarelaDePago,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
     backgroundColor: { control: 'color' }
@@ -14,21 +14,13 @@ export default {
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 function Template(args) {
-  return <Card {...args} />;
+  return <PasarelaDePago {...args} />;
 }
 
-export const Primary = Template.bind({});
+export const Default = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {
+Default.args = {
   title: 'Actualización en politraumatismos y emergencias',
   size: '20rem',
   backgroundColor: '#FFF'
-};
-
-export const PasarelaDePagos = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-PasarelaDePagos.args = {
-  title: 'Actualización',
-  size: '20rem',
-  backgroundColor: 'red'
 };
