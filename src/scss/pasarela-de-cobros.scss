@@ -1,0 +1,378 @@
+@use "abstracts" as *;
+@use "cardAsesor";
+:root {
+    --animate-delay: 0.5s;
+}
+$success: #32bea6;
+$accent: #00b6de;
+$texto-light: #808fa6;
+
+body,
+input {
+    font-family: "Roboto", sans-serif !important;
+}
+body * {
+    transition: all 0.3s ease-in;
+}
+header.container {
+    position: absolute;
+    width: 100%;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+
+    .navbar {
+        background-color: transparent;
+
+        &-item {
+            img {
+                max-height: unset;
+            }
+        }
+    }
+}
+.column {
+    padding: 0;
+    margin: 0;
+}
+.columns {
+    margin: 0;
+}
+.button {
+    //height: unset;
+    border-radius: 6px;
+}
+
+.invisible {
+    display: none !important;
+    -webkit-animation: scale-in-center 0.5s cubic-bezier(0.215, 0.61, 0.355, 1)
+        both;
+    animation: scale-in-center 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+    animation-play-state: paused;
+}
+
+.is-divider {
+    display: block;
+    position: relative;
+    border-top: 0.1rem solid #dbdbdb;
+    height: 0.1rem;
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+h2.title {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.pasarela {
+    padding-top: 8rem;
+    padding-bottom: 3rem;
+    position: relative;
+    z-index: 2;
+
+    &-cont {
+        display: flex;
+        flex-direction: column;
+        padding-right: 3rem;
+    }
+}
+
+.gridCuartos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    gap: 0.75rem;
+    &-item {
+        display: flex;
+        justify-content: flex-start;
+        gap: 0.5rem;
+        border-radius: 6px;
+
+        span {
+            position: relative;
+            z-index: 2;
+            gap: 0.5rem;
+        }
+
+        input {
+            position: absolute;
+            opacity: 0.001;
+            z-index: 3;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+    }
+}
+
+#medPago_grid,
+#modPago_grid {
+    .gridCuartos-item {
+        grid-column: span 2;
+        justify-content: center;
+    }
+}
+
+#metPago_grid {
+    .gridCuartos-item {
+        height: 5rem;
+        display: flex;
+        justify-content: center;
+    }
+}
+
+#medPago_grid,
+#modPago_grid,
+.stepControls,
+.edit_stepControls {
+    margin: 2rem 0 0 !important;
+    gap: 0.75rem;
+}
+
+.checkFields {
+    h3 {
+        font-weight: 500;
+    }
+    & > div {
+        justify-content: center;
+        gap: 1rem;
+    }
+    &-item {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 14px;
+    }
+}
+
+.form-datosPersonales,
+.form-datosTarjeta {
+    display: grid;
+    grid-template-columns: [start] repeat(auto-fill, minmax(20rem, 1fr)) [end];
+    gap: 0.75rem;
+
+    .ancho-completo {
+        grid-column: start/end;
+    }
+}
+
+.compartirLinkPor {
+    &-item {
+        margin: 0 !important;
+        text-align: center;
+        border-radius: 0;
+        border-bottom: 3px solid #dbdbdb;
+
+        &.is-active {
+            color: $accent;
+            border-color: $accent;
+        }
+        input {
+            position: absolute;
+            opacity: 0.001;
+            z-index: 3;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+    }
+}
+
+//RESUMEN
+
+.background-side {
+    position: absolute;
+    min-height: 100vh;
+    z-index: 1;
+    inset: 0;
+    background-color: #f4f5f7;
+}
+.overlay-left {
+    position: absolute;
+    min-height: 100vh;
+    z-index: 3;
+    inset: 0;
+    left: -66.6666%;
+    width: 133.33% !important;
+    background: hsla(218, 50%, 49%, 0.8);
+    backdrop-filter: blur(8px);
+}
+
+.infoView {
+    padding-bottom: 3rem;
+    &-decision,
+    &-body {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    &-body {
+        .button.bigger {
+            font-weight: 700;
+            height: 5rem;
+        }
+        .field {
+            input {
+                border-radius: 0;
+                border-width: 0 0 3px 0;
+                font-weight: 700;
+                background-color: unset;
+            }
+
+            .icon {
+                pointer-events: all;
+                cursor: pointer;
+            }
+            .icon:hover {
+                i {
+                    color: $success;
+                }
+            }
+        }
+    }
+
+    &-item {
+        display: flex;
+        padding: 0 1.5rem;
+        justify-content: space-between;
+
+        &.current,
+        &.completed {
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+
+            .title {
+                display: initial;
+            }
+            .subtitle {
+                margin-bottom: 1.5rem;
+            }
+            .button {
+                display: block;
+            }
+        }
+        &.current {
+            .numstep {
+                background-color: $accent;
+            }
+            .button {
+                display: none;
+            }
+        }
+        &.completed {
+            box-shadow: none;
+            border: 1px solid $success;
+
+            .numstep {
+                background-color: $success;
+            }
+            .button {
+                color: $texto-light;
+            }
+            .button:hover {
+                cursor: pointer;
+                color: $success;
+            }
+        }
+
+        &-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            .numstep {
+                width: 1.5rem;
+                height: 1.5rem;
+                position: relative;
+                line-height: 1.6;
+                font-weight: 700;
+                color: #fff;
+                text-align: center;
+                border-radius: 2rem;
+                background-color: $texto-light;
+            }
+            .title {
+                display: none;
+                color: #292d32;
+            }
+
+            .subtitle {
+                margin-bottom: 0;
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: $texto-light;
+            }
+        }
+
+        .button {
+            display: none;
+            padding: 0.25rem 0.5rem;
+        }
+    }
+
+    @media screen and (min-width: 1024px) {
+        .container {
+            max-width: calc(100% - 4rem);
+        }
+    }
+}
+
+#finalResume {
+    padding: 2rem;
+    min-height: 300px;
+    z-index: 5;
+    background: #fff;
+    border-radius: 10px 10px 0 0;
+    filter: drop-shadow(0px 30px 50px rgba(0, 0, 0, 0.25));
+    .finalResume-item {
+        h4 {
+            font-weight: 600;
+            font-size: 20px;
+        }
+        label {
+            color: #808fa6;
+            text-transform: uppercase;
+            font-weight: 500;
+            font-size: 14px;
+        }
+    }
+    h2 {
+        margin-bottom: 0.75rem;
+    }
+
+    #numeroContrato_resume h4,
+    #montoTotalContrato_resume h4 {
+        font-weight: 600;
+        font-size: 1.75rem;
+    }
+
+    #emailCliente_resume h4 {
+        font-size: 14px;
+        margin-left: 0.5rem;
+    }
+
+    #numeroContrato_resume {
+        grid-column: span 2;
+    }
+    #emailCliente_resume {
+        display: flex;
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+    .is-divider {
+        margin: 1rem 0;
+    }
+}
+
+.datos-tarjeta {
+    .finalResume-item {
+        margin-bottom: 0.75rem;
+    }
+}
+.is-divider-dashed {
+    border-bottom: 2px dashed #f5f5f5;
+    margin: 0.5rem 0 0.75rem;
+}

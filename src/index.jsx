@@ -1,11 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./components/App/index";
-import reportWebVitals from "./reportWebVitals";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './components/App/index';
+import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-console.log(process.env);
+const root = ReactDOM.createRoot(document.getElementById('root'));
+console.log(process.env.REACT_APP_OCEANO_WP_API);
 root.render(
   <React.StrictMode>
     <App />
