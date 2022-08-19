@@ -4,12 +4,10 @@ import Card from './index';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: 'components/Card',
+  title: 'components/Pasarela de Cobros/Card',
   component: Card,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {
-    backgroundColor: { control: 'color' }
-  }
+  argTypes: {}
 };
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
@@ -17,18 +15,22 @@ function Template(args) {
   return <Card {...args} />;
 }
 
-export const Primary = Template.bind({});
+export const Comercial = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {
-  title: 'Actualización en politraumatismos y emergencias',
-  size: '20rem',
-  backgroundColor: '#FFF'
+Comercial.args = {
+  title: 'Asesor comercial',
+  srcImg: 'asesorComercial',
+  altImg: 'tarjeta de asesor comercial',
+  idElement: 'asesorComercial',
+  idBtnElement: 'ctaAsesorComercial'
 };
 
-export const PasarelaDePagos = Template.bind({});
+export const Cobranza = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-PasarelaDePagos.args = {
-  title: 'Actualización',
-  size: '20rem',
-  backgroundColor: 'red'
+Cobranza.args = {
+  title: 'Asesor de cobranzas',
+  srcImg: 'asesorCobranzas',
+  altImg: 'tarjeta de asesor de cobranzas',
+  idElement: 'asesorCobranzas',
+  idBtnElement: 'ctaAsesorCobranzas'
 };

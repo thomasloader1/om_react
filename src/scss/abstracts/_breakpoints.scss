@@ -1,0 +1,16 @@
+// MIXIN RESPONSIVE
+
+$breakpoints: (
+  sm: 48rem,
+  md: 64rem,
+  lg: 85.375rem,
+  xlg: 120rem,
+);
+
+@mixin mediaQ($medida) {
+  $size: map-get($breakpoints, $medida);
+
+  @media screen and (min-width: $size) {
+    @content;
+  }
+}
