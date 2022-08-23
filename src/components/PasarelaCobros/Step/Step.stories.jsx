@@ -1,9 +1,16 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import LabelCountry from '../LabelCountry';
-import LabelPayment from '../LabelPayment';
+import RadioButton from '../RadioButton';
+import FormInput from '../FormInput';
+
 import Step from './index';
-import { countryOptions, paymentOptions } from './options';
+import {
+  countryOptions,
+  paymentOptions,
+  paymentMedOptions,
+  paymentModOptions,
+  clientData
+} from './options';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -24,7 +31,7 @@ SeleccionPais.args = {
   children: (
     <div id="pais-grid" className="gridCuartos">
       {countryOptions.map(({ ...props }) => (
-        <LabelCountry {...props} />
+        <RadioButton {...props} name="pais" />
       ))}
     </div>
   ),
@@ -33,17 +40,55 @@ SeleccionPais.args = {
   stepTitle: 'Seleccione país'
 };
 
-export const SeleccionPago = Template.bind({});
+export const SeleccionMetPago = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-SeleccionPago.args = {
+SeleccionMetPago.args = {
   children: (
     <div id="metPago_grid" className="gridCuartos">
       {paymentOptions.map(({ ...props }) => (
-        <LabelPayment {...props} />
+        <RadioButton {...props} showText={false} />
       ))}
     </div>
   ),
   idStepElement: 'seleccion_metPago',
   currentStep: 2,
   stepTitle: 'Seleccione método de pago'
+};
+
+export const SeleccionMedModPago = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+SeleccionMedModPago.args = {
+  children: (
+    <>
+      <div id="medModPago_grid" className="gridCuartos">
+        {paymentMedOptions.map(({ ...props }) => (
+          <RadioButton {...props} />
+        ))}
+      </div>
+      <div className="is-divider doble" />
+      <div id="medModPago_grid" className="gridCuartos">
+        {paymentModOptions.map(({ ...props }) => (
+          <RadioButton {...props} />
+        ))}
+      </div>
+    </>
+  ),
+  idStepElement: 'seleccion_medModPago',
+  currentStep: 3,
+  stepTitle: 'Seleccione medio y modo de pago'
+};
+
+export const DatosPersonales = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+DatosPersonales.args = {
+  children: (
+    <div id="form_datosPersonales" className="form-grid">
+      {clientData.map(({ ...props }) => (
+        <FormInput {...props} />
+      ))}
+    </div>
+  ),
+  idStepElement: 'seleccion_medModPago',
+  currentStep: 4,
+  stepTitle: 'Seleccione medio y modo de pago'
 };
