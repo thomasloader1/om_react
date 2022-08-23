@@ -1,61 +1,61 @@
-@use "abstracts" as *;
+@use 'abstracts' as *;
 
-.cardAsesor {
-    &-grid {
-        margin-top: 2rem;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
+.splash {
+  &-grid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  padding: 1.5rem;
+  position: relative;
+  min-height: 200px;
+  @include flex(space-between, flex-end, row, nowrap);
+  background-blend-mode: multiply;
+  background-position: center top !important;
+  background-size: cover !important;
+  border: 1px solid #efefef;
+  border-radius: 6px;
+  overflow: hidden;
+
+  &-title {
+    z-index: 2;
+    @include font(1.25rem, 700, 1.2);
+    max-width: 10ch;
+  }
+
+  button {
+    font-weight: 700;
+    z-index: 2;
+  }
+
+  &-img-overlay {
+    position: absolute;
+    inset: 0;
+    picture {
+      position: relative;
+      z-index: 1;
     }
-
-    padding: 1.5rem;
-    position: relative;
-    min-height: 200px;
-    @include flex(space-between, flex-end, row, nowrap);
-    background-blend-mode: multiply;
-    background-position: center top !important;
-    background-size: cover !important;
-    border: 1px solid #efefef;
-    border-radius: 6px;
-    overflow: hidden;
-
-    &-title {
-        z-index: 2;
-        @include font(1.25rem, 700, 1.2);
-        max-width: 10ch;
+    img {
+      @include imgPos(100%, 100%, cover, top);
     }
-
-    button {
-        font-weight: 700;
-        z-index: 2;
+    .overlay-color {
+      position: absolute;
+      z-index: 2;
+      inset: 0;
+      transition: all 0.3s ease-in-out;
+      background: linear-gradient(
+        360deg,
+        #ffffff 11.25%,
+        rgba(255, 255, 255, 0) 100%
+      );
     }
+  }
 
-    &-img-overlay {
-        position: absolute;
-        inset: 0;
-        picture {
-            position: relative;
-            z-index: 1;
-        }
-        img {
-            @include imgPos(100%, 100%, cover, top);
-        }
-        .overlay-color {
-            position: absolute;
-            z-index: 2;
-            inset: 0;
-            transition: all 0.3s ease-in-out;
-            background: linear-gradient(
-                360deg,
-                #ffffff 11.25%,
-                rgba(255, 255, 255, 0) 100%
-            );
-        }
-    }
-
-    &:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
-            0 0 0 1px rgb(10 10 10 / 2%);
-    }
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
+      0 0 0 1px rgb(10 10 10 / 2%);
+  }
 }

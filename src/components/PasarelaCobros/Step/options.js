@@ -1,123 +1,205 @@
-import IMAGES from '../../../img/pasarelaCobros/share';
-
 export const countryOptions = [
   {
-    idElement: 'pais_arg_label',
-    flag: 'argFlag',
-    title: 'Argentina'
+    idElement: 'pais_arg_input',
+    img: 'argFlag',
+    value: 'Argentina'
   },
   {
-    idElement: 'pais_bol_label',
-    flag: 'bolFlag',
-    title: 'Bolivia'
+    idElement: 'pais_bol_input',
+    img: 'bolFlag',
+    value: 'Bolivia'
   },
   {
-    idElement: 'pais_chi_label',
-    flag: 'chiFlag',
-    title: 'Chile'
+    idElement: 'pais_chi_input',
+    img: 'chiFlag',
+    value: 'Chile'
   },
   {
-    idElement: 'pais_col_label',
-    flag: 'colFlag',
-    title: 'Colombia'
+    idElement: 'pais_col_input',
+    img: 'colFlag',
+    value: 'Colombia'
   },
   {
-    idElement: 'pais_cos_label',
-    flag: 'cosFlag',
-    title: 'Costa Rica'
+    idElement: 'pais_cos_input',
+    img: 'cosFlag',
+    value: 'Costa Rica'
   },
   {
-    idElement: 'pais_ecu_label',
-    flag: 'ecuFlag',
-    title: 'Ecuador'
+    idElement: 'pais_ecu_input',
+    img: 'ecuFlag',
+    value: 'Ecuador'
   },
   {
-    idElement: 'pais_sal_label',
-    flag: 'salFlag',
-    title: 'El Salvador'
+    idElement: 'pais_sal_input',
+    img: 'salFlag',
+    value: 'El Salvador'
   },
   {
-    idElement: 'pais_gua_label',
-    flag: 'guaFlag',
-    title: 'Guatemala'
+    idElement: 'pais_gua_input',
+    img: 'guaFlag',
+    value: 'Guatemala'
   },
   {
-    idElement: 'pais_hon_label',
-    flag: 'honFlag',
-    title: 'Honduras'
+    idElement: 'pais_hon_input',
+    img: 'honFlag',
+    value: 'Honduras'
   },
   {
-    idElement: 'pais_mex_label',
-    flag: 'mexFlag',
-    title: 'México'
+    idElement: 'pais_mex_input',
+    img: 'mexFlag',
+    value: 'México'
   },
   {
-    idElement: 'pais_nic_label',
-    flag: 'nicFlag',
-    title: 'Nicaragua'
+    idElement: 'pais_nic_input',
+    img: 'nicFlag',
+    value: 'Nicaragua'
   },
   {
-    idElement: 'pais_pan_label',
-    flag: 'panFlag',
-    title: 'Panamá'
+    idElement: 'pais_pan_input',
+    img: 'panFlag',
+    value: 'Panamá'
   },
   {
-    idElement: 'pais_par_label',
-    flag: 'parFlag',
-    title: 'Paraguay'
+    idElement: 'pais_par_input',
+    img: 'parFlag',
+    value: 'Paraguay'
   },
   {
-    idElement: 'pais_per_label',
-    flag: 'perFlag',
-    title: 'Perú'
+    idElement: 'pais_per_input',
+    img: 'perFlag',
+    value: 'Perú'
   },
   {
-    idElement: 'pais_uru_label',
-    flag: 'uruFlag',
-    title: 'Uruguay'
+    idElement: 'pais_uru_input',
+    img: 'uruFlag',
+    value: 'Uruguay'
   },
   {
-    idElement: 'pais_usa_label',
-    flag: 'usaFlag',
-    title: 'Estados Unidos'
+    idElement: 'pais_usa_input',
+    img: 'usaFlag',
+    value: 'Estados Unidos'
   }
 ];
 
-const { mp, st, pp, ba, df } = IMAGES;
 export const paymentOptions = [
   {
-    title: 'Mercado Pago',
-    image: mp,
+    img: 'mp',
     shortName: 'mp',
-    className: '',
-    idInputElement: ''
+    className: 'tall',
+    value: 'Mercado Pago'
   },
   {
-    title: 'Stripe',
-    image: st,
+    img: 'st',
     shortName: 'st',
-    className: '',
+    className: 'tall',
     idInputElement: ''
   },
   {
-    title: 'PayPal',
-    image: pp,
+    img: 'pp',
     shortName: 'pp',
-    className: '',
+    className: 'tall',
     idInputElement: ''
   },
   {
-    title: 'Datafast',
-    image: df,
+    img: 'df',
     shortName: 'df',
-    className: '',
+    className: 'tall',
     idInputElement: ''
   },
   {
-    title: 'Banorte',
-    image: ba,
+    img: 'ba',
     shortName: 'ba',
-    className: '',
+    className: 'tall',
     idInputElement: ''
+  }
+];
+export const paymentMedOptions = [
+  {
+    idElement: 'med_tarjeta',
+    value: 'Pagar con Tarjeta',
+    classLabel: 'half'
+  },
+  {
+    idElement: 'med_link',
+    value: 'Compartir Link',
+    classLabel: 'half'
+  }
+];
+
+export const paymentModOptions = [
+  {
+    idElement: 'med_tarjeta',
+    value: 'Tradicional',
+    classLabel: 'half'
+  },
+  {
+    idElement: 'med_link',
+    value: 'Suscripción',
+    classLabel: 'half'
+  }
+];
+
+export const clientData = [
+  {
+    idElement: 'numeroContrato',
+    value: '',
+    label: 'Número de Contrato',
+    placeholder: 'placeholder'
+  },
+  {
+    idElement: 'porcentajeDescuento',
+    value: '',
+    label: 'Porcentaje a descontar',
+    placeholder: 'Ingrese porcentaje a descontar'
+  },
+  {
+    idElement: 'numeroContrato',
+    value: '',
+    label: '',
+    placeholder: 'placeholder'
+  },
+  {
+    idElement: 'numeroContrato',
+    value: '',
+    label: '',
+    placeholder: 'placeholder'
+  },
+  {
+    idElement: 'numeroContrato',
+    value: '',
+    label: '',
+
+    placeholder: 'placeholder'
+  },
+  {
+    idElement: 'numeroContrato',
+    value: '',
+    label: '',
+    placeholder: 'placeholder'
+  },
+  {
+    idElement: 'numeroContrato',
+    value: '',
+    label: '',
+    placeholder: 'placeholder'
+  },
+  {
+    idElement: 'numeroContrato',
+    value: '',
+    label: '',
+
+    placeholder: 'placeholder'
+  },
+  {
+    idElement: 'numeroContrato',
+    value: '',
+    label: '',
+    placeholder: 'placeholder'
+  },
+  {
+    idElement: 'numeroContrato',
+    value: '',
+    label: '',
+    placeholder: 'placeholder'
   }
 ];

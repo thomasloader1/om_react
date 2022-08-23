@@ -36,7 +36,6 @@ export function Variants(args) {
       <Button {...args} label="Rounded" rounded />
       <Button {...args} label="Inverted" inverted />
       <Button {...args} label="Inverted outlined" inverted outlined />
-
       <Button {...args} label="Ghost" color="" className="is-ghost" />
       <Button {...args} label="Text" color="" className="is-text" />
       <Button {...args} label="whit Icon" icon={<MdInfoOutline />} />
