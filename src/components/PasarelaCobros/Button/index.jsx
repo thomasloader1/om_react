@@ -73,7 +73,7 @@ Btn.propTypes = {
   label: PropTypes.string,
   color: PropTypes.string,
   size: PropTypes.oneOf(Object.values(SIZES)),
-
+  icon: PropTypes.string,
   className: PropTypes.string
 };
 
@@ -90,6 +90,7 @@ Btn.defaultProps = {
   color: 'primary',
   size: 'normal',
   label: 'Button',
-  className: ''
+  className: '',
+  icon: ''
 };
 export default Btn;

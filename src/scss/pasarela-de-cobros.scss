@@ -1,5 +1,6 @@
 @use 'abstracts' as *;
 @use 'cardAsesor';
+@import 'bulma/css/bulma.css';
 
 // Fix bug grilla con input radio
 .radio + .radio,
@@ -95,10 +96,6 @@ h2.title {
     gap: 0.5rem;
     border-radius: 6px;
 
-    &.half {
-      grid-column: span 2;
-      justify-content: center;
-    }
     &.tall {
       height: 5rem;
       display: flex;
@@ -121,6 +118,10 @@ h2.title {
       height: 100%;
       cursor: pointer;
     }
+  }
+  .half {
+    grid-column: span 2;
+    justify-content: center;
   }
 }
 .stepControls,
@@ -199,7 +200,7 @@ h2.title {
   backdrop-filter: blur(8px);
 }
 
-.Side {
+.side {
   padding-bottom: 3rem;
   &-decision,
   &-body {

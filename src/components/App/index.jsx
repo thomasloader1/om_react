@@ -1,24 +1,22 @@
 import React from 'react';
 import { Route, Routes } from 'react-router';
-import Home from '../Home';
+import PasarelaApp from '../PasarelaCobros/App';
 
 function App() {
   return (
-    <div>
-      <Routes>
-      <Route path="/" element={<Home />} />
-      
-          
-      
-        <Route path="*" element={
+    <Routes>
+      <Route path="/" element={<PasarelaApp />} />
+
+      <Route
+        path="*"
+        element={
           <main style={{ padding: '1rem' }}>
             <p>There nothing here!</p>
-          </main>} />
+          </main>
+        }
+      />
     </Routes>
-    </div>
   );
 }
-
-
 
 export default App;

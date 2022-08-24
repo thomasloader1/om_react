@@ -13,7 +13,7 @@ export default {
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 function Template(args) {
   return (
-    <div className="Side-body" style={{ maxWidth: '335px' }}>
+    <div className="side-body" style={{ maxWidth: '335px' }}>
       <SideItem {...args} />
     </div>
   );
@@ -21,7 +21,7 @@ function Template(args) {
 
 export function States(args) {
   return (
-    <div className="Side-body" style={{ maxWidth: '335px' }}>
+    <div className="side-body" style={{ maxWidth: '335px' }}>
       <SideItem {...args} />
       <Current status="current" />
       <Completed status="completed" />
