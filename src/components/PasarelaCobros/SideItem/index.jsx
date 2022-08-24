@@ -4,27 +4,17 @@ import PropTypes from 'prop-types';
 import { MdOutlineEditNote } from 'react-icons/md';
 import './SideItem.scss';
 
-function SideItem({
-  currentStep,
-  label,
-  status,
-  idElement,
-  className,
-  valueSelected
-}) {
-  const buttonStatus = {
+function SideItem({ currentStep, label, status, className, valueSelected }) {
+  const stepStatus = {
     current: `card current ${className}`,
     completed: `card completed ${className}`
   };
-  const classNameStatus = status !== '' ? `${buttonStatus[status]}` : className;
-  // Botón default render
+
+  const classNameStatus = status !== '' ? `${stepStatus[status]}` : className;
+
   return (
-    <div
-      id={`SideItem_${idElement}`}
-      data-target={currentStep}
-      className={`Side-item ${classNameStatus}`}
-    >
-      <span className="Side-item-info">
+    <div className={`side-item ${classNameStatus}`}>
+      <span className="side-item-info">
         <div className="numstep">{currentStep}</div>
 
         <div className="is-flex is-flex-direction-column is-align-items-flex-start">
@@ -52,11 +42,12 @@ SideItem.propTypes = {
   label: PropTypes.string.isRequired,
   status: PropTypes.string,
   className: PropTypes.string,
-  idElement: PropTypes.string.isRequired,
   valueSelected: PropTypes.string.isRequired
 };
+
 SideItem.defaultProps = {
   status: '',
   className: ''
 };
+
 export default SideItem;

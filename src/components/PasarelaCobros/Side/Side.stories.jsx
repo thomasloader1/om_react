@@ -22,13 +22,12 @@ export const SideMenu = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 SideMenu.args = {
   children: (
-    <div className="Side-body">
+    <div className="side-body">
       {SideData.map(({ ...props }) => (
         <SideItem {...props} />
       ))}
     </div>
   ),
-  idElement: 'seleccion_pais',
   currentStep: 1,
   label: 'País'
 };

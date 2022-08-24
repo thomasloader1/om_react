@@ -1,21 +1,31 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './Side.scss';
 import Button from '../Button';
 
-function Side({ children, idSideElement, sideTitle }) {
+function Side({ children, sideTitle }) {
+  const [completeSteps] = useState(false);
+
   return (
-    <div id={idSideElement} className="is-4 column Side pl-6">
+    <div className="is-4 column side pl-6">
       <h2 className="title is-4">{sideTitle}</h2>
-      <div className="Side-body">
-        <div>{children}</div>
-        <Button
-          className="bigger is-primary is-medium"
-          label="Generar pago"
-          fullwidth
-        />
-        <Button className="is-primary is-outlined" label="Volver" fullwidth />
+      <div className="side-body">
+        {children}
+        {completeSteps && (
+          <>
+            <Button
+              className="bigger is-primary is-medium"
+              label="Generar pago"
+              fullwidth
+            />
+            <Button
+              className="is-primary is-outlined"
+              label="Volver"
+              fullwidth
+            />
+          </>
+        )}
       </div>
     </div>
   );
@@ -26,7 +36,6 @@ Side.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]).isRequired,
-  idSideElement: PropTypes.string.isRequired,
   sideTitle: PropTypes.string
 };
 

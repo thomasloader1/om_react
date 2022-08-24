@@ -21,6 +21,7 @@ import st from './metPago/stripe.svg';
 import pp from './metPago/paypal.svg';
 import df from './metPago/datafast.jpg';
 import ba from './metPago/banorte.svg';
+import logo from './logo-oceano-pagos.svg';
 
 const IMAGES = {
   asesorComercial,
@@ -45,7 +46,8 @@ const IMAGES = {
   df,
   ba,
   st,
-  pp
+  pp,
+  logo
 };
 
 export default IMAGES;

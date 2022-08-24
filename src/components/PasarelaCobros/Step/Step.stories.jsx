@@ -1,32 +1,29 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import RadioButton from '../RadioButton';
-import FormInput from '../FormInput';
+// import FormInput from '../FormInput';
 
 import Step from './index';
 import {
-  countryOptions,
-  paymentOptions,
+  countryOptions
+  /*   paymentOptions,
   paymentMedOptions,
   paymentModOptions,
-  clientData
+  clientData */
 } from './options';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: 'components/Pasarela de Cobros/Step',
   component: Step,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {}
 };
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 function Template(args) {
   return <Step {...args} />;
 }
 
 export const SeleccionPais = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
 SeleccionPais.args = {
   children: (
     <div id="pais-grid" className="gridCuartos">
@@ -40,8 +37,7 @@ SeleccionPais.args = {
   stepTitle: 'Seleccione país'
 };
 
-export const SeleccionMetPago = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
+/* export const SeleccionMetPago = Template.bind({});
 SeleccionMetPago.args = {
   children: (
     <div id="metPago_grid" className="gridCuartos">
@@ -56,7 +52,6 @@ SeleccionMetPago.args = {
 };
 
 export const SeleccionMedModPago = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
 SeleccionMedModPago.args = {
   children: (
     <>
@@ -91,4 +86,4 @@ DatosPersonales.args = {
   idStepElement: 'seleccion_medModPago',
   currentStep: 4,
   stepTitle: 'Seleccione medio y modo de pago'
-};
+}; */
