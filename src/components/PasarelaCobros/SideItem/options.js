@@ -4,7 +4,7 @@ export const sideItemOptions = [
     step: 1,
     idElement: 'seleccion_pais',
     label: 'País',
-    value: '',
+    valueSelected: '',
     status: 'current'
   },
   {

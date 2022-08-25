@@ -35,7 +35,8 @@ function Btn({
   rounded,
   fullwidth,
   inverted,
-  icon
+  icon,
+  onClick
 }) {
   //  const disabledState = disabled ? 'button is-primary is-outlined' : 'button is-primary';
 
@@ -53,6 +54,7 @@ function Btn({
       rounded={rounded}
       fullwidth={fullwidth}
       inverted={inverted}
+      onClick={onClick}
     >
       {icon}
       {label}
@@ -74,7 +76,8 @@ Btn.propTypes = {
   color: PropTypes.string,
   size: PropTypes.oneOf(Object.values(SIZES)),
   icon: PropTypes.string,
-  className: PropTypes.string
+  className: PropTypes.string,
+  onClick: PropTypes.func
 };
 
 Btn.defaultProps = {
@@ -91,6 +94,7 @@ Btn.defaultProps = {
   size: 'normal',
   label: 'Button',
   className: '',
-  icon: ''
+  icon: '',
+  onClick: () => {}
 };
 export default Btn;
