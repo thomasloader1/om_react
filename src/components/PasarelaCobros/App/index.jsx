@@ -1,29 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import '../../../scss/pasarela-de-cobros.scss';
-import {
-  countryOptions,
-  paymentOptions,
-  paymentMethodOptions,
-  paymentModeOptions,
-  clientForm
-} from '../../../config/config';
 import Header from '../Header';
 import Stepper from '../Stepper';
+import { AppContext } from '../Provider/StateProvider';
 
 function PasarelaApp() {
-  const [config, setConfig] = useState();
-  const [flow] = useState();
-  useEffect(() => {
-    setConfig({
-      countryOptions,
-      paymentOptions,
-      paymentMethodOptions,
-      paymentModeOptions,
-      clientForm
-    });
-  }, [flow]);
+  const [state] = useContext(AppContext);
+  /* const [flow] = useContext(AppContext); */
 
-  console.log(config);
+  console.log(state);
 
   return (
     <>

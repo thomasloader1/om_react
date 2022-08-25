@@ -4,6 +4,7 @@ import PasarelaApp from '../PasarelaCobros/App';
 
 function App() {
   return (
+    
     <Routes>
       <Route path="/" element={<PasarelaApp />} />
 

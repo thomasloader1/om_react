@@ -1,16 +1,17 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 // import './Step.scss';
 import Button from '../Button';
 import SideItem from '../SideItem';
 import Side from '../Side';
-import { sideItemOptions } from '../SideItem/options';
+import { AppContext } from '../Provider/StateProvider';
 
-function Step({ children, idStepElement, currentStep, stepTitle }) {
+function Step({ children, currentStep, stepTitle }) {
+  const [state] = useContext(AppContext);
   return (
     <div className="pasarela columns mx-auto">
-      <div id={idStepElement} className="pasarela-1 column seleccion-pais">
+      <div className="pasarela-1 column seleccion-pais">
         {currentStep !== 0 && (
           <h2 className="title is-4">
             <span className="has-text-white has-background-black is-circle">
@@ -23,12 +24,12 @@ function Step({ children, idStepElement, currentStep, stepTitle }) {
         {children}
         <div id="stepControls" className="stepControls is-flex">
           <Button className="flex-grow-1" label="Volver" fullwidth />
-          <Button className="flex-grow-1" label="Siguiente" fullwidth />
+          <Button className="flex-grow-1" label="Siguiente" fullwidth onClick={()=> {console.log({state})}}/>
         </div>
       </div>
 
-      <Side sideTitle="Titulo">
-        {sideItemOptions.map(({ step, label, status, value }) => (
+      <Side>
+        {state.sideItemOptions.map(({ step, label, status, value }) => (
           <SideItem
             key={step}
             currentStep={step}
@@ -47,7 +48,6 @@ Step.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]).isRequired,
-  idStepElement: PropTypes.string.isRequired,
   stepTitle: PropTypes.string.isRequired,
   currentStep: PropTypes.number.isRequired
 };

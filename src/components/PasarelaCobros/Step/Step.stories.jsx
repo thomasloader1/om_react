@@ -32,7 +32,6 @@ SeleccionPais.args = {
       ))}
     </div>
   ),
-  idStepElement: 'seleccion_pais',
   currentStep: 1,
   stepTitle: 'Seleccione país'
 };
