@@ -1,14 +1,40 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 // import './Step.scss';
 import Button from '../Button';
 import SideItem from '../SideItem';
 import Side from '../Side';
 import { AppContext } from '../Provider/StateProvider';
+import { sideItemOptions } from '../../../config/config';
 
 function Step({ children, currentStep, stepTitle }) {
-  const [state] = useContext(AppContext);
+  const [state,setState] = useContext(AppContext);
+  const [backBtnDisabled, setBackBtnDisabled] = useState(true)
+  const [nextBtnDisabled, setNextBtnDisabled] = useState(false)
+
+  const handleBackStep = ()=>{}
+  const handleNextStep = ()=>{
+    const nextStep = state.sideItemOptions.map(step => {
+      if(step.status === 'current' && step.value !== ''){
+
+        sideItemOptions[step.step].status = 'current'
+      }
+      return (step.status === 'current' && step.value !== '')
+    })
+  console.log(nextStep)
+    
+    setNextBtnDisabled(nextStep)
+    setBackBtnDisabled(nextStep)
+  }
+
+
+  useEffect(() => {
+    setState({...state, sideItemOptions: [...state.sideItemOptions]})
+    console.log({backBtnDisabled, nextBtnDisabled,state})
+  }, [backBtnDisabled, nextBtnDisabled])
+  
   return (
     <div className="pasarela columns mx-auto">
       <div className="pasarela-1 column seleccion-pais">
@@ -23,8 +49,8 @@ function Step({ children, currentStep, stepTitle }) {
         )}
         {children}
         <div id="stepControls" className="stepControls is-flex">
-          <Button className="flex-grow-1" label="Volver" fullwidth />
-          <Button className="flex-grow-1" label="Siguiente" fullwidth onClick={()=> {console.log({state})}}/>
+          <Button disabled={backBtnDisabled} className="flex-grow-1" label="Volver" fullwidth onClick={()=> handleBackStep()}/>
+          <Button disabled={nextBtnDisabled} className="flex-grow-1" label="Siguiente" fullwidth onClick={()=> handleNextStep()}/>
         </div>
       </div>
 
