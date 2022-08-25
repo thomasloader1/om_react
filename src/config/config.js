@@ -242,30 +242,30 @@ export const sideItemOptions = [
   }
 ];
 
-export const userFlow = [
-  {
+export const userFlow = {
+  stepOne:{
     step: 1,
     label: 'country',
     value: '',
   },
-  {
+  stepTwo:{
     step: 2,
     label: 'payment_method',
     value: '',
   },
-  {
+  stepThree:{
     step: 3,
     label: 'payment_mode',
     value: '',
   },
-  {
+  stepFour:{
     step: 4,
     label: 'customer_data',
     value: '',
   },
-  {
+  stepFive:{
     step: 5,
     label: 'card_data',
     value: '',
   }
-];
+};

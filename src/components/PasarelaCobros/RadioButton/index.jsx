@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -33,19 +34,35 @@ function RadioButton({
   };
 
   const handleClick = () =>{
-    const country = formRadioRef.current.firstChild.value
+    const country = formRadioRef.current.firstChild.value.toLowerCase()
+
+    formRadioRef.current.id = country
+    state.userFlow.stepOne.value = country
+    document.querySelectorAll('label[id]').forEach((val) => {
+      // console.log({val},val.id.includes(country) , country, val.id)
+      if(val.id.includes(country)){
+        val.classList.add('is-link','is-light','is-outlined')
+      }else{
+        val.classList.remove('is-link','is-light','is-outlined')
+      }
+    })
+
+    state.sideItemOptions.map((step) => {
+      // console.log({step})
+      if(step.status === 'current'){
+        step.value = formRadioRef.current.firstChild.value
+        return {...step}
+      }
+      return {...step}
+    })
 
     setBtnStatus('active');
     setState({
-      ...state,
-      flow:{
-        country
-      }
+      ...state
     })
   }
 
   useEffect(()=>{
-    
     setClasses(buttonStatus[btnStatus])
   },[btnStatus])
 
@@ -59,9 +76,8 @@ function RadioButton({
           name={name}
           value={value}
           disabled={disabled}
-          onClick={() => handleClick()}
+          onClick={handleClick}
           domRef={formRadioRef}
-          
         >
           {img && <img src={IMAGES[img]} alt={value} />}
           {showText && <h4 className="text_option">{value}</h4>}
