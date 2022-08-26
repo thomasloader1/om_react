@@ -86,31 +86,42 @@ export const paymentOptions = [
     img: 'mp',
     shortName: 'mp',
     className: 'tall',
-    value: 'Mercado Pago'
+    value: 'Mercado Pago',
+    allowedCountries: ['arg','mex','chi','col']
   },
   {
     img: 'st',
     shortName: 'st',
     className: 'tall',
-    idInputElement: ''
+    idInputElement: '',
+    value: 'Stripe',
+    allowedCountries: ['bol','mex','chi','cos','ecu','sal','gua','hon','nic']
+
   },
   {
     img: 'pp',
     shortName: 'pp',
     className: 'tall',
-    idInputElement: ''
+    idInputElement: '',
+    value: 'PayPal',
+    allowedCountries: []
+
   },
   {
     img: 'df',
     shortName: 'df',
     className: 'tall',
-    idInputElement: ''
+    idInputElement: '',
+    value: 'Datafast',
+    allowedCountries: []
   },
   {
     img: 'ba',
     shortName: 'ba',
     className: 'tall',
-    idInputElement: ''
+    idInputElement: '',
+    value: 'Banorte',
+    allowedCountries: []
   }
 ];
 export const paymentMethodOptions = [
@@ -247,6 +258,7 @@ export const userFlow = {
     step: 1,
     label: 'country',
     value: '',
+    isoRef: ''
   },
   stepTwo:{
     step: 2,

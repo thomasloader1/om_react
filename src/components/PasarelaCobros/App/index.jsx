@@ -1,14 +1,11 @@
-import React, { useContext } from 'react';
+import React, {  } from 'react';
 import '../../../scss/pasarela-de-cobros.scss';
 import Header from '../Header';
 import Stepper from '../Stepper';
-import { AppContext } from '../Provider/StateProvider';
+import {  } from '../Provider/StateProvider';
 
 function PasarelaApp() {
-  const [state] = useContext(AppContext);
-  /* const [flow] = useContext(AppContext); */
-
-  console.log(state);
+  // const [state] = useContext(AppContext);
 
   return (
     <>

@@ -1,3 +1,5 @@
+/* eslint-disable no-case-declarations */
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
@@ -8,71 +10,61 @@ import { Form } from 'react-bulma-components';
 
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { AppContext } from '../Provider/StateProvider';
-// import usePreviousRef from '../Hooks/usePreviousRef';
+import { delegateManager } from '../Hooks/useStepManager';
 
-function RadioButton({
-  disabled,
-  showText,
-  img,
-  idElement,
-  value,
-  name,
-  className,
-  classLabel,
-}) {
-  // eslint-disable-next-line no-unused-vars
-  const formRadioRef = useRef(null)
-  // const prevRef = usePreviousRef(formRadioRef)
-  const [btnStatus, setBtnStatus] = useState(null)
-  const [classes, setClasses] = useState(className)
-  
-  const [state,setState] = useContext(AppContext);
-  
+function RadioButton({ ...props }) {
+  const {
+    disabled,
+    showText,
+    img,
+    idElement,
+    value,
+    name,
+    className,
+    classLabel,
+    typeBtn
+  } = props;
+  // console.log({props})
+  const formRadioRef = useRef(null);
+  const [btnStatus, setBtnStatus] = useState(null);
+  const [btnType] = useState(typeBtn);
+  const [classes, setClasses] = useState(className);
+
+  const [state, setState] = useContext(AppContext);
+
+
   const buttonStatus = {
-    active: 'is-link is-light is-outlined',
-    default: ''
+    country: {
+      active: 'is-link is-light is-outlined',
+      default: ''
+    },
+    payment_method: {
+      active: 'is-link is-light is-outlined',
+      default: ''
+    }
   };
 
-  const handleClick = () =>{
-    const country = formRadioRef.current.firstChild.value.toLowerCase()
+  const handleClick = () => {
+    const [currentStepObject] = state.sideItemOptions.filter(
+      (options) => options.status === 'current'
+    );
 
-    formRadioRef.current.id = country
-    state.userFlow.stepOne.value = country
-    document.querySelectorAll('label[id]').forEach((val) => {
-      // console.log({val},val.id.includes(country) , country, val.id)
-      if(val.id.includes(country)){
-        val.classList.add('is-link','is-light','is-outlined')
-      }else{
-        val.classList.remove('is-link','is-light','is-outlined')
-      }
-    })
-
-    state.sideItemOptions.map((step) => {
-      // console.log({step})
-      if(step.status === 'current'){
-        step.value = formRadioRef.current.firstChild.value
-        return {...step}
-      }
-      return {...step}
-    })
-
+   delegateManager(currentStepObject, formRadioRef, idElement, state);
+  // console.log(delegateManager(currentStepObject, formRadioRef, idElement, state))
+    setState({ ...state });
     setBtnStatus('active');
-    setState({
-      ...state
-    })
-  }
+  };
 
-  useEffect(()=>{
-    setClasses(buttonStatus[btnStatus])
-  },[btnStatus])
+  useEffect(() => {
+    setClasses(buttonStatus[btnType][btnStatus]);
+  }, [btnStatus]);
 
   // Botón default render
   return (
-    <Form.Field className={classLabel} >
+    <Form.Field className={classLabel}>
       <Form.Control>
         <Form.Radio
-          id={idElement}
-          className={`gridCuartos-item button ${classes ?? ''}`}
+          className={`gridCuartos-item button ${classes ?? className}`}
           name={name}
           value={value}
           disabled={disabled}
@@ -95,8 +87,9 @@ RadioButton.propTypes = {
   name: PropTypes.string,
   value: PropTypes.string.isRequired,
   img: PropTypes.string,
-
+  typeBtn: PropTypes.string
 };
+
 RadioButton.defaultProps = {
   showText: true,
   disabled: false,
@@ -104,6 +97,6 @@ RadioButton.defaultProps = {
   classLabel: '',
   name: '',
   img: '',
-
+  typeBtn: 'country'
 };
-export default RadioButton
+export default RadioButton;
