@@ -33,7 +33,7 @@ export function States(args) {
       <br />
       <MetPaymentButton img="mp" className="tall" />
       <MetPaymentButton img="mp" className="tall" status="active" />
-      <MetPaymentButton img="mp" className="tall" dsiabled />
+      <MetPaymentButton img="mp" className="tall" disabled />
     </div>
   );
 }
