@@ -12,6 +12,18 @@ const clearClassesByCountrySelected = (element, country) => {
   });
 };
 
+const setSideItemStep = (state, ref) => {
+  console.log('setSideItemStep', { state, ref });
+  state.sideItemOptions.map((step) => {
+    // console.log({step})
+    if (step.status === 'current') {
+      step.value = ref.current.firstChild.value;
+      return { ...step };
+    }
+    return { ...step };
+  });
+};
+
 export const useStepManager = {
   stepOneManager: (...info) => {
     const [formRadioRef, idElement, state] = info;
@@ -20,20 +32,18 @@ export const useStepManager = {
 
     formRadioRef.current.id = country;
     state.userFlow.stepOne.value = country;
+    state.userFlow.stepOne.isoRef = isoRef;
 
-    state.sideItemOptions.map((step) => {
-      // console.log({step})
-      if (step.status === 'current' && step.step === 1) {
-        step.value = formRadioRef.current.firstChild.value;
-        state.userFlow.stepOne.isoRef = isoRef;
-        return { ...step };
-      }
-      return { ...step };
-    });
+    setSideItemStep(state, formRadioRef);
 
     clearClassesByCountrySelected('label', country);
   },
-  stepTwoManager: () => {},
+  stepTwoManager: (...info) => {
+    console.log(info);
+    const [formRadioRef, _, state] = info;
+    state.userFlow.stepTwo.value = formRadioRef.current.firstChild.value;
+    setSideItemStep(state, formRadioRef);
+  },
   stepThreeManager: () => {},
   stepFourManager: () => {},
   stepFiveManager: () => {}
@@ -50,7 +60,8 @@ export const delegateManager = (...info) => {
 
   const manager = { updateState: {} };
   const [currentStep, ...rest] = info;
-  
+  console.log('delegateManager', { info });
+
   switch (currentStep.step) {
     case 1:
       manager.updateState = stepOneManager(...rest);

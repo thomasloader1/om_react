@@ -1,33 +1,58 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable import/prefer-default-export */
-import React, { useContext } from 'react'
-import { AppContext } from '../Provider/StateProvider'
+
+import React, { useContext } from 'react';
+import { AppContext } from '../Provider/StateProvider';
 import RadioButton from '../RadioButton';
 
-export function SelectCountryStep() {
-    const [state] = useContext(AppContext);
- 
-    return (
+export function SelectCountryStep({ countryOptions }) {
+  return (
     <div id="pais-grid" className="gridCuartos">
-      {state.countryOptions.map(({ ...props }) => (
+      {countryOptions.map(({ ...props }) => (
         <RadioButton {...props} name="country" key={props.idElement} />
       ))}
     </div>
-  )
+  );
 }
 
-export function SelectPaymentMethodStep() {
-  const [state] = useContext(AppContext);
-  const isoCountry = state.userFlow.stepOne.isoRef
-  const somePaymentsInCountry = (payment) => payment.allowedCountries.some(country => country === isoCountry)
-  const filterPayments = state.paymentOptions.filter((payment) => somePaymentsInCountry(payment))
-  
+export function SelectPaymentMethodStep({ paymentOptions, userFlow }) {
+  // const [state] = useContext(AppContext);
+  const isoCountry = userFlow.stepOne.isoRef;
+  /* const somePaymentsInCountry = (payment) =>
+    payment.allowedCountries.some((country) => country === isoCountry); */
+  paymentOptions.map((payment) =>
+    console.log(payment.allowedCountries.includes(isoCountry), isoCountry)
+  );
+
   return (
     <div id="metPago_grid" className="gridCuartos">
-      {filterPayments.map(({ ...props }) => (
-        <RadioButton {...props} showText={false} key={props.shortName} typeBtn="payment_method" />
+      {paymentOptions.forEach(({ ...props }) => {
+        props.allowedCountries.includes(isoCountry) && (
+          <RadioButton
+            {...props}
+            showText={false}
+            key={props.shortName}
+            typeBtn="payment_method"
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+export function SelectPaymentModeStep() {
+  const [state] = useContext(AppContext);
+
+  return (
+    <div id="medModPago_grid" className="gridCuartos">
+      {state.paymentMethodOptions.map(({ ...props }) => (
+        <RadioButton {...props} key={props.idElement} />
+      ))}
+      <div className="is-divider doble" />
+      {state.paymentModeOptions.map(({ ...props }) => (
+        <RadioButton {...props} key={props.idElement} />
       ))}
     </div>
-  )
+  );
 }

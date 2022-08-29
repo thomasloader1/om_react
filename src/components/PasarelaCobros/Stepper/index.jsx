@@ -1,26 +1,48 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import Step from '../Step';
-import { SelectCountryStep, SelectPaymentMethodStep } from './Steps'; 
+import {
+  SelectCountryStep,
+  SelectPaymentMethodStep,
+  SelectPaymentModeStep
+} from './Steps';
 
 function Stepper() {
-  const [state] = useContext(AppContext)
-  const [currentStep] = state.sideItemOptions.filter(sideOption => sideOption.status === 'current')
-  const [actualStep, setCurrentStep] = useState(currentStep)
-  
-  useEffect(()=>{
-    setCurrentStep(currentStep)
-    console.log({currentStep})
-  },[state])
+  const [state] = useContext(AppContext);
+  const [currentStep] = state.sideItemOptions.filter(
+    (sideOption) => sideOption.status === 'current'
+  );
+  const [actualStep, setCurrentStep] = useState(currentStep);
 
-  const {step, label} = actualStep
+  const appendContentStep = (step) => {
+    switch (step) {
+      case 1:
+        return <SelectCountryStep countryOptions={state.countryOptions} />;
+      case 2:
+        return (
+          <SelectPaymentMethodStep
+            paymentOptions={state.paymentOptions}
+            userFlow={state.userFlow}
+          />
+        );
+      case 3:
+        return <SelectPaymentModeStep />;
+      default:
+        return {};
+    }
+  };
+
+  useEffect(() => {
+    setCurrentStep(currentStep);
+    // console.log({currentStep})
+  }, [state, setCurrentStep]);
+
+  const { step, label } = actualStep;
   return (
     <section className="container is-max-widescreen">
       <Step currentStep={step} stepTitle={`Seleccione un ${label}`}>
-        {step === 1 && <SelectCountryStep />}
-        {step === 2 && <SelectPaymentMethodStep />}
+        {appendContentStep(step)}
       </Step>
-      
     </section>
   );
 }
