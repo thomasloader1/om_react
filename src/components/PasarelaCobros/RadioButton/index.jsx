@@ -32,14 +32,13 @@ function RadioButton({ ...props }) {
 
   const [state, setState] = useContext(AppContext);
 
-
   const buttonStatus = {
     country: {
       active: 'is-link is-light is-outlined',
       default: ''
     },
     payment_method: {
-      active: 'is-link is-light is-outlined',
+      active: 'tall is-link is-light is-outlined',
       default: ''
     }
   };
@@ -48,9 +47,9 @@ function RadioButton({ ...props }) {
     const [currentStepObject] = state.sideItemOptions.filter(
       (options) => options.status === 'current'
     );
-
-   delegateManager(currentStepObject, formRadioRef, idElement, state);
-  // console.log(delegateManager(currentStepObject, formRadioRef, idElement, state))
+    console.log({ currentStepObject, formRadioRef, idElement, state, props });
+    delegateManager(currentStepObject, formRadioRef, idElement, state);
+    // console.log(delegateManager(currentStepObject, formRadioRef, idElement, state))
     setState({ ...state });
     setBtnStatus('active');
   };
@@ -59,7 +58,6 @@ function RadioButton({ ...props }) {
     setClasses(buttonStatus[btnType][btnStatus]);
   }, [btnStatus]);
 
-  // Botón default render
   return (
     <Form.Field className={classLabel}>
       <Form.Control>
