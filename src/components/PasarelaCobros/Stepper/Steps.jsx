@@ -17,26 +17,18 @@ export function SelectCountryStep({ countryOptions }) {
 }
 
 export function SelectPaymentMethodStep({ paymentOptions, userFlow }) {
-  // const [state] = useContext(AppContext);
-  const isoCountry = userFlow.stepOne.isoRef;
-  /* const somePaymentsInCountry = (payment) =>
-    payment.allowedCountries.some((country) => country === isoCountry); */
-  paymentOptions.map((payment) =>
-    console.log(payment.allowedCountries.includes(isoCountry), isoCountry)
-  );
-
+  const isoCountry = userFlow.stepOne.isoRef; 
+  
   return (
     <div id="metPago_grid" className="gridCuartos">
-      {paymentOptions.forEach(({ ...props }) => {
-        props.allowedCountries.includes(isoCountry) && (
+      { paymentOptions.map(({ ...props }) => props.allowedCountries.includes(isoCountry) && (
           <RadioButton
             {...props}
             showText={false}
             key={props.shortName}
             typeBtn="payment_method"
           />
-        );
-      })}
+        )) }
     </div>
   );
 }

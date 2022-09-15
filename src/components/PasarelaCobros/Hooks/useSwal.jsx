@@ -1,18 +1,22 @@
-import Swal from 'sweetalert2'
+/* eslint-disable import/prefer-default-export */
 import React from 'react'
+import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
 const toast = withReactContent(Swal)
 
-export default /* useSwal = */ ({content}) =>{
-    toast.fire({
-        title: <p>{content}</p>,
-        didOpen: () => {
-          // `MySwal` is a subclass of `Swal` with all the same instance & static methods
-          toast.showLoading()
-        },
-      }).then(() => toast.fire(<p>Shorthand works too</p>))
-      
-}
-
- 
+export function fireToast(title) {
+  toast.fire({
+    title: <p>{title}</p>,
+    toast: true,
+    icon: 'error',
+    position: 'bottom-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (alert) => {
+      alert.addEventListener('mouseenter', Swal.stopTimer);
+      alert.addEventListener('mouseleave', Swal.resumeTimer);
+    }
+  });
+};

@@ -162,56 +162,6 @@ export const clientForm = [
     value: '',
     label: 'Porcentaje a descontar',
     placeholder: 'Ingrese porcentaje a descontar'
-  },
-  {
-    idElement: 'numeroContrato',
-    value: '',
-    label: '',
-    placeholder: 'placeholder'
-  },
-  {
-    idElement: 'numeroContrato',
-    value: '',
-    label: '',
-    placeholder: 'placeholder'
-  },
-  {
-    idElement: 'numeroContrato',
-    value: '',
-    label: '',
-
-    placeholder: 'placeholder'
-  },
-  {
-    idElement: 'numeroContrato',
-    value: '',
-    label: '',
-    placeholder: 'placeholder'
-  },
-  {
-    idElement: 'numeroContrato',
-    value: '',
-    label: '',
-    placeholder: 'placeholder'
-  },
-  {
-    idElement: 'numeroContrato',
-    value: '',
-    label: '',
-
-    placeholder: 'placeholder'
-  },
-  {
-    idElement: 'numeroContrato',
-    value: '',
-    label: '',
-    placeholder: 'placeholder'
-  },
-  {
-    idElement: 'numeroContrato',
-    value: '',
-    label: '',
-    placeholder: 'placeholder'
   }
 ];
 
