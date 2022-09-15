@@ -3,72 +3,78 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-// import './Step.scss';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-import Button from '../Button';
-import SideItem from '../SideItem';
-import Side from '../Side';
+
+import { fireToast } from '../Hooks/useSwal';
 import { AppContext } from '../Provider/StateProvider';
 import { sideItemOptions } from '../../../config/config';
 
+import Button from '../Button';
+import SideItem from '../SideItem';
+import Side from '../Side';
+
 function Step({ children, currentStep, stepTitle }) {
   const [state, setState] = useContext(AppContext);
+
   const [backBtnDisabled, setBackBtnDisabled] = useState(true);
   const [nextBtnDisabled, setNextBtnDisabled] = useState(false);
 
-  const toast = withReactContent(Swal);
-  const fireToast = (title) => {
-    toast.fire({
-      title: <p>{title}</p>,
-      toast: true,
-      icon: 'error',
-      position: 'bottom-end',
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (alert) => {
-        alert.addEventListener('mouseenter', Swal.stopTimer);
-        alert.addEventListener('mouseleave', Swal.resumeTimer);
-      }
-    });
-  };
-
-  const validateSuccessStep = (nextStep, backStep) => {
+  const validateSuccessStep = (actualStep, direction) => {
     const validateResponse = { hasError: true };
-    state.sideItemOptions.forEach(({ step, status, value }) => {
-      if (status === 'current' && value !== '') {
-        nextStep.step = step + 1;
-        nextStep.allow = true;
-        backStep.step = step;
-        backStep.allow = nextStep.step > 1;
-        sideItemOptions[step - 1].status = 'completed';
-        sideItemOptions[step].status = 'current';
-        validateResponse.hasError = false;
-
-        // console.log('validateSuccessStep', { nextStep, backStep });
-      }
-      console.log({ sideItemOptions: state.sideItemOptions, validateResponse });
-      if (validateResponse.hasError) {
-        fireToast('Debe seleccionar una opcion para avanzar');
-      }
-    });
-  };
-
-  const handleBackStep = (actualStep) => {};
-  const handleNextStep = (actualStep) => {
+    
     const nextStep = { step: actualStep, allow: true };
     const backStep = { step: null, allow: false };
-    validateSuccessStep(nextStep, backStep);
+   
+    if(direction === 'next'){
+    state.sideItemOptions.forEach(({ step, status, value }) => {
+      if (status === 'current' && value !== '') {
 
-    console.log('handleNextStep', { backStep, nextStep });
+          console.log({step, status, value}, direction)
+          nextStep.step = step + 1;
+          nextStep.allow = true;
+          
+          backStep.step = step;
+          backStep.allow = nextStep.step > 1;
+          
+          sideItemOptions[step - 1].status = 'completed';
+          sideItemOptions[step].status = 'current';
+          
+          validateResponse.hasError = false;
+        }
+        
+        
+        if (validateResponse.hasError) {
+          fireToast('Debe seleccionar una opcion para avanzar');
+        }
+        
+      });
+    }else{
+      
+      const goFrom = actualStep - 1;
+      
+      backStep.step = goFrom - 1;
+      backStep.allow = goFrom > 1;
+      
+      nextStep.step = goFrom;
+      nextStep.allow = true;
+
+      sideItemOptions[actualStep].status = '';
+      sideItemOptions[goFrom].status = 'current';
+     
+      validateResponse.hasError = false;
+      
+      console.log({actualStep, backStep, nextStep, sideOptionActualStep: sideItemOptions[actualStep], sideOptionGoFrom:  sideItemOptions[goFrom]}, direction)
+    }
+
     setNextBtnDisabled(!nextStep.allow);
     setBackBtnDisabled(!backStep.allow);
   };
 
+  const childrenArray = React.Children.toArray(children);
+  const [step] = useState(0)
+  const currentChildren = childrenArray[step];
+ 
   useEffect(() => {
     setState({ ...state, sideItemOptions: [...sideItemOptions] });
-    console.log({ backBtnDisabled, nextBtnDisabled, state });
   }, [backBtnDisabled, nextBtnDisabled]);
 
   return (
@@ -79,34 +85,33 @@ function Step({ children, currentStep, stepTitle }) {
             <span className="has-text-white has-background-black is-circle">
               {currentStep}
             </span>
-
             {stepTitle}
           </h2>
         )}
-        {children}
+        {currentChildren}
         <div id="stepControls" className="stepControls is-flex">
           <Button
             disabled={backBtnDisabled}
             className="flex-grow-1"
             label="Volver"
             fullwidth
-            onClick={() => handleBackStep(currentStep)}
+            onClick={() => validateSuccessStep(currentStep,'back')}
           />
           <Button
             disabled={nextBtnDisabled}
             className="flex-grow-1"
             label="Siguiente"
             fullwidth
-            onClick={() => handleNextStep(currentStep)}
+            onClick={() => validateSuccessStep(currentStep,'next')}
           />
         </div>
       </div>
 
       <Side>
-        {state.sideItemOptions.map(({ step, label, status, value }) => (
+        {state.sideItemOptions.map(({ step: stepNumber, label, status, value }) => (
           <SideItem
-            key={step}
-            currentStep={step}
+            key={stepNumber}
+            currentStep={stepNumber}
             label={label}
             status={status}
             valueSelected={value}

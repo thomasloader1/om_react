@@ -9,40 +9,33 @@ import {
 
 function Stepper() {
   const [state] = useContext(AppContext);
-  const [currentStep] = state.sideItemOptions.filter(
+  const [currentInfoStep] = state.sideItemOptions.filter(
     (sideOption) => sideOption.status === 'current'
   );
-  const [actualStep, setCurrentStep] = useState(currentStep);
-
-  const appendContentStep = (step) => {
-    switch (step) {
-      case 1:
-        return <SelectCountryStep countryOptions={state.countryOptions} />;
-      case 2:
-        return (
-          <SelectPaymentMethodStep
-            paymentOptions={state.paymentOptions}
-            userFlow={state.userFlow}
-          />
-        );
-      case 3:
-        return <SelectPaymentModeStep />;
-      default:
-        return {};
-    }
-  };
+  const [actualStep, setCurrentStep] = useState(currentInfoStep);
 
   useEffect(() => {
-    setCurrentStep(currentStep);
-    // console.log({currentStep})
-  }, [state, setCurrentStep]);
+    setCurrentStep(currentInfoStep);
+  }, [state, currentInfoStep]);
 
   const { step, label } = actualStep;
   return (
     <section className="container is-max-widescreen">
       <Step currentStep={step} stepTitle={`Seleccione un ${label}`}>
-        {appendContentStep(step)}
+        <div>
+          <SelectCountryStep countryOptions={state.countryOptions} />
+        </div>
+        <div>
+          <SelectPaymentMethodStep
+            paymentOptions={state.paymentOptions}
+            userFlow={state.userFlow}
+          />
+        </div>
+        <div>
+          <SelectPaymentModeStep />
+        </div>
       </Step>
+      
     </section>
   );
 }
