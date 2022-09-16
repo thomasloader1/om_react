@@ -12,70 +12,56 @@ import Button from '../Button';
 import SideItem from '../SideItem';
 import Side from '../Side';
 
-function Step({ children, currentStep, stepTitle }) {
+// eslint-disable-next-line react/prop-types
+function Step({ children, currentStep, stepTitle, setCurrentStep }) {
   const [state, setState] = useContext(AppContext);
-
-  const [backBtnDisabled, setBackBtnDisabled] = useState(true);
-  const [nextBtnDisabled, setNextBtnDisabled] = useState(false);
 
   const validateSuccessStep = (actualStep, direction) => {
     const validateResponse = { hasError: true };
     
-    const nextStep = { step: actualStep, allow: true };
-    const backStep = { step: null, allow: false };
-   
+    // const stepState = state.sideItemOptions.filter((sideItem) => sideItem.step === actualStep)
+    const indexOfActualStep = actualStep - 1;
+    const indexOfNextStep = indexOfActualStep + 1;
+    const indexOfPrevStep = indexOfActualStep > 0 ? indexOfActualStep - 1 : 0;
+    
+    // console.log({stepState, indexOfActualStep,indexOfNextStep,indexOfPrevStep,sideItemOptions, actualOption: sideItemOptions[indexOfActualStep]})
     if(direction === 'next'){
-    state.sideItemOptions.forEach(({ step, status, value }) => {
+      state.sideItemOptions.forEach(({ step, status, value }) => {
       if (status === 'current' && value !== '') {
+          
+          sideItemOptions[indexOfActualStep].status = 'completed';
 
-          console.log({step, status, value}, direction)
-          nextStep.step = step + 1;
-          nextStep.allow = true;
-          
-          backStep.step = step;
-          backStep.allow = nextStep.step > 1;
-          
-          sideItemOptions[step - 1].status = 'completed';
-          sideItemOptions[step].status = 'current';
+          // Set next step
+          sideItemOptions[indexOfNextStep].status = 'current';
           
           validateResponse.hasError = false;
-        }
-        
-        
-        if (validateResponse.hasError) {
-          fireToast('Debe seleccionar una opcion para avanzar');
+          setCurrentStep(s => s + 1)
+
         }
         
       });
     }else{
       
-      const goFrom = actualStep - 1;
-      
-      backStep.step = goFrom - 1;
-      backStep.allow = goFrom > 1;
-      
-      nextStep.step = goFrom;
-      nextStep.allow = true;
-
-      sideItemOptions[actualStep].status = '';
-      sideItemOptions[goFrom].status = 'current';
+      sideItemOptions[indexOfActualStep].status = '';
+      sideItemOptions[indexOfPrevStep].status = 'current';
      
       validateResponse.hasError = false;
+      setCurrentStep(s => s - 1)
       
-      console.log({actualStep, backStep, nextStep, sideOptionActualStep: sideItemOptions[actualStep], sideOptionGoFrom:  sideItemOptions[goFrom]}, direction)
+      // console.log({actualStep, backStep, nextStep, sideOptionActualStep: sideItemOptions[actualStep], sideOptionGoFrom:  sideItemOptions[goFrom]}, direction)
     }
 
-    setNextBtnDisabled(!nextStep.allow);
-    setBackBtnDisabled(!backStep.allow);
+    if (validateResponse.hasError) {
+      fireToast('Debe seleccionar una opcion para avanzar');
+    }
   };
 
   const childrenArray = React.Children.toArray(children);
-  const [step] = useState(0)
-  const currentChildren = childrenArray[step];
+  const currentChildren = childrenArray[currentStep - 1];
  
   useEffect(() => {
     setState({ ...state, sideItemOptions: [...sideItemOptions] });
-  }, [backBtnDisabled, nextBtnDisabled]);
+  }, [currentStep]);
 
   return (
     <div className="pasarela columns mx-auto">
@@ -90,21 +76,22 @@ function Step({ children, currentStep, stepTitle }) {
         )}
         {currentChildren}
         <div id="stepControls" className="stepControls is-flex">
-          <Button
-            disabled={backBtnDisabled}
+         { currentStep > 1 && (<Button
             className="flex-grow-1"
             label="Volver"
             fullwidth
             onClick={() => validateSuccessStep(currentStep,'back')}
-          />
+          />)}
           <Button
-            disabled={nextBtnDisabled}
             className="flex-grow-1"
             label="Siguiente"
             fullwidth
             onClick={() => validateSuccessStep(currentStep,'next')}
           />
         </div>
+        <pre>
+          {JSON.stringify(state,null,2)}
+        </pre>
       </div>
 
       <Side>

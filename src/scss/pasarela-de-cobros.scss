@@ -13,6 +13,7 @@
 $success: #32bea6;
 $accent: #00b6de;
 $texto-light: #808fa6;
+$buttonBg: #FF266E;
 
 body,
 input {
@@ -48,6 +49,19 @@ header.container {
 .button {
   //height: unset;
   border-radius: 6px;
+
+  &.is-primary{
+    background-color: $buttonBg;
+
+    &[disabled], fieldset[disabled]{
+      background-color: $buttonBg;
+      border-color: $buttonBg;
+    }
+
+    &:hover{
+      background-color: darken($buttonBg, 15%);
+    }
+  }
 }
 
 .invisible {
