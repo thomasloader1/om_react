@@ -12,16 +12,54 @@ const clearClassesByCountrySelected = (element, country) => {
   });
 };
 
+const clearClassesByNameSelected = (element, name) => {
+  document.querySelectorAll(`${element} > input[name]`).forEach((val) => {
+    // console.error({valName:val.name.includes(name)},name)
+
+    if(name.includes('med')){
+      if (val.name.includes(name)) {
+        val.parentElement.classList.add('is-link', 'is-light', 'is-outlined');
+      } else {
+        val.parentElement.classList.remove('is-link', 'is-light', 'is-outlined');
+      } 
+    }else if (name.includes('mod')) {
+      if (val.name.includes(name)) {
+        val.parentElement.classList.add('is-link', 'is-light', 'is-outlined');
+      } else {
+        val.parentElement.classList.remove('is-link', 'is-light', 'is-outlined');
+      }
+      }
+    
+    
+  });
+};
+
 const setSideItemStep = (state, ref) => {
-  console.log('setSideItemStep', { state, ref });
+ console.group('setSideItemStep', { state, ref });
   state.sideItemOptions.map((step) => {
-    // console.log({step})
     if (step.status === 'current') {
-      step.value = ref.current.firstChild.value;
+      console.log({step})
+
+      if(step.step === 3){
+        if(ref.current.firstChild.name.includes('med')){
+          step.value = ref.current.firstChild.value
+        }
+
+        if(ref.current.firstChild.name.includes('mod')){
+          const hasPrev = step.value.includes('/') ? step.value.split('/').shift() : step.value
+          step.value = `${hasPrev} / ${ref.current.firstChild.value}`
+        }
+
+      }else{
+        step.value = ref.current.firstChild.value;
+      }
+
       return { ...step };
     }
     return { ...step };
   });
+ console.groupEnd();
+
 };
 
 export const useStepManager = {
@@ -39,12 +77,27 @@ export const useStepManager = {
     clearClassesByCountrySelected('label', country);
   },
   stepTwoManager: (...info) => {
-    console.log(info);
+   // console.log(info);
     const [formRadioRef, _, state] = info;
     state.userFlow.stepTwo.value = formRadioRef.current.firstChild.value;
     setSideItemStep(state, formRadioRef);
   },
-  stepThreeManager: () => {},
+  stepThreeManager: (...info) => {
+    const [formRadioRef, valueSelected, state] = info;
+
+    if(valueSelected === 'med_tarjeta' || valueSelected === 'med_link'){
+      state.userFlow.stepThree.value = valueSelected;
+    }else{
+      state.userFlow.stepThree.value += ` / ${valueSelected}`;
+
+    }
+
+
+    console.log({formRadioRef, valueSelected, state})
+    setSideItemStep(state, formRadioRef);
+    clearClassesByNameSelected('label', formRadioRef.current.firstChild.name);
+
+  },
   stepFourManager: () => {},
   stepFiveManager: () => {}
 };
@@ -60,7 +113,7 @@ export const delegateManager = (...info) => {
 
   const manager = { updateState: {} };
   const [currentStep, ...rest] = info;
-  console.log('delegateManager', { info });
+  console.group('delegateManager', { info });
 
   switch (currentStep.step) {
     case 1:
@@ -82,5 +135,6 @@ export const delegateManager = (...info) => {
       manager.updateState = {};
       break;
   }
+  console.groupEnd();
   return manager;
 };

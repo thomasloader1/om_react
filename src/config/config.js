@@ -127,11 +127,13 @@ export const paymentOptions = [
 export const paymentMethodOptions = [
   {
     idElement: 'med_tarjeta',
+    name: 'med1',
     value: 'Pagar con Tarjeta',
     classLabel: 'half'
   },
   {
     idElement: 'med_link',
+    name: 'med2',
     value: 'Compartir Link',
     classLabel: 'half'
   }
@@ -139,12 +141,14 @@ export const paymentMethodOptions = [
 
 export const paymentModeOptions = [
   {
-    idElement: 'med_tarjeta',
+    idElement: 'mod_traditional',
+    name: 'mod1',
     value: 'Tradicional',
     classLabel: 'half'
   },
   {
-    idElement: 'med_link',
+    idElement: 'mod_suscrip',
+    name: 'mod2',
     value: 'Suscripción',
     classLabel: 'half'
   }

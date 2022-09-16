@@ -16,12 +16,13 @@ function Stepper() {
 
   useEffect(() => {
     setCurrentStep(currentInfoStep);
-  }, [state, currentInfoStep]);
+  }, [state]);
 
   const { step, label } = actualStep;
+  // console.log(actualStep)
   return (
     <section className="container is-max-widescreen">
-      <Step currentStep={step} stepTitle={`Seleccione un ${label}`}>
+      <Step currentStep={step} stepTitle={`Seleccione un ${label}`} setCurrentStep={setCurrentStep}>
         <div>
           <SelectCountryStep countryOptions={state.countryOptions} />
         </div>

@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import PropTypes from 'prop-types';
-import 'bulma/css/bulma.min.css';
 import { Button } from 'react-bulma-components';
 
 const SIZES = {
@@ -38,7 +37,6 @@ function Btn({
   icon,
   onClick
 }) {
-  //  const disabledState = disabled ? 'button is-primary is-outlined' : 'button is-primary';
 
   return (
     <Button
