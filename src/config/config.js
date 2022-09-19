@@ -87,7 +87,7 @@ export const paymentOptions = [
     shortName: 'mp',
     className: 'tall',
     value: 'Mercado Pago',
-    allowedCountries: ['arg','mex','chi','col']
+    allowedCountries: ['arg', 'mex', 'chi', 'col']
   },
   {
     img: 'st',
@@ -95,8 +95,17 @@ export const paymentOptions = [
     className: 'tall',
     idInputElement: '',
     value: 'Stripe',
-    allowedCountries: ['bol','mex','chi','cos','ecu','sal','gua','hon','nic']
-
+    allowedCountries: [
+      'bol',
+      'mex',
+      'chi',
+      'cos',
+      'ecu',
+      'sal',
+      'gua',
+      'hon',
+      'nic'
+    ]
   },
   {
     img: 'pp',
@@ -105,7 +114,6 @@ export const paymentOptions = [
     idInputElement: '',
     value: 'PayPal',
     allowedCountries: []
-
   },
   {
     img: 'df',
@@ -156,16 +164,59 @@ export const paymentModeOptions = [
 
 export const clientForm = [
   {
+    idElement: 'tipoSuscripcion',
+    value: '',
+    label: 'Tipo de suscripcion',
+    options: ['agregar suscripcion', 'modificar suscripcion']
+  },
+  {
     idElement: 'numeroContrato',
     value: '',
     label: 'Número de Contrato',
-    placeholder: 'placeholder'
+    placeholder: 'Ingrese número del contrato (SO)'
   },
   {
-    idElement: 'porcentajeDescuento',
+    idElement: 'email',
     value: '',
-    label: 'Porcentaje a descontar',
-    placeholder: 'Ingrese porcentaje a descontar'
+    label: 'Correo Electronico',
+    placeholder: 'Ingrese correo electronico del cliente'
+  },
+  {
+    idElement: 'montoContrato',
+    value: '',
+    label: 'Monto total del contrato',
+    placeholder: 'Ingrese monto total del contrato'
+  },
+  {
+    idElement: 'cuotas',
+    value: '',
+    label: 'Cuotas',
+    placeholder: 'Ingrese las cuotas'
+  },
+  {
+    idElement: 'montoMensual',
+    value: '',
+    label: 'Monto a pagar por mes',
+    placeholder: 'Monto a pagar por mes'
+  },
+  {
+    idElement: 'compartirLink',
+    value: '',
+    label: 'Compartir Link por',
+    options: [
+      {
+        idElement: 'compartirLink_email',
+        value: '',
+        label: 'Email',
+        placeholder: 'Ingrese email'
+      },
+      {
+        idElement: 'compartirLink_wpp',
+        value: '',
+        label: 'WhatsApp',
+        placeholder: 'Ingrese telefono'
+      }
+    ]
   }
 ];
 
@@ -208,30 +259,30 @@ export const sideItemOptions = [
 ];
 
 export const userFlow = {
-  stepOne:{
+  stepOne: {
     step: 1,
     label: 'country',
     value: '',
     isoRef: ''
   },
-  stepTwo:{
+  stepTwo: {
     step: 2,
     label: 'payment_method',
-    value: '',
+    value: ''
   },
-  stepThree:{
+  stepThree: {
     step: 3,
     label: 'payment_mode',
-    value: '',
+    value: ''
   },
-  stepFour:{
+  stepFour: {
     step: 4,
     label: 'customer_data',
-    value: '',
+    value: ''
   },
-  stepFive:{
+  stepFive: {
     step: 5,
     label: 'card_data',
-    value: '',
+    value: ''
   }
 };

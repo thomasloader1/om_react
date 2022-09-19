@@ -7,6 +7,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import './RadioButton.scss';
 import { Form } from 'react-bulma-components';
+import { Radio } from 'semantic-ui-react';
 
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { AppContext } from '../Provider/StateProvider';
@@ -22,7 +23,8 @@ function RadioButton({ ...props }) {
     name,
     className,
     classLabel,
-    typeBtn
+    typeBtn,
+    formikHook
   } = props;
   // console.log({props})
   const formRadioRef = useRef(null);
@@ -72,6 +74,17 @@ function RadioButton({ ...props }) {
           {img && <img src={IMAGES[img]} alt={value} />}
           {showText && <h4 className="text_option">{value}</h4>}
         </Form.Radio>
+        <Radio
+            className={`gridCuartos-item button ${classes ?? className}`}
+            name={name}
+            value={value}
+            disabled={disabled}
+            onClick={handleClick}
+            label='Choose this'
+            error={formikHook.errors.country}
+            checked={formikHook.values.country === name}
+            onChange={formikHook.handleChange}
+          />
       </Form.Control>
     </Form.Field>
   );

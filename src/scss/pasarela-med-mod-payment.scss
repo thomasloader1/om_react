@@ -1,0 +1,29 @@
+.grid-med_mod_payment {
+  display: grid;
+    grid-template-areas: 'tarjeta link'  'hr hr' 'tradicional suscripcion';
+    column-gap: 1rem;
+
+  .field.half:nth-child(1) {
+   grid-area: tarjeta;
+   margin-bottom: 0;
+  }
+
+  .field.half:nth-child(2) {
+    grid-area: link;
+   margin-bottom: 0;
+
+  }
+
+  .is-divider {
+    grid-area: hr;
+  }
+
+  .field.half:nth-child(4) {
+    grid-area: tradicional;
+  }
+
+  .field.half:nth-child(5) {
+    grid-area: suscripcion;
+
+  }
+}
