@@ -62,6 +62,8 @@ const setSideItemStep = (state, ref) => {
 
 };
 
+console.group('useStepManager')
+
 export const useStepManager = {
   stepOneManager: (...info) => {
     const [formRadioRef, idElement, state] = info;
@@ -92,7 +94,6 @@ export const useStepManager = {
 
     }
 
-
     console.log({formRadioRef, valueSelected, state})
     setSideItemStep(state, formRadioRef);
     clearClassesByNameSelected('label', formRadioRef.current.firstChild.name);
@@ -101,6 +102,9 @@ export const useStepManager = {
   stepFourManager: () => {},
   stepFiveManager: () => {}
 };
+
+console.groupEnd()
+
 
 export const delegateManager = (...info) => {
   const {

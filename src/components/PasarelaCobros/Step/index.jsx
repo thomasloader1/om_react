@@ -4,16 +4,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import { Button } from 'semantic-ui-react';
 import { fireToast } from '../Hooks/useSwal';
 import { AppContext } from '../Provider/StateProvider';
 import { sideItemOptions } from '../../../config/config';
-
-import Button from '../Button';
+ import Btn from '../Button';
 import SideItem from '../SideItem';
 import Side from '../Side';
 
 // eslint-disable-next-line react/prop-types
-function Step({ children, currentStep, stepTitle, setCurrentStep }) {
+function Step({ children, currentStep, stepTitle, setCurrentStep, formikHook }) {
   const [state, setState] = useContext(AppContext);
 
   const validateSuccessStep = (actualStep, direction) => {
@@ -36,7 +36,6 @@ function Step({ children, currentStep, stepTitle, setCurrentStep }) {
           
           validateResponse.hasError = false;
           setCurrentStep(s => s + 1)
-
         }
         
       });
@@ -77,15 +76,13 @@ function Step({ children, currentStep, stepTitle, setCurrentStep }) {
         {currentChildren}
         <div id="stepControls" className="stepControls is-flex">
          { currentStep > 1 && (<Button
-            className="flex-grow-1"
-            label="Volver"
-            fullwidth
+            className="flex-grow-1 is-primary is-normal is-fullwidth"
+            content="Volver"
             onClick={() => validateSuccessStep(currentStep,'back')}
           />)}
           <Button
-            className="flex-grow-1"
-            label="Siguiente"
-            fullwidth
+            className="flex-grow-1 is-primary is-normal is-fullwidth"
+            content="Siguiente"
             onClick={() => validateSuccessStep(currentStep,'next')}
           />
         </div>
