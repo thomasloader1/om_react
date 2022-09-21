@@ -1,0 +1,38 @@
+.grid-client_form {
+    display: grid;
+      grid-template-areas: 'suscri_type suscri_type' 'contract email' 'contract_amount quota' 'pay_amount pay_amount' 'controls controls';
+      column-gap: 1rem;
+  
+    .field:nth-child(1) {
+     grid-area: contract;
+     margin-bottom: 0;
+    }
+  
+    .field:nth-child(2) {
+      grid-area: email;
+     margin-bottom: 0;
+  
+    }
+  
+    .field:nth-child(3) {
+      grid-area: contract_amount;
+    }
+  
+    .field:nth-child(4) {
+      grid-area: quota;
+  
+    }
+
+    .field:nth-child(5) {
+        grid-area: pay_amount;
+      }
+  
+    .controls{
+      grid-area: controls;
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 10rem;
+  
+    }
+  }
+  

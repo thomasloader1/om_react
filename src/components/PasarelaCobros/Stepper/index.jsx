@@ -41,16 +41,26 @@ function Stepper() {
     <section className="container is-max-widescreen">
       <Step currentStep={step} stepTitle={`Seleccione un ${label}`} setCurrentStep={setCurrentStep} formikHook={formik}>
         <div>
-          <SelectCountryStep countryOptions={state.countryOptions} />
+          <SelectCountryStep 
+          countryOptions={state.countryOptions} 
+          currentStep={step} 
+          setCurrentStep={setCurrentStep} 
+          />
         </div>
         <div>
           <SelectPaymentMethodStep
+          currentStep={step} 
+          setCurrentStep={setCurrentStep} 
+
             paymentOptions={state.paymentOptions}
             userFlow={state.userFlow}
           />
         </div>
         <div>
-          <SelectPaymentModeStep />
+          <SelectPaymentModeStep 
+          currentStep={step} 
+          setCurrentStep={setCurrentStep}
+           />
         </div>
         <div>
           <FormClientDataStep />

@@ -14,7 +14,8 @@ module.exports = {
   overrides: [],
   parserOptions: {
     ecmaVersion: 'latest',
-    sourceType: 'module'
+    sourceType: 'module',
+    allowImportExportEverywhere: true
   },
   plugins: ['react', 'react-hooks', 'prettier'],
   rules: {

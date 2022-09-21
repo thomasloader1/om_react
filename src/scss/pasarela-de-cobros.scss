@@ -1,6 +1,9 @@
-@use 'abstracts' as *;
+
 @use 'cardAsesor';
+@import 'pasarela-country.scss';
+@import 'pasarela-client-form.scss';
 @import 'pasarela-med-mod-payment.scss';
+@import 'pasarela-payment_method.scss';
 @import 'bulma/css/bulma.css';
 
 // Fix bug grilla con input radio
@@ -15,6 +18,13 @@ $success: #32bea6;
 $accent: #00b6de;
 $texto-light: #808fa6;
 $buttonBg: #FF266E;
+
+button.button > .ui.radio{
+  input[type='radio']{
+    visibility: hidden;
+  }
+
+}
 
 body,
 input {
@@ -135,10 +145,17 @@ h2.title {
       width: 100%;
       height: 100%;
       cursor: pointer;
+      &[type='radio']{
+        visibility: hidden;
+      }
     }
    
     h4{
       text-align: center;
+    }
+
+    &.button.is-link.is-outlined:focus{
+      background-color:#eff1fa !important;
     }
   }
 
