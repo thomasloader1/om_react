@@ -1,13 +1,54 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
 /* eslint-disable import/prefer-default-export */
+
+import { fireToast } from './useSwal';
+
+export const validateStep = (actualStep, direction, state, sideItemOptions, setCurrentStep) => {
+  const validateResponse = { hasError: true };
+  
+  // const stepState = state.sideItemOptions.filter((sideItem) => sideItem.step === actualStep)
+  const indexOfActualStep = actualStep - 1;
+  const indexOfNextStep = indexOfActualStep + 1;
+  const indexOfPrevStep = indexOfActualStep > 0 ? indexOfActualStep - 1 : 0;
+  // console.log({stepState, indexOfActualStep,indexOfNextStep,indexOfPrevStep,sideItemOptions, actualOption: sideItemOptions[indexOfActualStep]})
+  if(direction === 'next'){
+    state.sideItemOptions.forEach(({ status, value }) => {
+    if (status === 'current' && value !== '') {
+        
+        sideItemOptions[indexOfActualStep].status = 'completed';
+
+        // Set next step
+        sideItemOptions[indexOfNextStep].status = 'current';
+        
+        validateResponse.hasError = false;
+        setCurrentStep(s => s + 1)
+      }
+      
+    });
+  }else{
+    
+    sideItemOptions[indexOfActualStep].status = '';
+    sideItemOptions[indexOfPrevStep].status = 'current';
+   
+    validateResponse.hasError = false;
+    setCurrentStep(s => s - 1)
+    
+    // console.log({actualStep, backStep, nextStep, sideOptionActualStep: sideItemOptions[actualStep], sideOptionGoFrom:  sideItemOptions[goFrom]}, direction)
+  }
+
+  if (validateResponse.hasError) {
+    fireToast('Debe seleccionar una opcion para avanzar');
+  }
+}
+
 const clearClassesByCountrySelected = (element, country) => {
   document.querySelectorAll(`${element}[id]`).forEach((val) => {
     // console.log({val},val.id.includes(country) , country, val.id)
     if (val.id.includes(country)) {
-      val.classList.add('is-link', 'is-light', 'is-outlined');
+      val.parentElement.classList.add('is-link', 'is-light', 'is-outlined');
     } else {
-      val.classList.remove('is-link', 'is-light', 'is-outlined');
+      val.parentElement.classList.remove('is-link', 'is-light', 'is-outlined');
     }
   });
 };
@@ -66,6 +107,7 @@ console.group('useStepManager')
 
 export const useStepManager = {
   stepOneManager: (...info) => {
+    console.log('Step 1',{info})
     const [formRadioRef, idElement, state] = info;
     const country = formRadioRef.current.firstChild.value.toLowerCase();
     const [_, isoRef] = idElement.split('_');
@@ -74,9 +116,9 @@ export const useStepManager = {
     state.userFlow.stepOne.value = country;
     state.userFlow.stepOne.isoRef = isoRef;
 
+    clearClassesByCountrySelected('div.ui.radio', country);
     setSideItemStep(state, formRadioRef);
 
-    clearClassesByCountrySelected('label', country);
   },
   stepTwoManager: (...info) => {
    // console.log(info);

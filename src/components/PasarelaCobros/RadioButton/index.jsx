@@ -6,14 +6,13 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import './RadioButton.scss';
-import { Form } from 'react-bulma-components';
-import { Radio } from 'semantic-ui-react';
+import {Ref ,Image, Radio } from 'semantic-ui-react';
 
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { AppContext } from '../Provider/StateProvider';
 import { delegateManager } from '../Hooks/useStepManager';
 
-function RadioButton({ ...props }) {
+function RadioButton({...props }) {
   const {
     disabled,
     showText,
@@ -24,7 +23,7 @@ function RadioButton({ ...props }) {
     className,
     classLabel,
     typeBtn,
-    formikHook
+    formikValue
   } = props;
   // console.log({props})
   const formRadioRef = useRef(null);
@@ -36,21 +35,26 @@ function RadioButton({ ...props }) {
 
   const buttonStatus = {
     country: {
-      active: 'is-link is-light is-outlined',
-      default: ''
+      active: 'grid-country-item is-link is-light is-outlined',
+      default: 'grid-country-item'
     },
     payment_method: {
-      active: 'tall is-link is-light is-outlined',
-      default: ''
+      active: 'grid-payment_method-item tall is-link is-light is-outlined',
+      default: 'grid-payment_method-item'
     }
   };
+
+  const imageIcon = img && <Image src={IMAGES[img]} alt={value} size='small' />
+  const labelOfRadio = showText ? value : ''
 
   const handleClick = () => {
     const [currentStepObject] = state.sideItemOptions.filter(
       (options) => options.status === 'current'
     );
-    console.log({ currentStepObject, formRadioRef, idElement, state, props });
+    console.group('Radio Handle',{ currentStepObject, formRadioRef, idElement, state, props });
     delegateManager(currentStepObject, formRadioRef, idElement, state);
+    console.groupEnd();
+
     // console.log(delegateManager(currentStepObject, formRadioRef, idElement, state))
     setState({ ...state });
     setBtnStatus('active');
@@ -58,35 +62,26 @@ function RadioButton({ ...props }) {
 
   useEffect(() => {
     setClasses(buttonStatus[btnType][btnStatus]);
-  }, [btnStatus]);
+  }, [btnStatus,formRadioRef]);
 
   return (
-    <Form.Field className={classLabel}>
-      <Form.Control>
-        <Form.Radio
-          className={`gridCuartos-item button ${classes ?? className}`}
-          name={name}
-          value={value}
-          disabled={disabled}
-          onClick={handleClick}
-          domRef={formRadioRef}
-        >
-          {img && <img src={IMAGES[img]} alt={value} />}
-          {showText && <h4 className="text_option">{value}</h4>}
-        </Form.Radio>
+    
+        <button type='button' className={`button ${classes ?? className}`} onClick={handleClick} >
+        {imageIcon}
+        <Ref innerRef={formRadioRef}>
         <Radio
-            className={`gridCuartos-item button ${classes ?? className}`}
             name={name}
             value={value}
             disabled={disabled}
-            onClick={handleClick}
-            label='Choose this'
-            error={formikHook.errors.country}
-            checked={formikHook.values.country === name}
-            onChange={formikHook.handleChange}
+            label={labelOfRadio}
+            // error={formikHook.errors.country}
+            checked={formikValue === value}
+            onChange={props.onChange}
+            id={name}
           />
-      </Form.Control>
-    </Form.Field>
+          </Ref>
+        </button>
+
   );
 }
 
