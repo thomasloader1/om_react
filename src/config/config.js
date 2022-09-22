@@ -85,14 +85,14 @@ export const paymentOptions = [
   {
     img: 'mp',
     shortName: 'mp',
-    className: 'tall',
+    className: 'button grid-payment_method-item tall',
     value: 'Mercado Pago',
     allowedCountries: ['arg', 'mex', 'chi', 'col']
   },
   {
     img: 'st',
     shortName: 'st',
-    className: 'tall',
+    className: 'button grid-payment_method-item tall',
     idInputElement: '',
     value: 'Stripe',
     allowedCountries: [
@@ -110,7 +110,7 @@ export const paymentOptions = [
   {
     img: 'pp',
     shortName: 'pp',
-    className: 'tall',
+    className: 'button grid-payment_method-item tall',
     idInputElement: '',
     value: 'PayPal',
     allowedCountries: []
@@ -118,7 +118,7 @@ export const paymentOptions = [
   {
     img: 'df',
     shortName: 'df',
-    className: 'tall',
+    className: 'button grid-payment_method-item tall',
     idInputElement: '',
     value: 'Datafast',
     allowedCountries: []
@@ -126,7 +126,7 @@ export const paymentOptions = [
   {
     img: 'ba',
     shortName: 'ba',
-    className: 'tall',
+    className: 'button grid-payment_method-item tall',
     idInputElement: '',
     value: 'Banorte',
     allowedCountries: []
@@ -135,13 +135,13 @@ export const paymentOptions = [
 export const paymentMethodOptions = [
   {
     idElement: 'med_tarjeta',
-    name: 'med1',
+    name: 'med',
     value: 'Pagar con Tarjeta',
     classLabel: 'half'
   },
   {
     idElement: 'med_link',
-    name: 'med2',
+    name: 'med',
     value: 'Compartir Link',
     classLabel: 'half'
   }
@@ -150,13 +150,13 @@ export const paymentMethodOptions = [
 export const paymentModeOptions = [
   {
     idElement: 'mod_traditional',
-    name: 'mod1',
+    name: 'mod',
     value: 'Tradicional',
     classLabel: 'half'
   },
   {
     idElement: 'mod_suscrip',
-    name: 'mod2',
+    name: 'mod',
     value: 'Suscripción',
     classLabel: 'half'
   }

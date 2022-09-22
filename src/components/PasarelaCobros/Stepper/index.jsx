@@ -63,7 +63,10 @@ function Stepper() {
            />
         </div>
         <div>
-          <FormClientDataStep />
+          <FormClientDataStep
+          currentStep={step} 
+          setCurrentStep={setCurrentStep} 
+          />
         </div>
         <div>
           Todavia no pa
