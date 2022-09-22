@@ -23,9 +23,10 @@ function RadioButton({...props }) {
     className,
     classLabel,
     typeBtn,
+    formikHook,
     formikValue
   } = props;
-  // console.log({props})
+ // console.log({props}, 'radioButton')
   const formRadioRef = useRef(null);
   const [btnStatus, setBtnStatus] = useState(null);
   const [btnType] = useState(typeBtn);
@@ -40,7 +41,7 @@ function RadioButton({...props }) {
     },
     payment_method: {
       active: 'grid-payment_method-item tall is-link is-light is-outlined',
-      default: 'grid-payment_method-item'
+      default: 'grid-payment_method-item tall'
     }
   };
 
@@ -48,14 +49,12 @@ function RadioButton({...props }) {
   const labelOfRadio = showText ? value : ''
 
   const handleClick = () => {
-    const [currentStepObject] = state.sideItemOptions.filter(
-      (options) => options.status === 'current'
-    );
-    console.group('Radio Handle',{ currentStepObject, formRadioRef, idElement, state, props });
-    delegateManager(currentStepObject, formRadioRef, idElement, state);
+    const [currentStepObject] = state.sideItemOptions.filter( options => options.status === 'current');
+    
+    console.group('Radio Handle',{ currentStepObject, formRadioRef, formikValue, idElement, state, props });
+    delegateManager(currentStepObject, formRadioRef, idElement, state, formikHook);
     console.groupEnd();
 
-    // console.log(delegateManager(currentStepObject, formRadioRef, idElement, state))
     setState({ ...state });
     setBtnStatus('active');
   };
@@ -74,10 +73,9 @@ function RadioButton({...props }) {
             value={value}
             disabled={disabled}
             label={labelOfRadio}
-            // error={formikHook.errors.country}
             checked={formikValue === value}
             onChange={props.onChange}
-            id={name}
+            id={props.idElement}
           />
           </Ref>
         </button>
@@ -85,16 +83,6 @@ function RadioButton({...props }) {
   );
 }
 
-RadioButton.propTypes = {
-  showText: PropTypes.bool,
-  disabled: PropTypes.bool,
-  className: PropTypes.string,
-  classLabel: PropTypes.string,
-  name: PropTypes.string,
-  value: PropTypes.string.isRequired,
-  img: PropTypes.string,
-  typeBtn: PropTypes.string
-};
 
 RadioButton.defaultProps = {
   showText: true,

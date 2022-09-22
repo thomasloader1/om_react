@@ -6,15 +6,14 @@ import { fireToast } from './useSwal';
 
 export const validateStep = (actualStep, direction, state, sideItemOptions, setCurrentStep) => {
   const validateResponse = { hasError: true };
-  
-  // const stepState = state.sideItemOptions.filter((sideItem) => sideItem.step === actualStep)
   const indexOfActualStep = actualStep - 1;
   const indexOfNextStep = indexOfActualStep + 1;
   const indexOfPrevStep = indexOfActualStep > 0 ? indexOfActualStep - 1 : 0;
-  // console.log({stepState, indexOfActualStep,indexOfNextStep,indexOfPrevStep,sideItemOptions, actualOption: sideItemOptions[indexOfActualStep]})
+  
   if(direction === 'next'){
     state.sideItemOptions.forEach(({ status, value }) => {
-    if (status === 'current' && value !== '') {
+    
+      if (status === 'current' && value !== '') {
         
         sideItemOptions[indexOfActualStep].status = 'completed';
 
@@ -33,8 +32,7 @@ export const validateStep = (actualStep, direction, state, sideItemOptions, setC
    
     validateResponse.hasError = false;
     setCurrentStep(s => s - 1)
-    
-    // console.log({actualStep, backStep, nextStep, sideOptionActualStep: sideItemOptions[actualStep], sideOptionGoFrom:  sideItemOptions[goFrom]}, direction)
+   
   }
 
   if (validateResponse.hasError) {
@@ -53,26 +51,22 @@ const clearClassesByCountrySelected = (element, country) => {
   });
 };
 
-const clearClassesByNameSelected = (element, name) => {
-  document.querySelectorAll(`${element} > input[name]`).forEach((val) => {
-    // console.error({valName:val.name.includes(name)},name)
-
-    if(name.includes('med')){
-      if (val.name.includes(name)) {
-        val.parentElement.classList.add('is-link', 'is-light', 'is-outlined');
+const clearClassesByNameSelected = (element, name, id) => {
+  document.querySelectorAll(`${element} > input[name='${name}']`).forEach((val) => {
+    
+      if (val.id === id) {
+        val.parentElement.parentElement.classList.add('is-link', 'is-light', 'is-outlined');
       } else {
-        val.parentElement.classList.remove('is-link', 'is-light', 'is-outlined');
+        val.parentElement.parentElement.classList.remove('is-link', 'is-light', 'is-outlined');
       } 
-    }else if (name.includes('mod')) {
-      if (val.name.includes(name)) {
-        val.parentElement.classList.add('is-link', 'is-light', 'is-outlined');
-      } else {
-        val.parentElement.classList.remove('is-link', 'is-light', 'is-outlined');
-      }
-      }
-    
-    
+     
   });
+
+  if(id === 'med_tarjeta' || id === 'med_link'){
+    document.querySelectorAll(`${element} > input[name='mod']`).forEach((val) => {
+        val.parentElement.parentElement.classList.remove('is-link', 'is-light', 'is-outlined');
+  });
+  }
 };
 
 const setSideItemStep = (state, ref) => {
@@ -107,7 +101,7 @@ console.group('useStepManager')
 
 export const useStepManager = {
   stepOneManager: (...info) => {
-    console.log('Step 1',{info})
+    // console.log('Step 1',{info})
     const [formRadioRef, idElement, state] = info;
     const country = formRadioRef.current.firstChild.value.toLowerCase();
     const [_, isoRef] = idElement.split('_');
@@ -121,7 +115,6 @@ export const useStepManager = {
 
   },
   stepTwoManager: (...info) => {
-   // console.log(info);
     const [formRadioRef, _, state] = info;
     state.userFlow.stepTwo.value = formRadioRef.current.firstChild.value;
     setSideItemStep(state, formRadioRef);
@@ -129,19 +122,21 @@ export const useStepManager = {
   stepThreeManager: (...info) => {
     const [formRadioRef, valueSelected, state] = info;
 
+    console.log('step3',{info})
+
     if(valueSelected === 'med_tarjeta' || valueSelected === 'med_link'){
       state.userFlow.stepThree.value = valueSelected;
     }else{
       state.userFlow.stepThree.value += ` / ${valueSelected}`;
-
     }
 
-    console.log({formRadioRef, valueSelected, state})
     setSideItemStep(state, formRadioRef);
-    clearClassesByNameSelected('label', formRadioRef.current.firstChild.name);
-
+    const {name, id} = formRadioRef.current.firstChild
+    clearClassesByNameSelected('div.ui.radio', name, id);
   },
-  stepFourManager: () => {},
+  stepFourManager: (...info) => {
+    console.log({info})
+  },
   stepFiveManager: () => {}
 };
 

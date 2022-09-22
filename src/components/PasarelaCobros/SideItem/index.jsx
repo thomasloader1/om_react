@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -10,8 +11,12 @@ function SideItem({ currentStep, label, status, className, valueSelected }) {
     completed: `card completed ${className}`
   };
 
-  const classNameStatus = status !== '' ? `${stepStatus[status]}` : className;
+  // console.log({currentStep, label, status, className, valueSelected})
 
+  const classNameStatus = status !== '' ? `${stepStatus[status]}` : className;
+ // const titleCurrentStep = !valueSelected ? 'Sin seleccionar' : valueSelected
+  const titleCurrentStep = currentStep > 3 && !valueSelected ? 'Sin completar' : !valueSelected ? 'Sin seleccionar' : valueSelected
+  
   return (
     <div className={`side-item ${classNameStatus}`}>
       <span className="side-item-info">
@@ -19,8 +24,8 @@ function SideItem({ currentStep, label, status, className, valueSelected }) {
 
         <div className="is-flex is-flex-direction-column is-align-items-flex-start">
           <h3 className="subtitle is-uppercase">{!label ? 'Label' : label}</h3>
-          <h4 className="title is-5">
-            {!valueSelected ? 'Sin seleccionar' : valueSelected}
+          <h4 className="title is-6">
+            {titleCurrentStep}
           </h4>
         </div>
       </span>
