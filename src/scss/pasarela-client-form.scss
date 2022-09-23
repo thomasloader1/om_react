@@ -30,27 +30,27 @@
 
     }
 
-    .field:nth-child(1) {
+    .field:nth-child(2) {
      grid-area: contract;
      margin-bottom: 0;
     }
   
-    .field:nth-child(2) {
+    .field:nth-child(3) {
       grid-area: email;
      margin-bottom: 0;
   
     }
   
-    .field:nth-child(3) {
+    .field:nth-child(4) {
       grid-area: contract_amount;
     }
   
-    .field:nth-child(4) {
+    .field:nth-child(5) {
       grid-area: quota;
   
     }
 
-    .field:nth-child(5) {
+    .field:nth-child(6) {
         grid-area: pay_amount;
       }
   

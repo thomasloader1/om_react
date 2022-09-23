@@ -130,8 +130,8 @@ export function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
       mod: ''
     },
     validationSchema: Yup.object({
-      med: Yup.string().required('Seleccione un metodo'),
-      mod: Yup.string().required('Seleccione un metodo')
+      med: Yup.string().min(1).required('Seleccione un metodo'),
+      mod: Yup.string().min(1).required('Seleccione un metodo')
     }),
     onSubmit: (values) => {
       console.log('formik values', {values});
@@ -145,7 +145,7 @@ export function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
     }
   });
 
-  // console.log({form:formik})
+  console.log({form:formik.values})
 
   return (
     <form
@@ -198,6 +198,7 @@ export function FormClientDataStep({ currentStep, setCurrentStep }) {
   const clientFormRadioField = state.clientForm.filter(
     (input) =>  input.options && typeof(input.options[0]) === 'string'
   );
+  const [currentStepObject] = state.sideItemOptions.filter( options => options.status === 'current');
 
   const formik = useFormik({
     initialValues: {
@@ -213,18 +214,22 @@ export function FormClientDataStep({ currentStep, setCurrentStep }) {
       email: Yup.string().email('Correo Invalido').required('Campo requerido'),
       montoContrato: Yup.number().typeError('Monto de contrato debe ser un numero').positive('No se permite valores negativos').required('Campo requerido'),
       cuotas: Yup.number().typeError('Cuotas debe ser un numero').positive('No se permite valores negativos').required('Campo requerido'),
-      montoMensual: Yup.number().typeError('Numero de contrato debe ser un numero').positive('No se permite valores negativos').min(10, 'Ingrese un SO valido').required('Campo requerido'),
+      montoMensual: Yup.number().typeError('Numero de contrato debe ser un numero').positive('No se permite valores negativos').required('Campo requerido'),
       tipoSuscripcion:Yup.string().required('Campo requerido')
     }),
     onSubmit: (values) => {
       console.log(values);
+      state.sideItemOptions[3].value = { ...values }
+      state.userFlow[3].value = { ...values }
+      delegateManager(currentStepObject,values,state)
     },
     onChange: (values) =>{
-      const [currentStepObject] = state.sideItemOptions.filter( options => options.status === 'current');
-      delegateManager(currentStepObject,values)
+      
+      delegateManager(currentStepObject,values,state)
+
+      console.log({state,formik})
     }
   });
-console.log({formik})
   return (
       <Form
         autoComplete="off"
@@ -243,7 +248,7 @@ console.log({formik})
                       value={option}
                       checked={formik.values[input.idElement] === option}
                       onChange={formik.handleChange}
-                      key={option}
+                      key={option.idElement}
                     />
                      ))}
                      {formik.errors[input.idElement] && (
