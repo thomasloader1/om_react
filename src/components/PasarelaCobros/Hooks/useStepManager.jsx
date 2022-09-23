@@ -4,42 +4,6 @@
 
 import { fireToast } from './useSwal';
 
-export const validateStep = (actualStep, direction, state, sideItemOptions, setCurrentStep) => {
-  const validateResponse = { hasError: true };
-  const indexOfActualStep = actualStep - 1;
-  const indexOfNextStep = indexOfActualStep + 1;
-  const indexOfPrevStep = indexOfActualStep > 0 ? indexOfActualStep - 1 : 0;
-  
-  if(direction === 'next'){
-    state.sideItemOptions.forEach(({ status, value }) => {
-    
-      if (status === 'current' && value !== '') {
-        
-        sideItemOptions[indexOfActualStep].status = 'completed';
-
-        // Set next step
-        sideItemOptions[indexOfNextStep].status = 'current';
-        
-        validateResponse.hasError = false;
-        setCurrentStep(s => s + 1)
-      }
-      
-    });
-  }else{
-    
-    sideItemOptions[indexOfActualStep].status = '';
-    sideItemOptions[indexOfPrevStep].status = 'current';
-   
-    validateResponse.hasError = false;
-    setCurrentStep(s => s - 1)
-   
-  }
-
-  if (validateResponse.hasError) {
-    fireToast('Debe seleccionar una opcion para avanzar');
-  }
-}
-
 const clearClassesByCountrySelected = (element, country) => {
   document.querySelectorAll(`${element}[id]`).forEach((val) => {
     // console.log({val},val.id.includes(country) , country, val.id)
@@ -69,36 +33,36 @@ const clearClassesByNameSelected = (element, name, id) => {
   }
 };
 
-const setSideItemStep = (state, ref) => {
- console.group('setSideItemStep', { state, ref });
-  state.sideItemOptions.map((step) => {
-    if (step.status === 'current') {
-      console.log({step})
+const setSideItemStep = (state, ref = null) => {
+  console.group('setSideItemStep', { state, ref });
+   state.sideItemOptions.map((step) => {
+     if (step.status === 'current') {
+       console.log({step})
+ 
+       if(step.step === 3){
+         if(ref.current.firstChild.name.includes('med')){
+           step.value = ref.current.firstChild.value
+         }
+ 
+         if(ref.current.firstChild.name.includes('mod')){
+           const hasPrev = step.value.includes('/') ? step.value.split('/').shift() : step.value
+           step.value = `${hasPrev} / ${ref.current.firstChild.value}`
+         }
+ 
+       }else{
+         step.value = ref.current.firstChild.value;
+       }
+ 
+       return { ...step };
+     }
+     return { ...step };
+   });
+  console.groupEnd();
+ 
+ };
 
-      if(step.step === 3){
-        if(ref.current.firstChild.name.includes('med')){
-          step.value = ref.current.firstChild.value
-        }
-
-        if(ref.current.firstChild.name.includes('mod')){
-          const hasPrev = step.value.includes('/') ? step.value.split('/').shift() : step.value
-          step.value = `${hasPrev} / ${ref.current.firstChild.value}`
-        }
-
-      }else{
-        step.value = ref.current.firstChild.value;
-      }
-
-      return { ...step };
-    }
-    return { ...step };
-  });
- console.groupEnd();
-
-};
 
 console.group('useStepManager')
-
 export const useStepManager = {
   stepOneManager: (...info) => {
     // console.log('Step 1',{info})
@@ -135,13 +99,18 @@ export const useStepManager = {
     clearClassesByNameSelected('div.ui.radio', name, id);
   },
   stepFourManager: (...info) => {
+    const [formikValues, state] = info
+    console.log({formikValues})
+      state.userFlow.stepFour.value = 'Completo';
+    
+
+    setSideItemStep(state, null);
     console.log({info})
   },
   stepFiveManager: () => {}
 };
 
 console.groupEnd()
-
 
 export const delegateManager = (...info) => {
   const {
@@ -179,3 +148,53 @@ export const delegateManager = (...info) => {
   console.groupEnd();
   return manager;
 };
+
+
+
+export const validateStep = (actualStep, direction, state, sideItemOptions, setCurrentStep) => {
+  const validateResponse = { hasError: true };
+  const indexOfActualStep = actualStep - 1;
+  const indexOfNextStep = indexOfActualStep + 1;
+  const indexOfPrevStep = indexOfActualStep > 0 ? indexOfActualStep - 1 : 0;
+
+  console.log({actualStep, direction, state, sideItemOptions, setCurrentStep})
+  
+  if(direction === 'next'){
+    state.sideItemOptions.forEach(({ status, value }) => {
+    
+      if (status === 'current' && value !== '') {
+        
+        sideItemOptions[indexOfActualStep].status = 'completed';
+
+        // Set next step
+        sideItemOptions[indexOfNextStep].status = 'current';
+        
+        validateResponse.hasError = false;
+        setCurrentStep(s => s + 1)
+      }
+      
+    });
+  }else{
+    delegateManager(actualStep,)
+
+    sideItemOptions[indexOfActualStep].status = '';
+    sideItemOptions[indexOfPrevStep].status = 'current';
+   
+    validateResponse.hasError = false;
+    setCurrentStep(s => s - 1)
+   
+  }
+
+  if (validateResponse.hasError) {
+    fireToast('Debe seleccionar una opcion para avanzar');
+  }
+}
+
+
+
+
+
+
+
+
+
