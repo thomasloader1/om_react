@@ -89,6 +89,8 @@ export function SelectPaymentMethodStep({
     }
   });
 
+  console.log({formValid: formik.isValid})
+
   return (
     <form
       autoComplete="off"
@@ -155,7 +157,7 @@ export function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
       onSubmit={formik.handleSubmit}
     >
       {state.paymentMethodOptions.map(({ ...props }) => {
-        console.log({ props });
+        console.log({isValidForm: formik.isValid });
         return (
           <RadioButton
             {...props}
@@ -219,8 +221,8 @@ export function FormClientDataStep({ currentStep, setCurrentStep }) {
     }),
     onSubmit: (values) => {
       console.log(values);
-      state.sideItemOptions[3].value = { ...values }
-      state.userFlow[3].value = { ...values }
+      state.sideItemOptions[3].value = JSON.stringify({ ...values })
+      state.userFlow[3].value = JSON.stringify({ ...values })
       delegateManager(currentStepObject,values,state)
     },
     onChange: (values) =>{
