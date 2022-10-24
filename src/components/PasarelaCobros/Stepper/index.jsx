@@ -9,6 +9,7 @@ import {
   SelectPaymentMethodStep,
   SelectPaymentModeStep
 } from './Steps';
+import { data } from '../data/index';
 
 
 function Stepper() {
@@ -61,6 +62,7 @@ function Stepper() {
           currentStep={step} 
           setCurrentStep={setCurrentStep}
            />
+          <pre>{JSON.stringify(data, null, 2)}</pre>
         </div>
         <div>
           <FormClientDataStep
