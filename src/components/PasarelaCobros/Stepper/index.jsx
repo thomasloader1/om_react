@@ -7,6 +7,7 @@ import {
   SelectPaymentMethodStep,
   SelectPaymentModeStep
 } from './Steps';
+import { data } from '../data/index';
 
 
 function Stepper() {
@@ -20,8 +21,6 @@ console.log({actualStep, setCurrentStep})
   useEffect(() => {
     setCurrentStep(currentInfoStep);
   }, [state]);
-
-
 
   const { step, label } = actualStep;
 
@@ -49,6 +48,7 @@ console.log({actualStep, setCurrentStep})
           currentStep={step} 
           setCurrentStep={setCurrentStep}
            />
+          <pre>{JSON.stringify(data, null, 2)}</pre>
         </div>
         <div>
           <FormClientDataStep
