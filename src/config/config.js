@@ -220,6 +220,14 @@ export const clientForm = [
   }
 ];
 
+export const numberSOForm = [
+  {
+    idElement: 'numberSO',
+    value: '',
+    label: 'Numero de SO'
+  }
+];
+
 export const sideItemOptions = [
   {
     step: 1,

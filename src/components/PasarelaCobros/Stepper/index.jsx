@@ -22,8 +22,6 @@ console.log({actualStep, setCurrentStep})
     setCurrentStep(currentInfoStep);
   }, [state]);
 
-
-
   const { step, label } = actualStep;
 
   return (
