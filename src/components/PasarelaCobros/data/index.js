@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
 export const data = {
   status_code: 200,
   response: {
