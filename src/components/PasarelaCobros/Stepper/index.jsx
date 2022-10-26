@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { AppContext } from '../Provider/StateProvider';
 import Step from '../Step';
 import {
@@ -14,33 +12,21 @@ import { data } from '../data/index';
 
 function Stepper() {
   const [state] = useContext(AppContext);
+
   const [currentInfoStep] = state.sideItemOptions.filter(
     (sideOption) => sideOption.status === 'current'
   );
   const [actualStep, setCurrentStep] = useState(currentInfoStep);
-
+console.log({actualStep, setCurrentStep})
   useEffect(() => {
     setCurrentStep(currentInfoStep);
   }, [state]);
-
-  const formik = useFormik({
-    initialValues: {
-      country: '',
-    },
-    validationSchema: Yup.object({
-      country: Yup.string().required('Seleccione un pais'),
-    }),
-    onSubmit: (values) => {
-      console.log('formik values',values);
-      
-    }
-  })
 
   const { step, label } = actualStep;
 
   return (
     <section className="container is-max-widescreen">
-      <Step currentStep={step} stepTitle={`Seleccione un ${label}`} setCurrentStep={setCurrentStep} formikHook={formik}>
+      <Step  currentStep={step} stepTitle={`Seleccione un ${label}`} setCurrentStep={setCurrentStep} >
         <div>
           <SelectCountryStep 
           countryOptions={state.countryOptions} 
