@@ -168,7 +168,7 @@ export const validateStep = (actualStep, direction, state, sideItemOptions, setC
   
   if(direction === 'next'){
     state.sideItemOptions.forEach(({ status, value }) => {
-    
+      console.log({status, value})
       if (status === 'current' && value !== '') {
         
         sideItemOptions[indexOfActualStep].status = 'completed';
@@ -182,7 +182,7 @@ export const validateStep = (actualStep, direction, state, sideItemOptions, setC
       
     });
   }else{
-    delegateManager(actualStep,)
+    delegateManager(actualStep)
 
     sideItemOptions[indexOfActualStep].status = '';
     sideItemOptions[indexOfPrevStep].status = 'current';

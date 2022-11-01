@@ -9,7 +9,7 @@ import {
   FormCardPayStep,
 
 } from './Steps';
-import { data } from '../data/index';
+/* import { data } from '../data/index'; */
 
 
 
@@ -51,7 +51,7 @@ console.log({actualStep, setCurrentStep})
           currentStep={step} 
           setCurrentStep={setCurrentStep}
            />
-          <pre>{JSON.stringify(data, null, 2)}</pre>
+          {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
         </div>
         <div>
           <FormClientDataStep
