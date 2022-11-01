@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 export const data = {
   status_code: 200,
   response: {
