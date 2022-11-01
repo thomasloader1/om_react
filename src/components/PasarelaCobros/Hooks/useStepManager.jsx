@@ -105,9 +105,16 @@ export const useStepManager = {
     
 
     setSideItemStep(state, null);
-    console.log({info})
+    console.log('step4',{info})
   },
-  stepFiveManager: () => {}
+  stepFiveManager: (...info) => {
+    const [formikValues, state] = info
+    console.log({formikValues})
+      state.userFlow.stepFour.value = 'Completo';
+
+    setSideItemStep(state, null);
+    console.log('step5',{info})
+  }
 };
 
 console.groupEnd()
