@@ -1,12 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import Step from '../Step';
-import {
-  FormClientDataStep,
-  SelectCountryStep,
-  SelectPaymentMethodStep,
-  SelectPaymentModeStep
-} from './Steps';
+import FormClientDataStep from './FormClientDataStep';
+import SelectCountryStep from './SelectCountryStep';
+import SelectPaymentMethodStep from './SelectPaymentMethodStep';
+import SelectPaymentModeStep from './SelectPaymentModeStep';
 /* import { data } from '../data/index'; */
 
 
@@ -44,7 +42,7 @@ console.log({actualStep, setCurrentStep})
           />
         </div>
         <div>
-          <SelectPaymentModeStep 
+          <SelectPaymentModeStep
           currentStep={step} 
           setCurrentStep={setCurrentStep}
            />
