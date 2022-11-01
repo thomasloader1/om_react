@@ -220,6 +220,14 @@ export const clientForm = [
   }
 ];
 
+export const cardForm = [
+  {
+    idElement: 'numeroTarjeta',
+    value: '',
+    label: 'Numero de tarjeta',
+  }
+];
+
 export const numberSOForm = [
   {
     idElement: 'numberSO',

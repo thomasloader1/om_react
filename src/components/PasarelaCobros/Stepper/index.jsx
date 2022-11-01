@@ -5,9 +5,12 @@ import {
   FormClientDataStep,
   SelectCountryStep,
   SelectPaymentMethodStep,
-  SelectPaymentModeStep
+  SelectPaymentModeStep,
+  FormCardPayStep,
+
 } from './Steps';
 import { data } from '../data/index';
+
 
 
 function Stepper() {
@@ -57,7 +60,10 @@ console.log({actualStep, setCurrentStep})
           />
         </div>
         <div>
-          Todavia no pa
+          <FormCardPayStep
+          currentStep={step} 
+          setCurrentStep={setCurrentStep} 
+          />
         </div>
       </Step>
       
