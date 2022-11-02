@@ -86,13 +86,18 @@ export const useStepManager = {
   stepThreeManager: (...info) => {
     const [formRadioRef, valueSelected, state] = info;
 
-    console.log('step3',{info})
+    console.log('step3',{info, state})
+
+    if(state.userFlow.stepTwo.value === 'Mercado Pago'){
+      console.log(info[0].then(res => res))
+    }
 
     if(valueSelected === 'med_tarjeta' || valueSelected === 'med_link'){
       state.userFlow.stepThree.value = valueSelected;
     }else{
       state.userFlow.stepThree.value += ` / ${valueSelected}`;
     }
+
 
     setSideItemStep(state, formRadioRef);
     const {name, id} = formRadioRef.current.firstChild
@@ -128,32 +133,30 @@ export const delegateManager = (...info) => {
     stepFiveManager
   } = useStepManager;
 
-  const manager = { updateState: {} };
   const [currentStep, ...rest] = info;
   console.group('delegateManager', { info });
 
   switch (currentStep.step) {
     case 1:
-      manager.updateState = stepOneManager(...rest);
+      stepOneManager(...rest);
       break;
     case 2:
-      manager.updateState = stepTwoManager(...rest);
+      stepTwoManager(...rest);
       break;
     case 3:
-      manager.updateState = stepThreeManager(...rest);
+      stepThreeManager(...rest);
       break;
     case 4:
-      manager.updateState = stepFourManager(...rest);
+      stepFourManager(...rest);
       break;
     case 5:
-      manager.updateState = stepFiveManager(...rest);
+      stepFiveManager(...rest);
       break;
     default:
-      manager.updateState = {};
+      
       break;
   }
   console.groupEnd();
-  return manager;
 };
 
 
@@ -164,11 +167,12 @@ export const validateStep = (actualStep, direction, state, sideItemOptions, setC
   const indexOfNextStep = indexOfActualStep + 1;
   const indexOfPrevStep = indexOfActualStep > 0 ? indexOfActualStep - 1 : 0;
 
-  console.log({actualStep, direction, state, sideItemOptions, setCurrentStep})
+  console.error({actualStep, direction, state, sideItemOptions, setCurrentStep})
   
   if(direction === 'next'){
+
     state.sideItemOptions.forEach(({ status, value }) => {
-      console.log({status, value})
+     // console.log({status, value})
       if (status === 'current' && value !== '') {
         
         sideItemOptions[indexOfActualStep].status = 'completed';
@@ -181,6 +185,7 @@ export const validateStep = (actualStep, direction, state, sideItemOptions, setC
       }
       
     });
+
   }else{
     delegateManager(actualStep)
 
