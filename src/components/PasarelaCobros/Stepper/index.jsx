@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import Step from '../Step';
+import { FormCardPayStep } from './CheckoutForm';
 import FormClientDataStep from './FormClientDataStep';
 import SelectCountryStep from './SelectCountryStep';
 import SelectPaymentMethodStep from './SelectPaymentMethodStep';
 import SelectPaymentModeStep from './SelectPaymentModeStep';
 /* import { data } from '../data/index'; */
+
 
 
 function Stepper() {
@@ -55,7 +57,10 @@ console.log({actualStep, setCurrentStep})
           />
         </div>
         <div>
-          Todavia no pa
+          <FormCardPayStep
+          currentStep={step} 
+          setCurrentStep={setCurrentStep} 
+          />
         </div>
       </Step>
       
