@@ -4,57 +4,61 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { useFormik } from 'formik';
 import React, { useContext } from 'react';
-import * as Yup from 'yup'
+import * as Yup from 'yup';
 import { sideItemOptions } from '../../../config/config';
+import { delegateManager } from '../Hooks/useStepManager';
 import { getContractCRM } from '../Hooks/useZohoContract';
 import { AppContext } from '../Provider/StateProvider';
 import RadioButton from '../RadioButton';
 import StepControl from '../StepControl';
 
-function SelectPaymentModeStep(currentStep, setCurrentStep) {
+function SelectPaymentModeStep({currentStep, setCurrentStep}) {
   const [state] = useContext(AppContext);
+  
   const initialValuesNormal = { med: '', mod: '' };
   const validationSchemaNormal = {
     med: Yup.string().min(1).required('Seleccione un metodo'),
     mod: Yup.string().min(1).required('Seleccione un metodo')
   };
 
-  const initialValuesSpecial = { numberSO: '' };
-  const validationSchemaSpecial = {
-    numberSO: Yup.string().min(1).required('Ingrese un numero de SO')
-  };
-
   const formik = useFormik({
     initialValues: initialValuesNormal,
     validationSchema: Yup.object(validationSchemaNormal),
     onSubmit: (values) => {
-      console.log('formik values', { values });
+      // console.log('formik values', { values });
       /*  const [currentStepObject] = state.sideItemOptions.filter( options => options.status === 'current');
          delegateManager(currentStepObject,values) */
     },
     onChange: (values) => {
-      console.log('Change', { values });
+      // console.log('Change', { values });
       /* const [currentStepObject] = state.sideItemOptions.filter( options => options.status === 'current');
         delegateManager(currentStepObject,values) */
     }
   });
 
+  // ------------------------------------------------------------------------------------
+
+  const initialValuesSpecial = { numberSO: '' };
+  const validationSchemaSpecial = {
+    numberSO: Yup.string().min(1).required('Ingrese un numero de SO')
+  };
+
   const formikSpecial = useFormik({
     initialValues: initialValuesSpecial,
     validationSchema: Yup.object(validationSchemaSpecial),
     onSubmit: (values) => {
-      console.log('formik values', { values });
+      console.log('formikSpecial values', { values });
+      const contract = getContractCRM();
       const [currentStepObject] = state.sideItemOptions.filter(
         (options) => options.status === 'current'
       );
-      const contract = getContractCRM();
-      console.log({ contract });
-      // delegateManager(currentStepObject, values);
+
+      delegateManager(currentStepObject, contract, state)
     }
   });
 
   if (state.userFlow.stepTwo.value === 'Mercado Pago') {
-    console.log('formikSpecial', { formikSpecialValues: formikSpecial.values });
+    // console.log('formikSpecial', { formikSpecialValues: formikSpecial.values });
 
     return (
       <form
@@ -80,9 +84,6 @@ function SelectPaymentModeStep(currentStep, setCurrentStep) {
               name="numberSO"
               id="numberSO"
             />
-            <button type="button" onClick={() => getContractCRM()}>
-              Traer contrato
-            </button>
           </div>
           {formikSpecial.errors.numberSO && (
             <p className="help is-danger">{formikSpecial.errors.numberSO}</p>

@@ -3,7 +3,9 @@ import React from 'react'
 import { Button } from 'semantic-ui-react'
 import { validateStep } from '../Hooks/useStepManager'
 
+console.group('StepControl')
 function StepControl({currentStep, setCurrentStep,state, sideItemOptions, validStep}) {
+  console.log({currentStep, setCurrentStep,state, sideItemOptions, validStep})
   return (
     <div className='controls'>
       { currentStep > 1 && (<Button
@@ -21,6 +23,7 @@ function StepControl({currentStep, setCurrentStep,state, sideItemOptions, validS
       </div>
   )
 }
+console.groupEnd()
 
 
 

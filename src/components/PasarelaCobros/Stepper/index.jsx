@@ -6,64 +6,60 @@ import FormClientDataStep from './FormClientDataStep';
 import SelectCountryStep from './SelectCountryStep';
 import SelectPaymentMethodStep from './SelectPaymentMethodStep';
 import SelectPaymentModeStep from './SelectPaymentModeStep';
-/* import { data } from '../data/index'; */
-
-
 
 function Stepper() {
   const [state] = useContext(AppContext);
-
   const [currentInfoStep] = state.sideItemOptions.filter(
     (sideOption) => sideOption.status === 'current'
   );
   const [actualStep, setCurrentStep] = useState(currentInfoStep);
-console.log({actualStep, setCurrentStep})
+  
+  console.log({ actualStep, setCurrentStep });
+  
   useEffect(() => {
     setCurrentStep(currentInfoStep);
-  }, [state]);
+  }, [state, actualStep]);
 
   const { step, label } = actualStep;
 
   return (
     <section className="container is-max-widescreen">
-      <Step  currentStep={step} stepTitle={`Seleccione un ${label}`} setCurrentStep={setCurrentStep} >
+      <Step
+        currentStep={step}
+        stepTitle={`Seleccione un ${label}`}
+        setCurrentStep={setCurrentStep}
+      >
         <div>
-          <SelectCountryStep 
-          countryOptions={state.countryOptions} 
-          currentStep={step} 
-          setCurrentStep={setCurrentStep} 
+          <SelectCountryStep
+            countryOptions={state.countryOptions}
+            currentStep={step}
+            setCurrentStep={setCurrentStep}
           />
         </div>
         <div>
           <SelectPaymentMethodStep
-          currentStep={step} 
-          setCurrentStep={setCurrentStep} 
-
+            currentStep={step}
+            setCurrentStep={setCurrentStep}
             paymentOptions={state.paymentOptions}
             userFlow={state.userFlow}
           />
         </div>
         <div>
           <SelectPaymentModeStep
-          currentStep={step} 
-          setCurrentStep={setCurrentStep}
-           />
-          {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+            currentStep={step}
+            setCurrentStep={setCurrentStep}
+          />
         </div>
         <div>
           <FormClientDataStep
-          currentStep={step} 
-          setCurrentStep={setCurrentStep} 
+            currentStep={step}
+            setCurrentStep={setCurrentStep}
           />
         </div>
         <div>
-          <FormCardPayStep
-          currentStep={step} 
-          setCurrentStep={setCurrentStep} 
-          />
+          <FormCardPayStep currentStep={step} setCurrentStep={setCurrentStep} />
         </div>
       </Step>
-      
     </section>
   );
 }
