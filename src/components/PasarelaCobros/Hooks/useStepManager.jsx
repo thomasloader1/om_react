@@ -46,7 +46,13 @@ const setSideItemStep = (state, ref = null) => {
  
          if(ref.current.firstChild.name.includes('mod')){
            const hasPrev = step.value.includes('/') ? step.value.split('/').shift() : step.value
-           step.value = `${hasPrev} / ${ref.current.firstChild.value}`
+
+           if(step.step === 3){
+            step.value = `${ref.current.firstChild.value}`
+           }else{
+             step.value = `${hasPrev} / ${ref.current.firstChild.value}`
+           }
+
          }
  
        }else{
@@ -85,18 +91,21 @@ export const useStepManager = {
   },
   stepThreeManager: (...info) => {
     const [formRadioRef, valueSelected, state] = info;
+    const { value: stateStepTwo } = state.userFlow.stepTwo;
 
     console.log('step3',{info, state})
 
-    if(state.userFlow.stepTwo.value === 'Mercado Pago'){
-      console.log(info[0].then(res => res))
+    if(stateStepTwo === 'Mercado Pago'){
+      console.log({info})
+      state.userFlow.stepThree.value = valueSelected
+      // console.log(info[0].then(res => res))
     }
-
-    if(valueSelected === 'med_tarjeta' || valueSelected === 'med_link'){
-      state.userFlow.stepThree.value = valueSelected;
-    }else{
-      state.userFlow.stepThree.value += ` / ${valueSelected}`;
-    }
+    
+    if(stateStepTwo !== 'Mercado Pago' && valueSelected === 'med_tarjeta' || valueSelected === 'med_link'){
+        state.userFlow.stepThree.value = valueSelected;
+      }else if(stateStepTwo !== 'Mercado Pago' && valueSelected.startsWith('mod')){
+        state.userFlow.stepThree.value += ` / ${valueSelected}`;
+      }
 
 
     setSideItemStep(state, formRadioRef);

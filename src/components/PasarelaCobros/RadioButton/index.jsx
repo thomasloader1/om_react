@@ -61,7 +61,7 @@ function RadioButton({...props }) {
 
   useEffect(() => {
     setClasses(buttonStatus[btnType][btnStatus]);
-  }, [btnStatus,formRadioRef]);
+  }, [btnStatus, formRadioRef]);
 
   return (
     
