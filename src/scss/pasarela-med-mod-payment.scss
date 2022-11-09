@@ -38,7 +38,7 @@
 
 .grid-med_mod_payment-mp {
   display: grid;
-    grid-template-areas: 'search search'  'tk tk' 'controls controls';
+    grid-template-areas: 'search search' 'mod mod' 'tk tk' 'controls controls';
     column-gap: 1rem;
 
   .field:nth-child(1) {

@@ -40,7 +40,8 @@ function SelectPaymentModeStep({currentStep, setCurrentStep}) {
 
   const initialValuesSpecial = { numberSO: '' };
   const validationSchemaSpecial = {
-    numberSO: Yup.string().min(1).required('Ingrese un numero de SO')
+    numberSO: Yup.string().min(1).required('Ingrese un numero de SO'),
+    mod: Yup.string().min(1).required('Seleccione un metodo')
   };
 
   const formikSpecial = useFormik({
@@ -89,6 +90,23 @@ function SelectPaymentModeStep({currentStep, setCurrentStep}) {
             <p className="help is-danger">{formikSpecial.errors.numberSO}</p>
           )}
         </div>
+        
+        {state.paymentModeOptions.map(({ ...props }) => {
+        console.log({ props });
+        return (
+          <RadioButton
+            {...props}
+            key={props.idElement}
+            formikHook={formikSpecial}
+            formikValue={formikSpecial.values.med}
+            onChange={formikSpecial.handleChange}
+          />
+          
+        );
+      })}
+      {formikSpecial.errors.mod && (
+            <p className="help is-danger">{formikSpecial.errors.mod}</p>
+          )}
         {/* <FB.Field style={{ marginBottom: '0.7rem' }}>
               <FB.Label>Ingrese SO de Contrato</FB.Label>
               <FB.Control>
