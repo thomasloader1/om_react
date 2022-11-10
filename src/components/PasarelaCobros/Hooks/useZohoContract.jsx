@@ -1,10 +1,21 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable no-console */
 import axios from 'axios';
+import qs from 'qs';
 
-export const getContractCRM = async (soNumber = '2000339000483253046') => {
-
-    const request = axios.get(`https://oceanomedicina.net/laravel-foclis/zoho/test/contrato/${soNumber}`);
+export const getContractCRM = async (soNumber) => {
+    const data = { key: '9j9fj0Do204==3fja134', id: soNumber};
+    const options = {
+      method: 'POST',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      data: qs.stringify(data),
+      url: 'https://oceanomedicina.com.ar/suscripciontest/remote/obtaindata',
+    };
+      
+    const request = axios(options);
     const contractData = await request.then( res => res.data ).catch( err => console.error({err}))
+
+    localStorage.setItem("contract", JSON.stringify(contractData));
+
     return contractData
   }

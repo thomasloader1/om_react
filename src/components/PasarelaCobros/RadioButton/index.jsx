@@ -62,12 +62,30 @@ function RadioButton({...props }) {
   useEffect(() => {
     setClasses(buttonStatus[btnType][btnStatus]);
   }, [btnStatus, formRadioRef]);
-
+  //console.warn(`Radio ${name}`,{props})
   return (
     
-        <button type='button' className={`button ${classes ?? className}`} onClick={handleClick} >
+        <button 
+          ref={formRadioRef} 
+          id={props.idElement}
+          name={name}
+          type='button' 
+          value={value} 
+          className={`button ${classes ?? className}`} 
+          disabled={disabled}
+          onClick={(e)=>{
+            //console.log(props)
+            const field = props.name
+            props.formikHook.setFieldValue(field, value)
+            props.formikHook.setSubmitting(true)
+            handleClick()
+          }} 
+          >
         {imageIcon}
-        <Ref innerRef={formRadioRef}>
+
+        <p>{labelOfRadio}</p>
+
+        {/* <Ref innerRef={formRadioRef}>
         <Radio
             name={name}
             value={value}
@@ -75,9 +93,8 @@ function RadioButton({...props }) {
             label={labelOfRadio}
             checked={formikValue === value}
             onChange={props.onChange}
-            id={props.idElement}
           />
-          </Ref>
+          </Ref> */}
         </button>
 
   );

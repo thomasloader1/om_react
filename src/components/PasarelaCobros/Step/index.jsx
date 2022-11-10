@@ -1,15 +1,11 @@
 /* eslint-disable react/default-props-match-prop-types */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-param-reassign */
-/* eslint-disable react/jsx-props-no-spreading */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { AppContext } from '../Provider/StateProvider';
 import { sideItemOptions } from '../../../config/config';
 import SideItem from '../SideItem';
 import Side from '../Side';
 
-// eslint-disable-next-line react/prop-types
 function Step({
   children,
   currentStep,
@@ -35,6 +31,7 @@ function Step({
           </h2>
         )}
         {currentChildren}
+        <pre>{JSON.stringify(state.sideItemOptions, null, 2)}</pre>
         <pre>{JSON.stringify(state.userFlow, null, 2)}</pre>
       </div>
 

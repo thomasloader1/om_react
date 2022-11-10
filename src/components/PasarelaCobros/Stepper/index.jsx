@@ -14,8 +14,6 @@ function Stepper() {
   );
   const [actualStep, setCurrentStep] = useState(currentInfoStep);
   
-  console.log({ actualStep, setCurrentStep });
-  
   useEffect(() => {
     setCurrentStep(currentInfoStep);
   }, [state, actualStep]);

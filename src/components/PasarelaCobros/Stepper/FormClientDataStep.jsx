@@ -8,10 +8,14 @@ import * as Yup from 'yup';
 import { sideItemOptions } from '../../../config/config';
 import { delegateManager } from '../Hooks/useStepManager';
 import { AppContext } from '../Provider/StateProvider';
+import ResumeTicket from '../ResumeTicket';
 import StepControl from '../StepControl';
 
 function FormClientDataStep({ currentStep, setCurrentStep }) {
   const [state] = useContext(AppContext);
+
+  const contractInStorage = JSON.parse(localStorage.getItem("contract"));
+
   const clientFormWithoutOptions = state.clientForm.filter(
     (input) => !input.options
   );
@@ -57,26 +61,25 @@ function FormClientDataStep({ currentStep, setCurrentStep }) {
       state.sideItemOptions[3].value = JSON.stringify({ ...values });
       state.userFlow[3].value = JSON.stringify({ ...values });
       delegateManager(currentStepObject, values, state);
-    },
-    onChange: (values) => {
-      delegateManager(currentStepObject, values, state);
-
-      console.log({ state, formik });
     }
   });
 
+  console.log({})
+
   return (
-    <Form
+    <div id='grid-client_data'>
+     <ResumeTicket data={contractInStorage} />  
+    {/* <Form
       autoComplete="off"
       style={{ width: '80%', margin: '0 auto' }}
       className="grid-client_form"
       onSubmit={formik.handleSubmit}
     >
       <div className="suscri_type">
-        {clientFormRadioField.map((input) => (
-          <Form.Field>
+        {clientFormRadioField.map((input, i) => (
+          <Form.Field key={input.idElement}>
             <label className="label">{input.label}</label>
-            {input.options.map((option) => (
+            {input.options.map((option,i) => (
               <Radio
                 label={` ${option}`}
                 name={input.idElement}
@@ -90,9 +93,9 @@ function FormClientDataStep({ currentStep, setCurrentStep }) {
               <p className="help is-danger">{formik.errors[input.idElement]}</p>
             )}
           </Form.Field>
-          /*  <pre>{JSON.stringify(input, null, 2)}</pre> */
         ))}
       </div>
+      
       {clientFormWithoutOptions.map((input) => (
         <Form.Field key={input.idElement} style={{ marginBottom: '0.7rem' }}>
           <Form.Label>{input.label}</Form.Label>
@@ -114,14 +117,17 @@ function FormClientDataStep({ currentStep, setCurrentStep }) {
         </Form.Field>
       ))}
 
-      <StepControl
+      
+    </Form> */}
+    
+    <StepControl
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
         state={state}
         sideItemOptions={sideItemOptions}
-        validStep={formik.isValid}
+        validStep={formik.isSubmitting}
       />
-    </Form>
+    </div>
   );
 }
 

@@ -1,16 +1,16 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
 /* eslint-disable import/prefer-default-export */
-
 import { fireToast } from './useSwal';
+import { getContractCRM } from './useZohoContract';
 
 const clearClassesByCountrySelected = (element, country) => {
   document.querySelectorAll(`${element}[id]`).forEach((val) => {
     // console.log({val},val.id.includes(country) , country, val.id)
     if (val.id.includes(country)) {
-      val.parentElement.classList.add('is-link', 'is-light', 'is-outlined');
+      val.classList.add('is-link', 'is-light', 'is-outlined');
     } else {
-      val.parentElement.classList.remove('is-link', 'is-light', 'is-outlined');
+      val.classList.remove('is-link', 'is-light', 'is-outlined');
     }
   });
 };
@@ -56,7 +56,7 @@ const setSideItemStep = (state, ref = null) => {
          }
  
        }else{
-         step.value = ref.current.firstChild.value;
+         step.value = ref.current.nodeName === 'BUTTON' ? ref.current.value : ref.current.firstChild.value;
        }
  
        return { ...step };
@@ -71,16 +71,18 @@ const setSideItemStep = (state, ref = null) => {
 console.group('useStepManager')
 export const useStepManager = {
   stepOneManager: (...info) => {
-    // console.log('Step 1',{info})
+    
     const [formRadioRef, idElement, state] = info;
-    const country = formRadioRef.current.firstChild.value.toLowerCase();
+    console.log('Step 1',{ info}, formRadioRef.current.value)
+    //formRadioRef.current.firstChild.value
+    const country = formRadioRef.current.value.toLowerCase();
     const [_, isoRef] = idElement.split('_');
 
     formRadioRef.current.id = country;
     state.userFlow.stepOne.value = country;
     state.userFlow.stepOne.isoRef = isoRef;
 
-    clearClassesByCountrySelected('div.ui.radio', country);
+    clearClassesByCountrySelected('button.grid-country-item', country);
     setSideItemStep(state, formRadioRef);
 
   },
@@ -117,14 +119,13 @@ export const useStepManager = {
     console.log({formikValues})
       state.userFlow.stepFour.value = 'Completo';
     
-
     setSideItemStep(state, null);
     console.log('step4',{info})
   },
   stepFiveManager: (...info) => {
     const [formikValues, state] = info
     console.log({formikValues})
-      state.userFlow.stepFour.value = 'Completo';
+      state.userFlow.stepFour.value = 'Confirmado';
 
     setSideItemStep(state, null);
     console.log('step5',{info})
@@ -170,30 +171,39 @@ export const delegateManager = (...info) => {
 
 
 
-export const validateStep = (actualStep, direction, state, sideItemOptions, setCurrentStep) => {
+export const validateStep = (actualStep, direction, state, sideItemOptions, setCurrentStep, currentFormikValues) => {
   const validateResponse = { hasError: true };
   const indexOfActualStep = actualStep - 1;
   const indexOfNextStep = indexOfActualStep + 1;
   const indexOfPrevStep = indexOfActualStep > 0 ? indexOfActualStep - 1 : 0;
 
-  console.error({actualStep, direction, state, sideItemOptions, setCurrentStep})
+  console.log({actualStep, direction, state, sideItemOptions, setCurrentStep,currentFormikValues})
+
+  const setCompletedSideItem = () => {
+    state.sideItemOptions.forEach(({ status, value }) => {
+      // console.log({status, value})
+       if (status === 'current' && value !== '') {
+         
+         sideItemOptions[indexOfActualStep].status = 'completed';
+ 
+         // Set next step
+         sideItemOptions[indexOfNextStep].status = 'current';
+         
+         validateResponse.hasError = false;
+         setCurrentStep(s => s + 1)
+       }
+       
+     });
+  }
   
   if(direction === 'next'){
-
-    state.sideItemOptions.forEach(({ status, value }) => {
-     // console.log({status, value})
-      if (status === 'current' && value !== '') {
-        
-        sideItemOptions[indexOfActualStep].status = 'completed';
-
-        // Set next step
-        sideItemOptions[indexOfNextStep].status = 'current';
-        
-        validateResponse.hasError = false;
-        setCurrentStep(s => s + 1)
-      }
-      
-    });
+console.log({actualStep})
+    
+/*     const [currentStepObject] = state.sideItemOptions.filter(
+      (options) => options.status === 'current'
+    ); */
+    delegateManager(actualStep,currentFormikValues,state)
+    setCompletedSideItem()
 
   }else{
     delegateManager(actualStep)

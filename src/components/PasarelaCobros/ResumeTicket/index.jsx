@@ -1,112 +1,82 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
+import moment from 'moment'
 
 function ResumeTicket({ data }) {
+  const { sale, contact } = data;
   return (
     <div id="finalResume" className="column ">
       <div className="columns is-multiline datos-cliente">
+      <h2 className="column is-full title is-size-4">Datos del contrato</h2>
         <div className="column datos-cliente-header">
           <div id="emailCliente_resume" className="finalResume-item">
-            <label>
-              CORREO ELECTRÓNICO
-            </label>
-            <h4>
-              {data.response.data[0].Owner.email !== null
-                ? data.response.data[0].Owner.email
-                : '****'}
-            </h4>
+            <label>CORREO ELECTRÓNICO</label>
+            <h4>{contact.Email}</h4>
           </div>
           <div id="todayDate_resume" className="finalResume-item">
-            <h4>****</h4>
+          <label>FECHA DE CONTRATO</label>
+            <h4>{moment(sale.Fecha_Creaci_n).format('LLL')}</h4>
           </div>
         </div>
         <div
           id="numeroContrato_resume"
           className="column is-three-fifths finalResume-item"
         >
-          <label>
-            Número de contrato
-          </label>
-          <h4>
-            {data.response.data[0].Owner.id !== null
-              ? data.response.data[0].Owner.id
-              : '****'}
-          </h4>
+          <label>Número de contrato</label>
+          <h4>{sale.SO_Number}</h4>
         </div>
         <div id="montoTotalContrato_resume" className="column finalResume-item">
-          <label>
-            MONTO TOTAL DEL CONTRATO
-          </label>
-          <h4>
-            {data.response.data[0].Sub_Total !== null
-              ? data.response.data[0].Sub_Total
-              : '****'}
-          </h4>
+          <label>MONTO TOTAL DEL CONTRATO</label>
+          <h4>{sale.Grand_Total}</h4>
         </div>
-        <div className="column is-full is-divider-dashed">-</div>
         <div
           id="mesesTotales_resume"
           className="column is-one-third finalResume-item"
         >
-          <label>
-            MESES TOTALES
-          </label>
-          <h4>
-            {data.response.data[0].Cuotas_totales !== null
-              ? data.response.data[0].Cuotas_totales
-              : '****'}
-          </h4>
+          <label>MESES TOTALES</label>
+          <h4>{sale.Cantidad}</h4>
         </div>
         <div
           id="montoTotalMes_resume"
           className="column is-one-third finalResume-item"
         >
-          <label>
-            monto a pagar POR MES
-          </label>
-          <h4>
-            {data.response.data[0].Valor_Cuota !== null
-              ? data.response.data[0].Valor_Cuota
-              : '****'}
-          </h4>
+          <label>monto a pagar POR MES</label>
+          <h4>{sale.Valor_Cuota}</h4>
+        </div>
+        <div
+          id="montoTotalMes_resume"
+          className="column is-three-fifths finalResume-item"
+        >
+          <label>Estado del contrato</label>
+          <h4>{sale.Status}</h4>
         </div>
       </div>
       <div className="is-divider">-</div>
       <div className="columns is-multiline datos-tarjeta">
-        <h2 className="column is-full title is-size-4">Datos de la tarjeta</h2>
+        <h2 className="column is-full title is-size-4">Datos del contacto</h2>
         <div
           id="tipoTarjeta_resume"
           className="column is-one-third finalResume-item"
         >
-          <label>
-            Tipo de tarjeta
-          </label>
-          <h4>
-            {data.response.data[0].Medio_de_Pagod !== null
-              ? data.response.data[0].Medio_de_Pago
-              : '****'}
-          </h4>
+          <label>Nombre completo</label>
+          <h4>{contact.Full_Name}</h4>
         </div>
         <div
           id="numeroTarjeta_resume"
           className="column is-two-thirds finalResume-item"
         >
-          <label>
-            número de tarjeta
-          </label>
-          <h4>****</h4>
+          <label>Pais</label>
+          <h4>{contact.Pais}</h4>
         </div>
         <div
           id="fechaVencimiento_resume"
           className="column is-one-third finalResume-item"
         >
-          <label>
-            Fecha de vencimiento
-          </label>
-          <h4>****</h4>
+          <label>Telefono</label>
+          <h4>{contact.Home_Phone}</h4>
         </div>
-        <div id="cvv_resume" className="column is-1 finalResume-item">
+        {/* <div id="cvv_resume" className="column is-1 finalResume-item">
           <label>
             CVV
           </label>
@@ -117,7 +87,7 @@ function ResumeTicket({ data }) {
             Cuotas
           </label>
           <h4>****</h4>
-        </div>
+        </div> 
         <div
           id="nombreTitular_resume"
           className="column is-half finalResume-item"
@@ -135,24 +105,17 @@ function ResumeTicket({ data }) {
             Dirección
           </label>
           <h4>
-            {data.response.data[0].CUIT_CUIL !== null
-              ? data.response.data[0].CUIT_CUIL
-              : '****'}
+            asd
           </h4>
-        </div>
+        </div>*/}
         <div
           id="tipoNumDocumento_resume"
           className="column is-one-third finalResume-item"
         >
-          <label>
-            Tipo Y NÚMERO DE DOC
-          </label>
-          <h4>
-            ****
-            {/* {(data.response.data[0].CUIT_CUIL !== null)? data.response.data[0].CUIT_CUIL:'No tiene CUIL/CUIT'} */}
-          </h4>
+          <label>Tipo Y NÚMERO DE DOC</label>
+          <h4>DNI: {contact.DNI}</h4>
         </div>
-        <div
+        {/* <div
           id="cuilCuit_resume"
           className="column is-one-third finalResume-item"
         >
@@ -160,9 +123,7 @@ function ResumeTicket({ data }) {
             CUIL/CUIT
           </label>
           <h4>
-            {data.response.data[0].CUIT_CUIL !== null
-              ? data.response.data[0].CUIT_CUIL
-              : '****'}
+            asd
           </h4>
         </div>
         <div
@@ -173,11 +134,9 @@ function ResumeTicket({ data }) {
             Razón Social
           </label>
           <h4>
-            {data.response.data[0].Razon_Social !== null
-              ? 'Tiene razon social'
-              : '****'}
+            asd
           </h4>
-        </div>
+        </div> */}
       </div>
     </div>
   );

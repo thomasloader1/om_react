@@ -19,7 +19,7 @@ function Template(args) {
   );
 }
 
-export function States(args) {
+/* export function States(args) {
   return (
     <div className="gridCuartos">
       <RadioButton {...args} value="Default" status="hover" />
@@ -37,7 +37,7 @@ export function States(args) {
     </div>
   );
 }
-
+ */
 export const CountryButton = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 CountryButton.args = {
@@ -46,7 +46,7 @@ CountryButton.args = {
   value: 'Argentina'
 };
 
-export const MetPaymentButton = Template.bind({});
+/* export const MetPaymentButton = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 MetPaymentButton.args = {
   idElement: 'met_pago_label',
@@ -62,4 +62,4 @@ MedModPaymentButton.args = {
   idElement: 'med_tarjeta',
   value: 'Pagar con tarjeta',
   classLabel: 'half'
-};
+}; */
