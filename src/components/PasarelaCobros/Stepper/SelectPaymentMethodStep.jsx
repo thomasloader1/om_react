@@ -31,7 +31,7 @@ function SelectPaymentMethodStep({paymentOptions,
           }
         });
       
-        console.log({ formValid: formik.isValid });
+        console.log({ formValid: formik.isValid, formik });
         
     return (
         <form

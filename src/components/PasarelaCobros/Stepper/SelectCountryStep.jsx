@@ -20,11 +20,10 @@ function SelectCountryStep({ countryOptions, currentStep, setCurrentStep }) {
     }),
     onSubmit: (values) => {
       console.log('formik values', values);
-    },
-    onChange: (values) => {
-      console.log('Change', values);
     }
   });
+
+  console.log({formikCountry: formik})
 
   return (
     <form
@@ -47,7 +46,7 @@ function SelectCountryStep({ countryOptions, currentStep, setCurrentStep }) {
         setCurrentStep={setCurrentStep}
         state={state}
         sideItemOptions={sideItemOptions}
-        validStep={formik.isValid}
+        validStep={formik.isSubmitting}
       />
     </form>
   );

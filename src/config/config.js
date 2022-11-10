@@ -253,8 +253,8 @@ export const sideItemOptions = [
   },
   {
     step: 3,
-    idElement: 'seleccion_pais',
-    label: 'MEDIO Y MODO DE PAGO',
+    idElement: 'mod_payment',
+    label: 'MODO DE PAGO',
     value: '',
     status: ''
   },

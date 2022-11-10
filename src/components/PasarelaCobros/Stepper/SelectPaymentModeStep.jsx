@@ -13,7 +13,7 @@ import RadioButton from '../RadioButton';
 import StepControl from '../StepControl';
 
 function SelectPaymentModeStep({currentStep, setCurrentStep}) {
-  const [state] = useContext(AppContext);
+  const [state, setState] = useContext(AppContext);
   
   const initialValuesNormal = { med: '', mod: '' };
   const validationSchemaNormal = {
@@ -28,20 +28,15 @@ function SelectPaymentModeStep({currentStep, setCurrentStep}) {
       // console.log('formik values', { values });
       /*  const [currentStepObject] = state.sideItemOptions.filter( options => options.status === 'current');
          delegateManager(currentStepObject,values) */
-    },
-    onChange: (values) => {
-      // console.log('Change', { values });
-      /* const [currentStepObject] = state.sideItemOptions.filter( options => options.status === 'current');
-        delegateManager(currentStepObject,values) */
     }
   });
 
   // ------------------------------------------------------------------------------------
 
-  const initialValuesSpecial = { numberSO: '' };
+  const initialValuesSpecial = { numberSO: '2712674000015973001', mod: '' };
   const validationSchemaSpecial = {
     numberSO: Yup.string().min(1).required('Ingrese un numero de SO'),
-    mod: Yup.string().min(1).required('Seleccione un metodo')
+    mod: Yup.string().required('Seleccione un metodo')
   };
 
   const formikSpecial = useFormik({
@@ -53,14 +48,15 @@ function SelectPaymentModeStep({currentStep, setCurrentStep}) {
       const [currentStepObject] = state.sideItemOptions.filter(
         (options) => options.status === 'current'
       );
+      //2000339000483253046
+
+      console.error({values, contract, currentStepObject})
 
       delegateManager(currentStepObject, contract, state)
     }
   });
 
   if (state.userFlow.stepTwo.value === 'Mercado Pago') {
-    // console.log('formikSpecial', { formikSpecialValues: formikSpecial.values });
-
     return (
       <form
         id="medModPago_grid"
@@ -78,10 +74,9 @@ function SelectPaymentModeStep({currentStep, setCurrentStep}) {
               className={
                 formikSpecial.errors.numberSO ? 'input is-danger' : 'input'
               }
-              type="number"
+              type="text"
               value={formikSpecial.values.numberSO}
               onChange={formikSpecial.handleChange}
-              onBlur={formikSpecial.handleBlur}
               name="numberSO"
               id="numberSO"
             />
@@ -92,41 +87,21 @@ function SelectPaymentModeStep({currentStep, setCurrentStep}) {
         </div>
         
         {state.paymentModeOptions.map(({ ...props }) => {
-        console.log({ props });
         return (
           <RadioButton
             {...props}
             key={props.idElement}
             formikHook={formikSpecial}
-            formikValue={formikSpecial.values.med}
+            formikValue={formikSpecial.values.mod}
             onChange={formikSpecial.handleChange}
           />
           
         );
       })}
+      
       {formikSpecial.errors.mod && (
             <p className="help is-danger">{formikSpecial.errors.mod}</p>
           )}
-        {/* <FB.Field style={{ marginBottom: '0.7rem' }}>
-              <FB.Label>Ingrese SO de Contrato</FB.Label>
-              <FB.Control>
-                <FB.Input
-                  placeholder='2000339000004553081'
-                  className={formikSpecial.errors.numberSO && 'is-danger'}
-                  type='text'
-                  value={formikSpecial.values.numberSO}
-                  onChange={formikSpecial.handleChange}
-                  onkeyup={formikSpecial.handleBlur}
-                  name='numberSO'
-                  id='numberSO'
-                />
-                {formikSpecial.errors.numberSO && (
-                  <p className='help is-danger'>{formikSpecial.errors.numberSO}</p>
-                )}
-              </FB.Control>
-            </FB.Field> */}
-        {/* <div id="finalResume" className="is-full column invisible"> */}
-        {/* <ResumeTicket data={data} /> */}
 
         <StepControl
           currentStep={currentStep}
@@ -134,6 +109,7 @@ function SelectPaymentModeStep({currentStep, setCurrentStep}) {
           state={state}
           sideItemOptions={sideItemOptions}
           validStep={formikSpecial.isValid}
+          currentFormikValues={formikSpecial.values}
         />
       </form>
     );
