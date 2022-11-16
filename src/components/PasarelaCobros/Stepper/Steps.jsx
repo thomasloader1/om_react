@@ -15,7 +15,6 @@ import { Form as FB } from 'react-bulma-components';
 
 // pago stripe
 import axios from 'axios'
-// import { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import {Elements,CardElement,useStripe,useElements} from '@stripe/react-stripe-js';
 
@@ -24,8 +23,6 @@ import { sideItemOptions } from '../../../config/config';
 import RadioButton from '../RadioButton';
 import StepControl from '../StepControl';
 import { delegateManager } from '../Hooks/useStepManager';
-import { data } from '../data/index';
-import ResumeTicket from '../ResumeTicket';
 
 export function SelectCountryStep({
   countryOptions,
@@ -43,9 +40,6 @@ export function SelectCountryStep({
     }),
     onSubmit: (values) => {
       console.log('formik values', values);
-    },
-    onChange: (values) => {
-      console.log('Change', values);
     }
   });
 
@@ -213,7 +207,6 @@ export function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
               name="numberSO"
               id="numberSO"
             />
-            <button type='button' onClick={ () => getContractCRM() }>Traer contrato</button>
           </div>
           {formikSpecial.errors.numberSO && (
             <p className="help is-danger">{formikSpecial.errors.numberSO}</p>
