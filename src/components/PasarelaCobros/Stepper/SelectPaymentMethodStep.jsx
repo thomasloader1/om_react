@@ -25,9 +25,6 @@ function SelectPaymentMethodStep({paymentOptions,
           }),
           onSubmit: (values) => {
             console.log('formik values', values);
-          },
-          onChange: (values) => {
-            console.log('Change', values);
           }
         });
       
@@ -60,7 +57,7 @@ function SelectPaymentMethodStep({paymentOptions,
             setCurrentStep={setCurrentStep}
             state={state}
             sideItemOptions={sideItemOptions}
-            validStep={formik.isValid}
+            validStep={formik.isSubmitting}
           />
         </form>
       );

@@ -31,6 +31,7 @@ function Step({
           </h2>
         )}
         {currentChildren}
+        <pre>{JSON.stringify(state?.contractResolve, null, 2)}</pre>
         <pre>{JSON.stringify(state.sideItemOptions, null, 2)}</pre>
         <pre>{JSON.stringify(state.userFlow, null, 2)}</pre>
       </div>

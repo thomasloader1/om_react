@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/prop-types */
 import { useFormik } from 'formik';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Form } from 'react-bulma-components';
 import { Radio } from 'semantic-ui-react';
 import * as Yup from 'yup';
@@ -13,8 +13,10 @@ import StepControl from '../StepControl';
 
 function FormClientDataStep({ currentStep, setCurrentStep }) {
   const [state] = useContext(AppContext);
-
-  const contractInStorage = JSON.parse(localStorage.getItem("contract"));
+  const [contract, setContract] = useState({})
+  
+  console.log(state)
+  state.contractResolve.then( res => { setContract(res) }).catch( err => console.error(err)) // Promesa que resuelvo y la sumo al estado DEL COMPONENTE
 
   const clientFormWithoutOptions = state.clientForm.filter(
     (input) => !input.options
@@ -64,12 +66,11 @@ function FormClientDataStep({ currentStep, setCurrentStep }) {
     }
   });
 
-  console.log({})
-
   return (
     <div id='grid-client_data'>
-     <ResumeTicket data={contractInStorage} />  
-    {/* <Form
+      <pre>{JSON.stringify(contract, null, 2)}</pre>  
+      {/*  <ResumeTicket data={contract} /> */}
+      {/* <Form
       autoComplete="off"
       style={{ width: '80%', margin: '0 auto' }}
       className="grid-client_form"
@@ -119,8 +120,8 @@ function FormClientDataStep({ currentStep, setCurrentStep }) {
 
       
     </Form> */}
-    
-    <StepControl
+
+      <StepControl
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
         state={state}

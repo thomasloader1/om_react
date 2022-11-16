@@ -40,17 +40,17 @@ const setSideItemStep = (state, ref = null) => {
        console.log({step})
  
        if(step.step === 3){
-         if(ref.current.firstChild.name.includes('med')){
-           step.value = ref.current.firstChild.value
+         if(ref.current.name.includes('med')){
+           step.value = ref.current.value
          }
  
-         if(ref.current.firstChild.name.includes('mod')){
+         if(ref.current.name.includes('mod')){
            const hasPrev = step.value.includes('/') ? step.value.split('/').shift() : step.value
 
            if(step.step === 3){
-            step.value = `${ref.current.firstChild.value}`
+            step.value = `${ref.current.value}`
            }else{
-             step.value = `${hasPrev} / ${ref.current.firstChild.value}`
+             step.value = `${hasPrev} / ${ref.current.value}`
            }
 
          }
@@ -73,7 +73,7 @@ export const useStepManager = {
   stepOneManager: (...info) => {
     
     const [formRadioRef, idElement, state] = info;
-    console.log('Step 1',{ info}, formRadioRef.current.value)
+   // console.log('Step 1',{ info}, formRadioRef.current.value)
     //formRadioRef.current.firstChild.value
     const country = formRadioRef.current.value.toLowerCase();
     const [_, isoRef] = idElement.split('_');
@@ -88,7 +88,8 @@ export const useStepManager = {
   },
   stepTwoManager: (...info) => {
     const [formRadioRef, _, state] = info;
-    state.userFlow.stepTwo.value = formRadioRef.current.firstChild.value;
+    //console.log(formRadioRef.current)
+    state.userFlow.stepTwo.value = formRadioRef.current.value;
     setSideItemStep(state, formRadioRef);
   },
   stepThreeManager: (...info) => {
@@ -100,7 +101,6 @@ export const useStepManager = {
     if(stateStepTwo === 'Mercado Pago'){
       console.log({info})
       state.userFlow.stepThree.value = valueSelected
-      // console.log(info[0].then(res => res))
     }
     
     if(stateStepTwo !== 'Mercado Pago' && valueSelected === 'med_tarjeta' || valueSelected === 'med_link'){
@@ -109,10 +109,14 @@ export const useStepManager = {
         state.userFlow.stepThree.value += ` / ${valueSelected}`;
       }
 
+      //Busco el el id del contrato para pedirlo a la API
+      const contractId = info.filter( property => typeof(property) === 'object' && typeof(property.numberSO) === 'string' ? property.numberSO : property);
+      console.log("in stepThreeManager",{contractId})
+
 
     setSideItemStep(state, formRadioRef);
-    const {name, id} = formRadioRef.current.firstChild
-    clearClassesByNameSelected('div.ui.radio', name, id);
+    const {name, id} = formRadioRef.current
+    clearClassesByNameSelected('button.grid-country-item', name, id);
   },
   stepFourManager: (...info) => {
     const [formikValues, state] = info
@@ -179,31 +183,43 @@ export const validateStep = (actualStep, direction, state, sideItemOptions, setC
 
   console.log({actualStep, direction, state, sideItemOptions, setCurrentStep,currentFormikValues})
 
-  const setCompletedSideItem = () => {
-    state.sideItemOptions.forEach(({ status, value }) => {
-      // console.log({status, value})
-       if (status === 'current' && value !== '') {
+  const setCompletedSideItem = (direction) => {
+    if(direction === 'next'){
+
+      state.sideItemOptions.forEach(({ status, value }) => {
+        // console.log({status, value})
+         if (status === 'current' && value !== '') {
+           
+           sideItemOptions[indexOfActualStep].status = 'completed';
+   
+           // Set next step
+           sideItemOptions[indexOfNextStep].status = 'current';
+           
+           validateResponse.hasError = false;
+           setCurrentStep(s => s + 1)
+         }
          
-         sideItemOptions[indexOfActualStep].status = 'completed';
- 
-         // Set next step
-         sideItemOptions[indexOfNextStep].status = 'current';
-         
-         validateResponse.hasError = false;
-         setCurrentStep(s => s + 1)
-       }
-       
-     });
+       });
+    }
   }
   
   if(direction === 'next'){
-console.log({actualStep})
+   // console.log({actualStep})
+    // console.log({currentFormikValues})
     
-/*     const [currentStepObject] = state.sideItemOptions.filter(
-      (options) => options.status === 'current'
-    ); */
+    if(currentFormikValues !== null && typeof(currentFormikValues?.numberSO) === 'string'){
+      console.log(currentFormikValues.numberSO, typeof(currentFormikValues.numberSO))
+      const contract = getContractCRM(currentFormikValues.numberSO)
+
+      state.contractResolve = contract
+      console.log({contract, state})
+    //  delegateManager(actualStep,currentFormikValues,state)
+
+    }
+     
     delegateManager(actualStep,currentFormikValues,state)
-    setCompletedSideItem()
+    
+
 
   }else{
     delegateManager(actualStep)
@@ -215,6 +231,8 @@ console.log({actualStep})
     setCurrentStep(s => s - 1)
    
   }
+
+  setCompletedSideItem(direction)
 
   if (validateResponse.hasError) {
     fireToast('Debe seleccionar una opcion para avanzar');

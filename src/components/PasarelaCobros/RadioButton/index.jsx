@@ -34,6 +34,8 @@ function RadioButton({...props }) {
 
   const [state, setState] = useContext(AppContext);
 
+  //console.log({state, btnStatus, btnType, classes})
+
   const buttonStatus = {
     country: {
       active: 'grid-country-item is-link is-light is-outlined',
@@ -42,6 +44,10 @@ function RadioButton({...props }) {
     payment_method: {
       active: 'grid-payment_method-item tall is-link is-light is-outlined',
       default: 'grid-payment_method-item tall'
+    },
+    mod_med_payment:{
+      active: 'is-link is-light is-outlined',
+      default: ''
     }
   };
 
@@ -53,6 +59,7 @@ function RadioButton({...props }) {
     
     console.group('Radio Handle',{ currentStepObject, formRadioRef, formikValue, idElement, state, props });
     delegateManager(currentStepObject, formRadioRef, idElement, state, formikHook);
+    //delegateManager(currentStepObject, formRadioRef, idElement, state, formikHook);
     console.groupEnd();
 
     setState({ ...state });
