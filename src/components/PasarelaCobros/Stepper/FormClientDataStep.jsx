@@ -16,7 +16,6 @@ function FormClientDataStep({ currentStep, setCurrentStep }) {
   const [contract, setContract] = useState({})
   
   console.log(state)
-  state.contractResolve.then( res => { setContract(res) }).catch( err => console.error(err)) // Promesa que resuelvo y la sumo al estado DEL COMPONENTE
 
   const clientFormWithoutOptions = state.clientForm.filter(
     (input) => !input.options
@@ -68,8 +67,8 @@ function FormClientDataStep({ currentStep, setCurrentStep }) {
 
   return (
     <div id='grid-client_data'>
-      <pre>{JSON.stringify(contract, null, 2)}</pre>  
-      {/*  <ResumeTicket data={contract} /> */}
+      {/* <pre>{JSON.stringify(contract, null, 2)}</pre> */} 
+        {/*  <ResumeTicket data={contract} /> */}  
       {/* <Form
       autoComplete="off"
       style={{ width: '80%', margin: '0 auto' }}
