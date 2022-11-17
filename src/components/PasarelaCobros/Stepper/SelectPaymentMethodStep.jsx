@@ -58,6 +58,7 @@ function SelectPaymentMethodStep({paymentOptions,
             state={state}
             sideItemOptions={sideItemOptions}
             validStep={formik.isSubmitting}
+            currentFormikValues={formik.values}
           />
         </form>
       );

@@ -1,11 +1,19 @@
 import React, { useContext } from 'react'
+import { useEffect } from 'react';
 import { Button } from 'semantic-ui-react'
 import { validateStep } from '../Hooks/useStepManager'
 import { AppContext } from '../Provider/StateProvider';
 
 console.group('StepControl')
-function StepControl({currentStep, setCurrentStep,state, sideItemOptions, validStep, currentFormikValues = null}) {
+function StepControl({currentStep, setCurrentStep, state, sideItemOptions, validStep, currentFormikValues = null}) {
   // console.log({currentStep, setCurrentStep,state, sideItemOptions, validStep})
+
+  const [_, setState] = useContext(AppContext)
+
+  useEffect(()=>{
+    setState({...state, formikValues : {...currentFormikValues}})
+  },[currentFormikValues])
+
 
   return (
     <div className='controls'>
@@ -25,7 +33,5 @@ function StepControl({currentStep, setCurrentStep,state, sideItemOptions, validS
   )
 }
 console.groupEnd()
-
-
 
 export default StepControl

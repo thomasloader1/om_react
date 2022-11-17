@@ -4,6 +4,7 @@
 import { fireToast } from './useSwal';
 import { getContractCRM } from './useZohoContract';
 
+
 const clearClassesByCountrySelected = (element, country) => {
   document.querySelectorAll(`${element}[id]`).forEach((val) => {
     // console.log({val},val.id.includes(country) , country, val.id)
@@ -207,15 +208,18 @@ export const validateStep = (actualStep, direction, state, sideItemOptions, setC
    // console.log({actualStep})
     // console.log({currentFormikValues})
     
-    if(currentFormikValues !== null && typeof(currentFormikValues?.numberSO) === 'string'){
+    /* if(currentFormikValues !== null && typeof(currentFormikValues?.numberSO) === 'string'){
       console.log(currentFormikValues.numberSO, typeof(currentFormikValues.numberSO))
       const contract = getContractCRM(currentFormikValues.numberSO)
 
-      state.contractResolve = contract
+      contract.then( res => {
+        state.contractResolve = res
+      }).catch(err => console.error(err))
+
       console.log({contract, state})
     //  delegateManager(actualStep,currentFormikValues,state)
 
-    }
+    }  */
      
     delegateManager(actualStep,currentFormikValues,state)
     

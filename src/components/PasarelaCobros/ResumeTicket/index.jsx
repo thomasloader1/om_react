@@ -76,38 +76,7 @@ function ResumeTicket({ data }) {
           <label>Telefono</label>
           <h4>{contact.Home_Phone}</h4>
         </div>
-        {/* <div id="cvv_resume" className="column is-1 finalResume-item">
-          <label>
-            CVV
-          </label>
-          <h4>****</h4>
-        </div>
-        <div id="cuotas_resume" className="column is-2 finalResume-item">
-          <label>
-            Cuotas
-          </label>
-          <h4>****</h4>
-        </div> 
-        <div
-          id="nombreTitular_resume"
-          className="column is-half finalResume-item"
-        >
-          <label>
-            NOMBRE DEL TITULAR
-          </label>
-          <h4>****</h4>
-        </div>
-        <div
-          id="direccionTitular_resume"
-          className="column is-half finalResume-item"
-        >
-          <label>
-            Dirección
-          </label>
-          <h4>
-            asd
-          </h4>
-        </div>*/}
+       
         <div
           id="tipoNumDocumento_resume"
           className="column is-one-third finalResume-item"
@@ -115,28 +84,6 @@ function ResumeTicket({ data }) {
           <label>Tipo Y NÚMERO DE DOC</label>
           <h4>DNI: {contact.DNI}</h4>
         </div>
-        {/* <div
-          id="cuilCuit_resume"
-          className="column is-one-third finalResume-item"
-        >
-          <label>
-            CUIL/CUIT
-          </label>
-          <h4>
-            asd
-          </h4>
-        </div>
-        <div
-          id="razonSocial_resume"
-          className="column is-one-third finalResume-item"
-        >
-          <label>
-            Razón Social
-          </label>
-          <h4>
-            asd
-          </h4>
-        </div> */}
       </div>
     </div>
   );

@@ -47,6 +47,7 @@ function SelectCountryStep({ countryOptions, currentStep, setCurrentStep }) {
         state={state}
         sideItemOptions={sideItemOptions}
         validStep={formik.isSubmitting}
+        currentFormikValues={formik.values}
       />
     </form>
   );
