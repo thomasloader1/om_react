@@ -4,15 +4,21 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import './RadioButton.scss';
-import {Ref ,Image, Radio } from 'semantic-ui-react';
+import { Image } from 'semantic-ui-react';
+
+import { useField } from 'formik';
 
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { AppContext } from '../Provider/StateProvider';
-import { delegateManager } from '../Hooks/useStepManager';
+import { delegateManager } from '../Helpers/delegateManager';
+import { getCurrentStep } from '../Hooks/useCurrentStep';
+
 
 function RadioButton({...props }) {
+  console.log({props})
+  const [field, meta] = useField(props)
+
   const {
     disabled,
     showText,
@@ -21,20 +27,18 @@ function RadioButton({...props }) {
     value,
     name,
     className,
-    classLabel,
     typeBtn,
     formikHook,
     formikValue
   } = props;
- // console.log({props}, 'radioButton')
+
   const formRadioRef = useRef(null);
   const [btnStatus, setBtnStatus] = useState(null);
   const [btnType] = useState(typeBtn);
   const [classes, setClasses] = useState(className);
 
-  const [state, setState] = useContext(AppContext);
-
-  //console.log({state, btnStatus, btnType, classes})
+  const {options, setOptions, userInfo, setUserInfo, formikValues, setFormikValues} = useContext(AppContext);
+  const { sideItemOptions } = options
 
   const buttonStatus = {
     country: {
@@ -55,21 +59,26 @@ function RadioButton({...props }) {
   const labelOfRadio = showText ? value : ''
 
   const handleClick = () => {
-    const [currentStepObject] = state.sideItemOptions.filter( options => options.status === 'current');
+    const currentStepObject = getCurrentStep(sideItemOptions)
     
-    console.group('Radio Handle',{ currentStepObject, formRadioRef, formikValue, idElement, state, props });
-    delegateManager(currentStepObject, formRadioRef, idElement, state, formikHook);
-    //delegateManager(currentStepObject, formRadioRef, idElement, state, formikHook);
+    console.group('Radio Handle',{ currentStepObject, formRadioRef, formikValue, idElement, options, props });
+      delegateManager(currentStepObject, formRadioRef, idElement, options, formikHook, userInfo, setUserInfo);
     console.groupEnd();
 
-    setState({ ...state });
+    const { values } = formikHook
+
+    setOptions({ ...options });
+    setFormikValues({
+      ...formikValues,
+      ...values
+    })
     setBtnStatus('active');
   };
 
   useEffect(() => {
     setClasses(buttonStatus[btnType][btnStatus]);
   }, [btnStatus, formRadioRef]);
-  //console.warn(`Radio ${name}`,{props})
+  console.warn(`Radio ${name}`,{props})
   return (
     
         <button 
@@ -87,21 +96,11 @@ function RadioButton({...props }) {
             props.formikHook.setSubmitting(true)
             handleClick()
           }} 
+          {...field}
+          {...props}
           >
         {imageIcon}
-
         <p>{labelOfRadio}</p>
-
-        {/* <Ref innerRef={formRadioRef}>
-        <Radio
-            name={name}
-            value={value}
-            disabled={disabled}
-            label={labelOfRadio}
-            checked={formikValue === value}
-            onChange={props.onChange}
-          />
-          </Ref> */}
         </button>
 
   );

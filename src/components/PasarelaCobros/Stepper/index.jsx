@@ -1,63 +1,87 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import React, { useContext } from 'react';
+import { useCurrentStep } from '../Hooks/useCurrentStep';
 import { AppContext } from '../Provider/StateProvider';
 import Step from '../Step';
 import { FormCardPayStep } from './CheckoutForm';
 import FormClientDataStep from './FormClientDataStep';
+import GeneratePaymentLinkStep from './GeneratePaymentLinkStep';
 import SelectCountryStep from './SelectCountryStep';
 import SelectPaymentMethodStep from './SelectPaymentMethodStep';
 import SelectPaymentModeStep from './SelectPaymentModeStep';
 
 function Stepper() {
-  const [state] = useContext(AppContext);
-  const [currentInfoStep] = state.sideItemOptions.filter(
-    (sideOption) => sideOption.status === 'current'
-  );
-  const [actualStep, setCurrentStep] = useState(currentInfoStep);
-  
-  useEffect(() => {
-    setCurrentStep(currentInfoStep);
-  }, [state, actualStep]);
+  const { options } = useContext(AppContext);
+  const { sideItemOptions } = options
+  const { actualStep, setCurrentStep } = useCurrentStep(sideItemOptions);
 
-  const { step, label } = actualStep;
+  const validationSchema = Yup.object({
+    country: Yup.string().required('Seleccione un pais')
+  })
+
+  console.group("Stepper")
+  console.log({ options })
+  console.groupEnd("Stepper")
+
 
   return (
     <section className="container is-max-widescreen">
-      <Step
-        currentStep={step}
-        stepTitle={`Seleccione un ${label}`}
-        setCurrentStep={setCurrentStep}
+      <Formik
+        initialValues={{
+          country: ''
+        }}
+        onSubmit={(values) => {
+          alert(JSON.stringify(values, null, 2))
+        }}
+        validationSchema={validationSchema}
       >
-        <div>
-          <SelectCountryStep
-            countryOptions={state.countryOptions}
-            currentStep={step}
-            setCurrentStep={setCurrentStep}
-          />
-        </div>
-        <div>
-          <SelectPaymentMethodStep
-            currentStep={step}
-            setCurrentStep={setCurrentStep}
-            paymentOptions={state.paymentOptions}
-            userFlow={state.userFlow}
-          />
-        </div>
-        <div>
-          <SelectPaymentModeStep
-            currentStep={step}
-            setCurrentStep={setCurrentStep}
-          />
-        </div>
-        <div>
-          <FormClientDataStep
-            currentStep={step}
-            setCurrentStep={setCurrentStep}
-          />
-        </div>
-        <div>
-          <FormCardPayStep currentStep={step} setCurrentStep={setCurrentStep} />
-        </div>
-      </Step>
+        {(formik) => (
+          <form onSubmit={formik.handleSubmit}>
+
+            <Step
+              currentStep={actualStep.step}
+              stepTitle={`Seleccione un ${actualStep.label}`}
+              setCurrentStep={setCurrentStep}
+            >
+              <div>
+                <SelectCountryStep
+                  currentStep={actualStep.step}
+                  setCurrentStep={setCurrentStep}
+                />
+              </div>
+              <div>
+                <SelectPaymentMethodStep
+                  currentStep={actualStep.step}
+                  setCurrentStep={setCurrentStep}
+                />
+              </div>
+              <div>
+                <SelectPaymentModeStep
+                  currentStep={actualStep.step}
+                  setCurrentStep={setCurrentStep}
+                />
+              </div>
+              <div>
+                <FormClientDataStep
+                  currentStep={actualStep.step}
+                  setCurrentStep={setCurrentStep}
+                />
+              </div>
+              <div>
+                <GeneratePaymentLinkStep
+                  currentStep={actualStep.step}
+                  setCurrentStep={setCurrentStep}
+                />
+              </div>
+              {/* <div>
+          <FormCardPayStep currentStep={actualStep.step} setCurrentStep={setCurrentStep} />
+        </div> */}
+            </Step>
+          </form>
+        )}
+
+      </Formik>
     </section>
   );
 }

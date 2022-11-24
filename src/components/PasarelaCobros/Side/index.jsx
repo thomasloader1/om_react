@@ -1,17 +1,29 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import './Side.scss';
 import Button from '../Button';
+import SideItem from '../SideItem';
 
-function Side({ children, sideTitle }) {
+function Side({ options, sideTitle, stepStateNumber }) {
   const [completeSteps] = useState(false);
 
   return (
     <div className="is-4 column side pl-6">
       <h2 className="title is-4">{sideTitle}</h2>
       <div className="side-body">
-        {children}
+        {options.map(
+          ({ step, label, status, value }) => (
+            <SideItem
+              key={step}
+              currentStep={step}
+              label={label}
+              status={status}
+              valueSelected={value}
+              stepStateNumber={stepStateNumber}
+            />
+          )
+        )}
+
         {completeSteps && (
           <>
             <Button
@@ -30,14 +42,6 @@ function Side({ children, sideTitle }) {
     </div>
   );
 }
-
-Side.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ]).isRequired,
-  sideTitle: PropTypes.string
-};
 
 Side.defaultProps = {
   sideTitle: 'Resumen del pago'
