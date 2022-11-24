@@ -17,11 +17,11 @@ import { useEffect } from 'react';
 function PasarelaApp() {
   const { options, formikValues, setFormikValues } = useContext(AppContext);
   const [stepNumber, setStepNumber] = useState(0)
+const [checkoutLink, setCheckoutLink] = useState("")
 
-
-  useEffect(()=>{
+  useEffect(() => {
     setStepNumber(stepNumber)
-    
+
     return () => null
   }, [stepNumber])
 
@@ -32,75 +32,92 @@ function PasarelaApp() {
       <section className="container is-max-widescreen">
         <div className="pasarela columns mx-auto">
           <MultiStep
-            stepStateNumber={{stepNumber, setStepNumber}}
+            stepStateNumber={{ stepNumber, setStepNumber }}
             className="pasarela-1 column seleccion-pais"
             initialValues={{
               country: '',
               contractId: '',
               mod: ''
             }}
-            onSubmit={(values) => {
-              alert(JSON.stringify(values, null, 2))
-              axios.post("https://www.oceanomedicina.com.ar/suscripciontest/remote/generateCheckoutPro")
+            onSubmit={async (values) => {
+              
+              const body = new FormData();
+              const type = formikValues.mod.toLowerCase().substring(0,4)
+              console.log({ values }, formikValues.mod === "Tradicional",{type})
+              body.append('months', 0)
+              body.append('amount', `${formikValues.amount}`)
+              body.append('type', type)
+              body.append('so', formikValues.contractId)
+
+              const response = await axios.post("https://www.oceanomedicina.com.ar/suscripciontest/remote/generateCheckoutPro", body, {
+                mode: 'no-cors',
+                headers: {
+                  'Access-Control-Allow-Origin': '*',
+                  'Content-Type': 'application/x-www-form-urlencoded'
+                }
+              });
+
+              setCheckoutLink(response.data.url)
+              console.log({ response })
             }}
           >
             <SelectCountryStep
-              onSubmit={(values) => { 
+              onSubmit={(values) => {
                 setFormikValues({
                   ...formikValues,
                   ...values
                 })
 
-                console.log('Step 1 submit',{values, formikValues}) 
+                console.log('Step 1 submit', { values, formikValues })
               }}
               validationSchema={Yup.object({
                 country: Yup.string().required('El pais es requerido')
               })} />
             <SelectPaymentMethodStep
-              onSubmit={(values) => { 
+              onSubmit={(values) => {
                 setFormikValues({
                   ...formikValues,
                   ...values
                 })
 
-                console.log('Step 2 submit',{values, formikValues}) 
-               }}
+                console.log('Step 2 submit', { values, formikValues })
+              }}
               validationSchema={Yup.object({
                 payment_method: Yup.string().required('El metodo de pago es requerido')
               })}
             />
             <SelectPaymentModeStep
-              onSubmit={(values) => { 
+              onSubmit={(values) => {
                 setFormikValues({
                   ...formikValues,
                   ...values
                 })
 
-                console.log('Step 3 submit',{values, formikValues}) 
-               }}
+                console.log('Step 3 submit', { values, formikValues })
+              }}
               validationSchema={Yup.object({
                 contractId: Yup.string().required('El campo es requerido'),
                 mod: Yup.string().required('El modo de pago es requerido')
               })}
             />
             <FormClientDataStep
-              onSubmit={(values) => { 
+              onSubmit={(values) => {
                 setFormikValues({
                   ...formikValues,
                   ...values
                 })
 
-                console.log('Step 4 submit',{values, formikValues}) 
-               }}
+                console.log('Step 4 submit', { values, formikValues })
+              }}
               validationSchema={Yup.object({
                 checkContract: Yup.string().required('El campo es requerido')
               })}
             />
 
-          <GeneratePaymentLinkStep />
+            <GeneratePaymentLinkStep checkoutLink={checkoutLink} />
 
           </MultiStep>
-          <Side options={options.sideItemOptions} stepStateNumber={{stepNumber, setStepNumber}} />
+          <Side options={options.sideItemOptions} stepStateNumber={{ stepNumber, setStepNumber }} />
         </div>
       </section>
     </>
