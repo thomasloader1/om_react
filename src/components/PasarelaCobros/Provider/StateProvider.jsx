@@ -12,18 +12,25 @@ import {
 } from '../../../config/config';
 
 function StateProvider({ children }) {
-  const [state, setState] = useState({
+  const [options, setOptions] = useState({
     countryOptions,
     paymentOptions,
     paymentMethodOptions,
     paymentModeOptions,
     clientForm,
-    sideItemOptions,
-    userFlow
-  });
+    sideItemOptions
+  })
+  
+  const [formikValues, setFormikValues] = useState({})
+  const [userInfo, setUserInfo] = useState(userFlow)
+  const [stepNumberGlobal, setStepNumberGlobal] = useState(0)
 
   return (
-    <AppContext.Provider value={[state, setState]}>
+    <AppContext.Provider value={{ options, setOptions, 
+                                  formikValues, setFormikValues, 
+                                  userInfo, setUserInfo,
+                                  stepNumberGlobal, setStepNumberGlobal
+                                 }}>
       {children}
     </AppContext.Provider>
   );
@@ -31,3 +38,5 @@ function StateProvider({ children }) {
 
 export default StateProvider;
 export const AppContext = createContext();
+
+

@@ -65,8 +65,12 @@
 
   div#grid-client_data{
     display: grid;
-    grid-template-areas: 'resume resume' 'controls controls';
+    grid-template-areas: 'spinner spinner' 'resume resume' 'controls controls';
 
+    .spinner{
+      grid-area: spinner;
+    }
+    
     #finalResume{
       grid-area: resume;
     }

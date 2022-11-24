@@ -1,25 +1,33 @@
+import axios from "axios"
 import { useState, useEffect } from "react"
-import qs from 'qs';
-import axios from "axios";
 
-const useContractZoho = (contractId) => {
-    const [data, setData] = useState(null)
-    const body = { key: '9j9fj0Do204==3fja134', id: contractId };
-    
-    useEffect(() => {
-        const options = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            data: qs.stringify(body),
-            url: 'https://oceanomedicina.com.ar/suscripciontest/remote/obtaindata',
-          };
-         
-          axios(options).then( res => setData(res.data)).catch( err => console.error("useContractZoho",{err}))
-    },[contractId])
+export const useContractZoho = (contractId) => {
+  const [data, setData] = useState({})
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
-    return [data]
+  const body = new FormData();
+  body.append('key', '9j9fj0Do204==3fja134')
+  body.append('id', contractId)
+
+  const URL = 'https://oceanomedicina.com.ar/suscripciontest/remote/obtaindata';
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.post(URL, body, {
+        mode: 'no-cors',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+      console.log({ response })
+      setData(response.data)
+      setLoading(response.data.lenght > 0)
+    }
+
+    fetchData()
+  }, [])
+
+  return { data, loading, error }
 }
-
-export default useContractZoho

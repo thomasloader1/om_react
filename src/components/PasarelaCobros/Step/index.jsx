@@ -2,21 +2,18 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { AppContext } from '../Provider/StateProvider';
-import { sideItemOptions } from '../../../config/config';
 import SideItem from '../SideItem';
 import Side from '../Side';
 
-function Step({
-  children,
-  currentStep,
-  stepTitle
-}) {
-  const [state, setState] = useContext(AppContext);
+function Step({ children, currentStep, stepTitle }) {
+
+  const { options, setOptions, userInfo } = useContext(AppContext);
+  const { sideItemOptions } = options
   const childrenArray = React.Children.toArray(children);
   const currentChildren = childrenArray[currentStep - 1];
 
   useEffect(() => {
-    setState({ ...state, sideItemOptions: [...sideItemOptions] });
+    setOptions({ ...options });
   }, [currentStep]);
 
   return (
@@ -31,13 +28,13 @@ function Step({
           </h2>
         )}
         {currentChildren}
-        <pre>{JSON.stringify(state?.contractResolve, null, 2)}</pre>
-        <pre>{JSON.stringify(state.sideItemOptions, null, 2)}</pre>
-        <pre>{JSON.stringify(state.userFlow, null, 2)}</pre>
+
+        {/* <pre>{JSON.stringify(sideItemOptions, null, 2)}</pre> */}
+        <pre>{JSON.stringify(userInfo, null, 2)}</pre>
       </div>
 
       <Side>
-        {state.sideItemOptions.map(
+        {sideItemOptions.map(
           ({ step: stepNumber, label, status, value }) => (
             <SideItem
               key={stepNumber}

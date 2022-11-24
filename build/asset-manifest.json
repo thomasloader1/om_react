@@ -1,0 +1,39 @@
+{
+  "files": {
+    "main.css": "/static/css/main.b815aead.css",
+    "main.js": "/static/js/main.8717c1c8.js",
+    "static/js/787.5673cd10.chunk.js": "/static/js/787.5673cd10.chunk.js",
+    "static/media/asesor-cobranzas.jpg": "/static/media/asesor-cobranzas.a52bce09a4843e523e32.jpg",
+    "static/media/asesor-comercial.jpg": "/static/media/asesor-comercial.2bfb243332853af1daba.jpg",
+    "static/media/datafast.jpg": "/static/media/datafast.c27a1164a8bfa68fcf38.jpg",
+    "static/media/mp.svg": "/static/media/mp.2325c24f832cd82d3a8181affd15cae5.svg",
+    "static/media/el-salvador.svg": "/static/media/el-salvador.18ed92bfa75af0d91768659045d463fa.svg",
+    "static/media/bolivia.svg": "/static/media/bolivia.c90ba867b1839fad0496d1a4e6d735ca.svg",
+    "static/media/guatemala.svg": "/static/media/guatemala.b762574fbb6c9e81527b4f8f6f96c42d.svg",
+    "static/media/logo-oceano-pagos.svg": "/static/media/logo-oceano-pagos.3b3c6ff7114b0b22b2c7288a5dd2c739.svg",
+    "static/media/ecuador.svg": "/static/media/ecuador.9a138ad080392912944ecf3f007d6245.svg",
+    "static/media/argentina.svg": "/static/media/argentina.49fb7cef1ec20ce3fff1801da58bd8f4.svg",
+    "static/media/mexico.svg": "/static/media/mexico.880ae24f7be5cd8d1ab26a39f70840e8.svg",
+    "static/media/paraguay.svg": "/static/media/paraguay.073e1e8cb7a7a1987fd488d59d4fa599.svg",
+    "static/media/paypal.svg": "/static/media/paypal.886c8d856996267048917f03c91f7fec.svg",
+    "static/media/estados-unidos.svg": "/static/media/estados-unidos.f11ce798f8b9ad5be6d81b8b00ccbd7b.svg",
+    "static/media/nicaragua.svg": "/static/media/nicaragua.9cbf93d064c87ec0e11bc725246d9620.svg",
+    "static/media/uruguay.svg": "/static/media/uruguay.f4690dde8c5d5592d53134965dc6240a.svg",
+    "static/media/banorte.svg": "/static/media/banorte.211a6b4c30cfa2a9784d8234d8f497ae.svg",
+    "static/media/stripe.svg": "/static/media/stripe.adffed8165316f860005d000d67f2fdf.svg",
+    "static/media/costa-rica.svg": "/static/media/costa-rica.089a8c0793b93d39610dcd0d45d39a96.svg",
+    "static/media/panama.svg": "/static/media/panama.73eacd68d45c9f81de81f2d1c533aac4.svg",
+    "static/media/honduras.svg": "/static/media/honduras.0e787ca4a4fba2ac5b8c6b88c00dcbe1.svg",
+    "static/media/chile.svg": "/static/media/chile.ca71ae18d88698f9b232c292d661744d.svg",
+    "static/media/colombia.svg": "/static/media/colombia.61dc8bf20ec851abd2c137198f503358.svg",
+    "index.html": "/index.html",
+    "static/media/peru.svg": "/static/media/peru.0732053311a60993127b33f9407fb6e4.svg",
+    "main.b815aead.css.map": "/static/css/main.b815aead.css.map",
+    "main.8717c1c8.js.map": "/static/js/main.8717c1c8.js.map",
+    "787.5673cd10.chunk.js.map": "/static/js/787.5673cd10.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b815aead.css",
+    "static/js/main.8717c1c8.js"
+  ]
+}

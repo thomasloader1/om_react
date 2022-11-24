@@ -6,16 +6,16 @@ import { useFormik } from 'formik';
 import React, { useContext } from 'react';
 import { Block, Button, Notification } from 'react-bulma-components';
 import * as Yup from 'yup';
-import { sideItemOptions } from '../../../config/config';
-import { delegateManager } from '../Hooks/useStepManager';
-import { getContractCRM } from '../Hooks/useZohoContract';
+import InputField from '../InputField';
 import { AppContext } from '../Provider/StateProvider';
 import RadioButton from '../RadioButton';
+import ButtonField from '../RadioButton/ButtonField';
 import SelectQuote from '../SelectQuote';
 import StepControl from '../StepControl';
+import { FormStep } from './MultiStep';
 
 function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
-  const [state, setState] = useContext(AppContext);
+  const { options, setOptions, userInfo, setUserInfo } = useContext(AppContext);
 
   const initialValuesNormal = { med: '', mod: '' };
   const validationSchemaNormal = {
@@ -33,118 +33,78 @@ function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
     }
   });
 
-  // ------------------------------------------------------------------------------------
+  if (userInfo.stepTwo.value === 'Mercado Pago') {
 
-  const initialValuesSpecial = { numberSO: '2712674000015973001', mod: '' };
-  const validationSchemaSpecial = {
-    numberSO: Yup.string().min(1).required('Ingrese un numero de SO'),
-    mod: Yup.string().required('Seleccione un metodo')
-  };
-
-  const formikSpecial = useFormik({
-    initialValues: initialValuesSpecial,
-    validationSchema: Yup.object(validationSchemaSpecial),
-    onSubmit: (values) => {
-     /*  console.log('formikSpecial values', { values });
-      const contract = getContractCRM(values.numberSO);
-      const [currentStepObject] = state.sideItemOptions.filter(
-        (options) => options.status === 'current'
-      );
-      //2000339000483253046
-
-      console.error({ values, contract, currentStepObject })
-
-      delegateManager(currentStepObject, contract, state) */
-    }
-  });
-  // console.log(state.userFlow)
-  if (state.userFlow.stepTwo.value === 'Mercado Pago') {
     return (
-      <form
-        id="medModPago_grid"
-        autoComplete="off"
-        className="grid-med_mod_payment-mp"
-        onSubmit={formikSpecial.handleSubmit}
+      /*{formikSpecial.values.mod === "Suscripción" ?
+           <SelectQuote selectName={'Seleccione la cantidad de coutas'} options={[1,3,6,9,12,18]}/>
+           : null}
+ 
+         {formikSpecial.errors.mod && (
+           <p className="help is-danger">{formikSpecial.errors.mod}</p>
+         )}
+ 
+         {
+           formikSpecial.values.mod && (
+             <Block className='field_info'>
+               <Notification color="info">
+                 <strong> {formikSpecial.values.mod} </strong>
+ 
+                 {formikSpecial.values.mod === "Tradicional" ? " le permite hacer la operacion habitual de compra" : null}
+                 {formikSpecial.values.mod === "Suscripción" ? " le permite hacer la operacion con las cuotas sin interes!" : null}
+ 
+               </Notification>
+             </Block>
+           )
+         }*/
+      <FormStep
+        stepNumber={3}
+        stepName='Seleccione un modo de pago'
       >
-        <div className="field">
-          <label htmlFor="numberSO" className="label">
-            Ingrese SO de Contrato
-          </label>
-          <div className="control">
-            <input
-              placeholder="2000339000004553081"
-              className={
-                formikSpecial.errors.numberSO ? 'input is-danger' : 'input'
-              }
-              type="text"
-              value={formikSpecial.values.numberSO}
-              onChange={formikSpecial.handleChange}
-              name="numberSO"
-              id="numberSO"
+        <div id="medModPago_grid" className="grid-med_mod_payment-mp">
+
+          <InputField label="Ingrese ID de Contrato" id="contractId" name="contractId" />
+
+          {options.paymentModeOptions.map(({ ...props }) =>
+            <ButtonField
+              {...props}
+              className={`grid-payment_method-item button`}
+              showText={true}
+              id={props.idElement}
+              name="mod"
+              key={props.idElement}
+              onClick={() => {
+                // console.log(userInfo)
+                const { sideItemOptions } = options
+                const { stepThree } = userInfo
+
+                sideItemOptions[2].value = props.value
+                stepThree.value = props.value
+
+                setOptions({
+                  ...options,
+                  sideItemOptions: [
+                    ...sideItemOptions
+                  ]
+                })
+
+                setUserInfo({
+                  ...userInfo
+                })
+              }}
             />
-          </div>
-          {formikSpecial.errors.numberSO && (
-            <p className="help is-danger">{formikSpecial.errors.numberSO}</p>
           )}
         </div>
-
-        {state.paymentModeOptions.map(({ ...props }) => {
-          return (
-            <RadioButton
-              {...props}
-              key={props.idElement}
-              name="mod"
-              typeBtn={'mod_med_payment'}
-              formikHook={formikSpecial}
-              formikValue={formikSpecial.values.mod}
-              onChange={formikSpecial.handleChange}
-            />
-
-          );
-        })}
-
-        {formikSpecial.values.mod === "Suscripción" ?
-          <SelectQuote selectName={'Seleccione la cantidad de coutas'} options={[1,3,6,9,12,18]}/>
-          : null}
-
-        {formikSpecial.errors.mod && (
-          <p className="help is-danger">{formikSpecial.errors.mod}</p>
-        )}
-
-        {
-          formikSpecial.values.mod && (
-            <Block className='field_info'>
-              <Notification color="info">
-                <strong> {formikSpecial.values.mod} </strong>
-
-                {formikSpecial.values.mod === "Tradicional" ? " le permite hacer la operacion habitual de compra" : null}
-                {formikSpecial.values.mod === "Suscripción" ? " le permite hacer la operacion con las cuotas sin interes!" : null}
-
-              </Notification>
-            </Block>
-          )
-        }
-
-        <StepControl
-          currentStep={currentStep}
-          setCurrentStep={setCurrentStep}
-          state={state}
-          sideItemOptions={sideItemOptions}
-          validStep={formikSpecial.isSubmitting}
-          currentFormikValues={formikSpecial.values}
-        />
-      </form>
+      </FormStep>
     );
   }
-
-  return (
-    <form
+  {/* <form
       id="medModPago_grid"
       autoComplete="off"
       className="grid-med_mod_payment"
       onSubmit={formik.handleSubmit}
     >
-      {state.paymentMethodOptions.map(({ ...props }) => {
+      {options.paymentMethodOptions.map(({ ...props }) => {
         console.log({ isValidForm: formik.isValid });
         return (
           <RadioButton
@@ -159,7 +119,7 @@ function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
 
       <div className="is-divider doble" />
 
-      {state.paymentModeOptions.map(({ ...props }) => (
+      {options.paymentModeOptions.map(({ ...props }) => (
         <RadioButton
           {...props}
           key={props.idElement}
@@ -172,12 +132,51 @@ function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
       <StepControl
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
-        state={state}
-        sideItemOptions={sideItemOptions}
         validStep={formik.isSubmitting}
         currentFormikValues={formik.values}
       />
-    </form>
+    </form> */}
+  return (
+
+    <FormStep
+      stepNumber={3}
+      stepName='Seleccione un modo de pago'
+    >
+      <div id="medModPago_grid" className="grid-med_mod_payment">
+
+        <InputField label="Ingrese ID de Contrato" id="contractId" name="contractId" />
+
+        {options.paymentModeOptions.map(({ ...props }) =>
+          <ButtonField
+            {...props}
+            className={`grid-payment_method-item button`}
+            showText={true}
+            id={props.idElement}
+            name="mod"
+            key={props.idElement}
+            onClick={() => {
+              // console.log(userInfo)
+              const { sideItemOptions } = options
+              const { stepThree } = userInfo
+
+              sideItemOptions[2].value = props.value
+              stepThree.value = props.value
+
+              setOptions({
+                ...options,
+                sideItemOptions: [
+                  ...sideItemOptions
+                ]
+              })
+
+              setUserInfo({
+                ...userInfo
+              })
+            }}
+          />
+        )}
+      </div>
+    </FormStep>
   );
 }
 

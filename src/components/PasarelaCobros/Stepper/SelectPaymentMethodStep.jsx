@@ -1,67 +1,64 @@
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/prop-types */
 
-import { useFormik } from 'formik';
 import React, { useContext } from 'react'
-import * as Yup from 'yup'
-import { sideItemOptions } from '../../../config/config';
 import { AppContext } from '../Provider/StateProvider';
-import RadioButton from '../RadioButton';
-import StepControl from '../StepControl';
+import ButtonField from '../RadioButton/ButtonField';
+import { FormStep } from './MultiStep';
 
-function SelectPaymentMethodStep({paymentOptions,
-    userFlow,
-    currentStep,
-    setCurrentStep}) {
-        const isoCountry = userFlow.stepOne.isoRef;
-        const [state] = useContext(AppContext);
-      
-        const formik = useFormik({
-          initialValues: {
-            payment_method: ''
-          },
-          validationSchema: Yup.object({
-            payment_method: Yup.string().required('Seleccione un metodo')
-          }),
-          onSubmit: (values) => {
-            console.log('formik values', values);
-          }
-        });
-      
-        console.log({ formValid: formik.isValid, formik });
-        
-    return (
-        <form
-          autoComplete="off"
-          id="metPago_grid"
-          className="grid-payment_method"
-          onSubmit={formik.handleSubmit}
-        >
-          {paymentOptions.map(
-            ({ allowedCountries, ...props }) =>
-              allowedCountries.includes(isoCountry) && (
-                <RadioButton
-                  {...props}
-                  name="payment_method"
-                  showText={false}
-                  key={props.shortName}
-                  typeBtn="payment_method"
-                  formikHook={formik}
-                  formikValue={props.value}
-                  onChange={formik.handleChange}
-                />
-              )
-          )}
-          <StepControl
-            currentStep={currentStep}
-            setCurrentStep={setCurrentStep}
-            state={state}
-            sideItemOptions={sideItemOptions}
-            validStep={formik.isSubmitting}
-            currentFormikValues={formik.values}
+
+function SelectPaymentMethodStep() {
+  const { options, setOptions, userInfo, setUserInfo } = useContext(AppContext);
+  const { paymentOptions } = options
+  const { isoRef } = userInfo.stepOne
+
+  const getIsoCountry = () => {
+    const filterString = isoRef.split('_').filter( ref => ref !== 'pais' && ref !== 'input')
+    return filterString[0]
+  }
+  
+  const isoCountry = getIsoCountry();
+
+  console.group("SelectPaymentMethodStep")
+  console.log({ options, userInfo, isoCountry })
+  console.groupEnd()
+
+  return (
+    <FormStep
+      stepNumber={2}
+      stepName='Seleccione un metodo de pago'
+    >
+      <div id="metPago_grid" className="grid-payment_method">
+        {paymentOptions.map(({allowedCountries, ...props }) => allowedCountries.includes(isoCountry) && (
+          <ButtonField
+            {...props}
+            className={`grid-payment_method-item tall button`}
+            showText={false}
+            id={props.shortName}
+            name="payment_method"
+            key={props.shortName}
+            onClick={()=>{
+              // console.log(userInfo)
+               const { sideItemOptions } = options
+               const { stepTwo } = userInfo
+ 
+               sideItemOptions[1].value = props.value
+               stepTwo.value = props.value
+               
+               setOptions({
+                 ...options,
+                 sideItemOptions:[
+                   ...sideItemOptions
+                 ]
+               })
+ 
+               setUserInfo({
+                 ...userInfo
+               })
+             }}
           />
-        </form>
-      );
+        ))}
+      </div>
+    </FormStep>
+  );
 }
 
 export default SelectPaymentMethodStep
