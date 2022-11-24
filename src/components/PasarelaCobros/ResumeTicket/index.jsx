@@ -11,7 +11,7 @@ import ButtonField from '../RadioButton/ButtonField';
 
 function ResumeTicket({ contractId }) {
 
-  const { formikValues, options, setOptions, userInfo, setUserInfo } = useContext(AppContext)
+  const { formikValues, setFormikValues, options, setOptions, userInfo, setUserInfo } = useContext(AppContext)
   const { loading, data, error } = useContractZoho(contractId)
 
   if (typeof (data) === "string") {
@@ -25,6 +25,7 @@ function ResumeTicket({ contractId }) {
   }
 
   const { sale, contact } = data;
+
 
   return (
     <>
@@ -131,6 +132,11 @@ function ResumeTicket({ contractId }) {
 
                 setUserInfo({
                   ...userInfo
+                })
+
+                setFormikValues({
+                  ...formikValues,
+                  amount: sale.Grand_Total
                 })
               }}
               />
