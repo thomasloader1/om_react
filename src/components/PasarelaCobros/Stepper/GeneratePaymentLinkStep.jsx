@@ -12,6 +12,7 @@ function GeneratePaymentLinkStep() {
       <div id='grid-client_data'>
         <h3>Este paso tiene que hacerse en la plataforma {formikValues.payment_method}</h3>
         <p>Oprima en finalizar para generar el link</p>
+        <pre>{JSON.stringify(formikValues, null, 2)}</pre>
       </div>)
   } else {
     return (
