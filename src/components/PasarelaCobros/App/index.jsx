@@ -96,8 +96,9 @@ const [checkoutLink, setCheckoutLink] = useState("")
                 console.log('Step 3 submit', { values, formikValues })
               }}
               validationSchema={Yup.object({
-                contractId: Yup.string().required('El campo es requerido'),
-                mod: Yup.string().required('El modo de pago es requerido')
+                //contractId: Yup.string().required('El campo es requerido'),
+                mod: Yup.string().required('El modo de pago es requerido'),
+                //quotes: Yup.string().required('Aclarame las cuotas')
               })}
             />
             <FormClientDataStep
@@ -110,7 +111,13 @@ const [checkoutLink, setCheckoutLink] = useState("")
                 console.log('Step 4 submit', { values, formikValues })
               }}
               validationSchema={Yup.object({
-                checkContract: Yup.string().required('El campo es requerido')
+                checkContract: Yup.string().required('El campo es requerido'),
+                /* type: Yup.string().required("elegite un tipo che"),
+                email: Yup.string().required("cargame el email"),
+                cuotas: Yup.string().required("andas dulce?"),
+                montoContrato: Yup.string().required("El monto mostro"),
+                montoMensual: Yup.string().required("El monto mostro"),
+                numeroContrato: Yup.string().required("ponele volutad") */
               })}
             />
 

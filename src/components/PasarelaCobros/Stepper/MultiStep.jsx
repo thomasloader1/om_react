@@ -48,9 +48,9 @@ const MultiStep = ({ children, initialValues, className, onSubmit, stepStateNumb
         }
     }
 
-    useEffect(() =>{
+    /* useEffect(() =>{
         setStepNumber(stepNumberGlobal)
-    },[stepNumberGlobal])
+    },[stepNumberGlobal]) */
     // console.log({stepValidationSchema: step.props.validationSchema, step})
     return (
         <Formik initialValues={spanshot} onSubmit={handleSubmit} validationSchema={step.props.validationSchema}>
