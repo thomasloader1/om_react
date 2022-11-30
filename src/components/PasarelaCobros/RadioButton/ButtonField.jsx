@@ -5,7 +5,7 @@ import { Image } from 'semantic-ui-react';
 import IMAGES from '../../../img/pasarelaCobros/share';
 import SelectQuote from '../SelectQuote';
 
-const ButtonField = ({ img, showText, idElement, className, ...props }) => {
+const ButtonField = ({ img, showText, idElement, className, classLabel, shortName, idInputElement, ...props }) => {
   const [field, meta] = useField(props)
   const { value } = props
 
@@ -32,7 +32,7 @@ const ButtonField = ({ img, showText, idElement, className, ...props }) => {
 
       {
         meta.value === "Suscripción" ?
-          <SelectQuote selectName={'Seleccione la cantidad de coutas'} options={[1, 3, 6, 9, 12, 18]} />
+          <SelectQuote selectName={'Seleccione la cantidad de coutas'} name='quotes' id='quotes' options={[1, 3, 6, 9, 12, 18]} />
           : null
       }
 

@@ -6,7 +6,7 @@ function App() {
   return (
     
     <Routes>
-      <Route path="/" element={<PasarelaApp />} />
+      <Route path="/superpasarela" element={<PasarelaApp />} />
 
       <Route
         path="*"

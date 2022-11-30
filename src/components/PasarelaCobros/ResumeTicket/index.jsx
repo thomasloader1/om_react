@@ -24,7 +24,7 @@ function ResumeTicket({ contractId }) {
     )
   }
 
-  const { sale, contact } = data;
+  const { sale, contact, products } = data;
 
 
   return (

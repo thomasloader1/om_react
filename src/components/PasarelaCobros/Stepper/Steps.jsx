@@ -15,7 +15,7 @@ import { Form as FB } from 'react-bulma-components';
 
 // pago stripe
 import axios from 'axios'
-import { loadStripe } from '@stripe/stripe-js';
+// import { loadStripe } from '@stripe/stripe-js';
 import {Elements,CardElement,useStripe,useElements} from '@stripe/react-stripe-js';
 
 import { AppContext } from '../Provider/StateProvider';
@@ -462,7 +462,7 @@ function CheckoutForm() {
 
 export function FormCardPayStep({ currentStep, setCurrentStep }) {
 
-  const stripePromise = loadStripe('pk_test_51LxuPAL8LzLismpRJ8x17MLBqh02YNICHMvzD91jEXEXkFQAPtDy3zE0BVM9xuRvlItl9ZWX2WH3fk5PTdzJ8TNL00n3Y1WfyW');
+ // const stripePromise = loadStripe('pk_test_51LxuPAL8LzLismpRJ8x17MLBqh02YNICHMvzD91jEXEXkFQAPtDy3zE0BVM9xuRvlItl9ZWX2WH3fk5PTdzJ8TNL00n3Y1WfyW');
 
   const [state] = useContext(AppContext);
 
@@ -495,7 +495,7 @@ export function FormCardPayStep({ currentStep, setCurrentStep }) {
       // onSubmit={formik.handleSubmit}
     >
 
-      <Elements stripe={stripePromise}>
+      {/* <Elements stripe={stripePromise}>
             <div className='container p-6'>
               <div className="row">
                 <div className="col-md-12
@@ -506,7 +506,7 @@ export function FormCardPayStep({ currentStep, setCurrentStep }) {
                 </div>
               </div>
             </div>
-          </Elements> 
+          </Elements>  */}
 {/* 
           {state.cardForm.map((input) => (
             <FB.Field key={input.idElement} style={{ marginBottom: '0.7rem' }}>
