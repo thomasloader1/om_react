@@ -1,17 +1,16 @@
 .grid-med_mod_payment {
   display: grid;
-    grid-template-areas: 'tarjeta link'  'hr hr' 'tradicional suscripcion' 'controls controls';
-    column-gap: 1rem;
+  grid-template-areas: 'tarjeta link' 'hr hr' 'tradicional suscripcion' 'controls controls';
+  column-gap: 1rem;
 
   button:nth-child(1) {
-   grid-area: tarjeta;
-   margin-bottom: 0;
+    grid-area: tarjeta;
+    margin-bottom: 0;
   }
 
   button:nth-child(2) {
     grid-area: link;
-   margin-bottom: 0;
-
+    margin-bottom: 0;
   }
 
   .is-divider {
@@ -24,44 +23,36 @@
 
   button:nth-child(5) {
     grid-area: suscripcion;
-
-  }
-
-  .controls{
-    grid-area: controls;
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 10rem;
-
   }
 }
 
 .grid-med_mod_payment-mp {
   display: grid;
-    grid-template-areas: 'search search' 'mod mod' 'quotes quotes' 'notification notification' 'controls controls';
-    column-gap: 1rem;
+  grid-template-areas: 'search search' 'mod mod' 'quotes quotes' 'notification notification' 'controls controls';
+  column-gap: 1rem;
 
   .field:nth-child(1) {
-   grid-area: search;
-   margin-bottom: 1.5rem;
+    grid-area: search;
+    margin-bottom: 1.5rem;
   }
 
-  .block.field_info{
+  .block.field_info {
     grid-area: notification;
     align-self: center;
-    margin: 10px auto ;
-  }
-
-  .select.is-info{
-    grid-area: quotes;
     margin: 10px auto;
   }
 
-  .controls{
-    grid-area: controls;
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 10rem;
+  .select.is-info {
+    grid-area: quotes;
+    margin: 10px auto;
+  }
+  .grid-payment_method-item {
+    height: unset;
 
+    &.active {
+      background-color: #eff1fa !important;
+      border-color: #485fc7;
+      color: #485fc7;
+    }
   }
 }

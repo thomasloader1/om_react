@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
-import '../../../scss/pasarela-de-cobros.scss';
+// import '../../../scss/pasarela-de-cobros.scss';
 import Header from '../Header';
 import Stepper from '../Stepper';
-import * as Yup from 'yup'
+import * as Yup from 'yup';
 import MultiStep from '../Stepper/MultiStep';
 import Side from '../Side';
 import { AppContext } from '../Provider/StateProvider';
@@ -16,14 +16,14 @@ import { useEffect } from 'react';
 
 function PasarelaApp() {
   const { options, formikValues, setFormikValues } = useContext(AppContext);
-  const [stepNumber, setStepNumber] = useState(0)
-const [checkoutLink, setCheckoutLink] = useState("")
+  const [stepNumber, setStepNumber] = useState(0);
+  const [checkoutLink, setCheckoutLink] = useState('');
 
   useEffect(() => {
-    setStepNumber(stepNumber)
+    setStepNumber(stepNumber);
 
-    return () => null
-  }, [stepNumber])
+    return () => null;
+  }, [stepNumber]);
 
   return (
     <>
@@ -40,25 +40,30 @@ const [checkoutLink, setCheckoutLink] = useState("")
               mod: ''
             }}
             onSubmit={async (values) => {
-              
               const body = new FormData();
-              const type = formikValues.mod.toLowerCase().substring(0,4)
-              console.log({ values }, formikValues.mod === "Tradicional",{type})
-              body.append('months', 0)
-              body.append('amount', `${formikValues.amount}`)
-              body.append('type', type)
-              body.append('so', formikValues.contractId)
-
-              const response = await axios.post("https://www.oceanomedicina.com.ar/suscripciontest/remote/generateCheckoutPro", body, {
-                mode: 'no-cors',
-                headers: {
-                  'Access-Control-Allow-Origin': '*',
-                  'Content-Type': 'application/x-www-form-urlencoded'
-                }
+              const type = formikValues.mod.toLowerCase().substring(0, 4);
+              console.log({ values }, formikValues.mod === 'Tradicional', {
+                type
               });
+              body.append('months', 0);
+              body.append('amount', `${formikValues.amount}`);
+              body.append('type', type);
+              body.append('so', formikValues.contractId);
 
-              setCheckoutLink(response.data.url)
-              console.log({ response })
+              const response = await axios.post(
+                'https://www.oceanomedicina.com.ar/suscripciontest/remote/generateCheckoutPro',
+                body,
+                {
+                  mode: 'no-cors',
+                  headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                  }
+                }
+              );
+
+              setCheckoutLink(response.data.url);
+              console.log({ response });
             }}
           >
             <SelectCountryStep
@@ -66,24 +71,27 @@ const [checkoutLink, setCheckoutLink] = useState("")
                 setFormikValues({
                   ...formikValues,
                   ...values
-                })
+                });
 
-                console.log('Step 1 submit', { values, formikValues })
+                console.log('Step 1 submit', { values, formikValues });
               }}
               validationSchema={Yup.object({
                 country: Yup.string().required('El pais es requerido')
-              })} />
+              })}
+            />
             <SelectPaymentMethodStep
               onSubmit={(values) => {
                 setFormikValues({
                   ...formikValues,
                   ...values
-                })
+                });
 
-                console.log('Step 2 submit', { values, formikValues })
+                console.log('Step 2 submit', { values, formikValues });
               }}
               validationSchema={Yup.object({
-                payment_method: Yup.string().required('El metodo de pago es requerido')
+                payment_method: Yup.string().required(
+                  'El metodo de pago es requerido'
+                )
               })}
             />
             <SelectPaymentModeStep
@@ -91,9 +99,9 @@ const [checkoutLink, setCheckoutLink] = useState("")
                 setFormikValues({
                   ...formikValues,
                   ...values
-                })
+                });
 
-                console.log('Step 3 submit', { values, formikValues })
+                console.log('Step 3 submit', { values, formikValues });
               }}
               validationSchema={Yup.object({
                 //contractId: Yup.string().required('El campo es requerido'),
@@ -106,9 +114,9 @@ const [checkoutLink, setCheckoutLink] = useState("")
                 setFormikValues({
                   ...formikValues,
                   ...values
-                })
+                });
 
-                console.log('Step 4 submit', { values, formikValues })
+                console.log('Step 4 submit', { values, formikValues });
               }}
               validationSchema={Yup.object({
                 checkContract: Yup.string().required('El campo es requerido'),
@@ -122,9 +130,11 @@ const [checkoutLink, setCheckoutLink] = useState("")
             />
 
             <GeneratePaymentLinkStep checkoutLink={checkoutLink} />
-
           </MultiStep>
-          <Side options={options.sideItemOptions} stepStateNumber={{ stepNumber, setStepNumber }} />
+          <Side
+            options={options.sideItemOptions}
+            stepStateNumber={{ stepNumber, setStepNumber }}
+          />
         </div>
       </section>
     </>

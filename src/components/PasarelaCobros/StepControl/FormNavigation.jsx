@@ -1,5 +1,5 @@
-import React from 'react'
-import { Button } from 'react-bulma-components'
+import React from 'react';
+import { Button } from 'react-bulma-components';
 
 const FormNavigation = (props) => {
   return (
@@ -9,7 +9,7 @@ const FormNavigation = (props) => {
       )}
       <Button className="flex-grow-1 is-primary is-normal is-fullwidth" type='submit'>{props.isLastStep ? 'Finalizar' : 'Siguiente'}</Button>
     </div>
-  )
-}
+  );
+};
 
-export default FormNavigation
+export default FormNavigation;

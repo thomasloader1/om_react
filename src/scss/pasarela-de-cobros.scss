@@ -1,10 +1,10 @@
-
+@use '../../node_modules/bulma/bulma.sass';
+@use 'abstracts';
 @use 'cardAsesor';
-@import 'pasarela-country.scss';
-@import 'pasarela-client-form.scss';
-@import 'pasarela-med-mod-payment.scss';
-@import 'pasarela-payment_method.scss';
-@import 'bulma/css/bulma.css';
+@use 'pasarela-country.scss';
+@use 'pasarela-client-form.scss';
+@use 'pasarela-med-mod-payment.scss';
+@use 'pasarela-payment_method.scss';
 
 // Fix bug grilla con input radio
 .radio + .radio,
@@ -17,13 +17,12 @@
 $success: #32bea6;
 $accent: #00b6de;
 $texto-light: #808fa6;
-$buttonBg: #FF266E;
+$buttonBg: #ff266e;
 
-button.button > .ui.radio{
-  input[type='radio']{
+button.button > .ui.radio {
+  input[type='radio'] {
     visibility: hidden;
   }
-
 }
 
 body,
@@ -61,15 +60,16 @@ header.container {
   //height: unset;
   border-radius: 6px;
 
-  &.is-primary{
+  &.is-primary {
     background-color: $buttonBg;
 
-    &[disabled], fieldset[disabled]{
+    &[disabled],
+    fieldset[disabled] {
       background-color: $buttonBg;
       border-color: $buttonBg;
     }
 
-    &:hover{
+    &:hover {
       background-color: darken($buttonBg, 15%);
     }
   }
@@ -104,6 +104,19 @@ h2.title {
   position: relative;
   z-index: 2;
 
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 376px;
+    height: max-content;
+
+    & > *:nth-child(2) {
+      flex-grow: 1;
+      align-content: flex-start;
+    }
+  }
+
   &-cont {
     display: flex;
     flex-direction: column;
@@ -116,7 +129,7 @@ h2.title {
   grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
   grid-template-rows: 1fr 3rem 1fr;
   column-gap: 0.75rem;
-  
+
   &-item {
     display: flex;
     justify-content: center;
@@ -136,40 +149,37 @@ h2.title {
     }
 
     input {
-     position: absolute;
-     text-align: center;
+      position: absolute;
+      text-align: center;
       opacity: 0.001;
       z-index: 3;
-     /*  left: 0px;
+      /*  left: 0px;
       top: 0px; */
       width: 100%;
       height: 100%;
       cursor: pointer;
-      &[type='radio']{
+      &[type='radio'] {
         visibility: hidden;
       }
     }
-   
-    h4{
+
+    h4 {
       text-align: center;
     }
 
-    &.button.is-link.is-outlined:focus{
-      background-color:#eff1fa !important;
+    &.button.is-link.is-outlined:focus {
+      background-color: #eff1fa !important;
     }
   }
 
-  .is-divider.doble{
+  .is-divider.doble {
     grid-column: span 3;
     grid-row: 2 / 3;
   }
 
-  .half{
+  .half {
     justify-content: center;
-
-   
   }
-
 }
 .stepControls,
 .edit_stepControls {
@@ -261,8 +271,7 @@ h2.title {
       height: 5rem;
     }
     .field {
-
-      & .half:not(:last-child){
+      & .half:not(:last-child) {
         margin: 0;
       }
 
@@ -378,6 +387,44 @@ h2.title {
   background: #fff;
   border-radius: 10px 10px 0 0;
   filter: drop-shadow(0px 30px 50px rgba(0, 0, 0, 0.25));
+
+  .datos-cliente {
+    &-header {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  .datos-tarjeta {
+    .finalResume-item {
+      margin-bottom: 0.75rem;
+    }
+  }
+  .datos-cliente,
+  .datos-tarjeta {
+    row-gap: 1.25rem;
+  }
+  .finalResume-confirmation {
+    gap: 1rem;
+    .control,
+    .field,
+    .field label {
+      width: 100%;
+    }
+    label {
+      display: flex;
+      align-items: center;
+    }
+    input {
+      position: absolute;
+      text-align: center;
+      opacity: 0.001;
+      z-index: 9999;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      height: 100%;
+    }
+  }
   .finalResume-item {
     h4 {
       font-weight: 600;
@@ -388,10 +435,20 @@ h2.title {
       text-transform: uppercase;
       font-weight: 500;
       font-size: 14px;
+
+      &.active {
+        background-color: #eff1fa !important;
+        border-color: #485fc7;
+        color: #485fc7;
+      }
     }
   }
   h2 {
-    margin-bottom: 0.75rem;
+    margin-bottom: -0.25rem;
+  }
+
+  #todayDate_resume h4 {
+    font-size: 1rem;
   }
 
   #numeroContrato_resume h4,
@@ -418,19 +475,18 @@ h2.title {
   }
 }
 
-.datos-tarjeta {
-  .finalResume-item {
-    margin-bottom: 0.75rem;
-  }
-}
 .is-divider-dashed {
   border-bottom: 2px dashed #f5f5f5;
   margin: 0.5rem 0 0.75rem;
 }
 
-.controls{
+.controls {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   margin-top: 2.5rem;
+
+  & button[type='submit'] {
+    grid-column: 2/3;
+  }
 }
