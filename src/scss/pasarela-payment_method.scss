@@ -1,7 +1,6 @@
 .grid-payment_method {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
-  grid-template-rows: 1fr 3rem 1fr;
   gap: 0.75rem;
 
   &-item {
@@ -36,10 +35,9 @@
       width: 100%;
       height: 100%;
       cursor: pointer;
-
     }
 
-    &.button.is-link.is-outlined:focus{
+    &.button.is-link.is-outlined:focus {
       background-color: #eff1fa !important;
     }
   }
