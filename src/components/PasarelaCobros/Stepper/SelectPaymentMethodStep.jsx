@@ -8,6 +8,7 @@ import { FormStep } from './MultiStep';
 function SelectPaymentMethodStep() {
   const { options, setOptions, userInfo, setUserInfo } = useContext(AppContext);
   const { paymentOptions } = options
+  const { stepTwo } = userInfo
   const { isoRef } = userInfo.stepOne
 
   const getIsoCountry = () => {
@@ -30,7 +31,7 @@ function SelectPaymentMethodStep() {
         {paymentOptions.map(({allowedCountries, ...props }) => allowedCountries.includes(isoCountry) && (
           <ButtonField
             {...props}
-            className={`grid-payment_method-item tall button`}
+            className={`grid-payment_method-item tall button ${ props.value === stepTwo.value && 'active'}`}
             showText={false}
             id={props.shortName}
             name="payment_method"

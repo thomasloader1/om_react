@@ -1,0 +1,24 @@
+#grid-payment_stripe{
+    display: grid;
+    grid-template-areas: 'text text text' 'card card notify' 'console console console';
+
+    .checkout_stripe{
+        grid-area: card;
+
+        #card_element{
+            margin: 10px 0;
+        }
+
+        #serverNotify{
+            grid-area: notify;
+        }
+
+        button{
+            width: 100%;
+        }
+    }
+
+    pre{
+        grid-area: console;
+    }
+}

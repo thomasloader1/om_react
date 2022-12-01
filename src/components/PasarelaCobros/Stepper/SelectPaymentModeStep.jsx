@@ -3,15 +3,14 @@ import InputField from '../InputField';
 import { AppContext } from '../Provider/StateProvider';
 import ButtonField from '../RadioButton/ButtonField';
 import { FormStep } from './MultiStep';
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
-import CheckoutForm from './CheckoutForm';
 
-function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
+function SelectPaymentModeStep() {
   const { options, setOptions, userInfo, setUserInfo } = useContext(AppContext);
-  
+  const { stepTwo, stepThree } = userInfo
 
-  if (userInfo.stepTwo.value === 'Mercado Pago') {
+  console.log({userInfo})
+
+  if (stepTwo.value === 'Mercado Pago') {
 
     return (
       <FormStep
@@ -25,7 +24,7 @@ function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
           {options.paymentModeOptions.map(({ ...props }) =>
             <ButtonField
               {...props}
-              className={`grid-payment_method-item button`}
+              className={`grid-payment_method-item button ${props.value === stepThree.value && 'active'}`}
               showText={true}
               id={props.idElement}
               name="mod"
@@ -33,7 +32,6 @@ function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
               disabled={props.value !== "Tradicional"}
               onClick={() => {
                 const { sideItemOptions } = options
-                const { stepThree } = userInfo
 
                 sideItemOptions[2].value = props.value
                 stepThree.value = props.value
@@ -70,7 +68,7 @@ function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
           {options.paymentModeOptions.map(({ ...props }) =>
             <ButtonField
               {...props}
-              className={`grid-payment_method-item button`}
+              className={`grid-payment_method-item button ${props.value === stepThree.value && 'active'}`}
               showText={true}
               id={props.idElement}
               name="mod"

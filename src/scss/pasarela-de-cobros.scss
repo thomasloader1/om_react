@@ -5,6 +5,7 @@
 @use 'pasarela-client-form.scss';
 @use 'pasarela-med-mod-payment.scss';
 @use 'pasarela-payment_method.scss';
+@use 'pasarela-generate_payment.scss';
 
 // Fix bug grilla con input radio
 .radio + .radio,
