@@ -1,5 +1,4 @@
-import React, { useContext, useRef } from 'react';
-import * as Yup from 'yup';
+import React, { useContext } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import ButtonField from '../RadioButton/ButtonField';
 import { FormStep } from './MultiStep';
@@ -7,6 +6,7 @@ import { FormStep } from './MultiStep';
 function SelectCountryStep() {
   const { options, setOptions, userInfo, setUserInfo } = useContext(AppContext);
   const { countryOptions } = options
+  const { stepOne } = userInfo
 
   return (
     <FormStep
@@ -17,7 +17,7 @@ function SelectCountryStep() {
         {countryOptions.map(({ ...props }) => (
           <ButtonField
             {...props}
-            className={`grid-country-item button`}
+            className={`grid-country-item button ${ props.value === stepOne.value && 'active'}`}
             showText={true}
             id={props.idElement}
             name="country"

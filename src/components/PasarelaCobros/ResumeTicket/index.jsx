@@ -20,6 +20,8 @@ function ResumeTicket({ contractId }) {
   } = useContext(AppContext);
   const { loading, data, error } = useContractZoho(contractId);
 
+  const { stepFour } = userInfo
+
   if (typeof data === 'string') {
     return (
       <Block>
@@ -128,18 +130,17 @@ function ResumeTicket({ contractId }) {
           <Columns className="finalResume-confirmation">
             <Columns.Column>
               <ButtonField
-                className={`button`}
+                className={`grid-payment_method-item button ${"Datos correctos" === stepFour.value && 'active'}`}
                 showText={true}
                 id="checkContract"
                 name="checkContract"
-                value="Todo liso"
+                value="Datos correctos"
                 onClick={() => {
                   // console.log(userInfo)
                   const { sideItemOptions } = options;
-                  const { stepFour } = userInfo;
 
-                  sideItemOptions[3].value = 'Todo liso';
-                  stepFour.value = 'Todo liso';
+                  sideItemOptions[3].value = 'Datos correctos';
+                  stepFour.value = 'Datos correctos';
 
                   setOptions({
                     ...options,
@@ -152,7 +153,10 @@ function ResumeTicket({ contractId }) {
 
                   setFormikValues({
                     ...formikValues,
-                    amount: sale.Grand_Total
+                    amount: sale.Grand_Total,
+                    sale,
+                    contact,
+                    products
                   });
                 }}
               />
@@ -160,18 +164,18 @@ function ResumeTicket({ contractId }) {
 
             <Columns.Column>
               <ButtonField
-                className={`button`}
+                className={`grid-payment_method-item button ${"Datos erroneos" === stepFour.value && 'active'}`}
                 showText={true}
                 id="checkContract"
                 name="checkContract"
-                value="Todo mal"
+                value="Datos erroneos"
                 onClick={() => {
                   // console.log(userInfo)
                   const { sideItemOptions } = options;
                   const { stepFour } = userInfo;
 
-                  sideItemOptions[3].value = 'Todo mal';
-                  stepFour.value = 'Todo mal';
+                  sideItemOptions[3].value = 'Datos erroneos';
+                  stepFour.value = 'Datos erroneos';
 
                   setOptions({
                     ...options,

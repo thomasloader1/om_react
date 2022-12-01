@@ -40,6 +40,12 @@
     &.button.is-link.is-outlined:focus {
       background-color: #eff1fa !important;
     }
+
+    &.active {
+      background-color: #eff1fa !important;
+      border-color: #485fc7;
+      color: #485fc7;
+    }
   }
 
   .controls {

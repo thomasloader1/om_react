@@ -4,13 +4,14 @@ import { loadStripe } from '@stripe/stripe-js';
 import React, { useContext } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import CheckoutForm from './CheckoutForm';
+import { FormStep } from './MultiStep';
 
 
 function GeneratePaymentLinkStep({ checkoutLink }) {
   const { formikValues, userInfo } = useContext(AppContext);
   const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_TEST_OM);
 
-  
+
   if (userInfo.stepTwo.value === "Mercado Pago") {
     console.log({ formikValues })
     return (
@@ -23,11 +24,22 @@ function GeneratePaymentLinkStep({ checkoutLink }) {
       </div>)
   } else {
     return (
-      <div id='grid-client_data'>
+      <FormStep
+        stepNumber={5}
+        stepName='Finalize su compra'
+      >
+      <div id='grid-payment_stripe'>
+        <div className="checkout_stripe field">
         <Elements stripe={stripePromise}>
           <CheckoutForm />
         </Elements>
+        </div>
+        <div id="serverNotify">
+
+        </div>
+        <pre>{JSON.stringify(formikValues, null, 2)}</pre>
       </div>
+      </FormStep>
     );
   }
 
