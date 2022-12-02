@@ -2,6 +2,7 @@
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import React, { useContext } from 'react';
+import { Block, Notification } from 'react-bulma-components';
 import { AppContext } from '../Provider/StateProvider';
 import CheckoutForm from './CheckoutForm';
 import { FormStep } from './MultiStep';
@@ -24,22 +25,27 @@ function GeneratePaymentLinkStep({ checkoutLink }) {
       </div>)
   } else {
     return (
+      <>
       <FormStep
         stepNumber={5}
         stepName='Finalize su compra'
       >
       <div id='grid-payment_stripe'>
         <div className="checkout_stripe field">
-        <Elements stripe={stripePromise}>
-          <CheckoutForm />
-        </Elements>
+          <Elements stripe={stripePromise}>
+            <CheckoutForm />
+          </Elements>
         </div>
         <div id="serverNotify">
-
+          <Block>
+            <Notification color="success">
+            {JSON.stringify(formikValues, null, 2)}
+            </Notification>
+          </Block>
         </div>
-        <pre>{JSON.stringify(formikValues, null, 2)}</pre>
       </div>
       </FormStep>
+      </>
     );
   }
 

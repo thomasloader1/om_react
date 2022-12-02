@@ -6,18 +6,7 @@ import ResumeTicket from '../ResumeTicket';
 import { FormStep } from './MultiStep';
 
 function FormClientDataStep() {
-  const { options, formikValues, userInfo } = useContext(AppContext);
-  const { clientForm } = options
-
-  const clientFormWithoutOptions = clientForm.filter(
-    (input) => !input.options
-  );
-
-  const clientFormRadioField = clientForm.filter(
-    (input) => input.options && typeof input.options[0] === 'string'
-  );
-
-  console.log({ clientFormWithoutOptions, clientFormRadioField })
+  const { formikValues, userInfo } = useContext(AppContext);
 
 
   if (userInfo.stepTwo.value === "Mercado Pago") {

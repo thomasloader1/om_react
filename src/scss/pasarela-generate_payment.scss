@@ -1,8 +1,12 @@
 #grid-payment_stripe{
     display: grid;
-    grid-template-areas: 'text text text' 'card card notify' 'console console console';
+    grid-template-areas: 'card card card' 'notify notify notify';
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
 
     .checkout_stripe{
+        max-width: 500px;
         grid-area: card;
 
         #card_element{
@@ -20,5 +24,6 @@
 
     pre{
         grid-area: console;
+        max-width: 300px;
     }
 }

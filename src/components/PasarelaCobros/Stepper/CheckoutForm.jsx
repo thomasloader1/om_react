@@ -72,7 +72,6 @@ const CheckoutForm = () => {
       <button className='button is-primary' type="button" onClick={handleSubmit} disabled={!stripe || !elements}>
         Pagar
       </button>
-      <pre>{JSON.stringify(stripeRequest, null, 2)}</pre>
 
       <Modal
         show={openModal === 'card'}
@@ -86,14 +85,15 @@ const CheckoutForm = () => {
             <Modal.Card.Title>Title</Modal.Card.Title>
           </Modal.Card.Header>
           <Modal.Card.Body>
+          {JSON.stringify(stripeRequest, null, 2)}
             <Media>
-              <Media.Item renderAs="figure" align="left">
+              {/* <Media.Item renderAs="figure" align="left">
                 <Image
                   size={64}
                   alt="64x64"
                   src="http://bulma.io/images/placeholders/128x128.png"
                 />
-              </Media.Item>
+              </Media.Item> */}
               <Media.Item>
                 <Content>
                   <p>
