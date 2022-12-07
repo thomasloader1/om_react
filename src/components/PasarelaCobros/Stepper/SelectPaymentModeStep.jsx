@@ -29,7 +29,7 @@ function SelectPaymentModeStep() {
               id={props.idElement}
               name="mod"
               key={props.idElement}
-              disabled={props.value !== "Tradicional"}
+              /* disabled={props.value !== "Tradicional"} */
               onClick={() => {
                 const { sideItemOptions } = options
 
@@ -73,7 +73,7 @@ function SelectPaymentModeStep() {
               id={props.idElement}
               name="mod"
               key={props.idElement}
-              disabled={props.value !== "Tradicional"}
+              /* disabled={props.value !== "Tradicional"} */
               onClick={() => {
                 const { sideItemOptions } = options
                 const { stepThree } = userInfo

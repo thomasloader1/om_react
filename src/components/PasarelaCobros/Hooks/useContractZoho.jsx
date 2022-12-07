@@ -14,16 +14,27 @@ export const useContractZoho = (contractId) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.post(URL, body, {
+      fetch(URL, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        },
+        body
+      }).then((res) => res.json()).then((data) => {
+        console.log({ data })
+        setData(data)
+        setLoading(data.lenght > 0)
+      })
+      /* await axios.post(URL, body, {
         mode: 'no-cors',
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/x-www-form-urlencoded'
         }
-      })
-      console.log({ response })
-      setData(response.data)
-      setLoading(response.data.lenght > 0)
+      }) */
+      // console.log({ response, data })
+
     }
 
     fetchData()
