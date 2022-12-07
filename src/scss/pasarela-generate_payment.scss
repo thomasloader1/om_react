@@ -4,13 +4,14 @@
     gap: 1rem;
     align-items: center;
     justify-content: center;
+    width: 100%;
 
     .checkout_stripe{
-        max-width: 500px;
         grid-area: card;
 
         #card_element{
             margin: 10px 0;
+            width: 700px;
         }
 
         #serverNotify{

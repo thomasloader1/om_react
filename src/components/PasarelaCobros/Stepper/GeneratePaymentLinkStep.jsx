@@ -1,16 +1,18 @@
 
 import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import React, { useContext } from 'react';
 import { Block, Notification } from 'react-bulma-components';
+import useStripeEnv from '../Hooks/useStripeEnv';
+
 import { AppContext } from '../Provider/StateProvider';
 import CheckoutForm from './CheckoutForm';
 import { FormStep } from './MultiStep';
 
-
 function GeneratePaymentLinkStep({ checkoutLink }) {
-  const { formikValues, userInfo } = useContext(AppContext);
-  const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_TEST_OM);
+  const { formikValues, userInfo, stripeRequest } = useContext(AppContext);
+  const { stripePromise } = useStripeEnv();
+
+  console.log({stripePromise})
 
 
   if (userInfo.stepTwo.value === "Mercado Pago") {
@@ -31,17 +33,21 @@ function GeneratePaymentLinkStep({ checkoutLink }) {
         stepName='Finalize su compra'
       >
       <div id='grid-payment_stripe'>
+      { stripeRequest === null &&
         <div className="checkout_stripe field">
           <Elements stripe={stripePromise}>
             <CheckoutForm />
           </Elements>
         </div>
+      }
         <div id="serverNotify">
+          { stripeRequest?.status === 'active' &&
           <Block>
-            <Notification color="success">
-            {JSON.stringify(formikValues, null, 2)}
-            </Notification>
-          </Block>
+          <Notification color="success">
+            ¡El pago fue exitoso!
+          {/* {JSON.stringify(stripeRequest, null, 2)} */}
+          </Notification>
+        </Block>}
         </div>
       </div>
       </FormStep>
