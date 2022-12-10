@@ -36,8 +36,11 @@ function PasarelaApp() {
             className="pasarela-1 column seleccion-pais"
             initialValues={{
               country: '',
+              payment_method:'',
               contractId: '',
-              mod: ''
+              mod: '',
+              checkContract: '',
+
             }}
             onSubmit={async (values) => {
               const body = new FormData();
@@ -54,7 +57,6 @@ function PasarelaApp() {
                 'https://www.oceanomedicina.com.ar/suscripciontest/remote/generateCheckoutPro',
                 body,
                 {
-                  mode: 'no-cors',
                   headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -104,9 +106,13 @@ function PasarelaApp() {
                 console.log('Step 3 submit', { values, formikValues });
               }}
               validationSchema={Yup.object({
-                contractId: Yup.string().required('El campo es requerido'),
-                mod: Yup.string().required('El modo de pago es requerido'),
-                quotes: Yup.string()
+                contractId: Yup.string().required('Ingrese el ID del contrato es requerido'),
+                mod: Yup.string().required('Seleccione un modo de pago'),
+                quotes: Yup.string().when('mod',{
+                  is: (val) => !(val && val.includes('Tradicional')),
+                  then: Yup.string().required('Especifique las cuotas'),
+                  otherwise: null
+                })
               })}
             />
             <FormClientDataStep
@@ -131,6 +137,7 @@ function PasarelaApp() {
           />
         </div>
       </section>
+      <pre>{JSON.stringify(formikValues, null, 2)}</pre>
     </>
   );
 }

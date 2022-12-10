@@ -1,9 +1,9 @@
 import { useField } from 'formik'
 import React from 'react'
 
-const SelectQuote = ({ selectName, options, ...props}) => {
+const SelectQuote = ({ selectName = "Seleccione las cuotas", options, ...props}) => {
     const [field, meta] = useField(props)
-console.log("selectQuote",{field, meta})
+    console.log("selectQuote",{field, meta})
     return (
         <div className="select is-info">
             <select {...props} {...field}>

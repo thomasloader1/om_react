@@ -22,6 +22,7 @@ function StateProvider({ children }) {
   })
   
   const [formikValues, setFormikValues] = useState({})
+  const [formikInputStatus, setFormikInputStatus] = useState({})
   const [userInfo, setUserInfo] = useState(userFlow)
   const [stepNumberGlobal, setStepNumberGlobal] = useState(0)
   const [stripeRequest, setStripeRequest] = useState(null)
@@ -29,6 +30,7 @@ function StateProvider({ children }) {
   return (
     <AppContext.Provider value={{ options, setOptions, 
                                   formikValues, setFormikValues, 
+                                  formikInputStatus, setFormikInputStatus,
                                   userInfo, setUserInfo,
                                   stepNumberGlobal, setStepNumberGlobal,
                                   stripeRequest, setStripeRequest

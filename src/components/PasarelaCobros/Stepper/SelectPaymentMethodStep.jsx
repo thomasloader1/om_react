@@ -2,6 +2,7 @@
 import React, { useContext } from 'react'
 import { AppContext } from '../Provider/StateProvider';
 import ButtonField from '../RadioButton/ButtonField';
+import SelectQuote from '../SelectQuote';
 import { FormStep } from './MultiStep';
 
 
@@ -57,6 +58,7 @@ function SelectPaymentMethodStep() {
              }}
           />
         ))}
+
       </div>
     </FormStep>
   );

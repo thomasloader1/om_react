@@ -14,9 +14,6 @@ const InputField = ({label, key,...props}) => {
                     {...field}
                     {...props}
                 />
-                {meta.touched && meta.error && (
-                    <p className="help is-danger">{meta.error}</p>
-                )}
             </Form.Control>
         </Form.Field>
     )
