@@ -18,7 +18,6 @@ const InputField = ({ label, ...props }) => {
                     {...props}
                 />
             </div>
-            {meta.touched && meta.error && <p className="help is-danger">{meta.error}</p>}
         </div>
     )
 }

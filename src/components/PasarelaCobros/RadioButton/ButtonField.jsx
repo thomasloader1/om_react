@@ -3,6 +3,7 @@ import React from 'react';
 import { Block, Form, Notification } from 'react-bulma-components';
 import { Image } from 'semantic-ui-react';
 import IMAGES from '../../../img/pasarelaCobros/share';
+import { useInputStatus } from '../Hooks/useNotify';
 import SelectQuote from '../SelectQuote';
 
 const ButtonField = ({ img, showText, idElement, className, classLabel, shortName, idInputElement, ...props }) => {
@@ -29,29 +30,8 @@ const ButtonField = ({ img, showText, idElement, className, classLabel, shortNam
           </Form.Radio>
         </Form.Control>
       </Form.Field>
+     {/*  <pre>{JSON.stringify(field, null, 1)}</pre> */}
 
-      {
-        meta.value === "Suscripción" ?
-          <SelectQuote selectName={'Seleccione la cantidad de coutas'} name='quotes' id='quotes' options={[1, 3, 6, 9, 12, 18]} />
-          : null
-      }
-
-      {meta.errors && <p className="help is-danger">{meta.error}</p>}
-
-      {meta.value === 'Tradicional' || meta.value === 'Suscripción' ? (
-        <Block className="field_info">
-          <Notification color="info" light="true">
-            <strong> {meta.value} </strong>
-
-            {meta.value === 'Tradicional'
-              ? ' le permite hacer la operacion habitual de compra'
-              : null}
-            {meta.value === 'Suscripción'
-              ? ' le permite hacer la operacion con las cuotas sin interes!'
-              : null}
-          </Notification>
-        </Block>
-      ) : null}
     </>
   );
 };

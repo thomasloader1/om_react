@@ -1,6 +1,8 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
 
+const { REACT_APP_OCEANO_OBTAINDATA, NODE_ENV } = process.env
+
 export const useContractZoho = (contractId) => {
   const [data, setData] = useState({})
   const [loading, setLoading] = useState(true)
@@ -9,23 +11,20 @@ export const useContractZoho = (contractId) => {
   const body = new FormData();
   body.append('key', '9j9fj0Do204==3fja134')
   body.append('id', contractId)
-
-  const URL = 'https://oceanomedicina.com.ar/suscripciontest/remote/obtaindata';
+//https://oceanomedicina.com.ar/suscripciontest/remote/obtaindata
+  const URL = NODE_ENV === "production" ? REACT_APP_OCEANO_OBTAINDATA : '/proxy' ;
 
   useEffect(() => {
     const fetchData = async () => {
-      fetch(URL, {
+      const response = await fetch(URL, {
         method: 'POST',
-        credentials: 'same-origin',
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        },
         body
-      }).then((res) => res.json()).then((data) => {
-        console.log({ data })
-        setData(data)
-        setLoading(data.lenght > 0)
       })
+      const data = await response.json()
+      console.log({ data })
+        
+      setData(data)
+      setLoading(data.lenght > 0)
       /* await axios.post(URL, body, {
         mode: 'no-cors',
         headers: {

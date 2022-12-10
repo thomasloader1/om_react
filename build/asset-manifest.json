@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "https://oceanomedicina.net/superpasarela/static/css/main.0191fbd6.css",
-    "main.js": "https://oceanomedicina.net/superpasarela/static/js/main.aef68b88.js",
+    "main.css": "https://oceanomedicina.net/superpasarela/static/css/main.0c9bbc0d.css",
+    "main.js": "https://oceanomedicina.net/superpasarela/static/js/main.bb34fb0f.js",
     "static/js/787.5673cd10.chunk.js": "https://oceanomedicina.net/superpasarela/static/js/787.5673cd10.chunk.js",
     "static/media/asesor-cobranzas.jpg": "https://oceanomedicina.net/superpasarela/static/media/asesor-cobranzas.a52bce09a4843e523e32.jpg",
     "static/media/asesor-comercial.jpg": "https://oceanomedicina.net/superpasarela/static/media/asesor-comercial.2bfb243332853af1daba.jpg",
@@ -28,12 +28,12 @@
     "index.html": "https://oceanomedicina.net/superpasarela/index.html",
     "static/media/colombia.svg": "https://oceanomedicina.net/superpasarela/static/media/colombia.61dc8bf20ec851abd2c137198f503358.svg",
     "static/media/peru.svg": "https://oceanomedicina.net/superpasarela/static/media/peru.0732053311a60993127b33f9407fb6e4.svg",
-    "main.0191fbd6.css.map": "https://oceanomedicina.net/superpasarela/static/css/main.0191fbd6.css.map",
-    "main.aef68b88.js.map": "https://oceanomedicina.net/superpasarela/static/js/main.aef68b88.js.map",
+    "main.0c9bbc0d.css.map": "https://oceanomedicina.net/superpasarela/static/css/main.0c9bbc0d.css.map",
+    "main.bb34fb0f.js.map": "https://oceanomedicina.net/superpasarela/static/js/main.bb34fb0f.js.map",
     "787.5673cd10.chunk.js.map": "https://oceanomedicina.net/superpasarela/static/js/787.5673cd10.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.0191fbd6.css",
-    "static/js/main.aef68b88.js"
+    "static/css/main.0c9bbc0d.css",
+    "static/js/main.bb34fb0f.js"
   ]
 }

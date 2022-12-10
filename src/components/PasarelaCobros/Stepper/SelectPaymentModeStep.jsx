@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import InputField from '../InputField';
 import { AppContext } from '../Provider/StateProvider';
 import ButtonField from '../RadioButton/ButtonField';
+import SelectQuote from '../SelectQuote';
 import { FormStep } from './MultiStep';
 
 function SelectPaymentModeStep() {
@@ -49,6 +50,9 @@ function SelectPaymentModeStep() {
               }}
             />
           )}
+        
+        <SelectQuote name='quotes' id='quotes' options={[1, 3, 6, 9, 12, 18]} />
+
         </div>
       </FormStep>
     );
@@ -94,6 +98,9 @@ function SelectPaymentModeStep() {
               }}
             />
           )}
+
+        {/* <SelectQuote name='quotes' id='quotes' options={[1, 3, 6, 9, 12, 18]} />
+ */}
         </div>
       </FormStep>
   );
