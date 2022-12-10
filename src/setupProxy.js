@@ -4,7 +4,7 @@ module.exports = function(app) {
   app.use(
     '/proxy',
     createProxyMiddleware({
-      target: 'http://127.0.0.1:8000/proxy/sg/obtaindata',
+      target: 'https://oceanomedicina.net',
       changeOrigin: true,
     })
   );

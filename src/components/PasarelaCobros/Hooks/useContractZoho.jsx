@@ -12,7 +12,7 @@ export const useContractZoho = (contractId) => {
   body.append('key', '9j9fj0Do204==3fja134')
   body.append('id', contractId)
 //https://oceanomedicina.com.ar/suscripciontest/remote/obtaindata
-  const URL = NODE_ENV === "production" ? REACT_APP_OCEANO_OBTAINDATA : '/proxy' ;
+  const URL = NODE_ENV === "production" ? REACT_APP_OCEANO_OBTAINDATA : '/proxy/proxy2.php?url=https://oceanomedicina.com.ar/suscripciontest/remote/obtaindata' ;
 
   useEffect(() => {
     const fetchData = async () => {
