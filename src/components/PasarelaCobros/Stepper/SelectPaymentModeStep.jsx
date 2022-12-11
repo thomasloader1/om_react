@@ -6,10 +6,10 @@ import SelectQuote from '../SelectQuote';
 import { FormStep } from './MultiStep';
 
 function SelectPaymentModeStep() {
-  const { options, setOptions, userInfo, setUserInfo } = useContext(AppContext);
+  const { options, setOptions, userInfo, setUserInfo, formikValues, stepNumberGlobal } = useContext(AppContext);
   const { stepTwo, stepThree } = userInfo
 
-  console.log({userInfo})
+  console.log({ userInfo, formikValues })
 
   if (stepTwo.value === 'Mercado Pago') {
 
@@ -50,8 +50,8 @@ function SelectPaymentModeStep() {
               }}
             />
           )}
-        
-        <SelectQuote name='quotes' id='quotes' options={[1, 3, 6, 9, 12, 18]} />
+
+          <SelectQuote name='quotes' id='quotes' options={[1, 3, 6, 9, 12, 18]} />
 
         </div>
       </FormStep>
@@ -62,102 +62,23 @@ function SelectPaymentModeStep() {
 
   return (
     <FormStep
-        stepNumber={3}
-        stepName='Seleccione un modo de pago'
-      >
-        <div id="medModPago_grid" className="grid-med_mod_payment-mp">
-
-          <InputField label="Ingrese ID de Contrato" id="contractId" name="contractId" />
-
-          {options.paymentModeOptions.map(({ ...props }) =>
-            <ButtonField
-              {...props}
-              className={`grid-payment_method-item button ${props.value === stepThree.value && 'active'}`}
-              showText={true}
-              id={props.idElement}
-              name="mod"
-              key={props.idElement}
-              /* disabled={props.value !== "Tradicional"} */
-              onClick={() => {
-                const { sideItemOptions } = options
-                const { stepThree } = userInfo
-
-                sideItemOptions[2].value = props.value
-                stepThree.value = props.value
-
-                setOptions({
-                  ...options,
-                  sideItemOptions: [
-                    ...sideItemOptions
-                  ]
-                })
-
-                setUserInfo({
-                  ...userInfo
-                })
-              }}
-            />
-          )}
-
-        {/* <SelectQuote name='quotes' id='quotes' options={[1, 3, 6, 9, 12, 18]} />
- */}
-        </div>
-      </FormStep>
-  );
-}
-
-export default SelectPaymentModeStep;
- {/* <FormStep
       stepNumber={3}
       stepName='Seleccione un modo de pago'
     >
-      <div id="medModPago_grid" className="grid-med_mod_payment">
+      <div id="medModPago_grid" className="grid-med_mod_payment-mp">
 
-       
-       
-
-        {options.paymentMethodOptions.map(({ ...props }) =>
-          <ButtonField
-            {...props}
-            className={`grid-payment_method-item button`}
-            showText={true}
-            id={props.idElement}
-            name="med"
-            key={props.idElement}
-            onClick={() => {
-              // console.log(userInfo)
-              const { sideItemOptions } = options
-              const { stepThree } = userInfo
-
-              sideItemOptions[2].value = props.value
-              stepThree.value = props.value
-
-              setOptions({
-                ...options,
-                sideItemOptions: [
-                  ...sideItemOptions
-                ]
-              })
-
-              setUserInfo({
-                ...userInfo
-              })
-            }}
-          />
-        )}
-
-        <div className="is-divider doble" />
+        <InputField label="Ingrese ID de Contrato" id="contractId" name="contractId" />
 
         {options.paymentModeOptions.map(({ ...props }) =>
           <ButtonField
             {...props}
-            className={`grid-payment_method-item button`}
+            className={`grid-payment_method-item button ${props.value === stepThree.value && 'active'}`}
             showText={true}
             id={props.idElement}
             name="mod"
             key={props.idElement}
+            /* disabled={props.value !== "Tradicional"} */
             onClick={() => {
-              // console.log(userInfo)
               const { sideItemOptions } = options
               const { stepThree } = userInfo
 
@@ -177,5 +98,15 @@ export default SelectPaymentModeStep;
             }}
           />
         )}
+        
+        {stepThree.value !== 'Tradicional' && stepThree.value !== '' &&
+
+          <SelectQuote name='quotes' id='quotes' options={[1, 3, 6, 9, 12, 18]} />
+        }
+
       </div>
-    </FormStep> */}
+    </FormStep>
+  );
+}
+
+export default SelectPaymentModeStep;

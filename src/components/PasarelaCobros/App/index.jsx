@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 // import '../../../scss/pasarela-de-cobros.scss';
 import Header from '../Header';
 import Stepper from '../Stepper';
@@ -14,11 +14,13 @@ import GeneratePaymentLinkStep from '../Stepper/GeneratePaymentLinkStep';
 import axios from 'axios';
 import { useEffect } from 'react';
 
+const { REACT_APP_OCEANO_URL, REACT_APP_OCEANO_GENERATECHECKOUTPRO, NODE_ENV } = process.env
+
+
 function PasarelaApp() {
   const { options, formikValues, setFormikValues } = useContext(AppContext);
   const [stepNumber, setStepNumber] = useState(0);
   const [checkoutLink, setCheckoutLink] = useState('');
-
   useEffect(() => {
     setStepNumber(stepNumber);
 
@@ -34,31 +36,19 @@ function PasarelaApp() {
           <MultiStep
             stepStateNumber={{ stepNumber, setStepNumber }}
             className="pasarela-1 column seleccion-pais"
-            initialValues={{
-              country: '',
-              payment_method:'',
-              contractId: '',
-              mod: '',
-              checkContract: '',
-
-            }}
+            initialValues={{}}
             onSubmit={async (values) => {
               const body = new FormData();
               const type = formikValues.mod.toLowerCase().substring(0, 4);
-              console.log({ values }, formikValues.mod === 'Tradicional', {
-                type
-              });
               body.append('months', 0);
               body.append('amount', `${formikValues.amount}`);
               body.append('type', type);
               body.append('so', formikValues.contractId);
 
-              const response = await axios.post(
-                'https://www.oceanomedicina.com.ar/suscripciontest/remote/generateCheckoutPro',
-                body,
+              const URL = NODE_ENV === "production" ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GENERATECHECKOUTPRO}` : REACT_APP_OCEANO_GENERATECHECKOUTPRO
+              const response = await axios.post(URL, body,
                 {
                   headers: {
-                    'Access-Control-Allow-Origin': '*',
                     'Content-Type': 'application/x-www-form-urlencoded'
                   }
                 }
@@ -70,12 +60,10 @@ function PasarelaApp() {
           >
             <SelectCountryStep
               onSubmit={(values) => {
-                setFormikValues({
-                  ...formikValues,
+                setFormikValues( prevFormikValues => ({
+                  ...prevFormikValues,
                   ...values
-                });
-
-                console.log('Step 1 submit', { values, formikValues });
+                }));
               }}
               validationSchema={Yup.object({
                 country: Yup.string().required('El pais es requerido')
@@ -83,10 +71,10 @@ function PasarelaApp() {
             />
             <SelectPaymentMethodStep
               onSubmit={(values) => {
-                setFormikValues({
-                  ...formikValues,
+                setFormikValues( prevFormikValues => ({
+                  ...prevFormikValues,
                   ...values
-                });
+                }));
 
                 console.log('Step 2 submit', { values, formikValues });
               }}
@@ -98,10 +86,10 @@ function PasarelaApp() {
             />
             <SelectPaymentModeStep
               onSubmit={(values) => {
-                setFormikValues({
-                  ...formikValues,
+                setFormikValues( prevFormikValues => ({
+                  ...prevFormikValues,
                   ...values
-                });
+                }));
 
                 console.log('Step 3 submit', { values, formikValues });
               }}
@@ -117,10 +105,10 @@ function PasarelaApp() {
             />
             <FormClientDataStep
               onSubmit={(values) => {
-                setFormikValues({
-                  ...formikValues,
+                setFormikValues( prevFormikValues => ({
+                  ...prevFormikValues,
                   ...values
-                });
+                }));
 
                 console.log('Step 4 submit', { values, formikValues });
               }}
@@ -131,13 +119,9 @@ function PasarelaApp() {
 
             <GeneratePaymentLinkStep checkoutLink={checkoutLink} />
           </MultiStep>
-          <Side
-            options={options.sideItemOptions}
-            stepStateNumber={{ stepNumber, setStepNumber }}
-          />
         </div>
       </section>
-      <pre>{JSON.stringify(formikValues, null, 2)}</pre>
+    {/*   <pre>{JSON.stringify(formikValues, null, 2)}</pre> */}
     </>
   );
 }

@@ -4,7 +4,7 @@ import './Side.scss';
 import Button from '../Button';
 import SideItem from '../SideItem';
 
-function Side({ options, sideTitle, stepStateNumber }) {
+function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
   const [completeSteps] = useState(false);
 
   return (
@@ -20,6 +20,7 @@ function Side({ options, sideTitle, stepStateNumber }) {
               status={status}
               valueSelected={value}
               stepStateNumber={stepStateNumber}
+              formikInstance={formikInstance}
             />
           )
         )}

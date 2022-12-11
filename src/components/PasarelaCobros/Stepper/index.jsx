@@ -4,7 +4,6 @@ import React, { useContext } from 'react';
 import { useCurrentStep } from '../Hooks/useCurrentStep';
 import { AppContext } from '../Provider/StateProvider';
 import Step from '../Step';
-import { FormCardPayStep } from './CheckoutForm';
 import FormClientDataStep from './FormClientDataStep';
 import GeneratePaymentLinkStep from './GeneratePaymentLinkStep';
 import SelectCountryStep from './SelectCountryStep';

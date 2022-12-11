@@ -1,10 +1,8 @@
 import { useField } from 'formik';
 import React from 'react';
-import { Block, Form, Notification } from 'react-bulma-components';
+import { Form } from 'react-bulma-components';
 import { Image } from 'semantic-ui-react';
 import IMAGES from '../../../img/pasarelaCobros/share';
-import { useInputStatus } from '../Hooks/useNotify';
-import SelectQuote from '../SelectQuote';
 
 const ButtonField = ({ img, showText, idElement, className, classLabel, shortName, idInputElement, ...props }) => {
   const [field, meta] = useField(props)
@@ -22,7 +20,7 @@ const ButtonField = ({ img, showText, idElement, className, classLabel, shortNam
             {...field}
             id={idElement}
             htmlFor={idElement}
-            className={className}
+            className={className+` ${meta.error && 'error'}`}
             value={value}
           >
             {imageIcon}
