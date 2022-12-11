@@ -3,7 +3,7 @@ import { AppContext } from '../Provider/StateProvider';
 import ButtonField from '../RadioButton/ButtonField';
 import { FormStep } from './MultiStep';
 
-function SelectCountryStep({onSubmit, validationSchema}) {
+function SelectCountryStep() {
   const { options, setOptions, userInfo, setUserInfo } = useContext(AppContext);
   const { countryOptions } = options
   const { stepOne } = userInfo

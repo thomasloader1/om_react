@@ -71,13 +71,6 @@ const CheckoutForm = () => {
           </Modal.Card.Header>
           <Modal.Card.Body>
             <Media>
-              {/* <Media.Item renderAs="figure" align="left">
-                <Image
-                  size={64}
-                  alt="64x64"
-                  src="http://bulma.io/images/placeholders/128x128.png"
-                />
-              </Media.Item> */}
               <Media.Item>
                 <Content>
                   <pre>
