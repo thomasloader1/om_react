@@ -28,10 +28,10 @@
 
 .grid-med_mod_payment-mp {
   display: grid;
-  grid-template-areas: 'search search' 'mod mod' 'quotes quotes' 'notification notification' 'controls controls';
+  grid-template-areas: 'mod mod' 'search search' 'quotes quotes' 'notification notification' 'controls controls';
   column-gap: 1rem;
 
-  .field:nth-child(1) {
+  .field:nth-child(3) {
     grid-area: search;
     margin-bottom: 1.5rem;
   }
