@@ -6,7 +6,7 @@ import { AppContext } from '../Provider/StateProvider'
 const InfoNotify = ({ messages }) => {
   const [key, value] = messages
   const { stepNumberGlobal } = useContext(AppContext)
-  console.log({stepNumberGlobal})
+  console.log({messages})
 
   if (key === 'mod' && value === 'Tradicional' && stepNumberGlobal === 3) {
     return (

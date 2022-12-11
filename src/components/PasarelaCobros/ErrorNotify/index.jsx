@@ -6,7 +6,7 @@ const ErrorNotify = ({messages}) => {
   return (
     <Block style={{margin: '1rem 0'}}>
     <Notification color="danger" light="true">
-      <strong>{key}</strong> : <span>{value}</span>
+      <span>{value}</span>
     </Notification>
   </Block>
   )

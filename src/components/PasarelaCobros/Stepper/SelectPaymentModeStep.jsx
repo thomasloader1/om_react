@@ -20,7 +20,6 @@ function SelectPaymentModeStep() {
       >
         <div id="medModPago_grid" className="grid-med_mod_payment-mp">
 
-          <InputField label="Ingrese ID de Contrato" id="contractId" name="contractId" />
 
           {options.paymentModeOptions.map(({ ...props }) =>
             <ButtonField
@@ -51,6 +50,9 @@ function SelectPaymentModeStep() {
             />
           )}
 
+<InputField label="Ingrese ID de Contrato" id="contractId" name="contractId" />
+
+
           <SelectQuote name='quotes' id='quotes' options={[1, 3, 6, 9, 12, 18]} />
 
         </div>
@@ -67,7 +69,6 @@ function SelectPaymentModeStep() {
     >
       <div id="medModPago_grid" className="grid-med_mod_payment-mp">
 
-        <InputField label="Ingrese ID de Contrato" id="contractId" name="contractId" />
 
         {options.paymentModeOptions.map(({ ...props }) =>
           <ButtonField
@@ -98,9 +99,10 @@ function SelectPaymentModeStep() {
             }}
           />
         )}
+
+<InputField label="Ingrese ID de Contrato" id="contractId" name="contractId" />
         
         {stepThree.value !== 'Tradicional' && stepThree.value !== '' &&
-
           <SelectQuote name='quotes' id='quotes' options={[1, 3, 6, 9, 12, 18]} />
         }
 
