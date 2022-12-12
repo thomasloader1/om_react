@@ -28,6 +28,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-shimmer-skeleton": "^1.0.3",
+    "react-transition-group": "^4.4.5",
     "redux": "^4.2.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.1.3",
