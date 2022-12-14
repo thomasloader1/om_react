@@ -11,27 +11,20 @@ export const useContractZoho = (contractId) => {
   const body = new FormData();
   body.append('key', '9j9fj0Do204==3fja134')
   body.append('id', contractId)
-//https://oceanomedicina.com.ar/suscripciontest/remote/obtaindata
   const URL = NODE_ENV === "production" ? (`${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_OBTAINDATA}`) : REACT_APP_OCEANO_OBTAINDATA ;
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(URL, {
-        method: 'POST',
-        body
-      })
-      const data = await response.json()
-      console.log({ data })
-        
-      setData(data)
-      setLoading(data.lenght > 0)
-      /* await axios.post(URL, body, {
-        mode: 'no-cors',
+      const response = await axios.post(URL, body, {
         headers: {
-          'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/x-www-form-urlencoded'
         }
-      }) */
+      })
+      console.log({ response })
+        
+      setData(response.data)
+      setLoading(response.data.lenght > 0)
+       
       // console.log({ response, data })
 
     }

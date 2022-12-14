@@ -28,3 +28,16 @@
         max-width: 300px;
     }
 }
+
+#grid-payment_mp{
+    display: grid;
+    grid-template-areas: "description description" 
+                        "buttonLink buttonLink";
+                        gap: 1rem;
+    h3{
+        grid-area: description;
+    }
+    a{
+        grid-area: buttonLink;
+    }
+}

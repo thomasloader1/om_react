@@ -6,10 +6,9 @@ import SelectQuote from '../SelectQuote';
 import { FormStep } from './MultiStep';
 
 function SelectPaymentModeStep() {
-  const { options, setOptions, userInfo, setUserInfo, formikValues, stepNumberGlobal } = useContext(AppContext);
-  const { stepTwo, stepThree } = userInfo
+  const { options, setOptions, userInfo, setUserInfo } = useContext(AppContext);
+  const { stepOne, stepTwo, stepThree } = userInfo
 
-  console.log({ userInfo, formikValues })
 
   if (stepTwo.value === 'Mercado Pago') {
 
@@ -50,10 +49,12 @@ function SelectPaymentModeStep() {
             />
           )}
 
-<InputField label="Ingrese ID de Contrato" id="contractId" name="contractId" />
+          <InputField label="Ingrese ID de Contrato" id="contractId" name="contractId" />
 
 
-          <SelectQuote name='quotes' id='quotes' options={[1, 3, 6, 9, 12, 18]} />
+          {stepThree.value !== 'Tradicional' && stepThree.value !== '' &&
+          <SelectQuote name='quotes' id='quotes' country={stepOne.value}  />
+        }
 
         </div>
       </FormStep>
@@ -100,10 +101,10 @@ function SelectPaymentModeStep() {
           />
         )}
 
-<InputField label="Ingrese ID de Contrato" id="contractId" name="contractId" />
-        
+        <InputField label="Ingrese ID de Contrato" id="contractId" name="contractId" />
+
         {stepThree.value !== 'Tradicional' && stepThree.value !== '' &&
-          <SelectQuote name='quotes' id='quotes' options={[1, 3, 6, 9, 12, 18]} />
+          <SelectQuote name='quotes' id='quotes' country={stepOne.value} />
         }
 
       </div>

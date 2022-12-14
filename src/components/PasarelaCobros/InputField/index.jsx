@@ -12,7 +12,7 @@ const InputField = ({ label, ...props }) => {
             <div className="control">
                 <input
                     placeholder="2000339000004553081"
-                    className={meta.touched || meta.error ? 'input is-danger' : 'input'}
+                    className={meta.error ? 'input is-danger' : 'input'}
                     type="text"
                     {...field}
                     {...props}

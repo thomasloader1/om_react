@@ -20,19 +20,22 @@ function StateProvider({ children }) {
     clientForm,
     sideItemOptions
   })
-  
+
   const [formikValues, setFormikValues] = useState({})
   const [userInfo, setUserInfo] = useState(userFlow)
   const [stepNumberGlobal, setStepNumberGlobal] = useState(1)
   const [stripeRequest, setStripeRequest] = useState(null)
+  const [checkoutLink, setCheckoutLink] = useState('')
 
   return (
-    <AppContext.Provider value={{ options, setOptions, 
-                                  formikValues, setFormikValues, 
-                                  userInfo, setUserInfo,
-                                  stepNumberGlobal, setStepNumberGlobal,
-                                  stripeRequest, setStripeRequest
-                                 }}>
+    <AppContext.Provider value={{
+      options, setOptions,
+      formikValues, setFormikValues,
+      userInfo, setUserInfo,
+      stepNumberGlobal, setStepNumberGlobal,
+      stripeRequest, setStripeRequest,
+      checkoutLink, setCheckoutLink
+    }}>
       {children}
     </AppContext.Provider>
   );

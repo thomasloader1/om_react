@@ -8,7 +8,6 @@ import StateProvider from './components/PasarelaCobros/Provider/StateProvider';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-console.log(process.env)
 root.render(
   
     <StateProvider>
