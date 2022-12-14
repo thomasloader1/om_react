@@ -56,19 +56,6 @@ function PasarelaApp() {
                   : REACT_APP_OCEANO_GENERATECHECKOUTPRO;
               
               const response = await axios.post(URL, body, requestConfig);
-/* 
-              const URL_UPDATE = NODE_ENV === 'production'
-              ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GENERATECHECKOUTPRO}`
-              : REACT_APP_OCEANO_GENERATECHECKOUTPRO;
-              
-              const contractStatus = await axios.post(URL_UPDATE,{
-                mail: '',
-                amount: '',
-                total: '',
-                installments: '',
-                sub_id: '',
-                contract_id:''
-              }, requestConfig) */
 
               setCheckoutLink(response.data.url);
               console.log({ response });

@@ -6,7 +6,7 @@ import {
 } from '@stripe/react-stripe-js';
 import axios from 'axios';
 import { AppContext } from '../Provider/StateProvider';
-import { Button, Content, Image, Media, Modal } from 'react-bulma-components';
+import { Content, Media, Modal } from 'react-bulma-components';
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -41,7 +41,8 @@ const CheckoutForm = () => {
       amount,
       contact,
       sale,
-      products
+      products,
+      contractId: formikValues.contractId
     }
 
     const laravelResponse = await axios.post("http://localhost:8000/api/stripe/subscriptionPayment", postStripe)
@@ -54,6 +55,7 @@ const CheckoutForm = () => {
     <>
       <label htmlFor="card_element" className='label'>Tarjeta</label>
       <CardElement id='card_element' />
+     {/*  <pre>{JSON.stringify(formikValues, null, 2)}</pre> */}
       <button className='button is-primary' type="button" onClick={handleSubmit} disabled={!stripe || !elements}>
         Pagar
       </button>
@@ -65,6 +67,7 @@ const CheckoutForm = () => {
           return setOpenModal();
         }}
       >
+       
         <Modal.Card>
           <Modal.Card.Header>
             <Modal.Card.Title>Title</Modal.Card.Title>
