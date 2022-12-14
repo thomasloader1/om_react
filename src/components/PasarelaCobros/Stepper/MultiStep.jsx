@@ -1,7 +1,7 @@
 import { Form, Formik } from 'formik';
 import React, { useState, useContext } from 'react';
 import { Block, Notification } from 'react-bulma-components';
-import ErrorNotify from '../ErrorNotify';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import InfoNotify from '../InfoNotify';
 import { AppContext } from '../Provider/StateProvider';
 import Side from '../Side';
@@ -38,12 +38,12 @@ const MultiStep = ({
     setOptions({ ...options });
     setStepNumber(stepNumber + 1);
     setStepNumberGlobal(stepNumberGlobal + 1);
-    console.log('next', {
+   /*  console.log('next', {
       stepNumber,
       stepNumberGlobal,
       formikValues,
       formikInstance
-    });
+    }); */
   };
   const previous = (values) => {
     setSpanshot(values);
@@ -53,12 +53,12 @@ const MultiStep = ({
     setOptions({ ...options });
     setStepNumber(stepNumber - 1);
     setStepNumberGlobal(stepNumber - 1);
-    console.log('previous', {
+    /* console.log('previous', {
       stepNumber,
       stepNumberGlobal,
       formikValues,
       formikInstance
-    });
+    }); */
   };
 
   const handleSubmit = async (values, actions) => {
@@ -74,47 +74,57 @@ const MultiStep = ({
     }
   };
 
-  console.log({ step });
+  //console.log({ step });
 
   return (
-    <Formik
-      initialValues={spanshot}
-      onSubmit={handleSubmit}
-      validationSchema={step.props.validationSchema}
+    <SwitchTransition>
+      <CSSTransition
+        key={stepNumber}
+      addEndListener={(node, done) =>
+        node.addEventListener('transitionend', done, false)
+      }
+      classNames="fade"
     >
-      {(formik) => (
-        <>
-          <Form className={className}>
-            {step}
-            {formik.errors && Object.keys(formik.errors).length > 0 && (
-              <Block style={{ margin: '1rem 0' }}>
-                <Notification color="danger" light="true">
-                  {Object.entries(formik.errors).map((e) => (
-                    <p key={e[0]} className="field">
-                      {e[1]}
-                    </p>
-                  ))}
-                </Notification>
-              </Block>
-            )}
-            {formik.values &&
-              Object.entries(formik.values).map((e) => {
-                return <InfoNotify key={e[0]} messages={e} />;
-              })}
-            <FormNavigation
-              isLastStep={isLastStep}
-              hasPrevious={stepNumber > 0}
-              onBackClick={() => previous(formik.values)}
+      <Formik
+        initialValues={spanshot}
+        onSubmit={handleSubmit}
+        validationSchema={step.props.validationSchema}
+      >
+        {(formik) => (
+          <>
+            <Form className={className}>
+              {step}
+              {formik.errors && Object.keys(formik.errors).length > 0 && (
+                <Block style={{ margin: '1rem 0' }}>
+                  <Notification color="danger" light="true">
+                    {Object.entries(formik.errors).map((e) => (
+                      <p key={e[0]} className="field">
+                        {e[1]}
+                      </p>
+                    ))}
+                  </Notification>
+                </Block>
+              )}
+              {formik.values &&
+                Object.entries(formik.values).map((e) => {
+                  return <InfoNotify key={e[0]} messages={e} />;
+                })}
+              <FormNavigation
+                isLastStep={isLastStep}
+                hasPrevious={stepNumber > 0}
+                onBackClick={() => previous(formik.values)}
+              />
+            </Form>
+            <Side
+              options={options.sideItemOptions}
+              stepStateNumber={{ stepNumber, setStepNumber }}
+              formikInstance={formik}
             />
-          </Form>
-          <Side
-            options={options.sideItemOptions}
-            stepStateNumber={{ stepNumber, setStepNumber }}
-            formikInstance={formik}
-          />
-        </>
-      )}
-    </Formik>
+          </>
+        )}
+      </Formik>
+    </ CSSTransition>
+    </ SwitchTransition >
   );
 };
 

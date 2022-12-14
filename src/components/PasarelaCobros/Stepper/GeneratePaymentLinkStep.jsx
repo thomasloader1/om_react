@@ -12,45 +12,46 @@ function GeneratePaymentLinkStep({ checkoutLink }) {
   const { formikValues, userInfo, stripeRequest } = useContext(AppContext);
   const { stripePromise } = useStripeEnv();
 
-  console.log({stripePromise})
-
 
   if (userInfo.stepTwo.value === "Mercado Pago") {
-    console.log({ formikValues })
     return (
-      <div id='grid-client_data'>
-        <h3>Este paso tiene que hacerse en la plataforma {formikValues.payment_method}</h3>
-        <p>Oprima en finalizar para generar el link</p>
-        <pre>{JSON.stringify(formikValues, null, 2)}</pre>
-        {checkoutLink && <a href={checkoutLink} className="button is-link is-rounded" target="_blank" rel="noreferrer"> Ir al Link </a>}
+      <>
+        <h2 className="title is-4">
+          <span className="has-text-white has-background-black is-circle">5</span>
+          Ultimo paso!
+        </h2>
+        <div id='grid-payment_mp'>
+          <h3>Para completar la compra debera usarse plataforma {formikValues.payment_method}</h3>
+          <a href={checkoutLink && checkoutLink} disabled={checkoutLink ? false : true} className="button is-link is-rounded" target="_blank" rel="noreferrer">{checkoutLink ? 'Ir al Link' : 'Oprima en finalizar para generar el link'}</a>
 
-      </div>)
+        </div>
+      </>)
   } else {
     return (
       <>
-      <FormStep
-        stepNumber={5}
-        stepName='Finalize su compra'
-      >
-      <div id='grid-payment_stripe'>
-      { stripeRequest === null &&
-        <div className="checkout_stripe field">
-          <Elements stripe={stripePromise}>
-            <CheckoutForm />
-          </Elements>
-        </div>
-      }
-        <div id="serverNotify">
-          { stripeRequest?.status === 'active' &&
-          <Block>
-          <Notification color="success">
-            ¡El pago fue exitoso!
-          {/* {JSON.stringify(stripeRequest, null, 2)} */}
-          </Notification>
-        </Block>}
-        </div>
-      </div>
-      </FormStep>
+        <FormStep
+          stepNumber={5}
+          stepName='Finalize su compra'
+        >
+          <div id='grid-payment_stripe'>
+            {stripeRequest === null &&
+              <div className="checkout_stripe field">
+                <Elements stripe={stripePromise}>
+                  <CheckoutForm />
+                </Elements>
+              </div>
+            }
+            <div id="serverNotify">
+              {stripeRequest?.status === 'active' &&
+                <Block>
+                  <Notification color="success">
+                    ¡El pago fue exitoso!
+                    {/* {JSON.stringify(stripeRequest, null, 2)} */}
+                  </Notification>
+                </Block>}
+            </div>
+          </div>
+        </FormStep>
       </>
     );
   }

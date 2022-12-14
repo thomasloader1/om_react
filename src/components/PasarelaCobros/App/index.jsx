@@ -11,15 +11,14 @@ import FormClientDataStep from '../Stepper/FormClientDataStep';
 import GeneratePaymentLinkStep from '../Stepper/GeneratePaymentLinkStep';
 import axios from 'axios';
 import { useEffect } from 'react';
-import { CSSTransition, SwitchTransition } from 'react-transition-group';
 
 const { REACT_APP_OCEANO_URL, REACT_APP_OCEANO_GENERATECHECKOUTPRO, NODE_ENV } =
   process.env;
 
 function PasarelaApp() {
-  const { options, formikValues, setFormikValues } = useContext(AppContext);
+  const { formikValues, setFormikValues, checkoutLink, setCheckoutLink } = useContext(AppContext);
   const [stepNumber, setStepNumber] = useState(0);
-  const [checkoutLink, setCheckoutLink] = useState('');
+
   useEffect(() => {
     setStepNumber(stepNumber);
 
@@ -29,43 +28,52 @@ function PasarelaApp() {
   return (
     <>
       <Header />
-      {/* <Stepper />  */}
       <section className="container is-max-widescreen">
         <div className="pasarela columns mx-auto">
-          <SwitchTransition>
-            <CSSTransition
-              key={stepNumber}
-              addEndListener={(node, done) =>
-                node.addEventListener('transitionend', done, false)
+
+          <MultiStep
+            stepStateNumber={{ stepNumber, setStepNumber }}
+            className="pasarela-1 column seleccion-pais"
+            initialValues={{}}
+            onSubmit={async (values) => {
+              const body = new FormData();
+              const type = formikValues.mod.toLowerCase().substring(0, 4);
+              const requestConfig = {
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+                }
               }
-              classNames="fade"
-            >
-              <MultiStep
-                stepStateNumber={{ stepNumber, setStepNumber }}
-                className="pasarela-1 column seleccion-pais"
-                initialValues={{}}
-                onSubmit={async (values) => {
-                  const body = new FormData();
-                  const type = formikValues.mod.toLowerCase().substring(0, 4);
-                  body.append('months', 0);
-                  body.append('amount', `${formikValues.amount}`);
-                  body.append('type', type);
-                  body.append('so', formikValues.contractId);
 
-                  const URL =
-                    NODE_ENV === 'production'
-                      ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GENERATECHECKOUTPRO}`
-                      : REACT_APP_OCEANO_GENERATECHECKOUTPRO;
-                  const response = await axios.post(URL, body, {
-                    headers: {
-                      'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                  });
 
-                  setCheckoutLink(response.data.url);
-                  console.log({ response });
-                }}
-              >
+              body.append('months', 0);
+              body.append('amount', `${formikValues.amount}`);
+              body.append('type', type);
+              body.append('so', formikValues.contractId);
+
+              const URL =
+                NODE_ENV === 'production'
+                  ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GENERATECHECKOUTPRO}`
+                  : REACT_APP_OCEANO_GENERATECHECKOUTPRO;
+              
+              const response = await axios.post(URL, body, requestConfig);
+/* 
+              const URL_UPDATE = NODE_ENV === 'production'
+              ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GENERATECHECKOUTPRO}`
+              : REACT_APP_OCEANO_GENERATECHECKOUTPRO;
+              
+              const contractStatus = await axios.post(URL_UPDATE,{
+                mail: '',
+                amount: '',
+                total: '',
+                installments: '',
+                sub_id: '',
+                contract_id:''
+              }, requestConfig) */
+
+              setCheckoutLink(response.data.url);
+              console.log({ response });
+            }}
+          >
                 <SelectCountryStep
                   onSubmit={(values) => {
                     setFormikValues((prevFormikValues) => ({
@@ -130,9 +138,7 @@ function PasarelaApp() {
                 />
 
                 <GeneratePaymentLinkStep checkoutLink={checkoutLink} />
-              </MultiStep>
-            </CSSTransition>
-          </SwitchTransition>
+          </MultiStep>
         </div>
       </section>
       {/*   <pre>{JSON.stringify(formikValues, null, 2)}</pre> */}
