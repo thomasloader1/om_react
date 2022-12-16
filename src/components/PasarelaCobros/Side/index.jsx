@@ -11,19 +11,17 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     <div className="is-4 column side pl-6">
       <h2 className="title is-4">{sideTitle}</h2>
       <div className="side-body">
-        {options.map(
-          ({ step, label, status, value }) => (
-            <SideItem
-              key={step}
-              currentStep={step}
-              label={label}
-              status={status}
-              valueSelected={value}
-              stepStateNumber={stepStateNumber}
-              formikInstance={formikInstance}
-            />
-          )
-        )}
+        {options.map(({ step, label, status, value }) => (
+          <SideItem
+            key={step}
+            currentStep={step}
+            label={label}
+            status={status}
+            valueSelected={value}
+            stepStateNumber={stepStateNumber}
+            formikInstance={formikInstance}
+          />
+        ))}
 
         {completeSteps && (
           <>

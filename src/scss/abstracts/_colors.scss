@@ -13,6 +13,7 @@ $colors: (
       "-light": hsl(209, 100%, 42%),
       "": hsl(209, 100%, 32%),
       "-dark": hsl(209, 100%, 22%),
+      "-darkest": hsl(216, 95%, 15%),
    ),
    enfermeria: (
       "-light": hsl(168, 100%, 35%),
@@ -42,6 +43,16 @@ $colors: (
    texto: (
       -light: hsl(0, 0%, 34%),
       "": hsl(0, 0%, 15%),
+   ),
+   whites: (
+      -light: hsl(0, 0%, 95%),
+      "": #fff,
+      -dark: hsl(0, 0%, 90%),
+   ),
+   news: (
+      "-light": hsl(39, 100%, 59%),
+      "": hsl(39, 100%, 49%),
+      "-dark": hsl(39, 100%, 40%),
    ),
 );
 
