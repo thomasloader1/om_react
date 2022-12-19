@@ -1,4 +1,3 @@
-import { getRoles } from '@testing-library/react'
 import { useField } from 'formik'
 import React from 'react'
 
@@ -9,10 +8,8 @@ const SelectQuote = ({ selectName = "Seleccione las cuotas deseadas", country, .
         switch (countryCode) {
             case 'ch': //Chile
                 return [8, 6, 3, 1];
-            case 'co': //Colombia
-                return [7, 6, 3, 1];
             case 'ar':
-                return [1, 3, 6, 9, 12, 18];
+                return [1, 3, 6, 9, 12, 18, 24];
             default:
                 return [12, 9, 6, 3, 1];
         }
