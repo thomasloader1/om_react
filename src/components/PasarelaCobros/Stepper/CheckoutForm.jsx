@@ -8,6 +8,8 @@ import axios from 'axios';
 import { AppContext } from '../Provider/StateProvider';
 import { Content, Media, Modal } from 'react-bulma-components';
 
+const { REACT_APP_OCEANO_STRIPESUBSCRIPTION } = process.env
+
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
@@ -45,7 +47,7 @@ const CheckoutForm = () => {
       contractId: formikValues.contractId
     }
 
-    const laravelResponse = await axios.post("http://localhost:8000/api/stripe/subscriptionPayment", postStripe)
+    const laravelResponse = await axios.post(REACT_APP_OCEANO_STRIPESUBSCRIPTION, postStripe)
     setStripeRequest(laravelResponse.data)
     console.log({ laravelResponse })
     setOpenModal('card')

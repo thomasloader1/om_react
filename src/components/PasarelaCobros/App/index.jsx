@@ -48,7 +48,7 @@ function PasarelaApp() {
               body.append('months', 0);
               body.append('amount', `${formikValues.amount}`);
               body.append('type', type);
-              body.append('so', formikValues.contractId);
+              body.append('so', formikValues.sale.SO_Number);
 
               const URL =
                 NODE_ENV === 'production'
