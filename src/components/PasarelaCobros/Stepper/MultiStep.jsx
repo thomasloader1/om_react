@@ -38,12 +38,12 @@ const MultiStep = ({
     setOptions({ ...options });
     setStepNumber(stepNumber + 1);
     setStepNumberGlobal(stepNumberGlobal + 1);
-   /*  console.log('next', {
+     console.log('next', {
       stepNumber,
       stepNumberGlobal,
       formikValues,
       formikInstance
-    }); */
+    }); 
   };
   const previous = (values) => {
     setSpanshot(values);

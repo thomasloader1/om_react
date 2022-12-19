@@ -46,7 +46,7 @@ const CheckoutForm = () => {
     }
 
     const laravelResponse = await axios.post("http://localhost:8000/api/stripe/subscriptionPayment", postStripe)
-    setStripeRequest(laravelResponse.data)
+    setStripeRequest(laravelResponse.data.stripeResponse)
     console.log({ laravelResponse })
     setOpenModal('card')
   };
