@@ -17,6 +17,7 @@
     "formik": "^2.2.9",
     "framer-motion": "^7.10.0",
     "http-proxy-middleware": "^2.0.6",
+    "iso-country-currency": "^0.6.0",
     "moment": "^2.29.4",
     "moment_spanish_locale": "^1.0.2",
     "prop-types": "^15.8.1",

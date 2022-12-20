@@ -7,17 +7,22 @@ import {
 import axios from 'axios';
 import { AppContext } from '../Provider/StateProvider';
 import { Content, Media, Modal } from 'react-bulma-components';
+import { getAllISOCodes } from 'iso-country-currency'
 
 const { REACT_APP_OCEANO_STRIPESUBSCRIPTION } = process.env
 
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
-
   const [openModal, setOpenModal] = useState(null)
-
   const { formikValues, stripeRequest, setStripeRequest } = useContext(AppContext)
   const { country, quotes, amount, sale, contact, products } = formikValues
+  
+  const allIsoCodes = getAllISOCodes();
+  const filterIso = allIsoCodes.filter(iso => iso.countryName === country)
+  const countryObject = filterIso[0]
+  const { currency, iso } = countryObject;
+  //console.log({iso})
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -35,8 +40,8 @@ const CheckoutForm = () => {
     console.log({ error, paymentMethod })
 
     const postStripe = {
-      currency: country === "Chile" && "CLP",
-      country: country === "Chile" && "CH",
+      currency,
+      country: iso,
       installments: quotes ? quotes : 1,
       email: contact.Email,
       paymentMethodId: paymentMethod.id,
@@ -47,7 +52,7 @@ const CheckoutForm = () => {
       contractId: formikValues.contractId
     }
 
-    
+
     const laravelResponse = await axios.post(REACT_APP_OCEANO_STRIPESUBSCRIPTION, postStripe)
     setStripeRequest(laravelResponse.data)
     console.log({ laravelResponse })

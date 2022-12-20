@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 /* eslint-disable react/prop-types */
 import React, { createContext, useState } from 'react';
+import { useRef } from 'react';
 import {
   countryOptions,
   sideItemOptions,
@@ -26,6 +27,7 @@ function StateProvider({ children }) {
   const [stepNumberGlobal, setStepNumberGlobal] = useState(1)
   const [stripeRequest, setStripeRequest] = useState(null)
   const [checkoutLink, setCheckoutLink] = useState('')
+  const appRef = useRef(null);
 
   return (
     <AppContext.Provider value={{
@@ -34,7 +36,8 @@ function StateProvider({ children }) {
       userInfo, setUserInfo,
       stepNumberGlobal, setStepNumberGlobal,
       stripeRequest, setStripeRequest,
-      checkoutLink, setCheckoutLink
+      checkoutLink, setCheckoutLink,
+      appRef
     }}>
       {children}
     </AppContext.Provider>
