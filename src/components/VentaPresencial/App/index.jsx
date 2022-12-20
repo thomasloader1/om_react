@@ -1,23 +1,22 @@
-import React, { useContext, useState } from 'react';
-import Header from '../Header';
+import React, { useContext, useState,useEffect } from 'react';
 import * as Yup from 'yup';
-import MultiStep from '../Stepper/MultiStep';
-import { AppContext } from '../Provider/StateProvider';
-import SelectCountryStep from '../Stepper/SelectCountryStep';
-import SelectPaymentMethodStep from '../Stepper/SelectPaymentMethodStep';
-import SelectPaymentModeStep from '../Stepper/SelectPaymentModeStep';
-import FormClientDataStep from '../Stepper/FormClientDataStep';
-import GeneratePaymentLinkStep from '../Stepper/GeneratePaymentLinkStep';
 import axios from 'axios';
-import { useEffect } from 'react';
+import Header from '../../PasarelaCobros/Header';
+import MultiStep from '../../PasarelaCobros/Stepper/MultiStep';
+import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
+import SelectCountryStep from '../../PasarelaCobros/Stepper/SelectCountryStep';
+import SelectPaymentMethodStep from '../../PasarelaCobros/Stepper/SelectPaymentMethodStep';
+import SelectPaymentModeStep from '../../PasarelaCobros/Stepper/SelectPaymentModeStep';
+import FormClientDataStep from '../../PasarelaCobros/Stepper/FormClientDataStep';
+import GeneratePaymentLinkStep from '../../PasarelaCobros/Stepper/GeneratePaymentLinkStep';
 
 const { REACT_APP_OCEANO_URL, REACT_APP_OCEANO_GENERATECHECKOUTPRO, NODE_ENV } =
   process.env;
 
-function PasarelaApp() {
-  const { formikValues, setFormikValues, checkoutLink, setCheckoutLink, appRef } = useContext(AppContext);
+function VentaPresencialApp() {
+  const { formikValues, setFormikValues, checkoutLink, setCheckoutLink } = useContext(AppContext);
   const [stepNumber, setStepNumber] = useState(0);
-  
+
   useEffect(() => {
     setStepNumber(stepNumber);
 
@@ -25,7 +24,7 @@ function PasarelaApp() {
   }, [stepNumber]);
 
   return (
-    <div ref={appRef}>
+    <>
       <Header />
       <section className="container is-max-widescreen">
         <div className="pasarela columns mx-auto">
@@ -95,7 +94,9 @@ function PasarelaApp() {
                     console.log('Step 3 submit', { values, formikValues });
                   }}
                   validationSchema={Yup.object({
-                    contractId: Yup.string("Coloque un id"),
+                    contractId: Yup.string().required(
+                      'Ingrese el ID del contrato es requerido'
+                    ),
                     mod: Yup.string().required('Seleccione un modo de pago'),
                     quotes: Yup.string().when('mod', {
                       is: (val) => !(val && val.includes('Tradicional')),
@@ -125,8 +126,8 @@ function PasarelaApp() {
         </div>
       </section>
       {/*   <pre>{JSON.stringify(formikValues, null, 2)}</pre> */}
-    </div>
+    </>
   );
 }
 
-export default PasarelaApp;
+export default VentaPresencialApp;

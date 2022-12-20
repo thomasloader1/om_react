@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
-import { Block, Notification, Columns } from 'react-bulma-components';
+import { Block, Notification, Columns, Modal, Media, Content } from 'react-bulma-components';
 import { useContext } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import { useContractZoho } from '../Hooks/useContractZoho';
@@ -16,9 +16,11 @@ function ResumeTicket({ contractId }) {
     options,
     setOptions,
     userInfo,
-    setUserInfo
+    setUserInfo,
+    appRef
   } = useContext(AppContext);
   const { loading, data, error } = useContractZoho(contractId);
+  const [openModal, setOpenModal] = useState(null)
 
   const { stepFour } = userInfo
 
@@ -41,6 +43,7 @@ function ResumeTicket({ contractId }) {
       {loading ? (
         <Spinner />
       ) : (
+        
         <div id="finalResume" className="column">
           <div className="columns is-multiline datos-cliente">
             <h2 className="column is-full title is-size-4">
@@ -170,12 +173,15 @@ function ResumeTicket({ contractId }) {
                 name="checkContract"
                 value="Datos erroneos"
                 onClick={() => {
-                  // console.log(userInfo)
+                  
                   const { sideItemOptions } = options;
                   const { stepFour } = userInfo;
+                  appRef.current.style.filter = 'blur(8px)'
 
                   sideItemOptions[3].value = 'Datos erroneos';
                   stepFour.value = 'Datos erroneos';
+
+                  setOpenModal('card')
 
                   setOptions({
                     ...options,
@@ -191,6 +197,31 @@ function ResumeTicket({ contractId }) {
           </Columns>
         </div>
       )}
+      <Modal
+        show={openModal === 'card'}
+        showClose={false}
+        onClose={() => {
+          appRef.current.style.filter = 'blur(0px)'
+
+          return setOpenModal();
+        }}
+      >
+       
+        <Modal.Card>
+          <Modal.Card.Header>
+            <Modal.Card.Title>Title</Modal.Card.Title>
+          </Modal.Card.Header>
+          <Modal.Card.Body>
+            <Media>
+              <Media.Item>
+                <Content>
+                 asd
+                </Content>
+              </Media.Item>
+            </Media>
+          </Modal.Card.Body>
+        </Modal.Card>
+      </Modal>
     </>
   );
 }
