@@ -13,11 +13,9 @@ function SelectPaymentModeStep() {
   const { id } = useParams();
   const formik = useFormikContext();
 
-  console.log({formik})
-
   useEffect(()=>{
     formik.setFieldValue('contractId', id);
-  },[]);
+  },[id]);
 
   return (
     <>
@@ -58,7 +56,7 @@ function SelectPaymentModeStep() {
           />
         )}
 
-        <InputField label="Ingrese ID de Contrato" id="contractId" name="contractId" value={id} readOnly />
+        <InputField label="Ingrese ID de Contrato" type='text' placeholder="2000339000004553081" id="contractId" name="contractId" value={id} readOnly />
 
         {stepThree.value !== 'Tradicional' && stepThree.value !== '' &&
           <SelectQuote name='quotes' id='quotes' country={stepOne.value} />

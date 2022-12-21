@@ -28,6 +28,7 @@ function StateProvider({ children }) {
   const [stripeRequest, setStripeRequest] = useState(null)
   const [checkoutLink, setCheckoutLink] = useState('')
   const appRef = useRef(null);
+  const formRef = useRef(null);
 
   return (
     <AppContext.Provider value={{
@@ -37,7 +38,7 @@ function StateProvider({ children }) {
       stepNumberGlobal, setStepNumberGlobal,
       stripeRequest, setStripeRequest,
       checkoutLink, setCheckoutLink,
-      appRef
+      appRef, formRef
     }}>
       {children}
     </AppContext.Provider>

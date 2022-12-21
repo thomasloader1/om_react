@@ -5,7 +5,7 @@ import './SideItem.scss';
 import { useContext } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 
-function SideItem({ currentStep, label, status, className, valueSelected, stepStateNumber, formikInstance }) {
+function SideItem({ currentStep, label, status, className, valueSelected, stepStateNumber, formikInstance, disableEdit }) {
   const stepStatus = {
     current: `card current ${className}`,
     completed: `card completed ${className}`
@@ -120,6 +120,8 @@ function SideItem({ currentStep, label, status, className, valueSelected, stepSt
     setStepNumberGlobal(stepNumber - 1)
   }
 
+ // console.log(disableEdit)
+
   return (
     <div className={`side-item ${classNameStatus}`}>
       <span className="side-item-info">
@@ -138,9 +140,12 @@ function SideItem({ currentStep, label, status, className, valueSelected, stepSt
         id={`editStep_${currentStep}`}
         className="button is-ghost"
         aria-label="User Profile"
+        disabled={disableEdit}
       >
         <MdOutlineEditNote className="is-size-3" onClick={() => {
-          editStep(currentStep)
+          if(!disableEdit){
+            editStep(currentStep)
+          }
         }}/>
       </button>
     </div>

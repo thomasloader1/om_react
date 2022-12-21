@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { useParams } from 'react-router';
 import { AppContext } from '../Provider/StateProvider';
 import ButtonField from '../RadioButton/ButtonField';
 import { FormStep } from './MultiStep';
@@ -8,7 +7,6 @@ function SelectCountryStep() {
   const { options, setOptions, userInfo, setUserInfo } = useContext(AppContext);
   const { countryOptions } = options
   const { stepOne } = userInfo
-  const {id} = useParams();
 
   return (
     <FormStep
