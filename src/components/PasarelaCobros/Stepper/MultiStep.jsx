@@ -6,6 +6,7 @@ import InfoNotify from '../InfoNotify';
 import { AppContext } from '../Provider/StateProvider';
 import Side from '../Side';
 import FormNavigation from '../StepControl/FormNavigation';
+import { motion } from 'framer-motion'
 
 const MultiStep = ({
   children,
@@ -19,8 +20,7 @@ const MultiStep = ({
     setOptions,
     stepNumberGlobal,
     setStepNumberGlobal,
-    formikValues,
-    formikInstance
+    formRef
   } = useContext(AppContext);
   const { stepNumber, setStepNumber } = stepStateNumber;
   const [spanshot, setSpanshot] = useState(initialValues);
@@ -38,12 +38,12 @@ const MultiStep = ({
     setOptions({ ...options });
     setStepNumber(stepNumber + 1);
     setStepNumberGlobal(stepNumberGlobal + 1);
-     console.log('next', {
+    /*  console.log('next', {
       stepNumber,
       stepNumberGlobal,
       formikValues,
       formikInstance
-    }); 
+    });  */
   };
   const previous = (values) => {
     setSpanshot(values);
@@ -92,7 +92,7 @@ const MultiStep = ({
       >
         {(formik) => (
           <>
-            <Form className={className}>
+            <Form className={className} ref={formRef}>
               {step}
               {formik.errors && Object.keys(formik.errors).length > 0 && (
                 <Block style={{ margin: '1rem 0' }}>

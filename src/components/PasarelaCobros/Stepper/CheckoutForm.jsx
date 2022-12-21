@@ -1,98 +1,31 @@
-import React, { useContext, useState } from 'react';
-import {
-  CardElement,
-  useStripe,
-  useElements
-} from '@stripe/react-stripe-js';
-import axios from 'axios';
+import React, { useContext } from 'react';
+import { CardElement} from '@stripe/react-stripe-js';
 import { AppContext } from '../Provider/StateProvider';
-import { Content, Media, Modal } from 'react-bulma-components';
-import { getAllISOCodes } from 'iso-country-currency'
-
-const { REACT_APP_OCEANO_STRIPESUBSCRIPTION } = process.env
+import { useFormikContext } from 'formik';
 
 const CheckoutForm = () => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [openModal, setOpenModal] = useState(null)
-  const { formikValues, stripeRequest, setStripeRequest } = useContext(AppContext)
-  const { country, quotes, amount, sale, contact, products } = formikValues
-  
-  const allIsoCodes = getAllISOCodes();
-  const filterIso = allIsoCodes.filter(iso => iso.countryName === country)
-  const countryObject = filterIso[0]
-  const { currency, iso } = countryObject;
-  //console.log({iso})
+  const { options, setOptions } = useContext(AppContext)
+  const formik = useFormikContext()
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (elements == null) {
-      return;
+  const handleChange = (event) => {
+    console.log({event, formik})
+    if(event.complete && event.value.postalCode !== ''){
+      options.sideItemOptions[4].status = 'completed';
+      options.sideItemOptions[4].value = 'Completos';
+      setOptions({ ...options });
+      formik.setFieldValue('cardComplete', true)
+    }else{
+      options.sideItemOptions[4].status = 'current';
+      options.sideItemOptions[4].value = 'Sin Completar';
+      setOptions({ ...options });
+      formik.setFieldValue('cardComplete', false)
     }
-
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: elements.getElement(CardElement),
-    })
-
-    console.log({ error, paymentMethod })
-
-    const postStripe = {
-      currency,
-      country: iso,
-      installments: quotes ? quotes : 1,
-      email: contact.Email,
-      paymentMethodId: paymentMethod.id,
-      amount,
-      contact,
-      sale,
-      products,
-      contractId: formikValues.contractId
-    }
-
-
-    const laravelResponse = await axios.post(REACT_APP_OCEANO_STRIPESUBSCRIPTION, postStripe)
-    setStripeRequest(laravelResponse.data)
-    console.log({ laravelResponse })
-    setOpenModal('card')
-  };
+  }
 
   return (
     <>
       <label htmlFor="card_element" className='label'>Tarjeta</label>
-      <CardElement id='card_element' />
-     {/*  <pre>{JSON.stringify(formikValues, null, 2)}</pre> */}
-      <button className='button is-primary' type="button" onClick={handleSubmit} disabled={!stripe || !elements}>
-        Pagar
-      </button>
-
-      <Modal
-        show={openModal === 'card'}
-        showClose={false}
-        onClose={() => {
-          return setOpenModal();
-        }}
-      >
-       
-        <Modal.Card>
-          <Modal.Card.Header>
-            <Modal.Card.Title>Title</Modal.Card.Title>
-          </Modal.Card.Header>
-          <Modal.Card.Body>
-            <Media>
-              <Media.Item>
-                <Content>
-                  <pre>
-                    {JSON.stringify(stripeRequest, null, 2)}
-                  </pre>
-                </Content>
-              </Media.Item>
-            </Media>
-          </Modal.Card.Body>
-        </Modal.Card>
-      </Modal>
+      <CardElement id='card_element' onChange={handleChange} />
     </>
   );
 };

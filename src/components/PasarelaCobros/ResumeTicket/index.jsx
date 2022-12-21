@@ -8,6 +8,7 @@ import { AppContext } from '../Provider/StateProvider';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import Spinner from '../Spinner';
 import ButtonField from '../RadioButton/ButtonField';
+import { useParams } from 'react-router';
 
 function ResumeTicket({ contractId }) {
   const {
@@ -21,6 +22,7 @@ function ResumeTicket({ contractId }) {
   } = useContext(AppContext);
   const { loading, data, error } = useContractZoho(contractId);
   const [openModal, setOpenModal] = useState(null)
+  const { id } = useParams();
 
   const { stepFour } = userInfo
 
@@ -209,13 +211,15 @@ function ResumeTicket({ contractId }) {
        
         <Modal.Card>
           <Modal.Card.Header>
-            <Modal.Card.Title>Title</Modal.Card.Title>
+            <Modal.Card.Title>Datos incorrectos del contrato</Modal.Card.Title>
           </Modal.Card.Header>
           <Modal.Card.Body>
             <Media>
               <Media.Item>
                 <Content>
-                 asd
+                 <p>Deberia editar los datos en la plataforma de Zoho y luego volver a hacer el procedimiento de compra</p>
+
+                 <a href={`https://crm.zoho.com/crm/org651130949/tab/SalesOrders/${id}`} className='button is-primary is-normal is-fullwidth'>Salir de pasarela y editar contrato</a>
                 </Content>
               </Media.Item>
             </Media>
