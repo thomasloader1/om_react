@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import App from './components/App/index';
 import reportWebVitals from './reportWebVitals';
 import StateProvider from './components/PasarelaCobros/Provider/StateProvider';
@@ -12,9 +12,9 @@ root.render(
   
     <StateProvider>
      
-          <BrowserRouter>
+          <HashRouter>
             <App />
-          </BrowserRouter>
+          </HashRouter>
 
     </StateProvider>
 );
