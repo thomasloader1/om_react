@@ -6,8 +6,9 @@ import VentaPresencialApp from '../VentaPresencial/App';
 
 function App() {
   return (
+
     <Routes>
-      <Route path="/superpasarela/:id" element={<PasarelaApp />} />
+      <Route path="/:id" element={<PasarelaApp />} />
       <Route path="/ventapresencial" element={<VentaPresencialApp />} />
 
       <Route

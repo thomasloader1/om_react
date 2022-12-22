@@ -99,6 +99,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       formRef.current.style.position = 'relative'
       formRef.current.style.zIndex = '0'
       setOpenBlockLayer(false)
+     
       console.error({ err })
     }).finally(() => {
       setFetching(false);
