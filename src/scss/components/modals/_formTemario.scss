@@ -1,0 +1,30 @@
+@use "../../abstracts/" as *;
+
+#modal-temario form {
+   display: flex;
+   flex-flow: row wrap;
+   gap: 1rem;
+   > span {
+      width: 100%;
+   }
+   .opcion-descarga {
+      @include flex(center, flex-start, row, nowrap, 1rem);
+   }
+   .wpcf7-list-item {
+      margin: 0px;
+   }
+   span.wpcf7-list-item-label {
+      font-size: 0.875rem;
+   }
+}
+
+#modal-temario {
+   .modal-card-body {
+      padding-top: 0;
+      .verificacion.checks {
+         background: #ffffff;
+         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+         border-radius: 4px;
+      }
+   }
+}

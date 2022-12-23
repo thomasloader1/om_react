@@ -1,11 +1,11 @@
 @use '../../node_modules/bulma/bulma.sass';
-@use 'abstracts';
+@use 'abstracts' as *;
 @use 'cardAsesor';
 @use 'pasarela-country.scss';
 @use 'pasarela-client-form.scss';
 @use 'pasarela-med-mod-payment.scss';
 @use 'pasarela-payment_method.scss';
-@use 'pasarela-generate_payment.scss';
+@use './components/tags';
 
 // Fix bug grilla con input radio
 .radio + .radio,
@@ -17,6 +17,7 @@
 }
 $success: #32bea6;
 $accent: #00b6de;
+$danger: rgb(236, 39, 39);
 $texto-light: #808fa6;
 $buttonBg: #ff266e;
 
@@ -338,6 +339,69 @@ h2.title {
         cursor: pointer;
         color: $success;
       }
+      .button:target {
+        outline: none;
+      }
+    }
+    &.selection ~ .side-item-courses {
+      display: block;
+    }
+    &-courses {
+      margin-top: -2rem;
+      display: none;
+      background-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0.25em 0.5em -0.125em rgb(10 10 10 / 5%),
+        0 0 0 1px rgb(10 10 10 / 2%);
+      //border: 1px solid #efefef;
+      border-radius: 0 0 10px 10px;
+      &-list {
+        display: flex;
+        flex-direction: column;
+      }
+      &-selected {
+        padding: 1rem 1.5rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 2rem;
+
+        &:not(:first-child) {
+          border-top: 1px solid #d9d9d9;
+        }
+        &:first-child {
+          padding-top: 1.75rem;
+        }
+
+        h4 {
+          @include font(1rem, 500, 1.1719rem, color(medicina, '-dark'));
+        }
+        .button {
+          color: $texto-light;
+          padding: 0;
+        }
+        .button:hover {
+          cursor: pointer;
+          color: $danger;
+        }
+        .button:target {
+          outline: none;
+        }
+      }
+      &-total {
+        padding: 1rem 1.5rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #d9d9d9;
+
+        span {
+          @include font(0.875rem, 500, 1.1719rem, #808fa6);
+        }
+        h3 {
+          @include font(2rem, 700, 1, color(texto, '-light'));
+        }
+      }
     }
 
     &-info {
@@ -489,5 +553,73 @@ h2.title {
 
   & button[type='submit'] {
     grid-column: 2/3;
+  }
+}
+
+// Lista de cursos
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: min(100%, 800px);
+  flex-flow: column nowrap;
+}
+
+.course {
+  padding: 0.75rem 1.625rem 1.625rem 1.5rem;
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+  gap: 1.125rem;
+
+  &-selection {
+    display: flex;
+    align-items: center;
+    input {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      border-color: #eeeeee;
+    }
+  }
+
+  &-content {
+    width: min(100%, 260px);
+    display: flex;
+    flex-flow: column nowrap;
+    flex-grow: 1;
+    gap: 0.75rem;
+
+    &-header {
+      display: flex;
+      flex-flow: row wrap;
+      align-items: center;
+      gap: 0.75rem;
+    }
+  }
+  &-specialty,
+  &-hours {
+    text-transform: uppercase;
+    @include font(0.75rem, 500, 1.5, color(texto, '-light'));
+
+    svg {
+      margin-right: 2px;
+      height: 1.1em;
+      width: 1.1em;
+    }
+  }
+  &-name {
+    h3 {
+      @include font(1.375rem, 700, 1.2, color(medicina, '-dark'));
+    }
+  }
+  &-price {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+
+    h3 {
+      @include font(2rem, 700, 1, color(medicina, '-dark'));
+    }
   }
 }

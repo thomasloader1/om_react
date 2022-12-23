@@ -1,0 +1,68 @@
+@use "../abstracts" as *;
+
+.tags {
+   padding: 0.125rem 0.5rem;
+   @include font(0.625rem, 700, 1.5, #fff);
+   max-width: max-content;
+   text-transform: uppercase;
+   height: max-content;
+   border-radius: 3px;
+
+   background-color: color(primary, "");
+
+   &:last-child,
+   &:not(:last-child) {
+      margin: 0;
+   }
+}
+@each $color, $shades in $colors {
+   .tags-#{$color} {
+      background-color: map-get($shades, "");
+
+      &:hover {
+         background: map-get($shades, "-light");
+         color: #fff;
+      }
+      &:focus {
+         background: map-get($shades, "-dark");
+         color: #fff;
+         box-shadow: inset 0 0 2px 3px rgba(0, 0, 0, 0.25);
+      }
+   }
+}
+.tags-whites {
+   color: color(texto, "-light");
+   background-color: #fff;
+   &:hover {
+      background: color(whites, "-light");
+      color: color(texto, "-light");
+   }
+   &:focus {
+      background: color(whites, "-dark");
+      color: color(texto, "");
+      box-shadow: inset 0 0 2px 3px rgba(0, 0, 0, 0.25);
+   }
+}
+.tags-whites-light {
+   color: color(texto, "");
+   &:hover {
+      background: color(whites, "-light");
+      color: #000;
+   }
+   &:focus {
+      background: color(whites, "-dark");
+      color: #000;
+   }
+}
+
+.tags-whites-dark {
+   color: color(texto, "-dark");
+   &:hover {
+      background: color(whites, "-light");
+      color: #fff;
+   }
+   &:focus {
+      background: color(whites, "-dark");
+      color: #fff;
+   }
+}
