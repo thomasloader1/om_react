@@ -87,6 +87,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       dni: formik.values.dni,
       phone: formik.values.phone,
       fullname: formik.values.fullName,
+      is_suscri: !(userInfo.stepThree.value.includes('Tradicional'))
     }
 
     axios.post(URL, postStripe).then(res => {
