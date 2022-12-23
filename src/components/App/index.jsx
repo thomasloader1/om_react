@@ -1,14 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Notification } from 'react-bulma-components';
-import { Route, Routes } from 'react-router';
+import { Route, Routes, useLocation } from 'react-router';
 import PasarelaApp from '../PasarelaCobros/App';
 import VentaPresencialApp from '../VentaPresencial/App';
 
-function App() {
-  return (
+const titles = {
+  'superpasarela': 'Pasarela de cobros',
+  '/ventapresencial': 'Venta presencial',
+}
 
+function App() {
+  const location = useLocation()
+  useEffect(
+    () => {
+      const title = location.pathname.includes('superpasarela') ? titles.superpasarela :  titles[location.pathname]
+      document.title = title ?? 'No controlled title'
+    },
+    [location]
+  )
+
+  return (
     <Routes>
-      <Route path="/:id" element={<PasarelaApp />} />
+      <Route path="/superpasarela/:id" element={<PasarelaApp />} /> 
       <Route path="/ventapresencial" element={<VentaPresencialApp />} />
 
       <Route
