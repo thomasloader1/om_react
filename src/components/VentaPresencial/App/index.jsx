@@ -2,14 +2,9 @@ import React, { useContext, useState,useEffect } from 'react';
 import * as Yup from 'yup';
 import axios from 'axios';
 import Header from '../../PasarelaCobros/Header';
-import MultiStep from '../../PasarelaCobros/Stepper/MultiStep';
+import MultiStep from '../Stepper/MultiStep';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import SelectCountryStep from '../../PasarelaCobros/Stepper/SelectCountryStep';
-import SelectPaymentMethodStep from '../../PasarelaCobros/Stepper/SelectPaymentMethodStep';
-import SelectPaymentModeStep from '../../PasarelaCobros/Stepper/SelectPaymentModeStep';
-import FormClientDataStep from '../../PasarelaCobros/Stepper/FormClientDataStep';
-import GeneratePaymentLinkStep from '../../PasarelaCobros/Stepper/GeneratePaymentLinkStep';
-
 const { REACT_APP_OCEANO_URL, REACT_APP_OCEANO_GENERATECHECKOUTPRO, NODE_ENV } =
   process.env;
 
@@ -69,59 +64,7 @@ function VentaPresencialApp() {
                     country: Yup.string().required('El pais es requerido')
                   })}
                 />
-                <SelectPaymentMethodStep
-                  onSubmit={(values) => {
-                    setFormikValues((prevFormikValues) => ({
-                      ...prevFormikValues,
-                      ...values
-                    }));
-
-                    console.log('Step 2 submit', { values, formikValues });
-                  }}
-                  validationSchema={Yup.object({
-                    payment_method: Yup.string().required(
-                      'El metodo de pago es requerido'
-                    )
-                  })}
-                />
-                <SelectPaymentModeStep
-                  onSubmit={(values) => {
-                    setFormikValues((prevFormikValues) => ({
-                      ...prevFormikValues,
-                      ...values
-                    }));
-
-                    console.log('Step 3 submit', { values, formikValues });
-                  }}
-                  validationSchema={Yup.object({
-                    contractId: Yup.string().required(
-                      'Ingrese el ID del contrato es requerido'
-                    ),
-                    mod: Yup.string().required('Seleccione un modo de pago'),
-                    quotes: Yup.string().when('mod', {
-                      is: (val) => !(val && val.includes('Tradicional')),
-                      then: Yup.string().required('Especifique las cuotas'),
-                      otherwise: null
-                    })
-                  })}
-                />
-                <FormClientDataStep
-                  onSubmit={(values) => {
-                    setFormikValues((prevFormikValues) => ({
-                      ...prevFormikValues,
-                      ...values
-                    }));
-
-                    console.log('Step 4 submit', { values, formikValues });
-                  }}
-                  validationSchema={Yup.object({
-                    checkContract: Yup.string().required(
-                      'El campo es requerido'
-                    )
-                  })}
-                />
-
-                <GeneratePaymentLinkStep checkoutLink={checkoutLink} />
+               
           </MultiStep>
         </div>
       </section>
