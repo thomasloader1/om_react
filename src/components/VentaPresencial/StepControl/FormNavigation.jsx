@@ -26,6 +26,7 @@ console.log({props})
       {props.hasPrevious && (
         <Button className="flex-grow-1 is-primary is-normal is-fullwidth" type='button' onClick={props.onBackClick}>Volver</Button>
       )}
+      
       {!props.isLastStep && (
         <Button className={`flex-grow-1 is-primary is-normal is-fullwidth`} disabled={disabledButton} type='submit'>{props.isLastStep ? 'Pagar' : 'Siguiente'}</Button>
       )}

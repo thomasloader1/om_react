@@ -5,6 +5,7 @@ import Header from '../../PasarelaCobros/Header';
 import MultiStep from '../Stepper/MultiStep';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import SelectCountryStep from '../../PasarelaCobros/Stepper/SelectCountryStep';
+import LeadStep from '../Stepper/Lead';
 const { REACT_APP_OCEANO_URL, REACT_APP_OCEANO_GENERATECHECKOUTPRO, NODE_ENV } =
   process.env;
 
@@ -65,6 +66,19 @@ function VentaPresencialApp() {
                   })}
                 />
                
+               <LeadStep
+                 onSubmit={(values) => {
+                  setFormikValues((prevFormikValues) => ({
+                    ...prevFormikValues,
+                    ...values
+                  }));
+                }}
+                validationSchema={
+                  Yup.object({
+                  country: Yup.string().required('El pais es requerido')
+                })}
+
+               />
           </MultiStep>
         </div>
       </section>
