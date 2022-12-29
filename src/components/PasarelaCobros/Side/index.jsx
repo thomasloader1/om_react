@@ -4,12 +4,13 @@ import './Side.scss';
 import Button from '../Button';
 import SideItem from '../SideItem';
 import { motion } from 'framer-motion'
-import { useFormikContext } from 'formik';
+import { Formik, useFormikContext } from 'formik';
 import axios from 'axios';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { getAllISOCodes } from 'iso-country-currency';
 import { AppContext } from '../Provider/StateProvider';
 import { useEffect } from 'react';
+import { useParams } from 'react-router';
 
 
 const { REACT_APP_OCEANO_URL, REACT_APP_OCEANO_STRIPESUBSCRIPTION, REACT_APP_OCEANO_STRIPESUBSCRIPTION_LOCAL, REACT_APP_OCEANO_GENERATECHECKOUTPRO, NODE_ENV } = process.env
@@ -20,6 +21,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
   const formik = useFormikContext()
   const stripe = useStripe();
   const elements = useElements();
+  const { id } = useParams();
   const [openBlockLayer, setOpenBlockLayer] = useState(false)
   const { formikValues, stripeRequest, setStripeRequest, userInfo, formRef, checkoutLink, setCheckoutLink, setOptions, options: optionsGlobal } = useContext(AppContext)
   const { country, quotes, amount, sale, contact, products } = formikValues
@@ -123,7 +125,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
           }
         }
 
-        body.append('months', 0);
+        body.append('months', formikValues.quotes? formikValues.quotes: 0);
         body.append('amount', `${formikValues.amount}`);
         body.append('type', type);
         body.append('so', formikValues.sale.SO_Number);
@@ -131,6 +133,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
         body.append('dni', formik.values.dni);
         body.append('phone', formik.values.phone);
         body.append('fullname', formik.values.fullName);
+        body.append('sale_id', id);
 
         const URL =
           NODE_ENV === 'production'
@@ -225,29 +228,53 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
 
 
           </motion.div>
+
+          { !fetching &&
+          
           <motion.div
-          style={{
-            width: "500px",
-            height: '300px',
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            bottom: '0',
-            zIndex: '-98',
-            backgroundColor: "white",
-            margin: 'auto 0px',
-            borderRadius: '4rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column'
-          }}
-          animate={{ backgroundColor: "#32bea6", boxShadow:'5px 5px 2rem rgba(0,0,0, 0.3)' }}
-          transition={{ ease: "easeOut", duration: 0.5 }}
-          >
-            <motion.h2 className='title is-2 has-text-white'>Pago realizado!</motion.h2>
-            <a href='http://localhost:3000/superpasarela/2712674000017120001' className='button is-primary'>Cobrar otro contrato</a>
+            style={{
+              width: "500px",
+              height: '300px',
+              position: 'absolute',
+              top: '0',
+              left: '0',
+              bottom: '0',
+              zIndex: '-98',
+              backgroundColor: "white",
+              margin: 'auto 0px',
+              borderRadius: '4rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'column'
+            }}
+            animate={{ backgroundColor: "#32bea6", boxShadow:'5px 5px 2rem rgba(0,0,0, 0.3)' }}
+            transition={{ ease: "easeOut", duration: 0.5 }}
+            >
+
+            {userInfo.stepTwo.value.includes('Stripe')? 
+            (<>
+
+                <motion.h2 className='title is-2 has-text-white'>Pago realizado!</motion.h2>
+                <a href='http://localhost:3000/superpasarela/2712674000017120001' className='button is-primary'>Cobrar otro contrato</a>
+              
+              </>) 
+            :
+              (<>
+              
+                  <motion.h2 className='title is-2 has-text-white'>Link generado!</motion.h2>
+                  <a href={checkoutLink} 
+                    disabled={checkoutLink ? false : true} 
+                    className="button is-link is-rounded"
+                    target="_blank" rel="noreferrer">
+                      Continuar en la pasarela de MercadoPago</a> 
+
+              </>)
+            }
+
           </motion.div>
+          
+          }
           
         </>)}
     </div>
