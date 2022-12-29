@@ -20,7 +20,7 @@ function Stepper() {
   })
 
   console.group("Stepper")
-  console.log({ options })
+  // console.log({ options })
   console.groupEnd("Stepper")
 
 

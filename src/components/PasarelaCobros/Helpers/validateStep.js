@@ -6,13 +6,13 @@ export const validateStep = ({actualStep, direction, options, sideItemOptions, s
     const indexOfNextStep = indexOfActualStep + 1;
     const indexOfPrevStep = indexOfActualStep > 0 ? indexOfActualStep - 1 : 0;
   
-    console.log("validateStep",{actualStep, direction, sideItemOptions, setCurrentStep})
+    // console.log("validateStep",{actualStep, direction, sideItemOptions, setCurrentStep})
   
     const setCompletedSideItem = (direction) => {
       if(direction === 'next'){
   
         options.sideItemOptions.forEach(({ status, value }) => {
-          // console.log({status, value})
+          // // console.log({status, value})
            if (status === 'current' && value !== '') {
              
              options.sideItemOptions[indexOfActualStep].status = 'completed';

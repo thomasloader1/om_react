@@ -141,7 +141,7 @@ function ResumeTicket({ contractId }) {
                 name="checkContract"
                 value="Datos correctos"
                 onClick={() => {
-                  // console.log(userInfo)
+                  // // console.log(userInfo)
                   const { sideItemOptions } = options;
 
                   sideItemOptions[3].value = 'Datos correctos';

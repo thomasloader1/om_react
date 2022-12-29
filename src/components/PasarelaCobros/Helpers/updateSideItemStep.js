@@ -2,7 +2,7 @@ export const updateSideItemStep = (state, ref = null) => {
     console.group('updateSideItemStep', { state, ref });
     state.sideItemOptions.map((step) => {
         if (step.status === 'current') {
-            console.log("Current step in updateSideItemStep()", { step })
+            // console.log("Current step in updateSideItemStep()", { step })
 
             if (step.step === 3) {
 

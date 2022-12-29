@@ -38,7 +38,7 @@ const MultiStep = ({
     setOptions({ ...options });
     setStepNumber(stepNumber + 1);
     setStepNumberGlobal(stepNumberGlobal + 1);
-    /*  console.log('next', {
+    /*  // console.log('next', {
       stepNumber,
       stepNumberGlobal,
       formikValues,
@@ -53,7 +53,7 @@ const MultiStep = ({
     setOptions({ ...options });
     setStepNumber(stepNumber - 1);
     setStepNumberGlobal(stepNumber - 1);
-    /* console.log('previous', {
+    /* // console.log('previous', {
       stepNumber,
       stepNumberGlobal,
       formikValues,
@@ -74,7 +74,7 @@ const MultiStep = ({
     }
   };
 
-  //console.log({ step });
+  //// console.log({ step });
 
   return (
     <SwitchTransition>

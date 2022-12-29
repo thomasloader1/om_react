@@ -20,12 +20,12 @@ export const useContractZoho = (contractId) => {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       })
-      console.log({ response })
+    //  // console.log({ response })
         
       setData(response.data)
       setLoading(response.data.lenght > 0)
        
-      // console.log({ response, data })
+      // // console.log({ response, data })
 
     }
 

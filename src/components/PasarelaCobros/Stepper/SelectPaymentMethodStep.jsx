@@ -20,7 +20,7 @@ function SelectPaymentMethodStep() {
   const isoCountry = getIsoCountry();
 
   console.group("SelectPaymentMethodStep")
-  console.log({ options, userInfo, isoCountry })
+  // console.log({ options, userInfo, isoCountry })
   console.groupEnd()
 
   return (
@@ -38,7 +38,7 @@ function SelectPaymentMethodStep() {
             name="payment_method"
             key={props.shortName}
             onClick={()=>{
-              // console.log(userInfo)
+              // // console.log(userInfo)
                const { sideItemOptions } = options
                const { stepTwo } = userInfo
  

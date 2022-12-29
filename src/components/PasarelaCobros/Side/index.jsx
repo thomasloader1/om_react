@@ -29,7 +29,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
   const { cardComplete, dni, address, fullName, phone } = formik.values
 
   const generateButton = userInfo.stepTwo.value.includes('Stripe') ? cardComplete : (dni && address && [...address].length > 10)
-  console.log({ userInfo })
+  // console.log({ userInfo })
 
   useEffect(() => {
     if (generateButton) {
@@ -70,7 +70,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       card: elements.getElement(CardElement),
     })
 
-    console.log({ error, paymentMethod })
+    // console.log({ error, paymentMethod })
 
     const postStripe = {
       currency,
@@ -91,7 +91,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     }
 
     axios.post(URL, postStripe).then(res => {
-      console.log({ res })
+      // console.log({ res })
       setStripeRequest(res.data)
 
 
@@ -140,7 +140,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
 
 
     axios.post(URL, body, requestConfig).then(res => {
-      console.log({ res })
+      // console.log({ res })
       setCheckoutLink(res.data.url);
 
     }).catch(err => {

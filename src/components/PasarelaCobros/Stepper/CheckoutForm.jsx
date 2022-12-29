@@ -8,7 +8,7 @@ const CheckoutForm = () => {
   const formik = useFormikContext()
 
   const handleChange = (event) => {
-    console.log({event, formik})
+    // console.log({event, formik})
     if(event.complete && event.value.postalCode !== ''){
       options.sideItemOptions[4].status = 'completed';
       options.sideItemOptions[4].value = 'Completos';

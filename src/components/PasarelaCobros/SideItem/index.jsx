@@ -18,7 +18,7 @@ function SideItem({ currentStep, label, status, className, valueSelected, stepSt
   const titleCurrentStep = currentStep > 3 && !valueSelected ? 'Sin completar' : !valueSelected ? 'Sin seleccionar' : valueSelected
   
   const editStep = (stepNumber) => {
-    console.log({formikInstance, formikValues, stepNumber})
+    // console.log({formikInstance, formikValues, stepNumber})
 
     switch(stepNumber){
       case 1:{
@@ -37,7 +37,7 @@ function SideItem({ currentStep, label, status, className, valueSelected, stepSt
         setUserInfo({...userInfo})
         setFormikValues({...formikInstance.values})
 
-        console.log({rest, formikInstance,userInfo})
+        // console.log({rest, formikInstance,userInfo})
         break;
       }
       case 2:{
@@ -55,7 +55,7 @@ function SideItem({ currentStep, label, status, className, valueSelected, stepSt
         setUserInfo({...userInfo})
         setFormikValues({...formikInstance.values})
 
-        console.log({rest, formikInstance,userInfo})
+        // console.log({rest, formikInstance,userInfo})
         break;
       }
       case 3:{
@@ -72,7 +72,7 @@ function SideItem({ currentStep, label, status, className, valueSelected, stepSt
         setUserInfo({...userInfo})
         setFormikValues({...formikInstance.values})
 
-        console.log({rest, formikInstance,userInfo})
+        // console.log({rest, formikInstance,userInfo})
         break;
       }
       case 4:{
@@ -88,11 +88,11 @@ function SideItem({ currentStep, label, status, className, valueSelected, stepSt
         setUserInfo({...userInfo})
         setFormikValues({...formikInstance.values})
 
-        console.log({rest, formikInstance,userInfo})
+        // console.log({rest, formikInstance,userInfo})
         break;
       }
       default:{
-        console.log("CHUPALA")
+        // console.log("CHUPALA")
         break;
       }
     }
@@ -101,9 +101,9 @@ function SideItem({ currentStep, label, status, className, valueSelected, stepSt
     
     options.sideItemOptions.forEach((stepObject, index) =>{
       /* console.group(`${index}`)
-      console.log({stepObject})
-      console.log("if",stepNumber === stepObject.step)
-      console.log("else if",stepNumber < stepObject.step)
+      // console.log({stepObject})
+      // console.log("if",stepNumber === stepObject.step)
+      // console.log("else if",stepNumber < stepObject.step)
       console.groupEnd(); */
 
       if(stepNumber === stepObject.step){
@@ -120,7 +120,7 @@ function SideItem({ currentStep, label, status, className, valueSelected, stepSt
     setStepNumberGlobal(stepNumber - 1)
   }
 
- // console.log(disableEdit)
+ // // console.log(disableEdit)
 
   return (
     <div className={`side-item ${classNameStatus}`}>

@@ -23,7 +23,7 @@ function SelectCountryStep() {
             name="country"
             key={props.idElement}
             onClick={()=>{
-             // console.log(userInfo)
+             // // console.log(userInfo)
               const { sideItemOptions } = options
               const { stepOne } = userInfo
 

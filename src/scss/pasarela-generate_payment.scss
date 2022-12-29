@@ -1,31 +1,35 @@
-#grid-payment_stripe{
+#grid-payment_stripe {
     display: grid;
-    grid-template-areas: 'fullName fullName phone' 'address address dni' 'card card card' 'notify notify notify';
+    grid-template-areas: 'fullName fullName phone' 'address address dni' 'email email email' 'card card card' 'notify notify notify';
     gap: 1rem;
     align-items: center;
     justify-content: center;
     width: 100%;
 
-    .field:nth-child(1){
+    .field:nth-child(1) {
         grid-area: fullName;
     }
 
-    .field:nth-child(2){
+    .field:nth-child(2) {
         grid-area: phone;
     }
 
-    .field:nth-child(3){
+    .field:nth-child(3) {
         grid-area: address;
     }
 
-    .field:nth-child(4){
+    .field:nth-child(4) {
         grid-area: dni;
     }
 
-    .checkout_stripe{
+    .field:nth-child(5) {
+        grid-area: email;
+    }
+
+    .checkout_stripe {
         grid-area: card;
 
-        #card_element{
+        #card_element {
             margin: 10px 0;
             width: 700px;
             background-color: hsl(0deg, 0%, 100%);
@@ -35,30 +39,44 @@
             padding: 10px;
         }
 
-        #serverNotify{
+        #serverNotify {
             grid-area: notify;
         }
 
-        button{
+        button {
             width: 100%;
         }
     }
 
-    pre{
+    pre {
         grid-area: console;
         max-width: 300px;
     }
 }
 
-#grid-payment_mp{
+#grid-payment_mp {
     display: grid;
-    grid-template-areas: "description description" 
-                        "buttonLink buttonLink";
-                        gap: 1rem;
-    h3{
-        grid-area: description;
+    grid-template-areas: 'fullName fullName phone' 'address address dni' 'email email email';
+    gap: 1rem;
+
+    .field:nth-child(1) {
+        grid-area: fullName;
     }
-    a{
-        grid-area: buttonLink;
+
+    .field:nth-child(2) {
+        grid-area: phone;
     }
+
+    .field:nth-child(3) {
+        grid-area: address;
+    }
+
+    .field:nth-child(4) {
+        grid-area: dni;
+    }
+
+    .field:nth-child(5) {
+        grid-area: email;
+    }
+
 }

@@ -16,7 +16,7 @@ import { getCurrentStep } from '../Hooks/useCurrentStep';
 
 
 function RadioButton({...props }) {
-  console.log({props})
+//  // console.log({props})
   const [field, meta] = useField(props)
 
   const {
@@ -90,7 +90,7 @@ function RadioButton({...props }) {
           className={`button ${classes ?? className}`} 
           disabled={disabled}
           onClick={(e)=>{
-            //console.log(props)
+            //// console.log(props)
             const field = props.name
             props.formikHook.setFieldValue(field, value)
             props.formikHook.setSubmitting(true)

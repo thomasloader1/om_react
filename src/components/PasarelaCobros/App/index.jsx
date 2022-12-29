@@ -12,7 +12,6 @@ import GeneratePaymentLinkStep from '../Stepper/GeneratePaymentLinkStep';
 import axios from 'axios';
 import { useEffect } from 'react';
 import useStripeEnv from '../Hooks/useStripeEnv';
-import { motion } from 'framer-motion'
 
 const { REACT_APP_OCEANO_URL, REACT_APP_OCEANO_GENERATECHECKOUTPRO, NODE_ENV } =
   process.env;
@@ -22,12 +21,13 @@ function PasarelaApp() {
   const [stepNumber, setStepNumber] = useState(0);
   const { stripePromise } = useStripeEnv();
 
-  const validationSchemaFinalStep = userInfo.stepTwo.value.includes('Stripe') ? Yup.object({
+  const validationSchemaFinalStep = Yup.object({
     fullName: Yup.string().required("Ingrese nombre que figura en la tarjeta").matches(/^[a-zA-Z]+\s+[a-zA-Z]+(?:\s+[a-zA-Z]+)?$/i, "El campo debe contener solo letras"),
     phone: Yup.string().required('Ingrese un numero de telefono').matches(/^[0-9]+$/i, "El campo debe contener solo numeros"),
-    address: Yup.string().required('Ingrese calle y numero del titual de la tarjeta').matches(/^.*[a-zA-Z]+\s[a-zA-Z]+\s[0-9]+.*$/i, 'No pega'),
+    address: Yup.string().required('Ingrese calle y numero del titual de la tarjeta').matches(/^.*[a-zA-Z]+\s[a-zA-Z]+\s[0-9]+.*$/i, 'El formato de la direccion es invalido'),
     dni: Yup.string().required('Ingrese el numero de tu documento de identidad').matches(/^[0-9]+$/i, "El campo debe contener solo numeros"),
-  }) : null
+    email: Yup.string().email("Ingrese un email valido").required('El email es requerido'),
+  })
 
   useEffect(() => {
     setStepNumber(stepNumber);
@@ -59,10 +59,10 @@ function PasarelaApp() {
         const response = await axios.post(URL, body, requestConfig);
 
         setCheckoutLink(response.data.url);
-        console.log({ response });
+       // // console.log({ response });
       
     }else{
-      console.log('handleSubmitByStepTwo:', userInfo.stepTwo.value)
+      //// console.log('handleSubmitByStepTwo:', userInfo.stepTwo.value)
     }
   }
 
@@ -76,7 +76,13 @@ function PasarelaApp() {
           <MultiStep
             stepStateNumber={{ stepNumber, setStepNumber }}
             className="pasarela-1 column seleccion-pais"
-            initialValues={{}}
+            initialValues={{
+              fullName: '',
+              phone: '',
+              address: '',
+              dni: '',
+              email: '',
+            }}
             onSubmit={handleSubmitByStepTwo}
           >
             
