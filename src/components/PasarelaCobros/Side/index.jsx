@@ -26,32 +26,32 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
 
   const URL = NODE_ENV === "production" ? (`${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_STRIPESUBSCRIPTION}`) : REACT_APP_OCEANO_STRIPESUBSCRIPTION_LOCAL;
 
-  const {cardComplete, dni, address, fullName, phone} = formik.values
+  const { cardComplete, dni, address, fullName, phone } = formik.values
 
   const generateButton = userInfo.stepTwo.value.includes('Stripe') ? cardComplete : (dni && address && [...address].length > 10)
-  console.log({stripeRequest})
+  console.log({ userInfo })
 
-  useEffect(()=>{
-    if(generateButton){
+  useEffect(() => {
+    if (generateButton) {
       optionsGlobal.sideItemOptions[4].status = 'completed';
       optionsGlobal.sideItemOptions[4].value = 'Completos';
       setOptions({ ...optionsGlobal });
-    }else if(dni && address && fullName && phone){
+    } else if (dni && address && fullName && phone) {
       optionsGlobal.sideItemOptions[4].status = 'current';
       optionsGlobal.sideItemOptions[4].value = 'Sin Completar';
       setOptions({ ...optionsGlobal });
     }
     return () => null
-  },[generateButton]);
-  
+  }, [generateButton]);
+
   const handleSubmitStripe = async (event) => {
     setFetching(true);
     setOpenBlockLayer(true)
-    
+
     formRef.current.style.filter = 'blur(5px)'
     formRef.current.style.position = 'relative'
     formRef.current.style.zIndex = '-9999'
-    
+
     event.preventDefault();
     event.stopPropagation();
 
@@ -100,7 +100,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       formRef.current.style.position = 'relative'
       formRef.current.style.zIndex = '0'
       setOpenBlockLayer(false)
-     
+
       console.error({ err })
     }).finally(() => {
       setFetching(false);
@@ -110,46 +110,47 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
   const handleSubmitMercadoPago = () => {
     setFetching(true);
     setOpenBlockLayer(true)
-    
+
     formRef.current.style.filter = 'blur(5px)'
     formRef.current.style.position = 'relative'
     formRef.current.style.zIndex = '-9999'
 
     const body = new FormData();
-        const type = formikValues.mod.toLowerCase().substring(0, 4);
-        const requestConfig = {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }
+    const type = formikValues.mod.toLowerCase().substring(0, 4);
+    const requestConfig = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }
+    const months = formikValues.quotes && formikValues.quotes > 0 ? formikValues.quotes : 0
+    body.append('months', months);
+    body.append('amount', `${formikValues.amount}`);
+    body.append('type', type);
+    body.append('so', formikValues.sale.SO_Number);
+    body.append('address', formik.values.address);
+    body.append('dni', formik.values.dni);
+    body.append('phone', formik.values.phone);
+    body.append('fullname', formik.values.fullName);
+    body.append('sale_id', formikValues.contractId);
 
-        body.append('months', 0);
-        body.append('amount', `${formikValues.amount}`);
-        body.append('type', type);
-        body.append('so', formikValues.sale.SO_Number);
-        body.append('address', formik.values.address);
-        body.append('dni', formik.values.dni);
-        body.append('phone', formik.values.phone);
-        body.append('fullname', formik.values.fullName);
+    const URL =
+      NODE_ENV === 'production'
+        ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GENERATECHECKOUTPRO}`
+        : REACT_APP_OCEANO_GENERATECHECKOUTPRO;
 
-        const URL =
-          NODE_ENV === 'production'
-            ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GENERATECHECKOUTPRO}`
-            : REACT_APP_OCEANO_GENERATECHECKOUTPRO;
-        
-        axios.post(URL, body, requestConfig).then(res => {
-          console.log({ res })
-          setCheckoutLink(res.data.url);
-    
-        }).catch(err => {
-          formRef.current.style.filter = 'blur(0px)'
-          formRef.current.style.position = 'relative'
-          formRef.current.style.zIndex = '0'
-          setOpenBlockLayer(false)
-          console.error({ err })
-        }).finally(() => {
-          setFetching(false);
-        });
+    axios.post(URL, body, requestConfig).then(res => {
+      console.log({ res })
+      setCheckoutLink(res.data.url);
+
+    }).catch(err => {
+      formRef.current.style.filter = 'blur(0px)'
+      formRef.current.style.position = 'relative'
+      formRef.current.style.zIndex = '0'
+      setOpenBlockLayer(false)
+      console.error({ err })
+    }).finally(() => {
+      setFetching(false);
+    });
 
   }
 
@@ -174,24 +175,24 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
 
         {generateButton && (
           <>
-          { userInfo.stepTwo.value.includes('Stripe') ? (
-          <Button
-              className={`bigger is-primary is-medium ${fetching && 'is-loading'}`}
-              label={stripeRequest ? "Pago Realizado" : "Generar pago"}
-              fullwidth
-              onClick={handleSubmitStripe}
-              disabled={stripeRequest}
-            />
+            {userInfo.stepTwo.value.includes('Stripe') ? (
+              <Button
+                className={`bigger is-primary is-medium ${fetching && 'is-loading'}`}
+                label={stripeRequest ? "Pago Realizado" : "Generar pago"}
+                fullwidth
+                onClick={handleSubmitStripe}
+                disabled={stripeRequest}
+              />
             ) : (
               <Button
-              className={`bigger is-primary is-medium ${fetching && 'is-loading'}`}
-              label={checkoutLink ? "Link generado" : "Generar link"}
-              fullwidth
-              onClick={handleSubmitMercadoPago}
-              disabled={checkoutLink}
-            />
-            ) }
-            
+                className={`bigger is-primary is-medium ${fetching && 'is-loading'}`}
+                label={checkoutLink ? "Link generado" : "Generar link"}
+                fullwidth
+                onClick={handleSubmitMercadoPago}
+                disabled={checkoutLink}
+              />
+            )}
+
 
           </>
         )}
@@ -210,45 +211,55 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       </motion.div>
       {
         openBlockLayer && (<>
-        <motion.div style={{
-          width: "3000px",
-          height: '100vh',
-          position: 'absolute',
-          top: '0',
-          right: '0',
-          zIndex: '-100',
-          backgroundColor: "white",
-        }}
-          animate={{ backgroundColor: "rgba(63, 108, 187, 0.8)" }}
-          transition={{ ease: "easeOut", duration: 0.5 }}>
+          <motion.div style={{
+            width: "3000px",
+            height: '100vh',
+            position: 'absolute',
+            top: '0',
+            right: '0',
+            zIndex: '-100',
+            backgroundColor: "white",
+          }}
+            animate={{ backgroundColor: "rgba(63, 108, 187, 0.8)" }}
+            transition={{ ease: "easeOut", duration: 0.5 }}>
 
 
 
           </motion.div>
           <motion.div
-          style={{
-            width: "500px",
-            height: '300px',
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            bottom: '0',
-            zIndex: '-98',
-            backgroundColor: "white",
-            margin: 'auto 0px',
-            borderRadius: '4rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column'
-          }}
-          animate={{ backgroundColor: "#32bea6", boxShadow:'5px 5px 2rem rgba(0,0,0, 0.3)' }}
-          transition={{ ease: "easeOut", duration: 0.5 }}
+            style={{
+              width: "500px",
+              height: '300px',
+              position: 'absolute',
+              top: '0',
+              left: '0',
+              bottom: '0',
+              zIndex: '-98',
+              backgroundColor: "white",
+              margin: 'auto 0px',
+              borderRadius: '4rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'column'
+            }}
+            animate={{ backgroundColor: "#32bea6", boxShadow: '5px 5px 2rem rgba(0,0,0, 0.3)' }}
+            transition={{ ease: "easeOut", duration: 0.5 }}
           >
-            <motion.h2 className='title is-2 has-text-white'>Pago realizado!</motion.h2>
-            <a href='http://localhost:3000/superpasarela/2712674000017120001' className='button is-primary'>Cobrar otro contrato</a>
+            { userInfo.stepTwo.value.includes('Stripe')  ? 
+            (
+              <>
+              <motion.h2 className='title is-2 has-text-white'>Pago realizado!</motion.h2>
+              <a href='http://localhost:3000/superpasarela/2712674000017120001' className='button is-primary'>Cobrar otro contrato</a>
+              </>
+            ) : (
+              <>
+               <motion.h2 className='title is-2 has-text-white'>Link generado!</motion.h2>
+              <a href='http://localhost:3000/superpasarela/2712674000017120001' className='button is-primary'>Cobrar otro contrato</a>
+              </>
+            ) }
           </motion.div>
-          
+
         </>)}
     </div>
   );
