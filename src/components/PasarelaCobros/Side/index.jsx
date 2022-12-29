@@ -138,6 +138,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
         ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GENERATECHECKOUTPRO}`
         : REACT_APP_OCEANO_GENERATECHECKOUTPRO;
 
+
     axios.post(URL, body, requestConfig).then(res => {
       console.log({ res })
       setCheckoutLink(res.data.url);
@@ -226,6 +227,9 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
 
 
           </motion.div>
+
+          { !fetching &&
+          
           <motion.div
             style={{
               width: "500px",
@@ -243,23 +247,34 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
               justifyContent: 'center',
               flexDirection: 'column'
             }}
-            animate={{ backgroundColor: "#32bea6", boxShadow: '5px 5px 2rem rgba(0,0,0, 0.3)' }}
+            animate={{ backgroundColor: "#32bea6", boxShadow:'5px 5px 2rem rgba(0,0,0, 0.3)' }}
             transition={{ ease: "easeOut", duration: 0.5 }}
-          >
-            { userInfo.stepTwo.value.includes('Stripe')  ? 
-            (
-              <>
-              <motion.h2 className='title is-2 has-text-white'>Pago realizado!</motion.h2>
-              <a href='http://localhost:3000/superpasarela/2712674000017120001' className='button is-primary'>Cobrar otro contrato</a>
-              </>
-            ) : (
-              <>
-               <motion.h2 className='title is-2 has-text-white'>Link generado!</motion.h2>
-              <a href='http://localhost:3000/superpasarela/2712674000017120001' className='button is-primary'>Cobrar otro contrato</a>
-              </>
-            ) }
-          </motion.div>
+            >
 
+            {userInfo.stepTwo.value.includes('Stripe')? 
+            (<>
+
+                <motion.h2 className='title is-2 has-text-white'>Pago realizado!</motion.h2>
+                <a href='http://localhost:3000/superpasarela/2712674000017120001' className='button is-primary'>Cobrar otro contrato</a>
+              
+              </>) 
+            :
+              (<>
+              
+                  <motion.h2 className='title is-2 has-text-white'>Link generado!</motion.h2>
+                  <a href={checkoutLink} 
+                    disabled={checkoutLink ? false : true} 
+                    className="button is-link is-rounded"
+                    target="_blank" rel="noreferrer">
+                      Continuar en la pasarela de MercadoPago</a> 
+
+              </>)
+            }
+
+          </motion.div>
+          
+          }
+          
         </>)}
     </div>
   );
