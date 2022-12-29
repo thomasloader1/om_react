@@ -132,6 +132,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     body.append('phone', formik.values.phone);
     body.append('fullname', formik.values.fullName);
     body.append('sale_id', formikValues.contractId);
+    body.append('mail', formikValues.email);
 
     const URL =
       NODE_ENV === 'production'
