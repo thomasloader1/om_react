@@ -37,7 +37,6 @@ function Btn({
   icon,
   onClick
 }) {
-
   return (
     <Button
       disabled={disabled}

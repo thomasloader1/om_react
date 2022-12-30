@@ -6,17 +6,13 @@ import App from './components/App/index';
 import reportWebVitals from './reportWebVitals';
 import StateProvider from './components/PasarelaCobros/Provider/StateProvider';
 
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  
-    <StateProvider>
-     
-          <HashRouter>
-            <App />
-          </HashRouter>
-
-    </StateProvider>
+  <StateProvider>
+    <HashRouter>
+      <App />
+    </HashRouter>
+  </StateProvider>,
 );
 
 // If you want to start measuring performance in your app, pass a function
