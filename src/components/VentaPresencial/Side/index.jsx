@@ -42,8 +42,6 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     }
     return () => null
   },[generateButton]);
-  
-  
 
   const handleSubmitMercadoPago = () => {
     setFetching(true);

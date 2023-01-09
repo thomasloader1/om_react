@@ -31,10 +31,30 @@
   grid-template-areas: 'search search' 'mod mod' 'quotes quotes' 'notification notification' 'controls controls';
   column-gap: 1rem;
 
-  .field:nth-child(1) {
-    grid-area: search;
-    margin-bottom: 1.5rem;
+  .block.field_info {
+    grid-area: notification;
+    align-self: center;
+    margin: 10px auto;
   }
+
+  .select.is-info {
+    grid-area: quotes;
+    margin: 10px auto;
+  }
+  .grid-payment_method-item {
+    height: unset;
+
+    &.active {
+      background-color: #eff1fa !important;
+      border-color: #485fc7;
+      color: #485fc7;
+    }
+  }
+}
+.grid-lead-face-to-face-sale{
+  display: grid;
+  grid-template-areas: 'search search' 'mod mod' 'quotes quotes' 'notification notification' 'controls controls';
+  column-gap: 1rem;
 
   .block.field_info {
     grid-area: notification;
