@@ -236,6 +236,8 @@ export const numberSOForm = [
   }
 ];
 
+
+
 export const sideItemOptions = [
   {
     step: 1,
@@ -302,3 +304,68 @@ export const userFlow = {
     value: ''
   }
 };
+
+
+// VentaPresencial
+export const userFlowFaceToFaceSale = {
+  stepOne: {
+    step: 1,
+    label: 'country',
+    value: '',
+    isoRef: ''
+  },
+  stepTwo: {
+    step: 2,
+    label: 'create_lead',
+    value: ''
+  },
+  stepThree: {
+    step: 3,
+    label: 'conversion_contact',
+    value: ''
+  }
+};
+export const leadForm = [
+  {
+    idElement: 'name',
+    value: '',
+    label: 'NOMBRE',
+    placeholder: 'Ingrese nombre'
+  },
+  {
+    idElement: 'username',
+    value: '',
+    label: 'APELLIDO',
+    placeholder: 'Ingrese apellido'
+  },
+  {
+    idElement: 'telephone',
+    value: '',
+    label: 'TELEFONO',
+    placeholder: 'Ingrese e-mail'
+  },
+  {
+    idElement: 'profession',
+    value: '',
+    label: 'PROFESION',
+    placeholder: 'Ingrese profesion'
+  },
+  {
+    idElement: 'speciality',
+    value: '',
+    label: 'ESPECIALIDAD',
+    placeholder: 'Ingrese especialidad'
+  },
+  {
+    idElement: 'email',
+    value: '',
+    label: 'E-MAIL',
+    placeholder: 'Ingrese email'
+  },
+  {
+    idElement: 'method_contact',
+    value: '',
+    label: 'METODO DE CONTACTO',
+    placeholder: 'Seleccionar metodo de contacto'
+  }
+];

@@ -20,8 +20,10 @@ const MultiStep = ({
     setOptions,
     stepNumberGlobal,
     setStepNumberGlobal,
-    formRef
+    formRef,
+    leadForm 
   } = useContext(AppContext);
+  
   const { stepNumber, setStepNumber } = stepStateNumber;
   const [spanshot, setSpanshot] = useState(initialValues);
   const steps = React.Children.toArray(children);
@@ -31,6 +33,7 @@ const MultiStep = ({
   const isLastStep = stepNumber === totalSteps - 1;
 
   const next = (values) => {
+
     setSpanshot(values);
     const indexOfNextStep = stepNumber + 1;
     options.sideItemOptions[stepNumber].status = 'completed';
