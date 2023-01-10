@@ -7,7 +7,7 @@ import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import SelectCountryStep from '../../PasarelaCobros/Stepper/SelectCountryStep';
 import LeadStep from '../Stepper/Lead';
 import ContactStep from '../Stepper/Contact';
-
+import SelectCourse from '../Stepper/SelectCourse';
 
 const { REACT_APP_OCEANO_URL,
    REACT_APP_OCEANO_GENERATECHECKOUTPRO, NODE_ENV,REACT_APP_PHP_LARAVEL_APIPAYMENTS } =
@@ -102,6 +102,18 @@ function VentaPresencialApp() {
                 validationSchema={
                   Yup.object({
                   country: Yup.string().required('El pais es requerido')
+                })}
+
+               />
+               <SelectCourse
+                 onSubmit={(values) => {
+                  setFormikValues((prevFormikValues) => ({
+                    ...prevFormikValues,
+                    ...values
+                  }));
+                }}
+                validationSchema={
+                  Yup.object({
                 })}
 
                />
