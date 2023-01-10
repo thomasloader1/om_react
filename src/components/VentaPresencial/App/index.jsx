@@ -16,7 +16,7 @@ const PHP_LARAVEL_APIPAYMENTS = "http://127.0.0.1:8000/api/db/stepCreateLead";
 console.log(process.env);
 
 function VentaPresencialApp() {
-  const { formikValues, setFormikValues, checkoutLink, setCheckoutLink,leadForm } = useContext(AppContext);
+  const { formikValues, setFormikValues, checkoutLink, setCheckoutLink } = useContext(AppContext);
   const [stepNumber, setStepNumber] = useState(0);
   useEffect(() => {
     setStepNumber(stepNumber);
@@ -101,8 +101,18 @@ function VentaPresencialApp() {
                 }}
                 validationSchema={
                   Yup.object({
-                  country: Yup.string().required('El pais es requerido')
-                })}
+                    dni: Yup.string().required('El dni es requerido'),
+                    sex: Yup.string().required('El sexo es requerido'),
+                    date_of_birth: Yup.string().required('La fecha de nacimiento es requerida'),
+                    registration_number: Yup.string().required('El nummero de matricula es requerido'),
+                    area_of_work: Yup.string().required('El area de trabajo es requerida'),
+                    training_interest: Yup.string().required('El interes de formacion'),
+                    province_state: Yup.string().required('La provincia o estado son requeridos'),
+                    country: Yup.string().required('El pais es requerido'),
+                    postal_code: Yup.string().required('El codigo postal es requerido'),
+                    street: Yup.string().required('La direccion es requerida'),
+                    locality: Yup.string().required('La localidad es requerida'),
+                  })}
 
                />
                <SelectCourse

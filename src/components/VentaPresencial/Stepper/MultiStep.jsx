@@ -21,7 +21,8 @@ const MultiStep = ({
     stepNumberGlobal,
     setStepNumberGlobal,
     formRef,
-    leadForm 
+    leadForm,
+    contactForm
   } = useContext(AppContext);
   
   const { stepNumber, setStepNumber } = stepStateNumber;
