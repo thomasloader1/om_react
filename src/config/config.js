@@ -236,8 +236,6 @@ export const numberSOForm = [
   }
 ];
 
-
-
 export const sideItemOptions = [
   {
     step: 1,
@@ -305,8 +303,45 @@ export const userFlow = {
   }
 };
 
-
 // VentaPresencial
+// export const sideItemOptionsFaceToFaceSale = [
+//   {
+//     step: 1,
+//     idElement: 'seleccion_pais',
+//     label: 'País',
+//     value: '',
+//     status: 'current'
+//   },
+//   {
+//     step: 2,
+//     idElement: 'create_lead',
+//     label: 'LEAD',
+//     value: '',
+//     status: ''
+//   },
+//   {
+//     step: 3,
+//     idElement: 'conversion_contact',
+//     label: 'CONTACTO',
+//     value: '',
+//     status: ''
+//   },
+//   {
+//     step: 4,
+//     idElement: 'select_course',
+//     label: 'CURSOS',
+//     value: '',
+//     status: ''
+//   },
+//   {
+//     step: 5,
+//     idElement: 'seleccion_pais',
+//     label: 'DATOS DE LA TARJETA',
+//     value: '',
+//     status: ''
+//   }
+// ];
+
 export const userFlowFaceToFaceSale = {
   stepOne: {
     step: 1,

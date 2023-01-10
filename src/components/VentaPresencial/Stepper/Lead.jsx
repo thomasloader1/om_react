@@ -21,17 +21,17 @@ const LeadStep =  () => {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }
+    let dataJson = {
+      lead: formik.values
+    };
 
-    body.append('dataJson', JSON.stringify(formik.values))
+    // body.append('dataJson', JSON.stringify(formik.values))
+    body.append('dataJson', JSON.stringify(dataJson))
 
-      
+    const response = axios.post("http://127.0.0.1:8000/api/db/stepCreateLead", body, requestConfig);
+    // debugger;//10
 
-      const response = axios.post("http://127.0.0.1:8000/api/db/stepCreateLead", body, requestConfig);
-      // debugger;//10
-
-      console.log({ response });
-
-
+    console.log({ response });
 
     return (
       <>
