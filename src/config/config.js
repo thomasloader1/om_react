@@ -360,6 +360,7 @@ export const userFlowFaceToFaceSale = {
     value: ''
   }
 };
+
 export const leadForm = [
   {
     idElement: 'name',
@@ -402,5 +403,74 @@ export const leadForm = [
     value: '',
     label: 'METODO DE CONTACTO',
     placeholder: 'Seleccionar metodo de contacto'
+  }
+];
+
+export const contactForm = [
+  {
+    idElement: 'dni',
+    value: '',
+    label: 'DNI',
+    placeholder: 'Ingrese DNI'
+  },
+  {
+    idElement: 'sex',
+    value: '',
+    label: 'SEXO',
+    placeholder: 'Ingrese sexo'
+  },
+  {
+    idElement: 'date_of_birth',
+    value: '',
+    label: 'FECHA DE NACIMIENTO',
+    placeholder: 'Ingrese fecha de nacimiento'
+  },
+  {
+    idElement: 'country',
+    value: '',
+    label: 'PAIS',
+    placeholder: 'Ingrese pais'
+  },
+  {
+    idElement: 'province_state',
+    value: '',
+    label: 'PROVINCIA/ESTADO',
+    placeholder: 'Ingrese provincia o estado'
+  },
+  {
+    idElement: 'postal_code',
+    value: '',
+    label: 'CODIGO POSTAL',
+    placeholder: 'Ingrese codigo postal'
+  },
+  {
+    idElement: 'street',
+    value: '',
+    label: 'DIRECCION',
+    placeholder: 'Ingrese direccion'
+  },
+  {
+    idElement: 'locality',
+    value: '',
+    label: 'LOCALIDAD',
+    placeholder: 'Ingrese localidad'
+  },
+  {
+    idElement: 'registration_number',
+    value: '',
+    label: 'NUMERO DE MATRICULA',
+    placeholder: 'Ingrese numero de matricula'
+  },
+  {
+    idElement: 'area_of_work',
+    value: '',
+    label: 'AREA DE TRABAJO',
+    placeholder: 'Ingrese area de trabajo'
+  },
+  {
+    idElement: 'training_interest',
+    value: '',
+    label: 'INTERES DE FORMACION',
+    placeholder: 'Ingrese interes de formacion'
   }
 ];
