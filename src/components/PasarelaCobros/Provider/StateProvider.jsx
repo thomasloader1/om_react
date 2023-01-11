@@ -20,26 +20,38 @@ function StateProvider({ children }) {
     paymentModeOptions,
     clientForm,
     sideItemOptions
-  })
+  });
 
-  const [formikValues, setFormikValues] = useState({})
-  const [userInfo, setUserInfo] = useState(userFlow)
-  const [stepNumberGlobal, setStepNumberGlobal] = useState(1)
-  const [stripeRequest, setStripeRequest] = useState(null)
-  const [checkoutLink, setCheckoutLink] = useState('')
+  const [formikValues, setFormikValues] = useState({});
+  const [userInfo, setUserInfo] = useState(userFlow);
+  const [stepNumberGlobal, setStepNumberGlobal] = useState(1);
+  const [stripeRequest, setStripeRequest] = useState(null);
+  const [checkoutLink, setCheckoutLink] = useState('');
+  const [appEnv, setAppEnv] = useState({});
   const appRef = useRef(null);
   const formRef = useRef(null);
 
   return (
-    <AppContext.Provider value={{
-      options, setOptions,
-      formikValues, setFormikValues,
-      userInfo, setUserInfo,
-      stepNumberGlobal, setStepNumberGlobal,
-      stripeRequest, setStripeRequest,
-      checkoutLink, setCheckoutLink,
-      appRef, formRef
-    }}>
+    <AppContext.Provider
+      value={{
+        options,
+        setOptions,
+        formikValues,
+        setFormikValues,
+        userInfo,
+        setUserInfo,
+        stepNumberGlobal,
+        setStepNumberGlobal,
+        stripeRequest,
+        setStripeRequest,
+        checkoutLink,
+        setCheckoutLink,
+        appRef,
+        formRef,
+        appEnv,
+        setAppEnv
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
@@ -47,5 +59,3 @@ function StateProvider({ children }) {
 
 export default StateProvider;
 export const AppContext = createContext();
-
-
