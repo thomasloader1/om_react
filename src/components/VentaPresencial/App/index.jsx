@@ -13,7 +13,7 @@ const {
   REACT_APP_OCEANO_URL,
   REACT_APP_OCEANO_GENERATECHECKOUTPRO,
   NODE_ENV,
-  REACT_APP_PHP_LARAVEL_APIPAYMENTS
+  REACT_APP_PHP_LARAVEL_APIPAYMENTS,
 } = process.env;
 const PHP_LARAVEL_APIPAYMENTS = 'http://127.0.0.1:8000/api/db/stepCreateLead';
 
@@ -26,14 +26,14 @@ function VentaPresencialApp() {
     const body = new FormData();
     const requestConfig = {
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
     };
     let dataJson = {
       lead: {
         id: null,
-        ...values
-      }
+        ...values,
+      },
     };
 
     body.append('dataJson', JSON.stringify(dataJson));
@@ -47,7 +47,7 @@ function VentaPresencialApp() {
 
     setAppEnv((appEnvCurrent) => ({
       ...appEnvCurrent,
-      leadEntityId: id
+      leadEntityId: id,
     }));
 
     console.log({ id });
@@ -73,8 +73,8 @@ function VentaPresencialApp() {
               const type = formikValues.mod.toLowerCase().substring(0, 4);
               const requestConfig = {
                 headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded'
-                }
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
               };
 
               body.append('months', 0);
@@ -102,11 +102,11 @@ function VentaPresencialApp() {
               onSubmit={(values) => {
                 setFormikValues((prevFormikValues) => ({
                   ...prevFormikValues,
-                  ...values
+                  ...values,
                 }));
               }}
               validationSchema={Yup.object({
-                country: Yup.string().required('El pais es requerido')
+                country: Yup.string().required('El pais es requerido'),
               })}
             />
 
@@ -114,7 +114,7 @@ function VentaPresencialApp() {
               onSubmit={(values) => {
                 setFormikValues((prevFormikValues) => ({
                   ...prevFormikValues,
-                  ...values
+                  ...values,
                 }));
 
                 saveLead(values);
@@ -127,7 +127,7 @@ function VentaPresencialApp() {
                 profession: Yup.string().required('La profesion es requerido'),
                 speciality: Yup.string().required(
                   'La especialidad es requerido'
-                )
+                ),
                 // method_contact: Yup.string().required('El metodo de contacto es requerido'),
               })}
             />
@@ -135,7 +135,7 @@ function VentaPresencialApp() {
               onSubmit={(values) => {
                 setFormikValues((prevFormikValues) => ({
                   ...prevFormikValues,
-                  ...values
+                  ...values,
                 }));
               }}
               validationSchema={Yup.object({
@@ -161,14 +161,14 @@ function VentaPresencialApp() {
                   'El codigo postal es requerido'
                 ),
                 street: Yup.string().required('La direccion es requerida'),
-                locality: Yup.string().required('La localidad es requerida')
+                locality: Yup.string().required('La localidad es requerida'),
               })}
             />
             <SelectCourse
               onSubmit={(values) => {
                 setFormikValues((prevFormikValues) => ({
                   ...prevFormikValues,
-                  ...values
+                  ...values,
                 }));
               }}
               validationSchema={Yup.object({})}
