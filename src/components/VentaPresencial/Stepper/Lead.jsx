@@ -1,18 +1,8 @@
-import { useFormikContext } from "formik";
-import { useContext } from "react";
-import { useParams } from "react-router";
 import InputField from "../../PasarelaCobros/InputField";
-import { AppContext } from "../../PasarelaCobros/Provider/StateProvider";
 import { FormStep } from "./MultiStep";
-import axios from 'axios';
+
 
 const LeadStep = () => {
-  const { formikValues, setFormikValues, checkoutLink, setCheckoutLink, appRef, userInfo } = useContext(AppContext);
-  const { useState, setOptions, setUserInfo } = useContext(AppContext);
-  // const [fetching, setFetching] = useState(false)
-
-  const { stepOne, stepThree } = userInfo
-  const { name, username } = useParams();
 
   return (
     <>
