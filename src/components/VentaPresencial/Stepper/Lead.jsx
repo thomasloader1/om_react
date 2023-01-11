@@ -22,17 +22,33 @@ const LeadStep =  () => {
       }
     }
     let dataJson = {
-      lead: formik.values
+      lead:{
+        id: null,
+        name: formik.values.name,
+        username: formik.values.username,
+        email: formik.values.email,
+        telephone: formik.values.telephone,
+        profession: formik.values.profession,
+        speciality: formik.values.speciality,
+        method_contact: formik.values.method_contact
+      }
     };
 
     // body.append('dataJson', JSON.stringify(formik.values))
     body.append('dataJson', JSON.stringify(dataJson))
 
-    const response = axios.post("http://127.0.0.1:8000/api/db/stepCreateLead", body, requestConfig);
+    axios.post("http://127.0.0.1:8000/api/db/stepCreateLead", body, requestConfig)
+    .then(res => {
+      
+      console.log({ id: res.data.newLead.id })
+    }).catch(err => {
+      console.error({ err })
+    }).finally((res) => {
+    });
+
     // debugger;//10
 
-    console.log({ response });
-
+    // console.log({ response });
     return (
       <>
       <FormStep
