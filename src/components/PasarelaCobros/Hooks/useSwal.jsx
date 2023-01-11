@@ -1,15 +1,15 @@
 /* eslint-disable import/prefer-default-export */
-import React from 'react'
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
+import React from 'react';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
-const toast = withReactContent(Swal)
+const toast = withReactContent(Swal);
 
-export function fireToast(title) {
+export function fireToast(title, icon = 'error') {
   toast.fire({
     title: <p>{title}</p>,
     toast: true,
-    icon: 'error',
+    icon,
     position: 'bottom-end',
     showConfirmButton: false,
     timer: 3000,
@@ -17,6 +17,6 @@ export function fireToast(title) {
     didOpen: (alert) => {
       alert.addEventListener('mouseenter', Swal.stopTimer);
       alert.addEventListener('mouseleave', Swal.resumeTimer);
-    }
+    },
   });
-};
+}

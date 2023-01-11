@@ -10,12 +10,14 @@ import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { getAllISOCodes } from 'iso-country-currency';
 import { AppContext } from '../Provider/StateProvider';
 import { useEffect } from 'react';
+import { fireToast } from '../Hooks/useSwal';
 
 const {
   REACT_APP_OCEANO_URL,
   REACT_APP_OCEANO_STRIPESUBSCRIPTION,
   REACT_APP_OCEANO_STRIPESUBSCRIPTION_LOCAL,
   REACT_APP_OCEANO_GENERATECHECKOUTPRO,
+  REACT_APP_BITLY_ACCESS_TOKEN,
   NODE_ENV,
 } = process.env;
 
@@ -125,6 +127,27 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       .finally(() => {
         setFetching(false);
       });
+  };
+
+  const handleCopyLink = () => {
+    fetch('https://api-ssl.bitly.com/v4/shorten', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${REACT_APP_BITLY_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        long_url: checkoutLink,
+        domain: 'bit.ly',
+        group_guid: 'Bm82hIzUJIK',
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log({ data }))
+      .catch((err) => console.log({ err }));
+
+    navigator.clipboard.writeText(checkoutLink);
+    fireToast('¡Link copiado en portapapeles!', 'success');
   };
 
   const handleSubmitMercadoPago = () => {
@@ -281,12 +304,19 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
                   <a
                     href={checkoutLink}
                     disabled={checkoutLink ? false : true}
-                    className='button is-link is-rounded'
+                    className='button is-link is-rounded '
                     target='_blank'
                     rel='noreferrer'
                   >
                     Continuar en la pasarela de MercadoPago
                   </a>
+                  <button
+                    disabled={checkoutLink ? false : true}
+                    className='button is-primary is-rounded mt-3'
+                    onClick={handleCopyLink}
+                  >
+                    Copiar Link
+                  </button>
                 </>
               )}
             </motion.div>
