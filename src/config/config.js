@@ -2,82 +2,98 @@ export const countryOptions = [
   {
     idElement: 'pais_arg_input',
     img: 'argFlag',
-    value: 'Argentina'
+    value: 'Argentina',
+    active: false
   },
   {
     idElement: 'pais_bol_input',
     img: 'bolFlag',
-    value: 'Bolivia'
+    value: 'Bolivia',
+    active: false
   },
   {
     idElement: 'pais_chi_input',
     img: 'chiFlag',
-    value: 'Chile'
+    value: 'Chile',
+    active: true
   },
   {
     idElement: 'pais_col_input',
     img: 'colFlag',
-    value: 'Colombia'
+    value: 'Colombia',
+    active: false
   },
   {
     idElement: 'pais_cos_input',
     img: 'cosFlag',
-    value: 'Costa Rica'
+    value: 'Costa Rica',
+    active: false
   },
   {
     idElement: 'pais_ecu_input',
     img: 'ecuFlag',
-    value: 'Ecuador'
+    value: 'Ecuador',
+    active: false
   },
   {
     idElement: 'pais_sal_input',
     img: 'salFlag',
-    value: 'El Salvador'
+    value: 'El Salvador',
+    active: false
   },
   {
     idElement: 'pais_gua_input',
     img: 'guaFlag',
-    value: 'Guatemala'
+    value: 'Guatemala',
+    active: false
   },
   {
     idElement: 'pais_hon_input',
     img: 'honFlag',
-    value: 'Honduras'
+    value: 'Honduras',
+    active: false
   },
   {
     idElement: 'pais_mex_input',
     img: 'mexFlag',
-    value: 'México'
+    value: 'México',
+    active: false
   },
   {
     idElement: 'pais_nic_input',
     img: 'nicFlag',
-    value: 'Nicaragua'
+    value: 'Nicaragua',
+    active: false
   },
   {
     idElement: 'pais_pan_input',
     img: 'panFlag',
-    value: 'Panamá'
+    value: 'Panamá',
+    active: false
   },
   {
     idElement: 'pais_par_input',
     img: 'parFlag',
-    value: 'Paraguay'
+    value: 'Paraguay',
+    active: false
   },
   {
     idElement: 'pais_per_input',
     img: 'perFlag',
-    value: 'Perú'
+    value: 'Perú',
+    active: false,
   },
   {
     idElement: 'pais_uru_input',
     img: 'uruFlag',
-    value: 'Uruguay'
+    value: 'Uruguay',
+    active: false,
   },
   {
     idElement: 'pais_usa_input',
     img: 'usaFlag',
-    value: 'Estados Unidos'
+    value: 'Estados Unidos',
+    active: false,
   }
 ];
 
