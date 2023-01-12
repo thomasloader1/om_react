@@ -31,7 +31,8 @@ function VentaPresencialApp() {
     };
     let dataJson = {
       lead: {
-        id: null,
+        lead_id: appEnv.lead_id !== undefined ?
+        appEnv.lead_id:null,
         ...values
       }
     };
@@ -43,14 +44,67 @@ function VentaPresencialApp() {
       body,
       requestConfig
     );
-    const { id } = responseOfLaravel.data;
+    console.log({ responseOfLaravel });
 
-    setAppEnv((appEnvCurrent) => ({
-      ...appEnvCurrent,
-      leadEntityId: id
-    }));
+    if(responseOfLaravel.data.message === "success"){
+      setAppEnv((appEnvCurrent) => ({
+        ...appEnvCurrent, 
+        lead_id: responseOfLaravel.data.newLead.id 
+      }));
+    }
+    console.log({ appEnv });
+  };
 
-    console.log({ id });
+  const saveContact = async (values) => {
+    console.log({values});
+    const body = new FormData();
+    const requestConfig = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    };
+    let dataJson = {
+      contact: {
+        id: appEnv.contact_id !== undefined ?
+            appEnv.contact_id:null ,
+        dni: values.dni,
+        sex: values.sex,
+        date_of_birth: values.date_of_birth,
+        registration_number: values.registration_number,
+        area_of_work: values.area_of_work,
+        training_interest: values.training_interest
+      },
+      address: {
+        id: appEnv.address_id !== undefined ?
+            appEnv.address_id:null ,
+        country: values.country,
+        province_state: values.province_state,
+        postal_code: values.postal_code,
+        street: values.street,
+        locality: values.locality
+      }
+    };
+  
+    // body.append('dataJson', JSON.stringify(formik.values))
+    body.append('dataJson', JSON.stringify(dataJson));
+  
+    const responseOfLaravel = await axios.post(
+      'http://127.0.0.1:8000/api/db/stepConversionContact',
+      body,
+      requestConfig
+    );
+
+  
+    if(responseOfLaravel.data.message === "success"){
+      setAppEnv((appEnvCurrent) => ({
+        ...appEnvCurrent, 
+        contact_id: responseOfLaravel.data.newContact.id,
+        address_id: responseOfLaravel.data.newAddress.id
+      }));
+    }
+     
+    console.log({ appEnv });
+
   };
 
   useEffect(() => {
@@ -95,7 +149,7 @@ function VentaPresencialApp() {
               );
               // const response = await axios.post(URL, body, requestConfig);
               setCheckoutLink(response.data.url);
-              console.log({ response });
+              // console.log({ response });
             }}
           >
             <SelectCountryStep
@@ -137,6 +191,8 @@ function VentaPresencialApp() {
                   ...prevFormikValues,
                   ...values
                 }));
+
+                saveContact(values);
               }}
               validationSchema={Yup.object({
                 dni: Yup.string().required('El dni es requerido'),
