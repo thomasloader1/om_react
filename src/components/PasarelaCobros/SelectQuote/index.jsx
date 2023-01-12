@@ -31,18 +31,11 @@ const SelectQuote = ({ selectName = 'Seleccione las cuotas deseadas', country, .
 
   const countryCode = getIsoCode(country);
   const options = getAvailableInstallments(countryCode);
+  const maxOption = Math.max(...options);
 
   useEffect(() => {
-    Array.prototype.max = function () {
-      return Math.max.apply(null, this);
-    };
-
-    Array.prototype.min = function () {
-      return Math.min.apply(null, this);
-    };
-
-    formik.setFieldValue('quotes', options.max());
-
+    console.log(maxOption, { options });
+    formik.setFieldValue('quotes', maxOption);
     return () => null;
   }, []);
 
@@ -51,7 +44,7 @@ const SelectQuote = ({ selectName = 'Seleccione las cuotas deseadas', country, .
       <label className='label'>{selectName}</label>
       <select {...props} {...field}>
         {options.map((option, index) => (
-          <option key={option} value={option} selected={options.max() === option}>
+          <option key={option} value={option} selected={maxOption === option}>
             {option}
           </option>
         ))}
