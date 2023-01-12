@@ -147,7 +147,7 @@ function PasarelaApp() {
               />
             </MultiStep>
           </div>
-          <pre>{JSON.stringify(formikValues, null, 2)}</pre>
+          {/* <pre>{JSON.stringify(formikValues, null, 2)}</pre> */}
         </section>
       </Elements>
     </div>
