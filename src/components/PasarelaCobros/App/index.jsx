@@ -30,7 +30,7 @@ function PasarelaApp() {
       .matches(/^[0-9]+$/i, 'El campo debe contener solo numeros'),
     address: Yup.string()
       .required('Ingrese calle y numero del titual de la tarjeta')
-      .matches(/^.*[a-zA-Z]+\s[a-zA-Z]+\s[0-9]+.*$/i, 'El formato de la direccion es invalido'),
+      .matches(/([A-Za-z0-9]+( [A-Za-z0-9]+)+)/i, 'El formato de la direccion es invalido'),
     dni: Yup.string()
       .required('Ingrese el numero de tu documento de identidad')
       .matches(/^[0-9]+$/i, 'El campo debe contener solo numeros'),
