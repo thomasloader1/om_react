@@ -10,7 +10,7 @@ import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { getAllISOCodes } from 'iso-country-currency';
 import { AppContext } from '../Provider/StateProvider';
 import { useEffect } from 'react';
-import { fireToast } from '../Hooks/useSwal';
+import { fireAlert, fireToast } from '../Hooks/useSwal';
 
 const {
   REACT_APP_OCEANO_URL,
@@ -23,9 +23,22 @@ const {
   NODE_ENV,
 } = process.env;
 
+const itsProduction = NODE_ENV === 'production';
+
+const URLS = {
+  MP: itsProduction
+    ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GENERATECHECKOUTPRO}`
+    : REACT_APP_OCEANO_GENERATECHECKOUTPRO,
+  STRIPE: itsProduction
+    ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_STRIPESUBSCRIPTION}`
+    : REACT_APP_OCEANO_STRIPESUBSCRIPTION_LOCAL,
+  UPDATE_CONTRACT: itsProduction
+    ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_UPDATECONTRACT}`
+    : REACT_APP_OCEANO_UPDATECONTRACT_LOCAL,
+};
+
 function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
   const [fetching, setFetching] = useState(false);
-  const formik = useFormikContext();
   const stripe = useStripe();
   const elements = useElements();
   const [openBlockLayer, setOpenBlockLayer] = useState(false);
@@ -40,26 +53,22 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     setOptions,
     options: optionsGlobal,
   } = useContext(AppContext);
+  const formik = useFormikContext();
+  const { cardComplete, email } = formik.values;
   const { country, quotes, amount, sale, contact, products } = formikValues;
 
-  const URL =
-    NODE_ENV === 'production'
-      ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_STRIPESUBSCRIPTION}`
-      : REACT_APP_OCEANO_STRIPESUBSCRIPTION_LOCAL;
-
-  const { cardComplete, dni, address, fullName, phone, email } = formik.values;
+  //console.log({ formik });
 
   const generateButton = userInfo.stepTwo.value.includes('Stripe')
-    ? cardComplete
-    : dni && address && [...address].length > 10;
-  // console.log({ userInfo })
+    ? formik.isValid && cardComplete
+    : formik.isValid && email;
 
   useEffect(() => {
     if (generateButton) {
       optionsGlobal.sideItemOptions[4].status = 'completed';
       optionsGlobal.sideItemOptions[4].value = 'Completos';
       setOptions({ ...optionsGlobal });
-    } else if (dni && address && fullName && phone) {
+    } else if (formik.isValid && email) {
       optionsGlobal.sideItemOptions[4].status = 'current';
       optionsGlobal.sideItemOptions[4].value = 'Sin Completar';
       setOptions({ ...optionsGlobal });
@@ -82,11 +91,6 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       return;
     }
 
-    const allIsoCodes = getAllISOCodes();
-    const filterIso = allIsoCodes.filter((iso) => iso.countryName === country);
-    const countryObject = filterIso[0];
-    const { currency, iso } = countryObject;
-
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
       card: elements.getElement(CardElement),
@@ -94,12 +98,28 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
 
     console.log({ error, paymentMethod });
 
+    if (error) {
+      fireToast('Eror al generar el PaymentMethod de Stripe');
+      setFetching(false);
+      return null;
+    }
+
+    handleRequestToGatewayAndCRM(paymentMethod.id);
+  };
+
+  const handleRequestToGatewayAndCRM = (paymentMethodId) => {
+    const { STRIPE, UPDATE_CONTRACT } = URLS;
+    const allIsoCodes = getAllISOCodes();
+    const filterIso = allIsoCodes.filter((iso) => iso.countryName === country);
+    const countryObject = filterIso[0];
+    const { currency, iso } = countryObject;
+
     const postStripe = {
       currency,
       country: iso,
       installments: quotes ? quotes : 1,
       email,
-      paymentMethodId: paymentMethod.id,
+      paymentMethodId: paymentMethodId,
       amount,
       contact,
       sale,
@@ -113,10 +133,12 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     };
 
     axios
-      .post(URL, postStripe)
+      .post(STRIPE, postStripe)
       .then((res) => {
         console.log({ res });
         setStripeRequest(res.data);
+        fireToast('Pago en Stripe correcto!', 'success', 5000);
+
         const postUpdateZohoStripe = {
           installments: quotes ? quotes : 1,
           email,
@@ -130,18 +152,16 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
           fullname: formik.values.fullName,
           is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
         };
-        const URL_UPDATECONTRACT =
-          NODE_ENV === 'production'
-            ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_UPDATECONTRACT}`
-            : REACT_APP_OCEANO_UPDATECONTRACT_LOCAL;
 
         axios
-          .post(URL_UPDATECONTRACT, postUpdateZohoStripe)
+          .post(UPDATE_CONTRACT, postUpdateZohoStripe)
           .then((res) => {
             console.log({ res });
+            fireToast('Contrato actualizado', 'success', 5000);
           })
           .catch((err) => {
             console.log({ err });
+            fireToast('Contrato no actualizado', 'error', 5000);
           })
           .finally((res) => {
             console.log({ res });
@@ -154,6 +174,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
         setOpenBlockLayer(false);
 
         console.error({ err });
+        fireAlert(`${err.response.data}`, 'error');
       })
       .finally(() => {
         setFetching(false);
@@ -207,11 +228,6 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     body.append('fullname', formik.values.fullName);
     body.append('sale_id', formikValues.contractId);
     body.append('mail', email);
-
-    const URL =
-      NODE_ENV === 'production'
-        ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GENERATECHECKOUTPRO}`
-        : REACT_APP_OCEANO_GENERATECHECKOUTPRO;
 
     axios
       .post(URL, body, requestConfig)
@@ -323,7 +339,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
                 <>
                   <motion.h2 className='title is-2 has-text-white'>Pago realizado!</motion.h2>
                   <a
-                    href='http://localhost:3000/superpasarela/2712674000017120001'
+                    href='https://crm.zoho.com/crm/org631172874/tab/SalesOrders'
                     className='button is-primary'
                   >
                     Cobrar otro contrato
@@ -348,6 +364,12 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
                   >
                     Copiar Link
                   </button>
+                  <a
+                    href='https://crm.zoho.com/crm/org631172874/tab/SalesOrders'
+                    className='button is-primary'
+                  >
+                    Cobrar otro contrato
+                  </a>
                 </>
               )}
             </motion.div>

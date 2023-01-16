@@ -16,10 +16,11 @@ export const useContractZoho = (contractId) => {
   const body = new FormData();
   body.append('key', '9j9fj0Do204==3fja134');
   body.append('id', contractId);
+
   const URL =
     NODE_ENV === 'production'
       ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_OBTAINDATA}`
-      : REACT_APP_OCEANO_OBTAINDATA_TEST;
+      : `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_OBTAINDATA_TEST}`;
 
   useEffect(() => {
     const fetchData = async () => {
