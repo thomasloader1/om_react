@@ -16,6 +16,8 @@ const {
   REACT_APP_OCEANO_URL,
   REACT_APP_OCEANO_STRIPESUBSCRIPTION,
   REACT_APP_OCEANO_STRIPESUBSCRIPTION_LOCAL,
+  REACT_APP_OCEANO_UPDATECONTRACT,
+  REACT_APP_OCEANO_UPDATECONTRACT_LOCAL,
   REACT_APP_OCEANO_GENERATECHECKOUTPRO,
   REACT_APP_BITLY_ACCESS_TOKEN,
   NODE_ENV,
@@ -90,7 +92,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       card: elements.getElement(CardElement),
     });
 
-    // console.log({ error, paymentMethod })
+    console.log({ error, paymentMethod });
 
     const postStripe = {
       currency,
@@ -113,8 +115,37 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     axios
       .post(URL, postStripe)
       .then((res) => {
-        // console.log({ res })
+        console.log({ res });
         setStripeRequest(res.data);
+        const postUpdateZohoStripe = {
+          installments: quotes ? quotes : 1,
+          email,
+          amount,
+          contractId: formikValues.contractId,
+          subscriptionId: res.data.id,
+          installment_amount: amount / (quotes ? quotes : 1),
+          address: formik.values.address,
+          dni: formik.values.dni,
+          phone: formik.values.phone,
+          fullname: formik.values.fullName,
+          is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
+        };
+        const URL_UPDATECONTRACT =
+          NODE_ENV === 'production'
+            ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_UPDATECONTRACT}`
+            : REACT_APP_OCEANO_UPDATECONTRACT_LOCAL;
+
+        axios
+          .post(URL_UPDATECONTRACT, postUpdateZohoStripe)
+          .then((res) => {
+            console.log({ res });
+          })
+          .catch((err) => {
+            console.log({ err });
+          })
+          .finally((res) => {
+            console.log({ res });
+          });
       })
       .catch((err) => {
         formRef.current.style.filter = 'blur(0px)';
@@ -225,7 +256,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
                 label={stripeRequest ? 'Pago Realizado' : 'Generar pago'}
                 fullwidth
                 onClick={handleSubmitStripe}
-                disabled={stripeRequest}
+                disabled={typeof stripeRequest?.id === 'string'}
               />
             ) : (
               <Button
