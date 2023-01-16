@@ -19,6 +19,7 @@ const {
   REACT_APP_OCEANO_UPDATECONTRACT,
   REACT_APP_OCEANO_UPDATECONTRACT_LOCAL,
   REACT_APP_OCEANO_GENERATECHECKOUTPRO,
+  REACT_APP_OCEANO_GENERATECHECKOUTPRO_TEST,
   REACT_APP_BITLY_ACCESS_TOKEN,
   NODE_ENV,
 } = process.env;
@@ -28,7 +29,7 @@ const itsProduction = NODE_ENV === 'production';
 const URLS = {
   MP: itsProduction
     ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GENERATECHECKOUTPRO}`
-    : REACT_APP_OCEANO_GENERATECHECKOUTPRO,
+    : `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GENERATECHECKOUTPRO_TEST}`,
   STRIPE: itsProduction
     ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_STRIPESUBSCRIPTION}`
     : REACT_APP_OCEANO_STRIPESUBSCRIPTION_LOCAL,
@@ -229,10 +230,20 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     body.append('sale_id', formikValues.contractId);
     body.append('mail', email);
 
+    const { MP } = URLS;
+
     axios
-      .post(URL, body, requestConfig)
+      .post(MP, body, requestConfig)
       .then((res) => {
-        // console.log({ res })
+        if (res.data.status === 0) {
+          formRef.current.style.filter = 'blur(0px)';
+          formRef.current.style.position = 'relative';
+          formRef.current.style.zIndex = '0';
+          setOpenBlockLayer(false);
+          fireAlert(res.data.error);
+          return;
+        }
+
         setCheckoutLink(res.data.url);
       })
       .catch((err) => {
@@ -240,7 +251,8 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
         formRef.current.style.position = 'relative';
         formRef.current.style.zIndex = '0';
         setOpenBlockLayer(false);
-        console.error({ err });
+        fireAlert('ERROR');
+        console.error({ error: err.response.data });
       })
       .finally(() => {
         setFetching(false);
