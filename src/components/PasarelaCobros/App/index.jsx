@@ -9,15 +9,11 @@ import SelectPaymentMethodStep from '../Stepper/SelectPaymentMethodStep';
 import SelectPaymentModeStep from '../Stepper/SelectPaymentModeStep';
 import FormClientDataStep from '../Stepper/FormClientDataStep';
 import GeneratePaymentLinkStep from '../Stepper/GeneratePaymentLinkStep';
-import axios from 'axios';
 import { useEffect } from 'react';
 import useStripeEnv from '../Hooks/useStripeEnv';
 
-const { REACT_APP_OCEANO_URL, REACT_APP_OCEANO_GENERATECHECKOUTPRO, NODE_ENV } = process.env;
-
 function PasarelaApp() {
-  const { formikValues, setFormikValues, checkoutLink, setCheckoutLink, appRef, userInfo } =
-    useContext(AppContext);
+  const { setFormikValues, checkoutLink, appRef } = useContext(AppContext);
   const [stepNumber, setStepNumber] = useState(0);
   const { stripePromise } = useStripeEnv();
 
@@ -43,34 +39,7 @@ function PasarelaApp() {
     return () => null;
   }, [stepNumber]);
 
-  const handleSubmitByStepTwo = async () => {
-    if (userInfo.stepTwo.value.includes('Stripe')) {
-      const body = new FormData();
-      const type = formikValues.mod.toLowerCase().substring(0, 4);
-      const requestConfig = {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      };
-
-      body.append('months', 0);
-      body.append('amount', `${formikValues.amount}`);
-      body.append('type', type);
-      body.append('so', formikValues.sale.SO_Number);
-
-      const URL =
-        NODE_ENV === 'production'
-          ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GENERATECHECKOUTPRO}`
-          : REACT_APP_OCEANO_GENERATECHECKOUTPRO;
-
-      const response = await axios.post(URL, body, requestConfig);
-
-      setCheckoutLink(response.data.url);
-      // // console.log({ response });
-    } else {
-      //// console.log('handleSubmitByStepTwo:', userInfo.stepTwo.value)
-    }
-  };
+  const handleSubmitByStepTwo = async () => {};
 
   return (
     <div ref={appRef}>
