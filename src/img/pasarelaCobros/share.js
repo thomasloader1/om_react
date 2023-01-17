@@ -21,6 +21,7 @@ import st from './metPago/stripe.svg';
 import pp from './metPago/paypal.svg';
 import df from './metPago/datafast.jpg';
 import ba from './metPago/banorte.svg';
+import wp from './metPago/webpay.png';
 import logo from './logo-oceano-pagos.svg';
 
 const IMAGES = {
@@ -47,7 +48,8 @@ const IMAGES = {
   ba,
   st,
   pp,
-  logo
+  wp,
+  logo,
 };
 
 export default IMAGES;
