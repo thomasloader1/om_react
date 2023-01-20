@@ -1,0 +1,63 @@
+.grid-create_lead {
+  display: grid;
+  grid-template-areas: 'name surname' 'email phone' 'profession specialty' 'contact contact';
+  column-gap: 1rem;
+
+  .block.field_info {
+    grid-area: notification;
+    align-self: center;
+    margin: 10px auto;
+  }
+
+  .field {
+    &:nth-child(1) {
+      grid-area: name;
+    }
+    &:nth-child(2) {
+      grid-area: surname;
+    }
+    &:nth-child(3) {
+      grid-area: email;
+    }
+    &:nth-child(4) {
+      grid-area: phone;
+    }
+    &:nth-child(5) {
+      grid-area: profession;
+    }
+    &:nth-child(6) {
+      grid-area: specialty;
+    }
+    &:nth-child(7) {
+      grid-area: contact;
+    }
+
+    .control {
+      &.select {
+        width: 100%;
+        select {
+          width: 100%;
+          &.is-danger{
+            border-color: red;
+            
+        }
+        }
+        &::after{
+            z-index: 1;
+        }
+      }
+      .allow-dropdown.intl-tel-input {
+        width: 100%;
+      }
+    }
+  }
+  .grid-payment_method-item {
+    height: unset;
+
+    &.active {
+      background-color: #eff1fa !important;
+      border-color: #485fc7;
+      color: #485fc7;
+    }
+  }
+}
