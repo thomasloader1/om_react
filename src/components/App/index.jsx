@@ -5,23 +5,24 @@ import PasarelaApp from '../PasarelaCobros/App';
 import VentaPresencialApp from '../VentaPresencial/App';
 
 const titles = {
-  'superpasarela': 'Pasarela de cobros',
-  '/ventapresencial': 'Venta presencial',
-}
+  superpasarela: 'Pasarela de cobros',
+  ventapresencial: 'Venta presencial',
+};
 
 function App() {
-  const location = useLocation()
-  useEffect(
-    () => {
-      const title = location.pathname.includes('superpasarela') ? titles.superpasarela :  titles[location.pathname]
-      document.title = title ?? 'No controlled title'
-    },
-    [location]
-  )
+  const location = useLocation();
+  useEffect(() => {
+    const hasIncludeString = location.pathname.includes('superpasarela');
+    const title = hasIncludeString
+      ? titles.superpasarela
+      : titles.ventapresencial;
+    document.title = title ?? 'No controlled title';
+  }, [location]);
 
   return (
     <Routes>
-      <Route path="/superpasarela/:id" element={<PasarelaApp />} /> 
+      <Route path="/superpasarela/:id" element={<PasarelaApp />} />
+      <Route path="/ventapresencial/:id" element={<VentaPresencialApp />} />
       <Route path="/ventapresencial" element={<VentaPresencialApp />} />
 
       <Route
@@ -31,7 +32,8 @@ function App() {
             <div>
               <Container>
                 <Notification color="danger">
-                  Para cobrar un contrato debe especificar un ID de contrato en la URL
+                  Para cobrar un contrato debe especificar un ID de contrato en
+                  la URL
                 </Notification>
               </Container>
             </div>
