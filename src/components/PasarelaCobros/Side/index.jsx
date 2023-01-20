@@ -378,7 +378,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
                   </button>
                   <a
                     href='https://crm.zoho.com/crm/org631172874/tab/SalesOrders'
-                    className='button is-primary'
+                    className='button is-primary mt-3'
                   >
                     Cobrar otro contrato
                   </a>
