@@ -5,21 +5,28 @@ import { useRef } from 'react';
 import {
   countryOptions,
   sideItemOptions,
+  sideItemOptionsVP,
   paymentOptions,
   paymentMethodOptions,
   paymentModeOptions,
-  clientForm,
-  userFlow
+  userFlow,
 } from '../../../config/config';
+import { useApi } from '../../VentaPresencial/Hook/useApi';
 
 function StateProvider({ children }) {
+  const { fetching: fetchProfessions, data: professions } =
+    useApi('/api/professions');
+  const { fetching: fetchSpecialties, data: specialties } =
+    useApi('/api/specialities');
+  const { fetching: fetchMethods, data: methods } = useApi('/api/methods');
+
   const [options, setOptions] = useState({
     countryOptions,
     paymentOptions,
     paymentMethodOptions,
     paymentModeOptions,
-    clientForm,
-    sideItemOptions
+    sideItemOptionsVP,
+    sideItemOptions,
   });
 
   const [formikValues, setFormikValues] = useState({});
@@ -27,7 +34,7 @@ function StateProvider({ children }) {
   const [stepNumberGlobal, setStepNumberGlobal] = useState(1);
   const [stripeRequest, setStripeRequest] = useState(null);
   const [checkoutLink, setCheckoutLink] = useState('');
-  const [appEnv, setAppEnv] = useState({});
+  const [appEnv, setAppEnv] = useState(null);
   const appRef = useRef(null);
   const formRef = useRef(null);
 
@@ -49,7 +56,13 @@ function StateProvider({ children }) {
         appRef,
         formRef,
         appEnv,
-        setAppEnv
+        setAppEnv,
+        fetchProfessions,
+        professions,
+        fetchSpecialties,
+        specialties,
+        fetchMethods,
+        methods,
       }}
     >
       {children}
