@@ -6,14 +6,13 @@ import InfoNotify from '../../PasarelaCobros/InfoNotify';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import Side from '../Side';
 import FormNavigation from '../StepControl/FormNavigation';
-import { motion } from 'framer-motion'
 
 const MultiStep = ({
   children,
   initialValues,
   className,
   onSubmit,
-  stepStateNumber
+  stepStateNumber,
 }) => {
   const {
     options,
@@ -21,48 +20,39 @@ const MultiStep = ({
     stepNumberGlobal,
     setStepNumberGlobal,
     formRef,
-    leadForm,
-    contactForm
   } = useContext(AppContext);
-  
+
   const { stepNumber, setStepNumber } = stepStateNumber;
+  const { sideItemOptionsVP } = options;
   const [spanshot, setSpanshot] = useState(initialValues);
   const steps = React.Children.toArray(children);
-
   const step = steps[stepNumber];
   const totalSteps = steps.length;
   const isLastStep = stepNumber === totalSteps - 1;
 
   const next = (values) => {
-
     setSpanshot(values);
     const indexOfNextStep = stepNumber + 1;
-    options.sideItemOptions[stepNumber].status = 'completed';
-    options.sideItemOptions[indexOfNextStep].status = 'current';
-    setOptions({ ...options });
+    sideItemOptionsVP[stepNumber].status = 'completed';
+    sideItemOptionsVP[indexOfNextStep].status = 'current';
+    setOptions((prevState) => ({
+      ...prevState,
+      sideItemOptionsVP: [...sideItemOptionsVP],
+    }));
     setStepNumber(stepNumber + 1);
     setStepNumberGlobal(stepNumberGlobal + 1);
-    /*  console.log('next', {
-      stepNumber,
-      stepNumberGlobal,
-      formikValues,
-      formikInstance
-    });  */
   };
   const previous = (values) => {
     setSpanshot(values);
     const indexOfPrevStep = stepNumber - 1;
-    options.sideItemOptions[stepNumber].status = '';
-    options.sideItemOptions[indexOfPrevStep].status = 'current';
-    setOptions({ ...options });
+    sideItemOptionsVP[stepNumber].status = '';
+    sideItemOptionsVP[indexOfPrevStep].status = 'current';
+    setOptions((prevState) => ({
+      ...prevState,
+      sideItemOptionsVP: [...sideItemOptionsVP],
+    }));
     setStepNumber(stepNumber - 1);
     setStepNumberGlobal(stepNumber - 1);
-    /* console.log('previous', {
-      stepNumber,
-      stepNumberGlobal,
-      formikValues,
-      formikInstance
-    }); */
   };
 
   const handleSubmit = async (values, actions) => {
@@ -78,57 +68,56 @@ const MultiStep = ({
     }
   };
 
-  //console.log({ step });
-
   return (
     <SwitchTransition>
       <CSSTransition
         key={stepNumber}
-      addEndListener={(node, done) =>
-        node.addEventListener('transitionend', done, false)
-      }
-      classNames="fade"
-    >
-      <Formik
-        initialValues={spanshot}
-        onSubmit={handleSubmit}
-        validationSchema={step.props.validationSchema}
+        addEndListener={(node, done) =>
+          node.addEventListener('transitionend', done, false)
+        }
+        classNames="fade"
       >
-        {(formik) => (
-          <>
-            <Form className={className} ref={formRef}>
-              {step}
-              {formik.errors && Object.keys(formik.errors).length > 0 && (
-                <Block style={{ margin: '1rem 0' }}>
-                  <Notification color="danger" light="true">
-                    {Object.entries(formik.errors).map((e) => (
-                      <p key={e[0]} className="field">
-                        {e[1]}
-                      </p>
-                    ))}
-                  </Notification>
-                </Block>
-              )}
-              {formik.values &&
-                Object.entries(formik.values).map((e) => {
-                  return <InfoNotify key={e[0]} messages={e} />;
-                })}
-              <FormNavigation
-                isLastStep={isLastStep}
-                hasPrevious={stepNumber > 0}
-                onBackClick={() => previous(formik.values)}
+        <Formik
+          initialValues={spanshot}
+          onSubmit={handleSubmit}
+          validationSchema={step.props.validationSchema}
+        >
+          {(formik) => (
+            <>
+              <Form className={className} ref={formRef}>
+                {step}
+                {formik.errors && Object.keys(formik.errors).length > 0 && (
+                  <Block style={{ margin: '1rem 0' }}>
+                    <Notification color="danger" light="true">
+                      {Object.entries(formik.errors).map((e) => (
+                        <p key={e[0]} className="field">
+                          {e[1]}
+                        </p>
+                      ))}
+                    </Notification>
+                  </Block>
+                )}
+                {formik.values &&
+                  Object.entries(formik.values).map((e) => {
+                    return <InfoNotify key={e[0]} messages={e} />;
+                  })}
+                <FormNavigation
+                  isLastStep={isLastStep}
+                  hasPrevious={stepNumber > 0}
+                  onBackClick={() => previous(formik.values)}
+                />
+              </Form>
+              <Side
+                options={options.sideItemOptionsVP}
+                stepStateNumber={{ stepNumber, setStepNumber }}
+                formikInstance={formik}
               />
-            </Form>
-            <Side
-              options={options.sideItemOptions}
-              stepStateNumber={{ stepNumber, setStepNumber }}
-              formikInstance={formik}
-            />
-          </>
-        )}
-      </Formik>
-    </ CSSTransition>
-    </ SwitchTransition >
+              {/*  <pre>{JSON.stringify(formik, null, 2)}</pre> */}
+            </>
+          )}
+        </Formik>
+      </CSSTransition>
+    </SwitchTransition>
   );
 };
 
