@@ -2,83 +2,83 @@ export const countryOptions = [
   {
     idElement: 'pais_arg_input',
     img: 'argFlag',
-    value: 'Argentina'
+    value: 'Argentina',
   },
   {
     idElement: 'pais_bol_input',
     img: 'bolFlag',
-    value: 'Bolivia'
+    value: 'Bolivia',
   },
   {
     idElement: 'pais_chi_input',
     img: 'chiFlag',
-    value: 'Chile'
+    value: 'Chile',
   },
   {
     idElement: 'pais_col_input',
     img: 'colFlag',
-    value: 'Colombia'
+    value: 'Colombia',
   },
   {
     idElement: 'pais_cos_input',
     img: 'cosFlag',
-    value: 'Costa Rica'
+    value: 'Costa Rica',
   },
   {
     idElement: 'pais_ecu_input',
     img: 'ecuFlag',
-    value: 'Ecuador'
+    value: 'Ecuador',
   },
   {
     idElement: 'pais_sal_input',
     img: 'salFlag',
-    value: 'El Salvador'
+    value: 'El Salvador',
   },
   {
     idElement: 'pais_gua_input',
     img: 'guaFlag',
-    value: 'Guatemala'
+    value: 'Guatemala',
   },
   {
     idElement: 'pais_hon_input',
     img: 'honFlag',
-    value: 'Honduras'
+    value: 'Honduras',
   },
   {
     idElement: 'pais_mex_input',
     img: 'mexFlag',
-    value: 'México'
+    value: 'México',
   },
   {
     idElement: 'pais_nic_input',
     img: 'nicFlag',
-    value: 'Nicaragua'
+    value: 'Nicaragua',
   },
   {
     idElement: 'pais_pan_input',
     img: 'panFlag',
-    value: 'Panamá'
+    value: 'Panamá',
   },
   {
     idElement: 'pais_par_input',
     img: 'parFlag',
-    value: 'Paraguay'
+    value: 'Paraguay',
   },
   {
     idElement: 'pais_per_input',
     img: 'perFlag',
-    value: 'Perú'
+    value: 'Perú',
   },
   {
     idElement: 'pais_uru_input',
     img: 'uruFlag',
-    value: 'Uruguay'
+    value: 'Uruguay',
   },
   {
     idElement: 'pais_usa_input',
     img: 'usaFlag',
-    value: 'Estados Unidos'
-  }
+    value: 'Estados Unidos',
+  },
 ];
 
 export const paymentOptions = [
@@ -87,7 +87,7 @@ export const paymentOptions = [
     shortName: 'mp',
     className: 'button grid-payment_method-item tall',
     value: 'Mercado Pago',
-    allowedCountries: ['arg', 'mex', 'chi', 'col', 'per', 'uru']
+    allowedCountries: ['arg', 'mex', 'chi', 'col', 'per', 'uru'],
   },
   {
     img: 'st',
@@ -104,8 +104,8 @@ export const paymentOptions = [
       'sal',
       'gua',
       'hon',
-      'nic'
-    ]
+      'nic',
+    ],
   },
   {
     img: 'pp',
@@ -113,7 +113,7 @@ export const paymentOptions = [
     className: 'button grid-payment_method-item tall',
     idInputElement: '',
     value: 'PayPal',
-    allowedCountries: []
+    allowedCountries: [],
   },
   {
     img: 'df',
@@ -121,7 +121,7 @@ export const paymentOptions = [
     className: 'button grid-payment_method-item tall',
     idInputElement: '',
     value: 'Datafast',
-    allowedCountries: ['ecu']
+    allowedCountries: ['ecu'],
   },
   {
     img: 'ba',
@@ -129,22 +129,22 @@ export const paymentOptions = [
     className: 'button grid-payment_method-item tall',
     idInputElement: '',
     value: 'Banorte',
-    allowedCountries: []
-  }
+    allowedCountries: [],
+  },
 ];
 export const paymentMethodOptions = [
   {
     idElement: 'med_tarjeta',
     name: 'med',
     value: 'Pagar con Tarjeta',
-    classLabel: 'half'
+    classLabel: 'half',
   },
   {
     idElement: 'med_link',
     name: 'med',
     value: 'Compartir Link',
-    classLabel: 'half'
-  }
+    classLabel: 'half',
+  },
 ];
 
 export const paymentModeOptions = [
@@ -152,14 +152,14 @@ export const paymentModeOptions = [
     idElement: 'mod_traditional',
     name: 'mod',
     value: 'Tradicional',
-    classLabel: 'half'
+    classLabel: 'half',
   },
   {
     idElement: 'mod_suscrip',
     name: 'mod',
     value: 'Suscripción',
-    classLabel: 'half'
-  }
+    classLabel: 'half',
+  },
 ];
 
 export const clientForm = [
@@ -167,37 +167,37 @@ export const clientForm = [
     idElement: 'tipoSuscripcion',
     value: '',
     label: 'Tipo de suscripcion',
-    options: ['agregar suscripcion', 'modificar suscripcion']
+    options: ['agregar suscripcion', 'modificar suscripcion'],
   },
   {
     idElement: 'numeroContrato',
     value: '',
     label: 'Número de Contrato',
-    placeholder: 'Ingrese número del contrato (SO)'
+    placeholder: 'Ingrese número del contrato (SO)',
   },
   {
     idElement: 'email',
     value: '',
     label: 'Correo Electronico',
-    placeholder: 'Ingrese correo electronico del cliente'
+    placeholder: 'Ingrese correo electronico del cliente',
   },
   {
     idElement: 'montoContrato',
     value: '',
     label: 'Monto total del contrato',
-    placeholder: 'Ingrese monto total del contrato'
+    placeholder: 'Ingrese monto total del contrato',
   },
   {
     idElement: 'cuotas',
     value: '',
     label: 'Cuotas',
-    placeholder: 'Ingrese las cuotas'
+    placeholder: 'Ingrese las cuotas',
   },
   {
     idElement: 'montoMensual',
     value: '',
     label: 'Monto a pagar por mes',
-    placeholder: 'Monto a pagar por mes'
+    placeholder: 'Monto a pagar por mes',
   },
   {
     idElement: 'compartirLink',
@@ -208,16 +208,16 @@ export const clientForm = [
         idElement: 'compartirLink_email',
         value: '',
         label: 'Email',
-        placeholder: 'Ingrese email'
+        placeholder: 'Ingrese email',
       },
       {
         idElement: 'compartirLink_wpp',
         value: '',
         label: 'WhatsApp',
-        placeholder: 'Ingrese telefono'
-      }
-    ]
-  }
+        placeholder: 'Ingrese telefono',
+      },
+    ],
+  },
 ];
 
 export const cardForm = [
@@ -225,15 +225,15 @@ export const cardForm = [
     idElement: 'numeroTarjeta',
     value: '',
     label: 'Numero de tarjeta',
-  }
+  },
 ];
 
 export const numberSOForm = [
   {
     idElement: 'numberSO',
     value: '',
-    label: 'Numero de SO'
-  }
+    label: 'Numero de SO',
+  },
 ];
 
 export const sideItemOptions = [
@@ -242,36 +242,36 @@ export const sideItemOptions = [
     idElement: 'seleccion_pais',
     label: 'País',
     value: '',
-    status: 'current'
+    status: 'current',
   },
   {
     step: 2,
     idElement: 'seleccion_metPago',
     label: 'MÉTODO DE PAGO',
     value: '',
-    status: ''
+    status: '',
   },
   {
     step: 3,
     idElement: 'mod_payment',
     label: 'MODO DE PAGO',
     value: '',
-    status: ''
+    status: '',
   },
   {
     step: 4,
     idElement: 'seleccion_pais',
     label: 'DATOS DEL CLIENTE    ',
     value: '',
-    status: ''
+    status: '',
   },
   {
     step: 5,
     idElement: 'seleccion_pais',
     label: 'DATOS DE LA TARJETA',
     value: '',
-    status: ''
-  }
+    status: '',
+  },
 ];
 
 export const userFlow = {
@@ -279,86 +279,86 @@ export const userFlow = {
     step: 1,
     label: 'country',
     value: '',
-    isoRef: ''
+    isoRef: '',
   },
   stepTwo: {
     step: 2,
     label: 'payment_method',
-    value: ''
+    value: '',
   },
   stepThree: {
     step: 3,
     label: 'payment_mode',
-    value: ''
+    value: '',
   },
   stepFour: {
     step: 4,
     label: 'customer_data',
-    value: ''
+    value: '',
   },
   stepFive: {
     step: 5,
     label: 'card_data',
-    value: ''
-  }
+    value: '',
+  },
 };
 
 // VentaPresencial
-// export const sideItemOptionsFaceToFaceSale = [
-//   {
-//     step: 1,
-//     idElement: 'seleccion_pais',
-//     label: 'País',
-//     value: '',
-//     status: 'current'
-//   },
-//   {
-//     step: 2,
-//     idElement: 'create_lead',
-//     label: 'LEAD',
-//     value: '',
-//     status: ''
-//   },
-//   {
-//     step: 3,
-//     idElement: 'conversion_contact',
-//     label: 'CONTACTO',
-//     value: '',
-//     status: ''
-//   },
-//   {
-//     step: 4,
-//     idElement: 'select_course',
-//     label: 'CURSOS',
-//     value: '',
-//     status: ''
-//   },
-//   {
-//     step: 5,
-//     idElement: 'seleccion_pais',
-//     label: 'DATOS DE LA TARJETA',
-//     value: '',
-//     status: ''
-//   }
-// ];
+export const sideItemOptionsVP = [
+  {
+    step: 1,
+    idElement: 'seleccion_pais',
+    label: 'País',
+    value: '',
+    status: 'current',
+  },
+  {
+    step: 2,
+    idElement: 'create_lead',
+    label: 'LEAD',
+    value: '',
+    status: '',
+  },
+  {
+    step: 3,
+    idElement: 'conversion_contact',
+    label: 'CONTACTO',
+    value: '',
+    status: '',
+  },
+  {
+    step: 4,
+    idElement: 'select_course',
+    label: 'CURSOS',
+    value: '',
+    status: '',
+  },
+  {
+    step: 5,
+    idElement: 'seleccion_pais',
+    label: 'DATOS DE LA TARJETA',
+    value: '',
+    status: '',
+  },
+];
 
 export const userFlowFaceToFaceSale = {
   stepOne: {
     step: 1,
     label: 'country',
     value: '',
-    isoRef: ''
+    isoRef: '',
   },
   stepTwo: {
     step: 2,
     label: 'create_lead',
-    value: ''
+    value: '',
   },
   stepThree: {
     step: 3,
     label: 'conversion_contact',
-    value: ''
-  }
+    value: '',
+  },
 };
 
 export const leadForm = [
@@ -366,44 +366,44 @@ export const leadForm = [
     idElement: 'name',
     value: '',
     label: 'NOMBRE',
-    placeholder: 'Ingrese nombre'
+    placeholder: 'Ingrese nombre',
   },
   {
     idElement: 'username',
     value: '',
     label: 'APELLIDO',
-    placeholder: 'Ingrese apellido'
+    placeholder: 'Ingrese apellido',
   },
   {
     idElement: 'telephone',
     value: '',
     label: 'TELEFONO',
-    placeholder: 'Ingrese e-mail'
+    placeholder: 'Ingrese e-mail',
   },
   {
     idElement: 'profession',
     value: '',
     label: 'PROFESION',
-    placeholder: 'Ingrese profesion'
+    placeholder: 'Ingrese profesion',
   },
   {
     idElement: 'speciality',
     value: '',
     label: 'ESPECIALIDAD',
-    placeholder: 'Ingrese especialidad'
+    placeholder: 'Ingrese especialidad',
   },
   {
     idElement: 'email',
     value: '',
     label: 'E-MAIL',
-    placeholder: 'Ingrese email'
+    placeholder: 'Ingrese email',
   },
   {
     idElement: 'method_contact',
     value: '',
     label: 'METODO DE CONTACTO',
-    placeholder: 'Seleccionar metodo de contacto'
-  }
+    placeholder: 'Seleccionar metodo de contacto',
+  },
 ];
 
 export const contactForm = [
@@ -411,66 +411,66 @@ export const contactForm = [
     idElement: 'dni',
     value: '',
     label: 'DNI',
-    placeholder: 'Ingrese DNI'
+    placeholder: 'Ingrese DNI',
   },
   {
     idElement: 'sex',
     value: '',
     label: 'SEXO',
-    placeholder: 'Ingrese sexo'
+    placeholder: 'Ingrese sexo',
   },
   {
     idElement: 'date_of_birth',
     value: '',
     label: 'FECHA DE NACIMIENTO',
-    placeholder: 'Ingrese fecha de nacimiento'
+    placeholder: 'Ingrese fecha de nacimiento',
   },
   {
     idElement: 'country',
     value: '',
     label: 'PAIS',
-    placeholder: 'Ingrese pais'
+    placeholder: 'Ingrese pais',
   },
   {
     idElement: 'province_state',
     value: '',
     label: 'PROVINCIA/ESTADO',
-    placeholder: 'Ingrese provincia o estado'
+    placeholder: 'Ingrese provincia o estado',
   },
   {
     idElement: 'postal_code',
     value: '',
     label: 'CODIGO POSTAL',
-    placeholder: 'Ingrese codigo postal'
+    placeholder: 'Ingrese codigo postal',
   },
   {
     idElement: 'street',
     value: '',
     label: 'DIRECCION',
-    placeholder: 'Ingrese direccion'
+    placeholder: 'Ingrese direccion',
   },
   {
     idElement: 'locality',
     value: '',
     label: 'LOCALIDAD',
-    placeholder: 'Ingrese localidad'
+    placeholder: 'Ingrese localidad',
   },
   {
     idElement: 'registration_number',
     value: '',
     label: 'NUMERO DE MATRICULA',
-    placeholder: 'Ingrese numero de matricula'
+    placeholder: 'Ingrese numero de matricula',
   },
   {
     idElement: 'area_of_work',
     value: '',
     label: 'AREA DE TRABAJO',
-    placeholder: 'Ingrese area de trabajo'
+    placeholder: 'Ingrese area de trabajo',
   },
   {
     idElement: 'training_interest',
     value: '',
     label: 'INTERES DE FORMACION',
-    placeholder: 'Ingrese interes de formacion'
-  }
+    placeholder: 'Ingrese interes de formacion',
+  },
 ];
