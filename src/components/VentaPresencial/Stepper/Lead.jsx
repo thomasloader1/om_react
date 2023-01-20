@@ -1,66 +1,74 @@
+import { useContext } from 'react';
 import InputField from '../../PasarelaCobros/InputField';
+import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
+import Select from '../Select';
 import { FormStep } from './MultiStep';
 
 const LeadStep = () => {
+  const {
+    fetchProfessions,
+    professions,
+    fetchSpecialties,
+    specialties,
+    fetchMethods,
+    methods,
+  } = useContext(AppContext);
+
   return (
     <>
       <FormStep stepNumber={2} stepName="Creacion de lead">
-        <div id="medModPago_grid" className="grid-lead-face-to-face-sale">
+        <div className="grid-create_lead">
           <InputField
-            label="NOMBRE"
+            label="Nombre"
             type="text"
             placeholder="Ingrese nombre"
             id="name"
             name="name"
-            // value={id}
           />
           <InputField
-            label="APELLIDO"
+            label="Apellido"
             type="text"
             placeholder="Ingrese apellido"
             id="username"
             name="username"
-            // value={id}
           />
           <InputField
-            label="E-MAIL"
+            label="Correo Electronico"
             type="text"
             placeholder="Ingrese e-mail"
             id="email"
             name="email"
-            // value={id}
           />
+
           <InputField
-            label="TELEFONO"
+            label="Telefono"
             type="text"
             placeholder="Ingrese telefono"
             id="telephone"
             name="telephone"
-            // value={id}
           />
-          <InputField
-            label="PROFESION"
-            type="text"
-            placeholder="Ingrese profesion"
+          <Select
+            options={professions}
+            placeholderText="Seleccione una profesion"
+            label="Profesion"
             id="profession"
             name="profession"
-            // value={id}
           />
-          <InputField
-            label="ESPECIALIDAD"
-            type="text"
-            placeholder="Ingrese especialidad"
+
+          <Select
+            options={specialties}
+            placeholderText="Seleccione una especialidad"
+            label="Especialidad"
             id="speciality"
             name="speciality"
-            // value={id}
           />
-          <InputField
-            label="METODO DE CONTACTO"
-            type="text"
-            placeholder="Seleccionar metodo de contacto"
+
+          <Select
+            options={methods}
+            placeholderText="Seleccionar metodo de contacto"
+            label="Metodo de contactacion"
             id="method_contact"
             name="method_contact"
-            // value={id}
           />
         </div>
       </FormStep>
