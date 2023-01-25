@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Container, Notification } from 'react-bulma-components';
 import { Route, Routes, useLocation } from 'react-router';
-import PasarelaApp from '../PasarelaCobros/App';
+// import PasarelaApp from '../PasarelaCobros/App';
 import VentaPresencialApp from '../VentaPresencial/App';
 
 const titles = {
@@ -21,9 +21,13 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/superpasarela/:id" element={<PasarelaApp />} />
-      <Route path="/ventapresencial/:id" element={<VentaPresencialApp />} />
-      <Route path="/ventapresencial" element={<VentaPresencialApp />} />
+      {/* <Route path="/superpasarela/:id" element={<PasarelaApp />} /> */}
+      <Route
+        exact
+        path="ventapresencial/:id"
+        element={<VentaPresencialApp />}
+      />
+      <Route exact path="/" element={<VentaPresencialApp />} />
 
       <Route
         path="*"
