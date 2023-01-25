@@ -29,7 +29,7 @@ function StateProvider({ children }) {
     sideItemOptions,
   });
 
-  const [formikValues, setFormikValues] = useState({});
+  const [formikValues, setFormikValues] = useState(null);
   const [userInfo, setUserInfo] = useState(userFlow);
   const [stepNumberGlobal, setStepNumberGlobal] = useState(1);
   const [stripeRequest, setStripeRequest] = useState(null);
