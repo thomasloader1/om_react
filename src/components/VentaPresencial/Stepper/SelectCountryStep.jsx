@@ -8,28 +8,19 @@ import { useFormHandler } from '../Hook/useFormHandler';
 import { FormStep } from './MultiStep';
 
 function SelectCountryStep() {
-  const { setStepOne } = useFormHandler();
-  const { options, setOptions, userInfo, setUserInfo, appEnv } =
+  // const { setStepOne } = useFormHandler();
+  const { options, setOptions, userInfo, setUserInfo, formikValues, appEnv } =
     useContext(AppContext);
   const { countryOptions, sideItemOptionsVP } = options;
   const { stepOne } = userInfo;
-  const { setFieldValue, values } = useFormikContext();
+  const { setFieldValue, ...formik } = useFormikContext();
 
   useEffect(() => {
-    const hasCountry = typeof appEnv?.country === 'string';
-    console.log({ hasCountry });
-    if (appEnv !== null) {
-      setFieldValue('country', appEnv?.country);
-      stepOne.value = appEnv?.country;
-      setUserInfo((prevUserInfo) => ({
-        ...prevUserInfo,
-        stepOne: {
-          ...prevUserInfo.stepOne,
-          ...stepOne,
-        },
-      }));
+    if (appEnv !== null && formikValues?.country !== null) {
+      //setFieldValue('country', formikValues?.country);
+      //console.log({ formik });
     }
-  }, []);
+  }, [appEnv, formikValues?.country]);
 
   const handleClick = (propsOfContryOptions) => {
     const { value, idElement } = propsOfContryOptions;

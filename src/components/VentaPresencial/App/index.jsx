@@ -11,12 +11,8 @@ import { useAppEnv } from '../Hook/useAppEnv';
 function VentaPresencialApp() {
   const {
     setFormikValues,
-    setAppEnv,
-    appEnv,
     saveLead,
     saveContact,
-    setValues,
-    creatingProgress,
     updateProgress,
     stepNumber,
     setStepNumber,
