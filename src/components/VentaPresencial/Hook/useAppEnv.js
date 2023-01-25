@@ -9,49 +9,55 @@ export const useAppEnv = () => {
     setOptions,
     userInfo,
     setUserInfo,
+    formikValues,
     setFormikValues,
     setAppEnv,
-    appEnv,
   } = useContext(AppContext);
-  const [stepNumber, setStepNumber] = useState(0);
-  const { fetching: creatingProgress, updateProgress } = useProgress();
+  const [stepNumber, setStepNumber] = useState(1);
+  const [progressLoadedFormStep, setProgressLoadedFormStep] = useState(null);
+  const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
 
   const setValues = ({ step, ...values }) => {
     setFormikValues({
       ...values,
     });
 
-    const stepValues = {
-      0: {
-        value: values?.country,
-        status: values?.country ? 'completed' : 'current',
-      },
-      1: 'completed',
-      2: 'completed',
-    };
+    setProgressLoadedFormStep(step);
 
-    if (step > 1) {
-      options.sideItemOptionsVP.map((value) => {
-        if (value.step <= step) {
-          value.status = 'completed';
-          value.value = stepValues[step];
-        }
+    options.sideItemOptionsVP.map((option) => {
+      const stepHasIncompleted = !option.status.includes('completed');
 
-        return value;
-      });
-    } else {
-      options.sideItemOptionsVP[step - 1].value = values?.country
-        ? values?.country
-        : 'Sin seleccionar';
-      userInfo.stepOne.value = values?.country;
-      options.sideItemOptionsVP[step - 1].status = values?.country
-        ? 'completed'
-        : 'current';
-      setOptions({ ...options });
-      setUserInfo({ ...userInfo });
-    }
-    setStepNumber(step - 1);
+      if (step === option.step && option.step === 1 && stepHasIncompleted) {
+        option.status = 'completed';
+        option.value = values?.country;
+      }
+
+      if (step === option.step && option.step === 2 && stepHasIncompleted) {
+        const { contact_id, entity_id_crm, ...leadForm } = values.lead;
+        const formIncomplete = Object.values(leadForm).includes(null);
+
+        option.status = formIncomplete ? 'current' : 'completed';
+        option.value = formIncomplete ? 'Sin completar' : 'Completado';
+      } else if (option.step === 2 && stepHasIncompleted) {
+        option.status = 'current';
+      }
+
+      return { ...option };
+    });
+
+    setOptions({ ...options });
+    setStepNumber(step);
   };
+
+  useEffect(() => {
+    console.log({ appEnv });
+    if (appEnv !== null && progressLoadedFormStep === null) {
+      /*  console.log({ appEnv }); */
+      setValues(appEnv);
+    }
+
+    return () => null;
+  }, [stepNumber, creatingProgress, formikValues]);
 
   const saveLead = async (values) => {
     const body = new FormData();
@@ -132,18 +138,6 @@ export const useAppEnv = () => {
 
     console.log({ appEnv });
   };
-
-  useEffect(() => {
-    setStepNumber(stepNumber);
-    //console.log({ creatingProgress, appEnv });
-
-    if (appEnv !== null) {
-      /*  console.log({ appEnv }); */
-      setValues(appEnv);
-    }
-
-    return () => null;
-  }, [stepNumber, creatingProgress]);
 
   return {
     setFormikValues,
