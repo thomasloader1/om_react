@@ -5,7 +5,7 @@ import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 
 export const useProgress = () => {
   const { id } = useParams();
-  const { setAppEnv } = useContext(AppContext);
+  const { appEnv, setAppEnv, stepNumberGlobal } = useContext(AppContext);
   const [fetching, setFetching] = useState(false);
   const progressId = Number(id);
   const navigate = useNavigate();
@@ -59,5 +59,5 @@ export const useProgress = () => {
     getProgress();
   }, []);
 
-  return { fetching, updateProgress, getProgress };
+  return { fetching, appEnv, updateProgress, getProgress };
 };
