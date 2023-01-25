@@ -1,18 +1,22 @@
-import { useContext } from 'react';
+import { useFormikContext } from 'formik';
+import { useContext, useEffect } from 'react';
 import InputField from '../../PasarelaCobros/InputField';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import Select from '../Select';
 import { FormStep } from './MultiStep';
 
 const LeadStep = () => {
-  const {
-    fetchProfessions,
-    professions,
-    fetchSpecialties,
-    specialties,
-    fetchMethods,
-    methods,
-  } = useContext(AppContext);
+  const { professions, specialties, methods, appEnv } = useContext(AppContext);
+  const { setFieldValue } = useFormikContext();
+
+  useEffect(() => {
+    if (appEnv !== null && appEnv.lead !== null) {
+      Object.keys(appEnv.lead).map((key) => {
+        const value = appEnv.lead[key] !== null && appEnv.lead[key];
+        setFieldValue(key, value);
+      });
+    }
+  }, [appEnv, appEnv?.lead]);
 
   return (
     <>

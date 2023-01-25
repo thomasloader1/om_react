@@ -5,122 +5,144 @@ import './SideItem.scss';
 import { useContext } from 'react';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 
-function SideItem({ currentStep, label, status, className, valueSelected, stepStateNumber, formikInstance, disableEdit }) {
+function SideItem({
+  currentStep,
+  label,
+  status,
+  className,
+  valueSelected,
+  stepStateNumber,
+  formikInstance,
+  disableEdit,
+}) {
   const stepStatus = {
     current: `card current ${className}`,
-    completed: `card completed ${className}`
+    completed: `card completed ${className}`,
   };
 
-  const { setStepNumber } = stepStateNumber
-  const { options, setOptions, formikValues, setFormikValues, userInfo, setUserInfo, setStepNumberGlobal } = useContext(AppContext)
+  const { setStepNumber } = stepStateNumber;
+  const {
+    options,
+    setOptions,
+    formikValues,
+    setFormikValues,
+    userInfo,
+    setUserInfo,
+    setStepNumberGlobal,
+  } = useContext(AppContext);
 
   const classNameStatus = status !== '' ? `${stepStatus[status]}` : className;
-  const titleCurrentStep = currentStep > 3 && !valueSelected ? 'Sin completar' : !valueSelected ? 'Sin seleccionar' : valueSelected
-  
-  const editStep = (stepNumber) => {
-    console.log({formikInstance, formikValues, stepNumber})
+  const titleCurrentStep =
+    currentStep > 1 && !valueSelected
+      ? 'Sin completar'
+      : !valueSelected
+      ? 'Sin seleccionar'
+      : valueSelected;
 
-    switch(stepNumber){
-      case 1:{
-        const {country, ...rest} = formikInstance.values;
-        
+  const editStep = (stepNumber) => {
+    console.log({ formikInstance, formikValues, stepNumber });
+
+    switch (stepNumber) {
+      case 1: {
+        const { country, ...rest } = formikInstance.values;
+
         Object.entries(rest).forEach(([key]) => {
-          formikInstance.setFieldValue(key,'');
-          formikInstance.setTouched({})
+          formikInstance.setFieldValue(key, '');
+          formikInstance.setTouched({});
         });
-        
+
         userInfo.stepFive.value = '';
         userInfo.stepFour.value = '';
         userInfo.stepThree.value = '';
         userInfo.stepTwo.value = '';
 
-        setUserInfo({...userInfo})
-        setFormikValues({...formikInstance.values})
+        setUserInfo({ ...userInfo });
+        setFormikValues({ ...formikInstance.values });
 
-        console.log({rest, formikInstance,userInfo})
+        console.log({ rest, formikInstance, userInfo });
         break;
       }
-      case 2:{
-        const {country,payment_method, ...rest} = formikInstance.values;
-        
+      case 2: {
+        const { country, payment_method, ...rest } = formikInstance.values;
+
         Object.entries(rest).forEach(([key]) => {
-          formikInstance.setFieldValue(key,'');
-          formikInstance.setTouched({})
+          formikInstance.setFieldValue(key, '');
+          formikInstance.setTouched({});
         });
-        
+
         userInfo.stepFive.value = '';
         userInfo.stepFour.value = '';
         userInfo.stepThree.value = '';
 
-        setUserInfo({...userInfo})
-        setFormikValues({...formikInstance.values})
+        setUserInfo({ ...userInfo });
+        setFormikValues({ ...formikInstance.values });
 
-        console.log({rest, formikInstance,userInfo})
+        console.log({ rest, formikInstance, userInfo });
         break;
       }
-      case 3:{
-        const {country,payment_method, contractId, mod, quotes, ...rest} = formikInstance.values;
-        
+      case 3: {
+        const { country, payment_method, contractId, mod, quotes, ...rest } =
+          formikInstance.values;
+
         Object.entries(rest).forEach(([key]) => {
-          formikInstance.setFieldValue(key,'');
-          formikInstance.setTouched({})
+          formikInstance.setFieldValue(key, '');
+          formikInstance.setTouched({});
         });
-        
+
         userInfo.stepFive.value = '';
         userInfo.stepFour.value = '';
 
-        setUserInfo({...userInfo})
-        setFormikValues({...formikInstance.values})
+        setUserInfo({ ...userInfo });
+        setFormikValues({ ...formikInstance.values });
 
-        console.log({rest, formikInstance,userInfo})
+        console.log({ rest, formikInstance, userInfo });
         break;
       }
-      case 4:{
-        const {country,payment_method, contractId, mod, quotes, checkContract, ...rest} = formikInstance.values;
-        
+      case 4: {
+        const {
+          country,
+          payment_method,
+          contractId,
+          mod,
+          quotes,
+          checkContract,
+          ...rest
+        } = formikInstance.values;
+
         Object.entries(rest).forEach(([key]) => {
-          formikInstance.setFieldValue(key,'');
-          formikInstance.setTouched({})
+          formikInstance.setFieldValue(key, '');
+          formikInstance.setTouched({});
         });
-        
+
         userInfo.stepFive.value = '';
 
-        setUserInfo({...userInfo})
-        setFormikValues({...formikInstance.values})
+        setUserInfo({ ...userInfo });
+        setFormikValues({ ...formikInstance.values });
 
-        console.log({rest, formikInstance,userInfo})
+        console.log({ rest, formikInstance, userInfo });
         break;
       }
-      default:{
-        console.log("CHUPALA")
+      default: {
+        console.log('default case editStep()');
         break;
       }
     }
 
-
-    
-    options.sideItemOptions.forEach((stepObject, index) =>{
-      /* console.group(`${index}`)
-      console.log({stepObject})
-      console.log("if",stepNumber === stepObject.step)
-      console.log("else if",stepNumber < stepObject.step)
-      console.groupEnd(); */
-
-      if(stepNumber === stepObject.step){
-        options.sideItemOptions[stepNumber - 1].status = 'current'
-      }else if(stepNumber < stepObject.step){
-        options.sideItemOptions[index].status = ''
-        options.sideItemOptions[index].value = ''
+    options.sideItemOptionsVP.forEach((stepObject, index) => {
+      if (stepNumber === stepObject.step) {
+        options.sideItemOptions[stepNumber - 1].status = 'current';
+      } else if (stepNumber < stepObject.step) {
+        options.sideItemOptions[index].status = '';
+        options.sideItemOptions[index].value = '';
       }
-    })
-    
+    });
 
-    setOptions({ ...options })
-    setStepNumber(stepNumber - 1)
-    setStepNumberGlobal(stepNumber - 1)
-  }
+    setOptions({ ...options });
+    setStepNumber(stepNumber - 1);
+    setStepNumberGlobal(stepNumber - 1);
+  };
 
- // console.log(disableEdit)
+  // console.log(disableEdit)
 
   return (
     <div className={`side-item ${classNameStatus}`}>
@@ -129,9 +151,7 @@ function SideItem({ currentStep, label, status, className, valueSelected, stepSt
 
         <div className="is-flex is-flex-direction-column is-align-items-flex-start">
           <h3 className="subtitle is-uppercase">{!label ? 'Label' : label}</h3>
-          <h4 className="title is-6">
-            {titleCurrentStep}
-          </h4>
+          <h4 className="title is-6">{titleCurrentStep}</h4>
         </div>
       </span>
 
@@ -142,11 +162,14 @@ function SideItem({ currentStep, label, status, className, valueSelected, stepSt
         aria-label="User Profile"
         disabled={disableEdit}
       >
-        <MdOutlineEditNote className="is-size-3" onClick={() => {
-          if(!disableEdit){
-            editStep(currentStep)
-          }
-        }}/>
+        <MdOutlineEditNote
+          className="is-size-3"
+          onClick={() => {
+            if (!disableEdit) {
+              editStep(currentStep);
+            }
+          }}
+        />
       </button>
     </div>
   );
@@ -157,12 +180,12 @@ SideItem.propTypes = {
   label: PropTypes.string.isRequired,
   status: PropTypes.string,
   className: PropTypes.string,
-  valueSelected: PropTypes.string.isRequired
+  valueSelected: PropTypes.string.isRequired,
 };
 
 SideItem.defaultProps = {
   status: '',
-  className: ''
+  className: '',
 };
 
 export default SideItem;

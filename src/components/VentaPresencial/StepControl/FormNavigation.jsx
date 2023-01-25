@@ -5,24 +5,39 @@ import { useContext } from 'react';
 import { Button } from 'react-bulma-components';
 import { useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
+import { useProgress } from '../Hook/useProgress';
 
 const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
-  const { values, ...formik } = useFormikContext();
+  const { values, setFieldValue, ...formik } = useFormikContext();
   const { stepNumberGlobal } = useContext(AppContext);
   const { id } = useParams();
   const { cardComplete, savingProgress } = values;
   const disabledButton = isLastStep === !cardComplete || savingProgress;
   const disabledSavingProgress = !formik.dirty;
-  /* console.log({ formik }); */
-  const handleSaveProgress = async () => {
-    formik.setFieldValue('savingProgress', true);
-    const response = await axios.put(`/api/progress/${id}`, {
-      step_number: stepNumberGlobal,
-      ...values,
-    });
 
-    console.log({ response });
-    formik.setFieldValue('savingProgress', false);
+  const handleSaveProgress = async () => {
+    setFieldValue('savingProgress', true);
+    console.log({ stepNumberGlobal, ...values });
+    switch (stepNumberGlobal) {
+      case 2: {
+        const response = await axios.post(`/api/leadSaveProgress/${id}`, {
+          step_number: 2,
+          ...values,
+        });
+        console.log({ stepNumberGlobal, response });
+        break;
+      }
+      default: {
+        const response = await axios.put(`/api/progress/${id}`, {
+          step_number: 1,
+          ...values,
+        });
+        console.log({ stepNumberGlobal, response });
+        break;
+      }
+    }
+
+    setFieldValue('savingProgress', false);
   };
 
   return (
