@@ -548,13 +548,25 @@ h2.title {
 
 .controls {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-areas: 'back save next';
   gap: 1rem;
   margin-top: 2.5rem;
 
-  & button[type='submit'] {
-    grid-column: 2/3;
+  button:first-child {
+    grid-area: back;
   }
+
+  button:nth-child(2) {
+    grid-area: save;
+  }
+
+  button:last-child {
+    grid-area: next;
+  }
+
+  /* & button[type='submit'] {
+    grid-column: 2/3;
+  } */
 }
 
 // Lista de cursos
