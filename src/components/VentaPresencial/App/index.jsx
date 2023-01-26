@@ -26,7 +26,16 @@ function VentaPresencialApp() {
           <MultiStep
             stepStateNumber={{ stepNumber, setStepNumber }}
             className="pasarela-1 column seleccion-pais"
-            initialValues={{}}
+            initialValues={{
+              country: '',
+              name: '',
+              username: '',
+              email: '',
+              telephone: '',
+              profession: '',
+              speciality: '',
+              method_contact: '',
+            }}
             onSubmit={async (values) => {}}
           >
             <SelectCountryStep
@@ -49,7 +58,7 @@ function VentaPresencialApp() {
                   ...values,
                 }));
 
-                saveLead(values);
+                //saveLead(values);
               }}
               validationSchema={Yup.object({
                 name: Yup.string().required('El nombre es requerido'),

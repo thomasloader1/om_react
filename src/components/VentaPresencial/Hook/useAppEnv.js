@@ -4,15 +4,8 @@ import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useProgress } from './useProgress';
 
 export const useAppEnv = () => {
-  const {
-    options,
-    setOptions,
-    userInfo,
-    setUserInfo,
-    formikValues,
-    setFormikValues,
-    setAppEnv,
-  } = useContext(AppContext);
+  const { options, setOptions, formikValues, setFormikValues, setAppEnv } =
+    useContext(AppContext);
   const [stepNumber, setStepNumber] = useState(1);
   const [progressLoadedFormStep, setProgressLoadedFormStep] = useState(null);
   const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
@@ -22,23 +15,30 @@ export const useAppEnv = () => {
       ...values,
     });
 
-    setProgressLoadedFormStep(step);
-
-    options.sideItemOptionsVP.map((option) => {
+    options.sideItemOptionsVP.map((option, index) => {
       const stepHasIncompleted = !option.status.includes('completed');
+      const stepRange = [...Array(Number(step)).keys()].map((step) => step + 1);
+      const stepMatch = stepRange.includes(option.step, index);
 
-      if (step === option.step && option.step === 1 && stepHasIncompleted) {
+      if (
+        stepMatch &&
+        option.step === 1 &&
+        values.country &&
+        stepHasIncompleted
+      ) {
         option.status = 'completed';
         option.value = values?.country;
+        return { ...option };
       }
 
-      if (step === option.step && option.step === 2 && stepHasIncompleted) {
+      if (stepMatch && option.step === 2 && values.lead && stepHasIncompleted) {
         const { contact_id, entity_id_crm, ...leadForm } = values.lead;
         const formIncomplete = Object.values(leadForm).includes(null);
 
         option.status = formIncomplete ? 'current' : 'completed';
         option.value = formIncomplete ? 'Sin completar' : 'Completado';
-      } else if (option.step === 2 && stepHasIncompleted) {
+        return { ...option };
+      } else if (stepMatch && option.step === 2 && stepHasIncompleted) {
         option.status = 'current';
       }
 
@@ -46,13 +46,13 @@ export const useAppEnv = () => {
     });
 
     setOptions({ ...options });
-    setStepNumber(step);
+    setStepNumber(step - 1);
   };
 
   useEffect(() => {
     console.log({ appEnv });
     if (appEnv !== null && progressLoadedFormStep === null) {
-      /*  console.log({ appEnv }); */
+      setProgressLoadedFormStep(appEnv.step);
       setValues(appEnv);
     }
 

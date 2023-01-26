@@ -3,22 +3,18 @@ import React, { useContext } from 'react';
 import { useEffect } from 'react';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import ButtonField from '../../PasarelaCobros/RadioButton/ButtonField';
-import { useFormHandler } from '../Hook/useFormHandler';
-
 import { FormStep } from './MultiStep';
 
 function SelectCountryStep() {
-  // const { setStepOne } = useFormHandler();
   const { options, setOptions, userInfo, setUserInfo, formikValues, appEnv } =
     useContext(AppContext);
   const { countryOptions, sideItemOptionsVP } = options;
   const { stepOne } = userInfo;
-  const { setFieldValue, ...formik } = useFormikContext();
+  const { setFieldValue } = useFormikContext();
 
   useEffect(() => {
     if (appEnv !== null && formikValues?.country !== null) {
-      //setFieldValue('country', formikValues?.country);
-      //console.log({ formik });
+      setFieldValue('country', formikValues?.country);
     }
   }, [appEnv, formikValues?.country]);
 

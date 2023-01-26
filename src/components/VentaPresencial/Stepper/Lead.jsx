@@ -6,12 +6,17 @@ import Select from '../Select';
 import { FormStep } from './MultiStep';
 
 const LeadStep = () => {
-  const { professions, specialties, methods, appEnv } = useContext(AppContext);
-  const { setFieldValue } = useFormikContext();
+  const { professions, specialties, methods, appEnv, setStepNumberGlobal } =
+    useContext(AppContext);
+  const { setFieldValue, values } = useFormikContext();
 
   useEffect(() => {
     if (appEnv !== null && appEnv.lead !== null) {
+      console.log('leadStep', { Lead: appEnv.lead, values });
+      setStepNumberGlobal(2);
+
       Object.keys(appEnv.lead).map((key) => {
+        console.log(key, appEnv.lead[key]);
         const value = appEnv.lead[key] !== null && appEnv.lead[key];
         setFieldValue(key, value);
       });
@@ -46,7 +51,7 @@ const LeadStep = () => {
 
           <InputField
             label="Telefono"
-            type="text"
+            type="tel"
             placeholder="Ingrese telefono"
             id="telephone"
             name="telephone"

@@ -5,7 +5,7 @@ import 'react-intl-tel-input/dist/main.css';
 const InputField = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   const { setFieldTouched, setFieldValue } = useFormikContext();
-
+  console.log({ props });
   return (
     <div className="field">
       <label htmlFor={props.id} className="label">
@@ -21,18 +21,18 @@ const InputField = ({ label, ...props }) => {
         ) : (
           <IntlTelInput
             defaultCountry="ar"
+            type={props.type}
             containerClassName="intl-tel-input"
             inputClassName={meta.error ? 'input is-danger' : 'input'}
-            type="tel"
-            defaultValue={field.value}
-            fieldId={field.id}
-            fieldName={field.name}
+            defaultValue={`${field.value}`}
+            fieldId={props.id}
+            fieldName={props.name}
             onPhoneNumberBlur={() => {
-              setFieldTouched(field.name, true);
+              setFieldTouched(props.name, true);
             }}
             onPhoneNumberChange={(...args) => {
               const [_, phone, countryObject] = args;
-              setFieldValue(field.name, `${countryObject.dialCode}${phone}`);
+              setFieldValue(props.name, `${countryObject.dialCode}${phone}`);
             }}
           />
         )}
