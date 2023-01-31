@@ -14,9 +14,12 @@ function VentaPresencialApp() {
     saveLead,
     saveContact,
     updateProgress,
-    stepNumber,
-    setStepNumber,
+    stepNumberGlobal,
+    setStepNumberGlobal,
+    appEnv,
   } = useAppEnv();
+
+  // console.log({ stepNumber });
 
   return (
     <>
@@ -24,9 +27,17 @@ function VentaPresencialApp() {
       <section className="container is-max-widescreen">
         <div className="pasarela columns mx-auto">
           <MultiStep
-            stepStateNumber={{ stepNumber, setStepNumber }}
+            stepStateNumber={{ stepNumberGlobal, setStepNumberGlobal }}
             className="pasarela-1 column seleccion-pais"
-            initialValues={{}}
+            initialValues={{
+              country: '',
+              name: '',
+              surname: '',
+              profession: '',
+              telephone: '',
+              speciality: '',
+              method_contact: '',
+            }}
             onSubmit={async (values) => {}}
           >
             <SelectCountryStep
@@ -35,7 +46,7 @@ function VentaPresencialApp() {
                   ...prevFormikValues,
                   ...values,
                 }));
-                updateProgress(values);
+                updateProgress(values, 2);
               }}
               validationSchema={Yup.object({
                 country: Yup.string().required('El pais es requerido'),
@@ -112,6 +123,7 @@ function VentaPresencialApp() {
           </MultiStep>
         </div>
       </section>
+      <pre>{JSON.stringify(appEnv, null, 2)}</pre>
     </>
   );
 }

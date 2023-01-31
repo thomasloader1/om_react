@@ -31,7 +31,7 @@ function StateProvider({ children }) {
 
   const [formikValues, setFormikValues] = useState(null);
   const [userInfo, setUserInfo] = useState(userFlow);
-  const [stepNumberGlobal, setStepNumberGlobal] = useState(1);
+  const [stepNumberGlobal, setStepNumberGlobal] = useState(0);
   const [stripeRequest, setStripeRequest] = useState(null);
   const [checkoutLink, setCheckoutLink] = useState('');
   const [appEnv, setAppEnv] = useState(null);

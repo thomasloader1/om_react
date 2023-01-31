@@ -18,26 +18,32 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
   const handleSaveProgress = async () => {
     setFieldValue('savingProgress', true);
     console.log({ stepNumberGlobal, ...values });
-    switch (stepNumberGlobal) {
-      case 2: {
-        const response = await axios.post(`/api/leadSaveProgress/${id}`, {
-          step_number: 2,
-          ...values,
-        });
-        console.log({ stepNumberGlobal, response });
-        break;
-      }
-      default: {
-        const response = await axios.put(`/api/progress/${id}`, {
-          step_number: 1,
-          ...values,
-        });
-        console.log({ stepNumberGlobal, response });
-        break;
-      }
-    }
 
-    setFieldValue('savingProgress', false);
+    try {
+      switch (stepNumberGlobal) {
+        case 1: {
+          const response = await axios.post(`/api/leadSaveProgress/${id}`, {
+            step_number: 2,
+            ...values,
+          });
+          console.log({ stepNumberGlobal, response });
+          break;
+        }
+        default: {
+          const response = await axios.put(`/api/progress/${id}`, {
+            step_number: 1,
+            ...values,
+          });
+          console.log({ stepNumberGlobal, response });
+          break;
+        }
+      }
+    } catch (e) {
+      const { message } = e.response.data;
+      console.log({ message });
+    } finally {
+      setFieldValue('savingProgress', false);
+    }
   };
 
   return (
