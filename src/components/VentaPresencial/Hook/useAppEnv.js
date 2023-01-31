@@ -12,52 +12,59 @@ export const useAppEnv = () => {
     formikValues,
     setFormikValues,
     setAppEnv,
+    stepNumberGlobal,
+    setStepNumberGlobal,
   } = useContext(AppContext);
-  const [stepNumber, setStepNumber] = useState(1);
+
   const [progressLoadedFormStep, setProgressLoadedFormStep] = useState(null);
   const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
 
-  const setValues = ({ step, ...values }) => {
+  const setValues = ({ step_number, ...values }) => {
     setFormikValues({
       ...values,
     });
-
-    setProgressLoadedFormStep(step);
+    console.log({ values });
+    setProgressLoadedFormStep(step_number);
+    const { country, lead } = values;
 
     options.sideItemOptionsVP.map((option) => {
-      const stepHasIncompleted = !option.status.includes('completed');
+      const sameStep =
+        step_number === option.step || step_number >= option.step;
+      if (sameStep) {
+        if (country !== null && option.step === 1) {
+          option.status = 'completed';
+          option.value = country;
+        }
 
-      if (step === option.step && option.step === 1 && stepHasIncompleted) {
-        option.status = 'completed';
-        option.value = values?.country;
-      }
-
-      if (step === option.step && option.step === 2 && stepHasIncompleted) {
-        const { contact_id, entity_id_crm, ...leadForm } = values.lead;
-        const formIncomplete = Object.values(leadForm).includes(null);
-
-        option.status = formIncomplete ? 'current' : 'completed';
-        option.value = formIncomplete ? 'Sin completar' : 'Completado';
-      } else if (option.step === 2 && stepHasIncompleted) {
-        option.status = 'current';
+        if (lead !== null && typeof lead !== 'undefined' && option.step === 2) {
+          const formIncomplete = Object.values(lead).includes(null);
+          option.status = formIncomplete ? 'current' : 'completed';
+          option.value = formIncomplete ? 'Sin completar' : 'Completado';
+        } else if (sameStep && option.step === 2) {
+          option.status = 'current';
+        }
       }
 
       return { ...option };
     });
 
     setOptions({ ...options });
-    setStepNumber(step);
+    const stepIndex = step_number - 1;
+    setStepNumberGlobal(stepIndex);
   };
 
   useEffect(() => {
-    console.log({ appEnv });
-    if (appEnv !== null && progressLoadedFormStep === null) {
-      /*  console.log({ appEnv }); */
+    if (
+      appEnv != null &&
+      typeof appEnv !== 'undefined' &&
+      progressLoadedFormStep === null
+    ) {
+      console.log({ appEnv });
       setValues(appEnv);
     }
 
     return () => null;
-  }, [stepNumber, creatingProgress, formikValues]);
+  }, [stepNumberGlobal, creatingProgress, formikValues]);
 
   const saveLead = async (values) => {
     const body = new FormData();
@@ -148,7 +155,7 @@ export const useAppEnv = () => {
     setValues,
     creatingProgress,
     updateProgress,
-    stepNumber,
-    setStepNumber,
+    stepNumberGlobal,
+    setStepNumberGlobal,
   };
 };

@@ -14,45 +14,39 @@ const MultiStep = ({
   onSubmit,
   stepStateNumber,
 }) => {
-  const {
-    options,
-    setOptions,
-    stepNumberGlobal,
-    setStepNumberGlobal,
-    formRef,
-  } = useContext(AppContext);
+  const { options, setOptions, formRef } = useContext(AppContext);
 
-  const { stepNumber, setStepNumber } = stepStateNumber;
+  const { stepNumberGlobal, setStepNumberGlobal } = stepStateNumber;
   const { sideItemOptionsVP } = options;
   const [spanshot, setSpanshot] = useState(initialValues);
   const steps = React.Children.toArray(children);
-  const step = steps[stepNumber];
+  const step = steps[stepNumberGlobal];
   const totalSteps = steps.length;
-  const isLastStep = stepNumber === totalSteps - 1;
+  const isLastStep = stepNumberGlobal === totalSteps - 1;
 
   const next = (values) => {
     setSpanshot(values);
-    const indexOfNextStep = stepNumber + 1;
-    sideItemOptionsVP[stepNumber].status = 'completed';
+    const indexOfNextStep = stepNumberGlobal + 1;
+    sideItemOptionsVP[stepNumberGlobal].status = 'completed';
     sideItemOptionsVP[indexOfNextStep].status = 'current';
     setOptions((prevState) => ({
       ...prevState,
       sideItemOptionsVP: [...sideItemOptionsVP],
     }));
-    setStepNumber(stepNumber + 1);
-    setStepNumberGlobal(stepNumberGlobal + 1);
+    //setStepNumber(stepNumber + 1);
+    setStepNumberGlobal((step) => step + 1);
   };
   const previous = (values) => {
     setSpanshot(values);
-    const indexOfPrevStep = stepNumber - 1;
-    sideItemOptionsVP[stepNumber].status = '';
+    const indexOfPrevStep = stepNumberGlobal - 1;
+    sideItemOptionsVP[stepNumberGlobal].status = '';
     sideItemOptionsVP[indexOfPrevStep].status = 'current';
     setOptions((prevState) => ({
       ...prevState,
       sideItemOptionsVP: [...sideItemOptionsVP],
     }));
-    setStepNumber(stepNumber - 1);
-    setStepNumberGlobal(stepNumber - 1);
+    //setStepNumber(stepNumber - 1);
+    setStepNumberGlobal((step) => step - 1);
   };
 
   const handleSubmit = async (values, actions) => {
@@ -71,7 +65,7 @@ const MultiStep = ({
   return (
     <SwitchTransition>
       <CSSTransition
-        key={stepNumber}
+        key={stepNumberGlobal}
         addEndListener={(node, done) =>
           node.addEventListener('transitionend', done, false)
         }
@@ -103,13 +97,13 @@ const MultiStep = ({
                   })}
                 <FormNavigation
                   isLastStep={isLastStep}
-                  hasPrevious={stepNumber > 0}
+                  hasPrevious={stepNumberGlobal > 0}
                   onBackClick={() => previous(formik.values)}
                 />
               </Form>
               <Side
                 options={options.sideItemOptionsVP}
-                stepStateNumber={{ stepNumber, setStepNumber }}
+                stepStateNumber={{ stepNumberGlobal, setStepNumberGlobal }}
                 formikInstance={formik}
               />
               {/*  <pre>{JSON.stringify(formik, null, 2)}</pre> */}

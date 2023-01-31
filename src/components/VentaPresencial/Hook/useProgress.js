@@ -2,18 +2,27 @@ import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
+import { useSwal } from './useSwal';
 
 export const useProgress = () => {
   const { id } = useParams();
-  const { appEnv, setAppEnv, stepNumberGlobal } = useContext(AppContext);
+  const { appEnv, setAppEnv } = useContext(AppContext);
+
   const [fetching, setFetching] = useState(false);
   const progressId = Number(id);
   const navigate = useNavigate();
+  const { fireErrorToast } = useSwal();
 
   const createProgress = async () => {
-    const { data } = await axios.post('/api/progress', { step: 1 });
-    setFetching(false);
-    navigate(`/ventapresencial/${data.id}`);
+    try {
+      const { data } = await axios.post('/api/progress', { step_number: 1 });
+      navigate(`/ventapresencial/${data.id}`);
+    } catch (e) {
+      console.log({ e });
+      fireErrorToast(`${JSON.stringify(e, null, 2)}`);
+    } finally {
+      setFetching(false);
+    }
   };
 
   const getProgress = async () => {
@@ -31,9 +40,9 @@ export const useProgress = () => {
       .finally(() => setFetching(false));
   };
 
-  const updateProgress = async (values) => {
+  const updateProgress = async (values, step) => {
     axios
-      .put(`/api/progress/${id}`, { ...values })
+      .put(`/api/progress/${id}`, { ...values, step_number: step })
       .then((data) => {
         console.log({ responseOfPut: data });
 
@@ -59,5 +68,5 @@ export const useProgress = () => {
     getProgress();
   }, []);
 
-  return { fetching, appEnv, updateProgress, getProgress };
+  return { fetching, appEnv, updateProgress, getProgress, createProgress };
 };
