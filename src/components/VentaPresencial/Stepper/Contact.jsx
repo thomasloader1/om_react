@@ -9,7 +9,7 @@ const ContactStep = () => {
   return (
     <>
       <FormStep stepNumber={3} stepName="Conversion a contacto">
-        <div id="medModPago_grid" className="grid-lead-face-to-face-sale">
+        <div id="medModPago_grid" className="grid-conversion_contact">
           {/* <pre>{JSON.stringify(appEnv, null, 2)}</pre> */}
           <InputField
             label="DNI"
@@ -19,70 +19,70 @@ const ContactStep = () => {
             name="dni"
           />
           <InputField
-            label="SEXO"
+            label="Sexo"
             type="text"
             placeholder="Seleccionar sexo"
             id="sex"
             name="sex"
           />
           <InputField
-            label="FECHA DE NACIMIENTO"
+            label="Fecha de Nacimiento"
             type="text"
             placeholder="--/--/----"
             id="date_of_birth"
             name="date_of_birth"
           />
           <InputField
-            label="PAIS"
+            label="Pais"
             type="text"
             placeholder="Ingresar pais"
             id="country"
             name="country"
           />
           <InputField
-            label="PROVINCIA/ESTADO"
+            label="Provincia / Estado"
             type="text"
             placeholder="Ingresar localidad"
             id="province_state"
             name="province_state"
           />
           <InputField
-            label="CODIGO POSTAL"
+            label="Codigo Postal"
             type="text"
             placeholder="Ingresar matricula"
             id="postal_code"
             name="postal_code"
           />
           <InputField
-            label="DIRECCION"
+            label="Direccion"
             type="text"
             placeholder="Ingresar calle y numero"
             id="street"
             name="street"
           />
           <InputField
-            label="LOCALIDAD"
+            label="Localidad"
             type="text"
             placeholder="Ingresar localidad"
             id="locality"
             name="locality"
           />
           <InputField
-            label="NUMERO DE MATRICULA"
+            label="Numero de Matricula"
             type="text"
             placeholder="Ingresar matricula"
             id="registration_number"
             name="registration_number"
           />
           <InputField
-            label="AREA DE TRABAJO"
+            label="Area de Trabajo"
             type="text"
             placeholder="Ingresar area de trabajo"
             id="area_of_work"
             name="area_of_work"
           />
           <InputField
-            label="INTERES DE FORMACION"
+            label="Interes de Formacion"
             type="text"
             placeholder="Ingresar interes de formacion"
             id="training_interest"
