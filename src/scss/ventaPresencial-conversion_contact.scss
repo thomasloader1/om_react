@@ -1,0 +1,74 @@
+.grid-conversion_contact {
+  display: grid;
+  grid-template-areas: 'dni sex date_of_birth date_of_birth country' 'province_state province_state locality street postal_code' 'training_interest training_interest area_of_work registration_number registration_number ';
+  column-gap: 1rem;
+
+  .block.field_info {
+    grid-area: notification;
+    align-self: center;
+    margin: 10px auto;
+  }
+
+  .field {
+    &:nth-child(1) {
+      grid-area: dni;
+    }
+    &:nth-child(2) {
+      grid-area: sex;
+    }
+    &:nth-child(3) {
+      grid-area: date_of_birth;
+    }
+    &:nth-child(4) {
+      grid-area: country;
+    }
+    &:nth-child(5) {
+      grid-area: province_state;
+    }
+    &:nth-child(6) {
+      grid-area: postal_code;
+    }
+    &:nth-child(7) {
+      grid-area: street;
+    }
+    &:nth-child(8) {
+      grid-area: locality;
+    }
+    &:nth-child(9) {
+      grid-area: registration_number;
+    }
+    &:nth-child(10) {
+      grid-area: area_of_work;
+    }
+    &:nth-child(11) {
+      grid-area: training_interest;
+    }
+
+    .control {
+      &.select {
+        width: 100%;
+        select {
+          width: 100%;
+          &.is-danger {
+            border-color: red;
+          }
+        }
+        &::after {
+          z-index: 1;
+        }
+      }
+      .allow-dropdown.intl-tel-input {
+        width: 100%;
+      }
+    }
+  }
+  .grid-payment_method-item {
+    height: unset;
+
+    &.active {
+      background-color: #eff1fa !important;
+      border-color: #485fc7;
+      color: #485fc7;
+    }
+  }
+}
