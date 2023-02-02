@@ -25,7 +25,8 @@ export const useAppEnv = () => {
       ...values,
     }));
     console.log({ step_number, values });
-    step_number = step_number === undefined ? stepNumberGlobal : step_number;
+    step_number =
+      step_number === undefined ? stepNumberGlobal + 1 : step_number;
     console.log({ step_number, values });
 
     setProgressLoadedFormStep(step_number);
