@@ -8,17 +8,16 @@ import { FormStep } from './MultiStep';
 const LeadStep = () => {
   const { professions, specialties, methods, appEnv } = useContext(AppContext);
   const { setFieldValue } = useFormikContext();
-  const { lead } = appEnv;
-
+  
   useEffect(() => {
-    if (appEnv !== null && lead !== null && typeof lead !== 'undefined') {
-      Object.keys(lead).map((key) => {
-        const value = lead[key] !== null && lead[key] ? lead[key] : '';
+    if (appEnv !== null && appEnv?.lead !== null && typeof appEnv?.lead !== 'undefined') {
+      Object.keys(appEnv?.lead).map((key) => {
+        const value = appEnv?.lead[key] !== null && appEnv?.lead[key] ? appEnv?.lead[key] : '';
         // console.log({ key, value });
         setFieldValue(key, value);
       });
     }
-  }, [appEnv, lead]);
+  }, [appEnv, appEnv?.lead]);
 
   return (
     <>
