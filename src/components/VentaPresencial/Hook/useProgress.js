@@ -29,6 +29,7 @@ export const useProgress = () => {
     axios
       .get(`/api/progress/${progressId}`)
       .then(({ data }) => {
+        console.log('getProgress', { data });
         setAppEnv((prevState) => ({
           ...prevState,
           ...data,

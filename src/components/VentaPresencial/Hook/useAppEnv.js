@@ -20,10 +20,14 @@ export const useAppEnv = () => {
   const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
 
   const setValues = ({ step_number, ...values }) => {
-    setFormikValues({
+    setFormikValues((prevState) => ({
+      ...prevState,
       ...values,
-    });
-    console.log({ values });
+    }));
+    console.log({ step_number, values });
+    step_number = step_number === undefined ? stepNumberGlobal : step_number;
+    console.log({ step_number, values });
+
     setProgressLoadedFormStep(step_number);
     const { country, lead } = values;
 
@@ -37,7 +41,9 @@ export const useAppEnv = () => {
         }
 
         if (lead !== null && typeof lead !== 'undefined' && option.step === 2) {
-          const formIncomplete = Object.values(lead).includes(null);
+          const { contact_id, entity_id_crm, ...formLead } = lead;
+          const formIncomplete = Object.values(formLead).includes(null);
+          //console.log({ formIncomplete, lead }, Object.values(lead));
           option.status = formIncomplete ? 'current' : 'completed';
           option.value = formIncomplete ? 'Sin completar' : 'Completado';
         } else if (sameStep && option.step === 2) {

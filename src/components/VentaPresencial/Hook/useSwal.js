@@ -22,5 +22,16 @@ export const useSwal = () => {
     });
   };
 
-  return { fireErrorToast };
+  const modalAlert = (message, type) => {
+    const isError = type === 'error';
+    const titleAlert = isError ? '¡Error!' : '¡Guardado completo!';
+
+    toast.fire({
+      title: <strong>{titleAlert}</strong>,
+      html: <p>{message}</p>,
+      icon: type,
+    });
+  };
+
+  return { fireErrorToast, modalAlert };
 };

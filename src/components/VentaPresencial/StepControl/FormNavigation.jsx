@@ -5,12 +5,13 @@ import { useContext } from 'react';
 import { Button } from 'react-bulma-components';
 import { useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
-import { useProgress } from '../Hook/useProgress';
+import { useSwal } from '../Hook/useSwal';
 
 const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
   const { values, setFieldValue, ...formik } = useFormikContext();
   const { stepNumberGlobal } = useContext(AppContext);
   const { id } = useParams();
+  const { modalAlert } = useSwal();
   const { cardComplete, savingProgress } = values;
   const disabledButton = isLastStep === !cardComplete || savingProgress;
   const disabledSavingProgress = !formik.dirty;
@@ -21,6 +22,14 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
 
     try {
       switch (stepNumberGlobal) {
+        case 2: {
+          const response = await axios.post(`/api/contactSaveProgress/${id}`, {
+            step_number: 3,
+            ...values,
+          });
+          console.log({ stepNumberGlobal, response });
+          break;
+        }
         case 1: {
           const response = await axios.post(`/api/leadSaveProgress/${id}`, {
             step_number: 2,
@@ -38,9 +47,12 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
           break;
         }
       }
+
+      modalAlert('Progreso guardado', 'success');
     } catch (e) {
       const { message } = e.response.data;
-      console.log({ message });
+      modalAlert(message, 'error');
+      console.log({ e });
     } finally {
       setFieldValue('savingProgress', false);
     }

@@ -24,6 +24,8 @@ const MultiStep = ({
   const totalSteps = steps.length;
   const isLastStep = stepNumberGlobal === totalSteps - 1;
 
+  console.log({ steps, step, stepNumberGlobal });
+
   const next = (values) => {
     setSpanshot(values);
     const indexOfNextStep = stepNumberGlobal + 1;
