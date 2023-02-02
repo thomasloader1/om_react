@@ -1,6 +1,6 @@
 .grid-conversion_contact {
   display: grid;
-  grid-template-areas: 'dni sex date_of_birth date_of_birth country' 'province_state province_state locality street postal_code' 'training_interest training_interest area_of_work registration_number registration_number ';
+  grid-template-areas: 'dni sex date_of_birth' 'country province_state postal_code' 'street street locality' ' registration_number area_of_work training_interest';
   column-gap: 1rem;
 
   .block.field_info {

@@ -60,7 +60,7 @@ function VentaPresencialApp() {
                   ...values,
                 }));
 
-                saveLead(values);
+                // saveLead(values);
               }}
               validationSchema={Yup.object({
                 name: Yup.string().required('El nombre es requerido'),
@@ -82,18 +82,16 @@ function VentaPresencialApp() {
                   ...prevFormikValues,
                   ...values,
                 }));
-
-                saveContact(values);
               }}
               validationSchema={Yup.object({
-                dni: Yup.string().required('El dni es requerido'),
+                dni: Yup.number().required('El dni es requerido'),
                 sex: Yup.string().required('El sexo es requerido'),
                 date_of_birth: Yup.string().required(
                   'La fecha de nacimiento es requerida'
                 ),
-                registration_number: Yup.string().required(
-                  'El nummero de matricula es requerido'
-                ),
+                registration_number: Yup.number(
+                  'El campo deben ser solo numeros'
+                ).required('El nummero de matricula es requerido'),
                 area_of_work: Yup.string().required(
                   'El area de trabajo es requerida'
                 ),
@@ -104,9 +102,9 @@ function VentaPresencialApp() {
                   'La provincia o estado son requeridos'
                 ),
                 country: Yup.string().required('El pais es requerido'),
-                postal_code: Yup.string().required(
-                  'El codigo postal es requerido'
-                ),
+                postal_code: Yup.number(
+                  'El campo deben ser solo numeros'
+                ).required('El codigo postal es requerido'),
                 street: Yup.string().required('La direccion es requerida'),
                 locality: Yup.string().required('La localidad es requerida'),
               })}

@@ -1,16 +1,12 @@
-import { useFormikContext } from 'formik';
-import { useContext } from 'react';
 import InputField from '../../PasarelaCobros/InputField';
-import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { FormStep } from './MultiStep';
-import axios from 'axios';
+import Select from '../Select';
 
 const ContactStep = () => {
   return (
     <>
       <FormStep stepNumber={3} stepName="Conversion a contacto">
         <div id="medModPago_grid" className="grid-conversion_contact">
-          {/* <pre>{JSON.stringify(appEnv, null, 2)}</pre> */}
           <InputField
             label="DNI"
             type="text"
@@ -18,16 +14,20 @@ const ContactStep = () => {
             id="dni"
             name="dni"
           />
-          <InputField
+          <Select
             label="Sexo"
-            type="text"
-            placeholder="Seleccionar sexo"
+            options={[
+              { id: 1, name: 'Masculino' },
+              { id: 2, name: 'Femenino' },
+              { id: 3, name: 'Prefiero no aclararlo' },
+            ]}
             id="sex"
             name="sex"
+            placeholderText="Seleccionar sexo"
           />
           <InputField
             label="Fecha de Nacimiento"
-            type="text"
+            type="date"
             placeholder="--/--/----"
             id="date_of_birth"
             name="date_of_birth"
