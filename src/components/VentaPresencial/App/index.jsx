@@ -60,7 +60,7 @@ function VentaPresencialApp() {
                   ...values,
                 }));
 
-                // saveLead(values);
+                saveLead(values);
               }}
               validationSchema={Yup.object({
                 name: Yup.string().required('El nombre es requerido'),

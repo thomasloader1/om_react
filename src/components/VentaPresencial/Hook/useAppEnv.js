@@ -80,20 +80,22 @@ export const useAppEnv = () => {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     };
-    let dataJson = {
-      lead: {
-        lead_id: appEnv.lead_id !== undefined ? appEnv.lead_id : null,
-        ...values,
-      },
-    };
+    // let dataJson = {
+    //   lead: {
+    //     lead_id: appEnv.lead_id !== undefined ? appEnv.lead_id : null,
+    //     ...values,
+    //   },
+    // };
 
-    body.append('dataJson', JSON.stringify(dataJson));
+    // body.append('dataJson', JSON.stringify(dataJson));
 
     try {
       const responseOfLaravel = await axios.post(
         'http://127.0.0.1:8000/api/db/stepCreateLead',
-        body,
-        requestConfig
+        {
+          ...values,
+            lead_id: appEnv.lead_id !== undefined ? appEnv.lead_id : null,
+        }
       );
       console.log({ responseOfLaravel });
 
