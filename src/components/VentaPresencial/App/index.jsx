@@ -84,7 +84,7 @@ function VentaPresencialApp() {
                 }));
               }}
               validationSchema={Yup.object({
-                dni: Yup.number().required('El dni es requerido'),
+                /* dni: Yup.number().required('El dni es requerido'),
                 sex: Yup.string().required('El sexo es requerido'),
                 date_of_birth: Yup.string().required(
                   'La fecha de nacimiento es requerida'
@@ -106,7 +106,7 @@ function VentaPresencialApp() {
                   'El campo deben ser solo numeros'
                 ).required('El codigo postal es requerido'),
                 street: Yup.string().required('La direccion es requerida'),
-                locality: Yup.string().required('La localidad es requerida'),
+                locality: Yup.string().required('La localidad es requerida'), */
               })}
             />
             <SelectCourse
