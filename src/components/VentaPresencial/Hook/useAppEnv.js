@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useProgress } from './useProgress';
+import { useLead } from '../Hook/useLead';
 
 export const useAppEnv = () => {
   const {
@@ -15,6 +16,8 @@ export const useAppEnv = () => {
     stepNumberGlobal,
     setStepNumberGlobal,
   } = useContext(AppContext);
+
+  const { createLeadSales } = useLead();
 
   const [progressLoadedFormStep, setProgressLoadedFormStep] = useState(null);
   const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
@@ -74,57 +77,7 @@ export const useAppEnv = () => {
   }, [stepNumberGlobal, creatingProgress, formikValues]);
 
   const saveLead = async (values) => {
-    const body = new FormData();
-    const requestConfig = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    };
-    // let dataJson = {
-    //   lead: {
-    //     lead_id: appEnv.lead_id !== undefined ? appEnv.lead_id : null,
-    //     ...values,
-    //   },
-    // };
-
-    // body.append('dataJson', JSON.stringify(dataJson));
-
-    try {
-      const responseOfLaravel = await axios.post(
-        'http://127.0.0.1:8000/api/db/stepCreateLead',
-        {
-          ...values,
-            lead_id: appEnv.lead_id !== undefined ? appEnv.lead_id : null,
-        }
-      );
-      console.log({ responseOfLaravel });
-
-      if (responseOfLaravel.data.message === 'success') {
-        setAppEnv((appEnvCurrent) => ({
-          ...appEnvCurrent,
-          lead_id: responseOfLaravel.data.newLead.id,
-        }));
-      }
-      
-      console.log({ appEnv });
-
-      const responseCreateLeadZohoCRM = await axios.post(
-        'http://127.0.0.1:8000/api/createLeadZohoCRM',
-        {...values}
-      );
-
-      const responseUpdateEntityIdLeadVentas = await axios.post(
-        'http://127.0.0.1:8000/api/updateEntityIdLeadVentas',
-        {
-          crm: responseCreateLeadZohoCRM.data,
-          lead: {...values}
-        }
-      );
-
-    } catch (error) {
-      
-    }
-
+    createLeadSales(values);
   };
 
   const saveContact = async (values) => {
