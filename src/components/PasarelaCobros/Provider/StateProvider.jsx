@@ -19,6 +19,7 @@ function StateProvider({ children }) {
   const { fetching: fetchSpecialties, data: specialties } =
     useApi('/api/specialities');
   const { fetching: fetchMethods, data: methods } = useApi('/api/methods');
+  const { fetching: fetchProducts, data: products } = useApi('/api/products');
 
   const [options, setOptions] = useState({
     countryOptions,
@@ -63,6 +64,8 @@ function StateProvider({ children }) {
         specialties,
         fetchMethods,
         methods,
+        fetchProducts,
+        products,
       }}
     >
       {children}

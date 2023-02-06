@@ -90,13 +90,10 @@ export const useAppEnv = () => {
     // body.append('dataJson', JSON.stringify(dataJson));
 
     try {
-      const responseOfLaravel = await axios.post(
-        'http://127.0.0.1:8000/api/db/stepCreateLead',
-        {
-          ...values,
-            lead_id: appEnv.lead_id !== undefined ? appEnv.lead_id : null,
-        }
-      );
+      const responseOfLaravel = await axios.post('/api/db/stepCreateLead', {
+        ...values,
+        lead_id: appEnv.lead_id !== undefined ? appEnv.lead_id : null,
+      });
       console.log({ responseOfLaravel });
 
       if (responseOfLaravel.data.message === 'success') {
@@ -105,30 +102,26 @@ export const useAppEnv = () => {
           lead_id: responseOfLaravel.data.newLead.id,
         }));
       }
-      
+
       console.log({ appEnv });
 
-      const responseCreateLeadZohoCRM = await axios.post(
-        'http://127.0.0.1:8000/api/createLeadZohoCRM',
-        {...values}
+      /* const responseCreateLeadZohoCRM = await axios.post(
+        '/api/createLeadZohoCRM',
+        { ...values }
       );
 
       const responseUpdateEntityIdLeadVentas = await axios.post(
-        'http://127.0.0.1:8000/api/updateEntityIdLeadVentas',
+        '/api/updateEntityIdLeadVentas',
         {
           crm: responseCreateLeadZohoCRM.data,
-          lead: {...values}
+          lead: { ...values },
         }
-      );
-
-    } catch (error) {
-      
-    }
-
+      ); */
+    } catch (error) {}
   };
 
   const saveContact = async (values) => {
-    console.log({ values });
+    /*  console.log({ values });
     const body = new FormData();
     const requestConfig = {
       headers: {
@@ -172,7 +165,7 @@ export const useAppEnv = () => {
       }));
     }
 
-    console.log({ appEnv });
+    console.log({ appEnv }); */
   };
 
   return {
