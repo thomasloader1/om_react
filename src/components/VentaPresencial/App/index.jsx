@@ -32,7 +32,7 @@ function VentaPresencialApp() {
             initialValues={{
               country: '',
               name: '',
-              surname: '',
+              username: '',
               profession: '',
               telephone: '',
               speciality: '',
