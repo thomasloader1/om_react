@@ -31,6 +31,7 @@ const SelectCourseStep = () => {
     if (courseIndex !== -1) {
       setSelectedCourses((prevState) => {
         prevState.splice(courseIndex, 1);
+
         return [...prevState];
       });
     } else {
@@ -64,18 +65,25 @@ const SelectCourseStep = () => {
           </div>
         </div>
         <div id="medModPago_grid" className={'courses-grid'}>
-          {elementsToShow.map((product) => (
-            <CourseItem
-              key={product.id}
-              profession={product.tags}
-              specialty={product.area}
-              hours={product.horas}
-              courseId={product.id}
-              name={product.title}
-              price={product.precio}
-              onSelectedCourse={handleSelectCourse}
-            />
-          ))}
+          {elementsToShow.map((product) => {
+            const isChecked = selectedCourses.some(
+              (course) => product.id === course.id
+            );
+
+            return (
+              <CourseItem
+                key={product.id}
+                profession={product.tags}
+                specialty={product.area}
+                hours={product.horas}
+                courseId={product.id}
+                name={product.title}
+                price={product.precio}
+                onSelectedCourse={handleSelectCourse}
+                checked={isChecked}
+              />
+            );
+          })}
         </div>
       </FormStep>
       <ReactPaginate

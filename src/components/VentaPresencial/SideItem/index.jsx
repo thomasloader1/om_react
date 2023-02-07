@@ -30,6 +30,9 @@ function SideItem({
     userInfo,
     setUserInfo,
     setStepNumberGlobal,
+    products,
+    selectedCourses,
+    setSelectedCourses,
   } = useContext(AppContext);
 
   const classNameStatus = status !== '' ? `${stepStatus[status]}` : className;
@@ -143,7 +146,24 @@ function SideItem({
     setStepNumberGlobal(stepNumber - 1);
   };
 
-  const handleDeleteCourse = (evt, courseId) => {};
+  const handleDeleteCourse = (courseId) => {
+    const [courseSelected] = products.filter(
+      (product) => product.id === courseId
+    );
+
+    const courseIndex = selectedCourses.findIndex(
+      (course) => course.id === courseId
+    );
+
+    if (courseIndex !== -1) {
+      setSelectedCourses((prevState) => {
+        prevState.splice(courseIndex, 1);
+        return [...prevState];
+      });
+    } else {
+      setSelectedCourses((prevState) => [...prevState, courseSelected]);
+    }
+  };
 
   // console.log(disableEdit)
   if (currentStep === 4) {

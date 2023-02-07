@@ -9,6 +9,7 @@ function CourseItem({
   courseId,
   name,
   price,
+  checked,
   onSelectedCourse,
 }) {
   const professionName = profession.map((p) => p.name);
@@ -27,6 +28,7 @@ function CourseItem({
           <input
             id={courseId}
             type="checkbox"
+            checked={checked}
             onClick={() => onSelectedCourse(courseId)}
           />
         </div>
