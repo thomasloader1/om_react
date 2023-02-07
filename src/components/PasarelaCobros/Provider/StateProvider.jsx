@@ -36,6 +36,7 @@ function StateProvider({ children }) {
   const [stripeRequest, setStripeRequest] = useState(null);
   const [checkoutLink, setCheckoutLink] = useState('');
   const [appEnv, setAppEnv] = useState(null);
+  const [selectedCourses, setSelectedCourses] = useState([]);
   const appRef = useRef(null);
   const formRef = useRef(null);
 
@@ -66,6 +67,8 @@ function StateProvider({ children }) {
         methods,
         fetchProducts,
         products,
+        selectedCourses,
+        setSelectedCourses,
       }}
     >
       {children}

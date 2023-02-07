@@ -1,0 +1,28 @@
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.pagination-item {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 0 0.5rem;
+  text-align: center;
+  a {
+    color: hsl(209deg, 100%, 22%);
+  }
+}
+
+.pagination-item:not(.break-me):hover {
+  background-color: #ddd;
+}
+
+.pagination-item.is-current {
+  background-color: hsl(340deg, 100%, 57%);
+  a {
+    color: #fff;
+  }
+}

@@ -8,6 +8,7 @@
 @use 'ventaPresencial-create_lead.scss';
 @use 'ventaPresencial-conversion_contact.scss';
 @use './components/tags';
+@use './react-paginate.scss';
 
 // Fix bug grilla con input radio
 .radio + .radio,
