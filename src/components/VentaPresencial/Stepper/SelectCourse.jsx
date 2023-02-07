@@ -7,7 +7,7 @@ import { FormStep } from './MultiStep';
 import ReactPaginate from 'react-paginate';
 
 const SelectCourseStep = () => {
-  const { fetchProducts, products, setSelectedCourses } =
+  const { fetchProducts, products, selectedCourses, setSelectedCourses } =
     useContext(AppContext);
   const { id } = useParams();
   const formik = useFormikContext();
@@ -19,8 +19,26 @@ const SelectCourseStep = () => {
     setCurrentPage(data.selected);
   };
 
-  const handleSelectCourse = () => {};
+  const handleSelectCourse = (courseId) => {
+    const [courseSelected] = products.filter(
+      (product) => product.id === courseId
+    );
 
+    const courseIndex = selectedCourses.findIndex(
+      (course) => course.id === courseId
+    );
+
+    if (courseIndex !== -1) {
+      setSelectedCourses((prevState) => {
+        prevState.splice(courseIndex, 1);
+        return [...prevState];
+      });
+    } else {
+      setSelectedCourses((prevState) => [...prevState, courseSelected]);
+    }
+
+    console.log({ selectedCourses });
+  };
   const productsWithPrice = products.filter((product) => product.precio !== 0);
 
   const filteredProducts = productsWithPrice.filter((product) =>
