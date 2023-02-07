@@ -5,11 +5,12 @@ import { useContext } from 'react';
 import { Button } from 'react-bulma-components';
 import { useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
+import { useAppEnv } from '../Hook/useAppEnv';
 import { useSwal } from '../Hook/useSwal';
 
 const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
   const { values, setFieldValue, ...formik } = useFormikContext();
-  const { stepNumberGlobal } = useContext(AppContext);
+  const { stepNumberGlobal, setAppEnv } = useContext(AppContext);
   const { id } = useParams();
   const { modalAlert } = useSwal();
   const { cardComplete, savingProgress } = values;
@@ -27,6 +28,12 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
             step_number: 3,
             ...values,
           });
+
+          const {} = response;
+
+          setAppEnv((prevState) => ({
+            ...prevState,
+          }));
           console.log({ stepNumberGlobal, response });
           break;
         }
@@ -35,6 +42,11 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
             step_number: 2,
             ...values,
           });
+          const { lead } = response.data;
+          setAppEnv((prevState) => ({
+            ...prevState,
+            lead,
+          }));
           console.log({ stepNumberGlobal, response });
           break;
         }
@@ -43,6 +55,14 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
             step_number: 1,
             ...values,
           });
+
+          const { stepNumberGlobal: step_number, ...restValues } =
+            response.data;
+
+          setAppEnv((prevState) => ({
+            ...prevState,
+            ...restValues,
+          }));
           console.log({ stepNumberGlobal, response });
           break;
         }

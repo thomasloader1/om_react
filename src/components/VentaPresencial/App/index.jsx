@@ -118,6 +118,8 @@ function VentaPresencialApp() {
               }}
               validationSchema={Yup.object({})}
             />
+
+            <div></div>
           </MultiStep>
         </div>
       </section>

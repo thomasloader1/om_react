@@ -1,15 +1,17 @@
 import React from 'react';
 import { MdQueryBuilder } from 'react-icons/md';
-
 import { Box } from 'react-bulma-components';
 
 function CourseItem({ profession, specialty, hours, courseId, name, price }) {
-  console.log({ profession, specialty, hours, courseId, name, price });
-
   const professionName = profession.map((p) => p.name);
   const specialtyName = Array.isArray(specialty)
     ? specialty.map((s) => s.name)
     : specialty.name;
+
+  const professionClassName = professionName.includes('medicos')
+    ? 'medicina'
+    : 'enfermeria';
+  console.log({ profession, specialty });
   return (
     <>
       <Box className="course" key={courseId}>
@@ -19,8 +21,12 @@ function CourseItem({ profession, specialty, hours, courseId, name, price }) {
 
         <div className="course-content">
           <div className="course-content-header">
-            <h4 className={`tags course-profession tags-${professionName}`}>
-              {professionName}
+            <h4
+              className={`tags course-profession tags-${professionClassName}`}
+            >
+              {professionClassName.includes('medicina')
+                ? 'Medicina'
+                : 'Enfermeria'}
             </h4>
             <h4 className="course-specialty">{specialtyName}</h4>
             <span className="course-hours is-flex is-align-items-center">
