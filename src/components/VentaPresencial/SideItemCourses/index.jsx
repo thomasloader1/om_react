@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MdOutlineEditNote, MdDeleteOutline } from 'react-icons/md';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 
-function SideItemCourses({ currentStep, label, status }) {
+function SideItemCourses({ currentStep, label, status, onDelete }) {
   const { selectedCourses } = useContext(AppContext);
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -12,11 +12,12 @@ function SideItemCourses({ currentStep, label, status }) {
         (acc, current) => acc + current.precio,
         0
       );
-      console.log({ totalAmout });
       setTotalPrice(totalAmout);
+      console.log({ selectedCourses, totalAmout }, selectedCourses.length > 0);
+    } else {
+      setTotalPrice(0);
     }
-  }, [selectedCourses.length]);
-
+  }, [selectedCourses]);
   const stepStatus = {
     current: `card current`,
     selection: `card current selection`,
@@ -61,6 +62,7 @@ function SideItemCourses({ currentStep, label, status }) {
                 type="button"
                 className="button is-ghost"
                 aria-label="Eliminar curso"
+                onClick={() => onDelete(course.id)}
               >
                 <MdDeleteOutline className="is-size-3" />
               </button>
