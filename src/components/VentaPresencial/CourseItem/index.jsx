@@ -2,7 +2,15 @@ import React from 'react';
 import { MdQueryBuilder } from 'react-icons/md';
 import { Box } from 'react-bulma-components';
 
-function CourseItem({ profession, specialty, hours, courseId, name, price }) {
+function CourseItem({
+  profession,
+  specialty,
+  hours,
+  courseId,
+  name,
+  price,
+  onSelectedCourse,
+}) {
   const professionName = profession.map((p) => p.name);
   const specialtyName = Array.isArray(specialty)
     ? specialty.map((s) => s.name)
@@ -11,12 +19,16 @@ function CourseItem({ profession, specialty, hours, courseId, name, price }) {
   const professionClassName = professionName.includes('medicos')
     ? 'medicina'
     : 'enfermeria';
-  console.log({ profession, specialty });
+
   return (
     <>
       <Box className="course" key={courseId}>
         <div className="course-selection">
-          <input id={courseId} type="checkbox" />
+          <input
+            id={courseId}
+            type="checkbox"
+            onClick={() => onSelectedCourse(courseId)}
+          />
         </div>
 
         <div className="course-content">

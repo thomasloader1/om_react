@@ -4,6 +4,7 @@ import { MdOutlineEditNote } from 'react-icons/md';
 import './SideItem.scss';
 import { useContext } from 'react';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
+import SideItemCourses from '../SideItemCourses';
 
 function SideItem({
   currentStep,
@@ -142,7 +143,21 @@ function SideItem({
     setStepNumberGlobal(stepNumber - 1);
   };
 
+  const handleDeleteCourse = (evt, courseId) => {};
+
   // console.log(disableEdit)
+  if (currentStep === 4) {
+    return (
+      <div className="side-body">
+        <SideItemCourses
+          currentStep={currentStep}
+          label="seleccion de cursos"
+          status="selection"
+          onDelete={handleDeleteCourse}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className={`side-item ${classNameStatus}`}>
