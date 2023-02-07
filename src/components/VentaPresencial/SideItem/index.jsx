@@ -172,7 +172,7 @@ function SideItem({
         <SideItemCourses
           currentStep={currentStep}
           label="seleccion de cursos"
-          status="selection"
+          status={classNameStatus}
           onDelete={handleDeleteCourse}
         />
       </div>

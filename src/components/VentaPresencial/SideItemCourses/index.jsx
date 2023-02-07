@@ -20,7 +20,7 @@ function SideItemCourses({ currentStep, label, status, onDelete }) {
   }, [selectedCourses]);
   const stepStatus = {
     current: `card current`,
-    selection: `card current selection`,
+    selection: `card current`,
     completed: `card completed`,
   };
   const classNameStatus = status !== '' ? `${stepStatus[status]}` : '';
