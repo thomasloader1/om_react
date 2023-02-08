@@ -1,8 +1,31 @@
 import InputField from '../../PasarelaCobros/InputField';
 import { FormStep } from './MultiStep';
 import Select from '../Select';
+import { useContext, useEffect } from 'react';
+import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
+import { useFormikContext } from 'formik';
 
 const ContactStep = () => {
+  const { appEnv } = useContext(AppContext);
+  const { setFieldValue } = useFormikContext();
+
+  useEffect(() => {
+    if (
+      appEnv !== null &&
+      appEnv?.contact !== null &&
+      typeof appEnv?.contact !== 'undefined'
+    ) {
+      Object.keys(appEnv?.contact).map((key) => {
+        const value =
+          appEnv?.contact[key] !== null && appEnv?.contact[key]
+            ? appEnv?.contact[key]
+            : '';
+        console.log({ key, value });
+        setFieldValue(key, value);
+      });
+    }
+  }, [appEnv, appEnv?.contact]);
+
   return (
     <>
       <FormStep stepNumber={3} stepName="Conversion a contacto">

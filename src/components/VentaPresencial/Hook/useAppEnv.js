@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useLead } from '../Hook/useLead';
+import { useContact } from '../Hook/useContact';
 
 export const useAppEnv = () => {
   const {
@@ -11,6 +12,7 @@ export const useAppEnv = () => {
     setStepNumberGlobal,
   } = useContext(AppContext);
 
+  const { createContactSales } = useContact();
   const { createLeadSales } = useLead();
 
   const setValues = ({ step_number, ...values }) => {
@@ -53,17 +55,16 @@ export const useAppEnv = () => {
   };
 
   const saveLead = async (values) => {
-    //createLeadSales(values);
+    createLeadSales(values);
   };
 
   const saveContact = async (values) => {
+    console.log(values);
+    createContactSales(values);
+
     /*  console.log({ values });
     const body = new FormData();
-    const requestConfig = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    };
+   
     let dataJson = {
       contact: {
         id: appEnv.contact_id !== undefined ? appEnv.contact_id : null,
@@ -88,9 +89,8 @@ export const useAppEnv = () => {
     body.append('dataJson', JSON.stringify(dataJson));
 
     const responseOfLaravel = await axios.post(
-      'http://127.0.0.1:8000/api/db/stepConversionContact',
-      body,
-      requestConfig
+      '/api/db/stepConversionContact',
+      body
     );
 
     if (responseOfLaravel.data.message === 'success') {
