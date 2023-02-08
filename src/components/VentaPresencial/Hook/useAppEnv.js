@@ -1,6 +1,5 @@
 import { useContext } from 'react';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
-import { useLead } from '../Hook/useLead';
 
 export const useAppEnv = () => {
   const {
@@ -11,9 +10,10 @@ export const useAppEnv = () => {
     setStepNumberGlobal,
   } = useContext(AppContext);
 
-  const { createLeadSales } = useLead();
+  console.log("useAppEnv()",{stepNumberGlobal})
 
   const setValues = ({ step_number, ...values }) => {
+
     setFormikValues((prevState) => ({
       ...prevState,
       ...values,
@@ -50,10 +50,6 @@ export const useAppEnv = () => {
     setOptions({ ...options });
     const stepIndex = step_number - 1;
     setStepNumberGlobal(stepIndex);
-  };
-
-  const saveLead = async (values) => {
-    //createLeadSales(values);
   };
 
   const saveContact = async (values) => {
@@ -107,7 +103,6 @@ export const useAppEnv = () => {
   return {
     setFormikValues,
     setValues,
-    saveLead,
     saveContact,
     stepNumberGlobal,
     setStepNumberGlobal,

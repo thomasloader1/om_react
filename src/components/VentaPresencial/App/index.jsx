@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import * as Yup from 'yup';
 import Header from '../../PasarelaCobros/Header';
 import MultiStep from '../Stepper/MultiStep';
@@ -8,20 +8,22 @@ import SelectCourse from '../Stepper/SelectCourse';
 import SelectCountryStep from '../Stepper/SelectCountryStep';
 import { useAppEnv } from '../Hook/useAppEnv';
 import { useProgress } from '../Hook/useProgress';
+import { useLead } from '../Hook/useLead';
 
 function VentaPresencialApp() {
   const {
     setFormikValues,
     formikValues,
-    saveLead,
     setValues,
     stepNumberGlobal,
     setStepNumberGlobal,
   } = useAppEnv();
+  
   const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
+  const { createLeadSales } = useLead();
 
   useEffect(() => {
-    console.log({stepNumberGlobal, creatingProgress, appEnv,formikValues})
+   // console.log({stepNumberGlobal, creatingProgress, appEnv,formikValues})
     if (
       appEnv != null &&
       typeof appEnv !== 'undefined'
@@ -31,7 +33,7 @@ function VentaPresencialApp() {
     }
 
     return () => null;
-  }, [stepNumberGlobal, creatingProgress, appEnv,formikValues]);
+  }, [creatingProgress, appEnv,formikValues]);
 
   return (
     <>
@@ -71,8 +73,10 @@ function VentaPresencialApp() {
                   ...prevFormikValues,
                   ...values,
                 }));
-
-                saveLead(values);
+               
+                console.log({values})
+                
+                createLeadSales(values)
               }}
               validationSchema={Yup.object({
                 name: Yup.string().required('El nombre es requerido'),
@@ -96,7 +100,7 @@ function VentaPresencialApp() {
                 }));
               }}
               validationSchema={Yup.object({
-                /* dni: Yup.number().required('El dni es requerido'),
+                dni: Yup.number().required('El dni es requerido'),
                 sex: Yup.string().required('El sexo es requerido'),
                 date_of_birth: Yup.string().required(
                   'La fecha de nacimiento es requerida'
@@ -118,7 +122,7 @@ function VentaPresencialApp() {
                   'El campo deben ser solo numeros'
                 ).required('El codigo postal es requerido'),
                 street: Yup.string().required('La direccion es requerida'),
-                locality: Yup.string().required('La localidad es requerida'), */
+                locality: Yup.string().required('La localidad es requerida'), 
               })}
             />
             <SelectCourse
