@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { useParams } from 'react-router';
 import { useSwal } from './useSwal';
 
 export const useContact = () => {
     const [fetching, setFetching] = useState(false);
+    const { id } = useParams();
 
     const { modalAlert } = useSwal();
 
@@ -12,16 +14,17 @@ export const useContact = () => {
         
         setFetching(true);
         try {
-           /*  const resCreateContactSales = await axios.post(
+            const { data } = await axios.post(
                 '/api/db/stepConversionContact',
-                { idPurchaseProgress: 3,...dataContact,...dataLead }
+                { idPurchaseProgress: id,...values,step_number: 4 }
             );
+            const { contact, contact_id, lead } = data;
+             
             createContactCRM(
-                dataContact,
-                resCreateContactSales.data.contact_id,
-                resCreateContactSales.data.newOrUpdatedContact,
-                dataLead
-            ); */
+                contact_id,
+                contact,
+                lead
+            );
         } catch (e) {
             console.log(e);
             const { message } = e.response.data;
@@ -29,18 +32,19 @@ export const useContact = () => {
             setFetching(false);
         } 
     };
-    /* const createContactCRM = async (dataContact,contactId,newOrUpdatedContact,dataLead) => {
-        console.log(dataContact);
+    const createContactCRM = async (contact_id,contact,lead) => {
+        console.log({contact,contact_id,lead});
         // console.log(responseCreateLeadSales);
         try {
-            const resCreateContactCRM = await axios.post(
+            const { data } = await axios.post(
                 '/api/createContactZohoCRM',
-                {contactId,...dataContact,...dataLead}
+                {...contact,...contact_id,...lead}
             );
+            const { id, result } = data;
             updateEntityIdCRMContactSales(
-                { contactId, ...newOrUpdatedContact },
-                resCreateContactCRM
-            );
+                contact,
+                id
+             );
         } catch (e) {
             const { message } = e.response.data;
             modalAlert(message, "error");
@@ -48,13 +52,12 @@ export const useContact = () => {
         }
     };
 
-     const updateEntityIdCRMContactSales = async (dataContact,resCreateContactCRM) => {
+     const updateEntityIdCRMContactSales = async (contact,id) => {
          try {
-             dataContact.entity_id_crm = resCreateContactCRM.data.id;
-            const request = { contactId, ...dataLead };
+            contact.entity_id_crm = id;
             const resEntityIdLeadCRM = await axios.post(
                 '/api/updateEntityIdContactSales',
-                request
+                contact
             );
             
         } catch (e) {
@@ -64,7 +67,7 @@ export const useContact = () => {
         } finally {
             setFetching(false);
         }
-    }; */
+    }; 
 
     return { fetching ,createContactSales };
 };
