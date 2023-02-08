@@ -50,20 +50,21 @@ export const useProgress = () => {
   };
 
   const updateProgress = async (values, step) => {
-    axios
-      .put(`/api/progress/${id}`, { ...values, step_number: step })
-      .then((data) => {
-        console.log({ responseOfPut: data });
+    try{
+      const { data } = await axios.put(`/api/progress/${id}`, { ...values, step_number: step })
+      console.log({ data });
+  
+      setAppEnv((prevState) => ({
+        ...prevState,
+        ...data
+      }));
 
-        setAppEnv((prevState) => ({
-          ...prevState,
-          ...values,
-        }));
-      })
-      .catch((err) => {
-        console.log({ err });
-      })
-      .finally(() => setFetching(false));
+    }catch(e){
+      console.log({ e });
+    }finally{
+      setFetching(false)
+    }
+
   };
 
   useEffect(() => {

@@ -12,19 +12,20 @@ export const useLead = () => {
 
   const createLeadSales = async (dataLead) => {
     setFetching(true);
-    let request = { idPurchaseProgress: id,...dataLead, step_number: 2};
+
     try {
       const { data } = await axios.post(
         '/api/db/stepCreateLead',
-        request
+        { idPurchaseProgress: id,...dataLead, step_number: 3}
       );
 
-      const { newOrUpdatedLead, lead_id } = data;
+      const { progress,newOrUpdatedLead, lead_id } = data;
       
       setAppEnv((prevEnv) => ({
         ...prevEnv,
         lead: { ...newOrUpdatedLead },
         lead_id,
+        ...progress
       }));
         createLeadCRM(
             dataLead,
