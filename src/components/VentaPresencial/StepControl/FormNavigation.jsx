@@ -29,10 +29,14 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
             ...values,
           });
 
-          const {} = response;
+          const {contact, lead, progress} = response.data;
+
 
           setAppEnv((prevState) => ({
             ...prevState,
+            ...progress,
+            lead: {...lead},
+            contact:{...contact}
           }));
           console.log({ stepNumberGlobal, response });
           break;
