@@ -2,11 +2,33 @@
 import React from 'react';
 import { Navbar } from 'react-bulma-components';
 import IMAGES from '../../../img/pasarelaCobros/share';
+import { useToggle } from '../Hooks/useToggle';
+import { motion } from 'framer-motion';
 
 function Header() {
   const { logo } = IMAGES;
+  const { expanded, toggleState } = useToggle(false);
+  const variantStyles = {
+    open: {
+      opacity: 0,
+      transition: {
+        type: 'spring',
+        bounce: 0,
+        duration: 0.3,
+      },
+    },
+    closed: {
+      opacity: 1,
+      transition: {
+        type: 'spring',
+        bounce: 0,
+        duration: 0.3,
+      },
+    },
+  };
+
   return (
-    <header className="container is-max-widescreen py-5">
+    <header className={`container is-max-widescreen py-5 ${expanded ? 'is-expanded' : ''}`}>
       {/*       <nav
         className="navbar is-transparent"
         role="navigation"
@@ -19,12 +41,19 @@ function Header() {
         </div>
       </nav> */}
 
-      <Navbar active="true" transparent="true">
+      <Navbar transparent='true'>
         <Navbar.Brand>
-          <Navbar.Item href="#">
-            <img alt="Oceano Logo" height="auto" src={logo} width="100%" />
+          <Navbar.Burger onClick={toggleState} />
+          <Navbar.Item href='#'>
+            <motion.img
+              animate={expanded ? 'open' : 'closed'}
+              variants={variantStyles}
+              alt='Oceano Logo'
+              height='auto'
+              src={logo}
+              width='100%'
+            ></motion.img>
           </Navbar.Item>
-          <Navbar.Burger />
         </Navbar.Brand>
       </Navbar>
     </header>

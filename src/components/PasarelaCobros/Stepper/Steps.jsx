@@ -14,9 +14,9 @@ import { Form, Radio } from 'semantic-ui-react';
 import { Form as FB } from 'react-bulma-components';
 
 // pago stripe
-import axios from 'axios'
+import axios from 'axios';
 // import { loadStripe } from '@stripe/stripe-js';
-import {Elements,CardElement,useStripe,useElements} from '@stripe/react-stripe-js';
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 import { AppContext } from '../Provider/StateProvider';
 import { sideItemOptions } from '../../../config/config';
@@ -24,36 +24,27 @@ import RadioButton from '../RadioButton';
 import StepControl from '../StepControl';
 import { delegateManager } from '../Hooks/useStepManager';
 
-export function SelectCountryStep({
-  countryOptions,
-  currentStep,
-  setCurrentStep
-}) {
+export function SelectCountryStep({ countryOptions, currentStep, setCurrentStep }) {
   const [state] = useContext(AppContext);
 
   const formik = useFormik({
     initialValues: {
-      country: ''
+      country: '',
     },
     validationSchema: Yup.object({
-      country: Yup.string().required('Seleccione un pais')
+      country: Yup.string().required('Seleccione un pais'),
     }),
     onSubmit: (values) => {
       // console.log('formik values', values);
-    }
+    },
   });
 
   return (
-    <form
-      autoComplete="off"
-      id="pais-grid"
-      className="grid-country"
-      onSubmit={formik.handleSubmit}
-    >
+    <form autoComplete='off' id='pais-grid' className='grid-country' onSubmit={formik.handleSubmit}>
       {countryOptions.map(({ ...props }) => (
         <RadioButton
           {...props}
-          name="country"
+          name='country'
           key={props.idElement}
           formikHook={formik}
           onChange={formik.handleChange}
@@ -70,37 +61,32 @@ export function SelectCountryStep({
   );
 }
 
-export function SelectPaymentMethodStep({
-  paymentOptions,
-  userFlow,
-  currentStep,
-  setCurrentStep
-}) {
+export function SelectPaymentMethodStep({ paymentOptions, userFlow, currentStep, setCurrentStep }) {
   const isoCountry = userFlow.stepOne.isoRef;
   const [state] = useContext(AppContext);
 
   const formik = useFormik({
     initialValues: {
-      payment_method: ''
+      payment_method: '',
     },
     validationSchema: Yup.object({
-      payment_method: Yup.string().required('Seleccione un metodo')
+      payment_method: Yup.string().required('Selecciona un método'),
     }),
     onSubmit: (values) => {
       // console.log('formik values', values);
     },
     onChange: (values) => {
       // console.log('Change', values);
-    }
+    },
   });
 
   // console.log({ formValid: formik.isValid });
 
   return (
     <form
-      autoComplete="off"
-      id="metPago_grid"
-      className="grid-payment_method"
+      autoComplete='off'
+      id='metPago_grid'
+      className='grid-payment_method'
       onSubmit={formik.handleSubmit}
     >
       {paymentOptions.map(
@@ -108,15 +94,15 @@ export function SelectPaymentMethodStep({
           allowedCountries.includes(isoCountry) && (
             <RadioButton
               {...props}
-              name="payment_method"
+              name='payment_method'
               showText={false}
               key={props.shortName}
-              typeBtn="payment_method"
+              typeBtn='payment_method'
               formikHook={formik}
               formikValue={props.value}
               onChange={formik.handleChange}
             />
-          )
+          ),
       )}
       <StepControl
         currentStep={currentStep}
@@ -133,13 +119,13 @@ export function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
   const [state] = useContext(AppContext);
   const initialValuesNormal = { med: '', mod: '' };
   const validationSchemaNormal = {
-    med: Yup.string().min(1).required('Seleccione un metodo'),
-    mod: Yup.string().min(1).required('Seleccione un metodo')
+    med: Yup.string().min(1).required('Selecciona un método'),
+    mod: Yup.string().min(1).required('Selecciona un método'),
   };
 
   const initialValuesSpecial = { numberSO: '' };
   const validationSchemaSpecial = {
-    numberSO: Yup.string().min(1).required('Ingrese un numero de SO')
+    numberSO: Yup.string().min(1).required('Ingrese un numero de SO'),
   };
 
   const formik = useFormik({
@@ -154,15 +140,16 @@ export function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
       // console.log('Change', { values });
       /* const [currentStepObject] = state.sideItemOptions.filter( options => options.status === 'current');
       delegateManager(currentStepObject,values) */
-    }
+    },
   });
 
   const getContractCRM = (soNumber = '2000339000483253046') => {
-
-    const request = axios.get(`https://oceanomedicina.net/laravel-foclis/zoho/test/contrato/${soNumber}`);
-    const contractData = request.then( res => res.data ).catch( err => console.error({err}))
-    return contractData
-  }
+    const request = axios.get(
+      `https://oceanomedicina.net/laravel-foclis/zoho/test/contrato/${soNumber}`,
+    );
+    const contractData = request.then((res) => res.data).catch((err) => console.error({ err }));
+    return contractData;
+  };
 
   const formikSpecial = useFormik({
     initialValues: initialValuesSpecial,
@@ -170,46 +157,42 @@ export function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
     onSubmit: (values) => {
       // console.log('formik values', { values });
       const [currentStepObject] = state.sideItemOptions.filter(
-        (options) => options.status === 'current'
+        (options) => options.status === 'current',
       );
-      const contract = getContractCRM()
+      const contract = getContractCRM();
       // console.log({contract})
-     // delegateManager(currentStepObject, values);
-    }
+      // delegateManager(currentStepObject, values);
+    },
   });
-
-  
 
   if (state.userFlow.stepTwo.value === 'Mercado Pago') {
     // console.log('formikSpecial', { formikSpecialValues:formikSpecial.values })
 
     return (
       <form
-        id="medModPago_grid"
-        autoComplete="off"
-        className="grid-med_mod_payment-mp"
+        id='medModPago_grid'
+        autoComplete='off'
+        className='grid-med_mod_payment-mp'
         onSubmit={formikSpecial.handleSubmit}
       >
-        <div className="field">
-          <label htmlFor="numberSO" className="label">
+        <div className='field'>
+          <label htmlFor='numberSO' className='label'>
             Ingrese SO de Contrato
           </label>
-          <div className="control">
+          <div className='control'>
             <input
-              placeholder="2000339000004553081"
-              className={
-                formikSpecial.errors.numberSO ? 'input is-danger' : 'input'
-              }
-              type="number"
+              placeholder='2000339000004553081'
+              className={formikSpecial.errors.numberSO ? 'input is-danger' : 'input'}
+              type='number'
               value={formikSpecial.values.numberSO}
               onChange={formikSpecial.handleChange}
               onBlur={formikSpecial.handleBlur}
-              name="numberSO"
-              id="numberSO"
+              name='numberSO'
+              id='numberSO'
             />
           </div>
           {formikSpecial.errors.numberSO && (
-            <p className="help is-danger">{formikSpecial.errors.numberSO}</p>
+            <p className='help is-danger'>{formikSpecial.errors.numberSO}</p>
           )}
         </div>
         {/* <FB.Field style={{ marginBottom: '0.7rem' }}>
@@ -246,9 +229,9 @@ export function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
 
   return (
     <form
-      id="medModPago_grid"
-      autoComplete="off"
-      className="grid-med_mod_payment"
+      id='medModPago_grid'
+      autoComplete='off'
+      className='grid-med_mod_payment'
       onSubmit={formik.handleSubmit}
     >
       {state.paymentMethodOptions.map(({ ...props }) => {
@@ -264,7 +247,7 @@ export function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
         );
       })}
 
-      <div className="is-divider doble" />
+      <div className='is-divider doble' />
 
       {state.paymentModeOptions.map(({ ...props }) => (
         <RadioButton
@@ -289,14 +272,12 @@ export function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
 
 export function FormClientDataStep({ currentStep, setCurrentStep }) {
   const [state] = useContext(AppContext);
-  const clientFormWithoutOptions = state.clientForm.filter(
-    (input) => !input.options
-  );
+  const clientFormWithoutOptions = state.clientForm.filter((input) => !input.options);
   const clientFormRadioField = state.clientForm.filter(
-    (input) => input.options && typeof input.options[0] === 'string'
+    (input) => input.options && typeof input.options[0] === 'string',
   );
   const [currentStepObject] = state.sideItemOptions.filter(
-    (options) => options.status === 'current'
+    (options) => options.status === 'current',
   );
 
   const formik = useFormik({
@@ -306,7 +287,7 @@ export function FormClientDataStep({ currentStep, setCurrentStep }) {
       montoContrato: '',
       cuotas: '',
       montoMensual: '',
-      tipoSuscripcion: ''
+      tipoSuscripcion: '',
     },
     validationSchema: Yup.object({
       numeroContrato: Yup.number()
@@ -327,7 +308,7 @@ export function FormClientDataStep({ currentStep, setCurrentStep }) {
         .typeError('Numero de contrato debe ser un numero')
         .positive('No se permite valores negativos')
         .required('Campo requerido'),
-      tipoSuscripcion: Yup.string().required('Campo requerido')
+      tipoSuscripcion: Yup.string().required('Campo requerido'),
     }),
     onSubmit: (values) => {
       // console.log(values);
@@ -339,19 +320,19 @@ export function FormClientDataStep({ currentStep, setCurrentStep }) {
       delegateManager(currentStepObject, values, state);
 
       // console.log({ state, formik });
-    }
+    },
   });
   return (
     <Form
-      autoComplete="off"
+      autoComplete='off'
       style={{ width: '80%', margin: '0 auto' }}
-      className="grid-client_form"
+      className='grid-client_form'
       onSubmit={formik.handleSubmit}
     >
-      <div className="suscri_type">
+      <div className='suscri_type'>
         {clientFormRadioField.map((input) => (
           <Form.Field>
-            <label className="label">{input.label}</label>
+            <label className='label'>{input.label}</label>
             {input.options.map((option) => (
               <Radio
                 label={` ${option}`}
@@ -363,7 +344,7 @@ export function FormClientDataStep({ currentStep, setCurrentStep }) {
               />
             ))}
             {formik.errors[input.idElement] && (
-              <p className="help is-danger">{formik.errors[input.idElement]}</p>
+              <p className='help is-danger'>{formik.errors[input.idElement]}</p>
             )}
           </Form.Field>
           /*  <pre>{JSON.stringify(input, null, 2)}</pre> */
@@ -376,7 +357,7 @@ export function FormClientDataStep({ currentStep, setCurrentStep }) {
             <FB.Input
               placeholder={input.placeholder}
               className={formik.errors[input.idElement] && 'is-danger'}
-              type="text"
+              type='text'
               value={formik.values[input.idElement]}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -384,7 +365,7 @@ export function FormClientDataStep({ currentStep, setCurrentStep }) {
               id={input.idElement}
             />
             {formik.errors[input.idElement] && (
-              <p className="help is-danger">{formik.errors[input.idElement]}</p>
+              <p className='help is-danger'>{formik.errors[input.idElement]}</p>
             )}
           </FB.Control>
         </FB.Field>
@@ -402,7 +383,6 @@ export function FormClientDataStep({ currentStep, setCurrentStep }) {
 }
 
 function CheckoutForm() {
-
   const stripe = useStripe();
   const elements = useElements();
   // const [loading, setLoading] = useState(false);
@@ -410,26 +390,26 @@ function CheckoutForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const {error, paymentMethod} = await stripe.createPaymentMethod({
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
-      card: elements.getElement(CardElement)
+      card: elements.getElement(CardElement),
     });
     // setLoading(true);
 
-    if(!error){
+    if (!error) {
       // // console.log(paymentMethod)
-      const {id} = paymentMethod
-      
+      const { id } = paymentMethod;
+
       try {
         // eslint-disable-next-line no-shadow
-        const { data } = await axios.post('http://localhost:3001/api/checkout',{
+        const { data } = await axios.post('http://localhost:3001/api/checkout', {
           id,
-          amount: 1000
+          amount: 1000,
         });
 
         // console.log(data);
 
-      // eslint-disable-next-line no-shadow
+        // eslint-disable-next-line no-shadow
       } catch (error) {
         // console.log(error);
       }
@@ -439,10 +419,8 @@ function CheckoutForm() {
     }
   };
 
-  
   return (
-    <form onSubmit={handleSubmit} className="card card-body">
-
+    <form onSubmit={handleSubmit} className='card card-body'>
       {/* <img src="https://http2.mlstatic.com/D_NQ_NP_721030-MLA49653195444_042022-O.webp" 
       alt="k68 keyboard"
       className='img-fluid'/> */}
@@ -450,19 +428,18 @@ function CheckoutForm() {
       {/* <h3 className='text-center my-2'>Price: 1000$</h3> */}
 
       <div className='form-group' styles='width: 100px;'>
-        <CardElement className='form-control'/>
+        <CardElement className='form-control' />
       </div>
 
       <button type='submit' className='btn btn-success' disabled={!stripe}>
         Buy
-      </button> 
+      </button>
     </form>
   );
-};
+}
 
 export function FormCardPayStep({ currentStep, setCurrentStep }) {
-
- // const stripePromise = loadStripe('pk_test_51LxuPAL8LzLismpRJ8x17MLBqh02YNICHMvzD91jEXEXkFQAPtDy3zE0BVM9xuRvlItl9ZWX2WH3fk5PTdzJ8TNL00n3Y1WfyW');
+  // const stripePromise = loadStripe('pk_test_51LxuPAL8LzLismpRJ8x17MLBqh02YNICHMvzD91jEXEXkFQAPtDy3zE0BVM9xuRvlItl9ZWX2WH3fk5PTdzJ8TNL00n3Y1WfyW');
 
   const [state] = useContext(AppContext);
 
@@ -494,7 +471,6 @@ export function FormCardPayStep({ currentStep, setCurrentStep }) {
       className='grid-client_form'
       // onSubmit={formik.handleSubmit}
     >
-
       {/* <Elements stripe={stripePromise}>
             <div className='container p-6'>
               <div className="row">
@@ -507,7 +483,7 @@ export function FormCardPayStep({ currentStep, setCurrentStep }) {
               </div>
             </div>
           </Elements>  */}
-{/* 
+      {/* 
           {state.cardForm.map((input) => (
             <FB.Field key={input.idElement} style={{ marginBottom: '0.7rem' }}>
               <FB.Label>{input.label}</FB.Label>
@@ -532,15 +508,9 @@ export function FormCardPayStep({ currentStep, setCurrentStep }) {
         setCurrentStep={setCurrentStep}
         state={state}
         sideItemOptions={sideItemOptions}
-        validStep="true"
+        validStep='true'
         // validStep={formik.isValid}
-
       />
     </Form>
   );
 }
-
-
- 
-
-  

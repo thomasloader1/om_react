@@ -48,6 +48,12 @@ header.container {
         max-height: unset;
       }
     }
+    &-burger {
+      margin: 0;
+    }
+    &-brand {
+      justify-content: space-between;
+    }
   }
 }
 .column {
@@ -78,8 +84,7 @@ header.container {
 
 .invisible {
   display: none !important;
-  -webkit-animation: scale-in-center 0.5s cubic-bezier(0.215, 0.61, 0.355, 1)
-    both;
+  -webkit-animation: scale-in-center 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) both;
   animation: scale-in-center 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) both;
   animation-play-state: paused;
 }
@@ -101,9 +106,9 @@ h2.title {
 
 .pasarela {
   padding-top: 8rem;
-  padding-bottom: 3rem;
+  padding-bottom: 3rem !important;
   position: relative;
-  z-index: 2;
+  overflow: hidden;
 
   form {
     display: flex;
@@ -259,7 +264,7 @@ h2.title {
 }
 
 .side {
-  padding-bottom: 3rem;
+  padding: 0 0 0 3rem;
   &-decision,
   &-body {
     display: flex;
@@ -297,8 +302,8 @@ h2.title {
 
   &-item {
     display: flex;
-    padding: 0 1.5rem;
     justify-content: space-between;
+    min-height: 28.25px;
 
     &.current,
     &.completed {
@@ -489,5 +494,277 @@ h2.title {
 
   & button[type='submit'] {
     grid-column: 2/3;
+  }
+}
+@media screen and (min-width: 767px) {
+  .pasarela {
+    overflow: unset;
+  }
+}
+
+@media screen and (max-width: 766px) {
+  header.container {
+    padding-bottom: 0px !important;
+    padding-top: 28px !important;
+    z-index: 5;
+
+    .navbar-brand {
+      display: grid;
+      grid-template-columns: 72px 100%;
+      justify-content: start;
+      gap: 24px;
+
+      .navbar-item {
+        padding: 0;
+        width: 150px;
+      }
+    }
+    .navbar-burger {
+      width: 100%;
+      span {
+        width: 24px;
+        left: calc(50% - 12px);
+      }
+    }
+  }
+  .pasarela {
+    display: grid;
+    grid-template-columns: 72px auto;
+    padding-top: calc(80px + 20px);
+    padding-bottom: 0 !important;
+    height: 100vh;
+    .notification {
+      padding: 12px;
+      font-size: 12px;
+    }
+    .label {
+      color: #808fa6;
+      text-transform: uppercase;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    form {
+      order: 2;
+      height: 100%;
+      grid-template-columns: 1fr;
+      grid-template-rows: max-content auto max-content;
+      padding: 0 24px 24px;
+
+      & > *:nth-child(2) {
+        overflow: scroll;
+        grid-template-columns: 1fr;
+        width: 100%;
+        padding-bottom: 12px;
+      }
+      .grid-med_mod_payment-mp {
+        overflow: initial;
+      }
+      .grid-country-item {
+        justify-content: start;
+      }
+      .field {
+        margin: 0;
+        width: 100%;
+      }
+      .grid-payment_method {
+        &-item {
+          &.tall {
+            height: 60px;
+          }
+          img {
+            height: 85%;
+          }
+        }
+      }
+      .grid-med_mod_payment-mp {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          'mod'
+          'mod1'
+          'search'
+          'quotes'
+          'notification'
+          'controls';
+        gap: 12px;
+
+        .field:nth-child(3) {
+          margin-bottom: 0px;
+        }
+      }
+
+      #mod_suscrip_field {
+        grid-area: mod1;
+      }
+
+      #mod_traditional_field {
+        grid-area: mod;
+      }
+      #grid-client_data,
+      #grid-payment_mp {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding-top: 0.75rem;
+      }
+      #finalResume {
+        padding: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        border-radius: unset;
+        filter: none;
+        .finalResume-confirmation {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+          padding-block: 1rem;
+          .field label {
+            height: max-content;
+            padding: 0.75rem;
+          }
+        }
+        .finalResume-item {
+          margin: 0;
+          overflow-wrap: anywhere;
+
+          h4 {
+            font-size: 1rem;
+          }
+        }
+        h2 {
+          font-size: 1.125rem !important;
+        }
+        .datos-cliente,
+        .datos-tarjeta {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin: 0;
+
+          &-header {
+            flex-direction: column;
+            gap: 12px;
+          }
+        }
+        #emailCliente_resume {
+          flex-direction: column;
+          h4 {
+            margin: 0;
+          }
+        }
+        #numeroContrato_resume h4,
+        #montoTotalContrato_resume h4 {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
+  .side {
+    padding-left: 1.5rem !important;
+    padding: 0;
+    min-width: 4.5rem;
+
+    &-body {
+      gap: 6px;
+    }
+
+    .title {
+      display: none;
+    }
+    &-item {
+      padding: 0;
+
+      &.card {
+        border: none;
+        box-shadow: none;
+        background: transparent;
+        padding: 0;
+      }
+      & .title {
+        display: none;
+      }
+      &-info {
+        .subtitle {
+          display: none;
+        }
+      }
+      button {
+        height: 1.75rem;
+        padding: 0 !important;
+
+        svg {
+          font-size: 1.5rem !important;
+        }
+      }
+      &.current,
+      &.completed {
+        .subtitle {
+          margin-bottom: 0;
+        }
+        .title {
+          margin-top: 0;
+        }
+      }
+      &.completed .button {
+        display: none;
+      }
+      span.side-item-info > .is-flex {
+        display: none !important;
+      }
+    }
+  }
+
+  .pasarela-1 {
+    & > .title {
+      margin-bottom: 12px;
+      font-size: 18px;
+      span {
+        display: none;
+      }
+    }
+  }
+
+  .controls {
+    margin-top: 0;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    button[type='submit'] {
+      grid-column: auto;
+    }
+    button[type='button'] {
+      order: 2;
+    }
+  }
+
+  .is-expanded {
+    .navbar-brand .navbar-item {
+      display: none;
+    }
+
+    & ~ * {
+      .pasarela {
+        grid-template-columns: min(80vw, 272px) auto;
+
+        &-1 {
+          position: relative;
+          width: max-content;
+        }
+
+        form::before {
+          transition: all 0.3s ease-in-out;
+          position: absolute;
+          background-color: rgba(63, 108, 187, 0.8);
+          content: ' ';
+          inset: -125px 0;
+          z-index: 5;
+          backdrop-filter: blur(2px);
+        }
+      }
+
+      #background-side {
+        width: min(80vw, 272px);
+      }
+    }
   }
 }

@@ -22,7 +22,7 @@ function SelectPaymentMethodStep() {
   console.groupEnd();
 
   return (
-    <FormStep stepNumber={2} stepName='Seleccione un metodo de pago'>
+    <FormStep stepNumber={2} stepName='Selecciona un método de pago'>
       <div id='metPago_grid' className='grid-payment_method'>
         {paymentOptions.map(
           ({ allowedCountries, ...props }) =>

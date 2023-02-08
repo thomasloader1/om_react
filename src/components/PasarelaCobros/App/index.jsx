@@ -19,18 +19,18 @@ function PasarelaApp() {
 
   const validationSchemaFinalStep = Yup.object({
     fullName: Yup.string()
-      .required('Ingrese nombre que figura en la tarjeta')
+      .required('❗ Ingresa el nombre que figura en la tarjeta')
       .matches(/^[a-zA-Z]+\s+[a-zA-Z]+(?:\s+[a-zA-Z]+)?$/i, 'El campo debe contener solo letras'),
     phone: Yup.string()
-      .required('Ingrese un numero de telefono')
+      .required('❗ Ingresa un número de telefono')
       .matches(/^[0-9]+$/i, 'El campo debe contener solo numeros'),
     address: Yup.string()
-      .required('Ingrese calle y numero del titual de la tarjeta')
-      .matches(/([A-Za-z0-9]+( [A-Za-z0-9]+)+)/i, 'El formato de la direccion es invalido'),
+      .required('❗ Ingresa calle y número del titual de la tarjeta')
+      .matches(/([A-Za-z0-9]+( [A-Za-z0-9]+)+)/i, 'El formato de la dirección es invalido'),
     dni: Yup.string()
-      .required('Ingrese el numero de tu documento de identidad')
+      .required('❗ Ingresa el número de tu documento de identidad')
       .matches(/^[0-9]+$/i, 'El campo debe contener solo numeros'),
-    email: Yup.string().email('Ingrese un email valido').required('El email es requerido'),
+    email: Yup.string().email('❗ Ingresa un email valido').required('❗ El email es requerido'),
   });
 
   useEffect(() => {
@@ -45,7 +45,7 @@ function PasarelaApp() {
     <div ref={appRef}>
       <Header />
       <Elements stripe={stripePromise}>
-        <section className='container is-max-widescreen'>
+        <section className={'container is-max-widescreen'}>
           <div className='pasarela columns mx-auto'>
             <MultiStep
               stepStateNumber={{ stepNumber, setStepNumber }}
@@ -67,7 +67,7 @@ function PasarelaApp() {
                   }));
                 }}
                 validationSchema={Yup.object({
-                  country: Yup.string().required('El pais es requerido'),
+                  country: Yup.string().required('❗ El pais es requerido'),
                 })}
               />
               <SelectPaymentMethodStep
@@ -78,7 +78,7 @@ function PasarelaApp() {
                   }));
                 }}
                 validationSchema={Yup.object({
-                  payment_method: Yup.string().required('El metodo de pago es requerido'),
+                  payment_method: Yup.string().required('❗ El método de pago es requerido'),
                 })}
               />
               <SelectPaymentModeStep
@@ -90,10 +90,10 @@ function PasarelaApp() {
                 }}
                 validationSchema={Yup.object({
                   contractId: Yup.string('Coloque un id'),
-                  mod: Yup.string().required('Seleccione un modo de pago'),
+                  mod: Yup.string().required('❗ Seleccione un modo de pago'),
                   quotes: Yup.string().when('mod', {
                     is: (val) => !(val && val.includes('Tradicional')),
-                    then: Yup.string().required('Especifique las cuotas'),
+                    then: Yup.string().required('❗ Especifique las cuotas'),
                     otherwise: null,
                   }),
                 })}
@@ -106,7 +106,7 @@ function PasarelaApp() {
                   }));
                 }}
                 validationSchema={Yup.object({
-                  checkContract: Yup.string().required('El campo es requerido'),
+                  checkContract: Yup.string().required('❗ El campo es requerido'),
                 })}
               />
 
