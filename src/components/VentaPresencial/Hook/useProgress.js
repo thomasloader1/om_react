@@ -31,14 +31,15 @@ export const useProgress = () => {
 
     try{
       const progress = await axios.get(`/api/progress/${progressId}`)
+      const { data } = progress
       console.log('getProgress', { progress });
       setAppEnv((prevState) => ({
         ...prevState,
-        ...progress,
+        ...data,
       }));
     }catch(e){
       console.group("getProgress(): catch",{e})
-      if(typeof id === 'undefined'){
+      if(typeof id === 'undefined' || e.response.status === 404){
         createProgress();
       }
       console.groupEnd()

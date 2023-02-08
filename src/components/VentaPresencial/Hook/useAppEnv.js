@@ -52,56 +52,11 @@ export const useAppEnv = () => {
     setStepNumberGlobal(stepIndex);
   };
 
-  const saveContact = async (values) => {
-    console.log(values);
-    createContactSales(values);
 
-    /*  console.log({ values });
-    const body = new FormData();
-   
-    let dataJson = {
-      contact: {
-        id: appEnv.contact_id !== undefined ? appEnv.contact_id : null,
-        dni: values.dni,
-        sex: values.sex,
-        date_of_birth: values.date_of_birth,
-        registration_number: values.registration_number,
-        area_of_work: values.area_of_work,
-        training_interest: values.training_interest,
-      },
-      address: {
-        id: appEnv.address_id !== undefined ? appEnv.address_id : null,
-        country: values.country,
-        province_state: values.province_state,
-        postal_code: values.postal_code,
-        street: values.street,
-        locality: values.locality,
-      },
-    };
-
-    // body.append('dataJson', JSON.stringify(formik.values))
-    body.append('dataJson', JSON.stringify(dataJson));
-
-    const responseOfLaravel = await axios.post(
-      '/api/db/stepConversionContact',
-      body
-    );
-
-    if (responseOfLaravel.data.message === 'success') {
-      setAppEnv((appEnvCurrent) => ({
-        ...appEnvCurrent,
-        contact_id: responseOfLaravel.data.newContact.id,
-        address_id: responseOfLaravel.data.newAddress.id,
-      }));
-    }
-
-    console.log({ appEnv }); */
-  };
 
   return {
     setFormikValues,
     setValues,
-    saveContact,
     stepNumberGlobal,
     setStepNumberGlobal,
   };

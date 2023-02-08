@@ -1,41 +1,18 @@
 import axios from 'axios';
-import { useContext, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSwal } from './useSwal';
 
 export const useContact = () => {
-
     const [fetching, setFetching] = useState(false);
-    const [lastStateLead, setastStateLead] = useState(false);
 
     const { modalAlert } = useSwal();
 
-    const createContactSales = async (dataContact) => {
-        dataContact = {
-            id: null,
-            entity_id_crm: '0',
-            dni: '39845733',
-            sex: 'Masculino',
-            date_of_birth: '01/08/1996',
-            registration_number: '1',
-            area_of_work: '1',
-            training_interest: '1',
-            type_of_address: 'Casa',
-            country: 'Argentina',
-            postal_code: '1714',
-            street: 'caca',
-            locality: 'ituzaingo',
-            province_state: 'bs',
-        };
-        let dataLead = {
-            name: 'facundo',
-            surname: 'Brizuela',
-            email: 'facu@gmail.com',
-            telephone: '1132322332',
-            country: 'Argentina',
-        };
+    const createContactSales = async (values) => {
+        console.log("createContactSales",{values})
+        
         setFetching(true);
         try {
-            const resCreateContactSales = await axios.post(
+           /*  const resCreateContactSales = await axios.post(
                 '/api/db/stepConversionContact',
                 { idPurchaseProgress: 3,...dataContact,...dataLead }
             );
@@ -44,7 +21,7 @@ export const useContact = () => {
                 resCreateContactSales.data.contact_id,
                 resCreateContactSales.data.newOrUpdatedContact,
                 dataLead
-            );
+            ); */
         } catch (e) {
             console.log(e);
             const { message } = e.response.data;
@@ -52,7 +29,7 @@ export const useContact = () => {
             setFetching(false);
         } 
     };
-    const createContactCRM = async (dataContact,contactId,newOrUpdatedContact,dataLead) => {
+    /* const createContactCRM = async (dataContact,contactId,newOrUpdatedContact,dataLead) => {
         console.log(dataContact);
         // console.log(responseCreateLeadSales);
         try {
@@ -87,7 +64,7 @@ export const useContact = () => {
         } finally {
             setFetching(false);
         }
-    };
+    }; */
 
-    return { fetching,createContactSales };
+    return { fetching ,createContactSales };
 };

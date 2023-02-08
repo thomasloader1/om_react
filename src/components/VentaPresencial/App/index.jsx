@@ -9,6 +9,7 @@ import SelectCountryStep from '../Stepper/SelectCountryStep';
 import { useAppEnv } from '../Hook/useAppEnv';
 import { useProgress } from '../Hook/useProgress';
 import { useLead } from '../Hook/useLead';
+import { useContact } from '../Hook/useContact';
 
 function VentaPresencialApp() {
   const {
@@ -21,6 +22,7 @@ function VentaPresencialApp() {
   
   const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
   const { createLeadSales } = useLead();
+  const { createContactSales } = useContact();
 
   useEffect(() => {
    // console.log({stepNumberGlobal, creatingProgress, appEnv,formikValues})
@@ -95,7 +97,7 @@ function VentaPresencialApp() {
                   ...values,
                 }));
 
-                saveContact();
+                createContactSales(values)
               }}
               validationSchema={Yup.object({
                 dni: Yup.number().required('El dni es requerido'),
