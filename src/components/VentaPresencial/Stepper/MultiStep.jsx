@@ -15,7 +15,6 @@ const MultiStep = ({
   stepStateNumber,
 }) => {
   const { options, setOptions, formRef } = useContext(AppContext);
-
   const { stepNumberGlobal, setStepNumberGlobal } = stepStateNumber;
   const { sideItemOptionsVP } = options;
   const [spanshot, setSpanshot] = useState(initialValues);
@@ -23,8 +22,6 @@ const MultiStep = ({
   const step = steps[stepNumberGlobal];
   const totalSteps = steps.length;
   const isLastStep = stepNumberGlobal === totalSteps - 1;
-
-  console.log({ steps, step, stepNumberGlobal });
 
   const next = (values) => {
     setSpanshot(values);

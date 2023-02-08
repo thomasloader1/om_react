@@ -12,28 +12,26 @@ import { useProgress } from '../Hook/useProgress';
 function VentaPresencialApp() {
   const {
     setFormikValues,
+    formikValues,
     saveLead,
-    saveContact,
     setValues,
     stepNumberGlobal,
     setStepNumberGlobal,
   } = useAppEnv();
   const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
-  // console.log({ stepNumber });
-  const [progressLoadedFormStep, setProgressLoadedFormStep] = useState(null);
 
   useEffect(() => {
+    console.log({stepNumberGlobal, creatingProgress, appEnv,formikValues})
     if (
       appEnv != null &&
-      typeof appEnv !== 'undefined' &&
-      progressLoadedFormStep === null
+      typeof appEnv !== 'undefined'
     ) {
       console.log({ appEnv });
       setValues(appEnv);
     }
 
     return () => null;
-  }, [stepNumberGlobal, creatingProgress, appEnv]);
+  }, [stepNumberGlobal, creatingProgress, appEnv,formikValues]);
 
   return (
     <>

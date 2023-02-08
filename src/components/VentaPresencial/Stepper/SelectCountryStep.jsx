@@ -1,9 +1,7 @@
 import { useFormikContext } from 'formik';
-import React, { useContext } from 'react';
-import { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import ButtonField from '../../PasarelaCobros/RadioButton/ButtonField';
-
 import { FormStep } from './MultiStep';
 
 function SelectCountryStep() {
@@ -14,7 +12,6 @@ function SelectCountryStep() {
   const { setFieldValue, ...formik } = useFormikContext();
 
   useEffect(() => {
-    console.log({ appEnv });
     if (
       appEnv != null &&
       appEnv?.country !== null &&

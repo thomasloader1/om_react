@@ -1,38 +1,27 @@
-import axios from 'axios';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
-import { useProgress } from './useProgress';
 import { useLead } from '../Hook/useLead';
 
 export const useAppEnv = () => {
   const {
     options,
     setOptions,
-    userInfo,
-    setUserInfo,
-    formikValues,
     setFormikValues,
-    setAppEnv,
     stepNumberGlobal,
     setStepNumberGlobal,
   } = useContext(AppContext);
 
   const { createLeadSales } = useLead();
 
-  const [progressLoadedFormStep, setProgressLoadedFormStep] = useState(null);
-  const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
-
   const setValues = ({ step_number, ...values }) => {
     setFormikValues((prevState) => ({
       ...prevState,
       ...values,
     }));
-    console.log({ step_number, values });
+
     step_number =
       step_number === undefined ? stepNumberGlobal + 1 : step_number;
-    console.log({ step_number, values });
 
-    setProgressLoadedFormStep(step_number);
     const { country, lead } = values;
 
     options.sideItemOptionsVP.map((option) => {
@@ -120,9 +109,6 @@ export const useAppEnv = () => {
     setValues,
     saveLead,
     saveContact,
-    setValues,
-    creatingProgress,
-    updateProgress,
     stepNumberGlobal,
     setStepNumberGlobal,
   };

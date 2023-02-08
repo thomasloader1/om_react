@@ -14,10 +14,10 @@ export const useProgress = () => {
   const { fireErrorToast } = useSwal();
 
   const createProgress = async () => {
+    console.log("createProgress")
     try {
       const { data } = await axios.post('/api/progress', { step_number: 1 });
       navigate(`/ventapresencial/${data.id}`);
-      return;
     } catch (e) {
       console.log({ e });
       fireErrorToast(`${JSON.stringify(e, null, 2)}`);
@@ -36,8 +36,10 @@ export const useProgress = () => {
           ...data,
         }));
       })
-      .catch(() => {
+      .catch((err) => {
+        console.group("getProgress(): catch",{err})
         createProgress();
+        console.groupEnd()
       })
       .finally(() => setFetching(false));
   };

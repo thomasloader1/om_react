@@ -1,21 +1,18 @@
 import axios from 'axios';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useSwal } from './useSwal';
-import { useProgress } from './useProgress';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
+import { useParams } from 'react-router';
 
 export const useLead = () => {
-  const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
   const { setAppEnv } = useContext(AppContext);
-
   const [fetching, setFetching] = useState(false);
-  const [lastStateLead, setastStateLead] = useState(false);
-
   const { modalAlert } = useSwal();
+  const { id} = useParams()
 
   const createLeadSales = async (dataLead) => {
     setFetching(true);
-    let request = { idPurchaseProgress: 2, ...dataLead };
+    let request = { idPurchaseProgress: id,...dataLead };
     try {
       const { data } = await axios.post(
         '/api/db/stepCreateLead',
@@ -37,6 +34,7 @@ export const useLead = () => {
       setFetching(false);
     }
   };
+ 
   const createLeadCRM = async (dataLead, leadId, newOrUpdatedLead) => {
     console.log(dataLead);
     // console.log(responseCreateLeadSales);
