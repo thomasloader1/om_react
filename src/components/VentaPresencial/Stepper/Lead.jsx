@@ -10,6 +10,7 @@ const LeadStep = () => {
   const { setFieldValue } = useFormikContext();
 
   useEffect(() => {
+    console.log("Lead step",{appEnv})
     if (
       appEnv !== null &&
       appEnv?.lead !== null &&

@@ -1,6 +1,4 @@
-import { useFormikContext } from 'formik';
 import React, { useContext, useState } from 'react';
-import { useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import CourseItem from '../CourseItem';
 import { FormStep } from './MultiStep';
@@ -9,8 +7,6 @@ import ReactPaginate from 'react-paginate';
 const SelectCourseStep = () => {
   const { fetchProducts, products, selectedCourses, setSelectedCourses } =
     useContext(AppContext);
-  const { id } = useParams();
-  const formik = useFormikContext();
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [elementsPerPage, setElementsPerPage] = useState(3);
@@ -23,6 +19,8 @@ const SelectCourseStep = () => {
     const [courseSelected] = products.filter(
       (product) => product.id === courseId
     );
+console.log({courseSelected})
+    const {id,precio} = courseSelected
 
     const courseIndex = selectedCourses.findIndex(
       (course) => course.id === courseId
@@ -35,7 +33,7 @@ const SelectCourseStep = () => {
         return [...prevState];
       });
     } else {
-      setSelectedCourses((prevState) => [...prevState, courseSelected]);
+      setSelectedCourses((prevState) => [...prevState, {id,precio,quantity: 1,discount: 0}]);
     }
 
     console.log({ selectedCourses });

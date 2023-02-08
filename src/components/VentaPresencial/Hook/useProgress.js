@@ -30,12 +30,16 @@ export const useProgress = () => {
   const getProgress = async () => {
 
     try{
-      const progress = await axios.get(`/api/progress/${progressId}`)
-      const { data } = progress
-      console.log('getProgress', { progress });
+      const response = await axios.get(`/api/progress/${progressId}`)
+      const { data } = response
+      const {progress, lead, contact} = data
+
+      console.log('getProgress', { response });
       setAppEnv((prevState) => ({
         ...prevState,
-        ...data,
+        ...progress,
+        lead,
+        contact
       }));
     }catch(e){
       console.group("getProgress(): catch",{e})
