@@ -15,6 +15,7 @@ export const useProgress = () => {
 
   const createProgress = async () => {
     console.log("createProgress")
+   
     try {
       const { data } = await axios.post('/api/progress', { step_number: 1 });
       navigate(`/ventapresencial/${data.id}`);
@@ -27,21 +28,24 @@ export const useProgress = () => {
   };
 
   const getProgress = async () => {
-    axios
-      .get(`/api/progress/${progressId}`)
-      .then(({ data }) => {
-        console.log('getProgress', { data });
-        setAppEnv((prevState) => ({
-          ...prevState,
-          ...data,
-        }));
-      })
-      .catch((err) => {
-        console.group("getProgress(): catch",{err})
+
+    try{
+      const progress = await axios.get(`/api/progress/${progressId}`)
+      console.log('getProgress', { progress });
+      setAppEnv((prevState) => ({
+        ...prevState,
+        ...progress,
+      }));
+    }catch(e){
+      console.group("getProgress(): catch",{e})
+      if(typeof id === 'undefined'){
         createProgress();
-        console.groupEnd()
-      })
-      .finally(() => setFetching(false));
+      }
+      console.groupEnd()
+    }finally{
+      setFetching(false)
+    }
+    
   };
 
   const updateProgress = async (values, step) => {
@@ -63,14 +67,20 @@ export const useProgress = () => {
 
   useEffect(() => {
     setFetching(true);
+    
+    console.log('useEffect en useProgress()',{id, progressId})
 
-    if (id === undefined) {
-      createProgress();
-      return;
+    const prepareProgress = async () =>{
+      if (typeof id === 'undefined') {
+        await createProgress();
+        return;
+      }
+  
+      getProgress();
     }
-
-    getProgress();
-  }, []);
+    
+    prepareProgress();
+  }, [progressId]);
 
   return { fetching, appEnv, updateProgress, getProgress, createProgress };
 };

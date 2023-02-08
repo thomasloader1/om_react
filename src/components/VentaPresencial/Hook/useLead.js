@@ -19,7 +19,8 @@ export const useLead = () => {
         request
       );
 
-      const { message, newOrUpdatedLead, lead_id } = data;
+      const { newOrUpdatedLead, lead_id } = data;
+      
       setAppEnv((prevEnv) => ({
         ...prevEnv,
         lead: { ...newOrUpdatedLead },
