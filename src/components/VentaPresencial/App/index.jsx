@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import Header from '../../PasarelaCobros/Header';
 import MultiStep from '../Stepper/MultiStep';
@@ -7,19 +7,33 @@ import ContactStep from '../Stepper/Contact';
 import SelectCourse from '../Stepper/SelectCourse';
 import SelectCountryStep from '../Stepper/SelectCountryStep';
 import { useAppEnv } from '../Hook/useAppEnv';
+import { useProgress } from '../Hook/useProgress';
 
 function VentaPresencialApp() {
   const {
     setFormikValues,
     saveLead,
     saveContact,
-    updateProgress,
+    setValues,
     stepNumberGlobal,
     setStepNumberGlobal,
-    appEnv,
   } = useAppEnv();
-
+  const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
   // console.log({ stepNumber });
+  const [progressLoadedFormStep, setProgressLoadedFormStep] = useState(null);
+
+  useEffect(() => {
+    if (
+      appEnv != null &&
+      typeof appEnv !== 'undefined' &&
+      progressLoadedFormStep === null
+    ) {
+      console.log({ appEnv });
+      setValues(appEnv);
+    }
+
+    return () => null;
+  }, [stepNumberGlobal, creatingProgress, appEnv]);
 
   return (
     <>

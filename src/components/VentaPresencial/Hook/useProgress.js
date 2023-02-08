@@ -17,6 +17,7 @@ export const useProgress = () => {
     try {
       const { data } = await axios.post('/api/progress', { step_number: 1 });
       navigate(`/ventapresencial/${data.id}`);
+      return;
     } catch (e) {
       console.log({ e });
       fireErrorToast(`${JSON.stringify(e, null, 2)}`);

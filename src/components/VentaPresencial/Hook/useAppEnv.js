@@ -63,19 +63,6 @@ export const useAppEnv = () => {
     setStepNumberGlobal(stepIndex);
   };
 
-  useEffect(() => {
-    if (
-      appEnv != null &&
-      typeof appEnv !== 'undefined' &&
-      progressLoadedFormStep === null
-    ) {
-      console.log({ appEnv });
-      setValues(appEnv);
-    }
-
-    return () => null;
-  }, [stepNumberGlobal, creatingProgress, formikValues]);
-
   const saveLead = async (values) => {
     //createLeadSales(values);
   };
@@ -130,8 +117,7 @@ export const useAppEnv = () => {
 
   return {
     setFormikValues,
-    setAppEnv,
-    appEnv,
+    setValues,
     saveLead,
     saveContact,
     setValues,
