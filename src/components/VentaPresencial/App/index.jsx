@@ -97,7 +97,7 @@ function VentaPresencialApp() {
                   ...values,
                 }));
 
-                //createContactSales(values)
+                createContactSales(values)
               }}
               validationSchema={Yup.object({
                 /* dni: Yup.number().required('El dni es requerido'),

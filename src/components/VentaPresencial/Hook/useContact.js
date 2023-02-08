@@ -1,13 +1,15 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useParams } from 'react-router';
+import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useSwal } from './useSwal';
 
 export const useContact = () => {
     const [fetching, setFetching] = useState(false);
     const { id } = useParams();
-
     const { modalAlert } = useSwal();
+
+    const { setAppEnv} = useContext(AppContext);
 
     const createContactSales = async (values) => {
         console.log("createContactSales",{values})
@@ -18,8 +20,13 @@ export const useContact = () => {
                 '/api/db/stepConversionContact',
                 { idPurchaseProgress: id,...values,step_number: 4 }
             );
-            const { contact, contact_id, lead } = data;
-             
+            const { contact, contact_id, lead, progress } = data;
+             setAppEnv(prevState => ({
+                ...prevState,
+                ...progress,
+                lead: {...lead},
+                contact:{...contact}
+             }))
             createContactCRM(
                 contact_id,
                 contact,

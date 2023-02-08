@@ -5,7 +5,7 @@ import { FormStep } from './MultiStep';
 import ReactPaginate from 'react-paginate';
 
 const SelectCourseStep = () => {
-  const { fetchProducts, products, selectedCourses, setSelectedCourses } =
+  const { fetchProducts, products, selectedCourses, setSelectedCourses, setAppEnv } =
     useContext(AppContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
@@ -19,7 +19,7 @@ const SelectCourseStep = () => {
     const [courseSelected] = products.filter(
       (product) => product.id === courseId
     );
-console.log({courseSelected})
+
     const {id,precio} = courseSelected
 
     const courseIndex = selectedCourses.findIndex(
@@ -28,13 +28,32 @@ console.log({courseSelected})
 
     if (courseIndex !== -1) {
       setSelectedCourses((prevState) => {
-        prevState.splice(courseIndex, 1);
-
-        return [...prevState];
+        const newState = [...prevState];
+        newState.splice(courseIndex, 1);
+       
+        setAppEnv((prevState) =>({
+          ...prevState,
+          products: [...newState]
+        }))
+        
+        return newState;
       });
     } else {
-      setSelectedCourses((prevState) => [...prevState, {id,precio,quantity: 1,discount: 0}]);
+      setSelectedCourses((prevState) => {
+        const newState = [...prevState, {id,precio,quantity: 1,discount: 0}]
+        setAppEnv((prevState) =>({
+          ...prevState,
+          products: [...newState]
+        }))
+        
+        return newState;
+      });
     }
+
+    setAppEnv((prevState) =>({
+      ...prevState,
+
+    }))
 
     console.log({ selectedCourses });
   };
