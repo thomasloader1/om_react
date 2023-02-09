@@ -10,7 +10,7 @@ const LeadStep = () => {
   const { setFieldValue } = useFormikContext();
 
   useEffect(() => {
-    console.log("Lead step",{appEnv})
+    console.log('Lead step', { appEnv });
     if (
       appEnv !== null &&
       appEnv?.lead !== null &&
@@ -29,48 +29,48 @@ const LeadStep = () => {
 
   return (
     <>
-      <FormStep stepNumber={2} stepName="Creacion de lead">
+      <FormStep stepNumber={2} stepName="Crear lead">
         <div className="grid-create_lead">
           <InputField
             label="Nombre"
             type="text"
-            placeholder="Ingrese nombre"
+            placeholder="Ingresar nombre"
             id="name"
             name="name"
           />
           <InputField
             label="Apellido"
             type="text"
-            placeholder="Ingrese apellido"
+            placeholder="Ingresar apellido"
             id="username"
             name="username"
           />
           <InputField
-            label="Correo Electronico"
+            label="E-mail"
             type="text"
-            placeholder="Ingrese e-mail"
+            placeholder="Ingresar e-mail"
             id="email"
             name="email"
           />
 
           <InputField
-            label="Telefono"
+            label="Teléfono"
             type="text"
-            placeholder="Ingrese telefono"
+            placeholder="Ingresar teléfono"
             id="telephone"
             name="telephone"
           />
           <Select
             options={professions}
-            placeholderText="Seleccione una profesion"
-            label="Profesion"
+            placeholderText="Seleccionar una profesión"
+            label="Profesión"
             id="profession"
             name="profession"
           />
 
           <Select
             options={specialties}
-            placeholderText="Seleccione una especialidad"
+            placeholderText="Seleccionar una especialidad"
             label="Especialidad"
             id="speciality"
             name="speciality"
@@ -78,8 +78,8 @@ const LeadStep = () => {
 
           <Select
             options={methods}
-            placeholderText="Seleccionar metodo de contacto"
-            label="Metodo de contactacion"
+            placeholderText="Seleccionar método de contacto"
+            label="Método de contacto"
             id="method_contact"
             name="method_contact"
           />

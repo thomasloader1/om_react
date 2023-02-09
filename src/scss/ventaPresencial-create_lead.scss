@@ -1,6 +1,7 @@
 .grid-create_lead {
   display: grid;
-  grid-template-areas: 'name surname' 'email phone' 'profession specialty' 'contact contact';
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: 'name surname' 'email phone' 'profession specialty' 'contact none';
   column-gap: 1rem;
 
   .block.field_info {
@@ -37,13 +38,12 @@
         width: 100%;
         select {
           width: 100%;
-          &.is-danger{
+          &.is-danger {
             border-color: red;
-            
+          }
         }
-        }
-        &::after{
-            z-index: 1;
+        &::after {
+          z-index: 1;
         }
       }
       .allow-dropdown.intl-tel-input {

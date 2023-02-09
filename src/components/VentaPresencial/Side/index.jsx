@@ -210,7 +210,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
 }
 
 Side.defaultProps = {
-  sideTitle: 'Resumen del pago',
+  sideTitle: 'Resumen',
 };
 
 export default Side;
