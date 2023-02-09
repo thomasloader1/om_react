@@ -114,34 +114,36 @@ function VentaPresencialApp() {
 
                     createLeadSales(values);
                   }}
-                  validationSchema={Yup.object().shape({
-                    name: Yup.string().required('El nombre es requerido'),
-                    username: Yup.string().required('El apellido es requerido'),
-                    email: Yup.string().required('El e-mail es requerido'),
-                    telephone: Yup.string().required(
-                      'El telefono es requerido'
+                  validationSchema={Yup.object({
+                    name: Yup.string().required('❗ El nombre es requerido'),
+                    username: Yup.string().required(
+                      '❗ El apellido es requerido'
                     ),
-                    profession: Yup.string()
-                      .required('La profesion es requerido')
-                      .test(
-                        'is-not-zero',
-                        'Elija una profesion valida',
-                        (value) => value !== '0'
-                      ),
-                    speciality: Yup.string()
-                      .required('La especialidad es requerido')
-                      .test(
-                        'is-not-zero',
-                        'Elija una especialidad valida',
-                        (value) => value !== '0'
-                      ),
-                    method_contact: Yup.string()
-                      .required('El metodo de contacto es requerido')
-                      .test(
-                        'is-not-zero',
-                        'Elija un metodo de contactacion valido',
-                        (value) => value !== '0'
-                      ),
+                    email: Yup.string().required('❗ El e-mail es requerido'),
+                    telephone: Yup.string().required(
+                      '❗ El teléfono es requerido'
+                    ),
+                    profession: Yup.string().required(
+                      '❗ La profesión es requerida'
+                    ).test(
+                      'is-not-zero',
+                      '❗ Seleccione una profesion valida',
+                      (value) => value !== '0'
+                    ),
+                    speciality: Yup.string().required(
+                      '❗ La especialidad es requerida'
+                    ).test(
+                      'is-not-zero',
+                      '❗ Seleccione una especialidad valida',
+                      (value) => value !== '0'
+                    ),
+                    method_contact: Yup.string().required(
+                      '❗ El método de contacto es requerido'
+                    ).test(
+                      'is-not-zero',
+                      '❗ Seleccione un método de contacto valido',
+                      (value) => value !== '0'
+                    ),
                   })}
                 />
                 <ContactStep
@@ -154,30 +156,32 @@ function VentaPresencialApp() {
                     createContactSales(values);
                   }}
                   validationSchema={Yup.object({
-                    dni: Yup.number().required('El dni es requerido'),
-                    sex: Yup.string().required('El sexo es requerido'),
+                    dni: Yup.number().required('❗ El DNI es requerido'),
+                    sex: Yup.string().required('❗ El sexo es requerido'),
                     date_of_birth: Yup.string().required(
-                      'La fecha de nacimiento es requerida'
+                      '❗ La fecha de nacimiento es requerida'
                     ),
                     registration_number: Yup.number(
-                      'El campo deben ser solo numeros'
-                    ).required('El nummero de matricula es requerido'),
+                      '❗ El campo debe contener solo numeros'
+                    ).required('❗ El número de matrícula es requerido'),
                     area_of_work: Yup.string().required(
-                      'El area de trabajo es requerida'
+                      '❗ El área de trabajo es requerida'
                     ),
                     training_interest: Yup.string().required(
-                      'El interes de formacion'
+                      '❗ El interés de formación es requerido'
                     ),
                     province_state: Yup.string().required(
-                      'La provincia o estado son requeridos'
+                      '❗ La provincia o estado son requeridos'
                     ),
-                    country: Yup.string().required('El pais es requerido'),
+                    country: Yup.string().required('❗ El país es requerido'),
                     postal_code: Yup.number(
-                      'El campo deben ser solo numeros'
-                    ).required('El codigo postal es requerido'),
-                    street: Yup.string().required('La direccion es requerida'),
+                      '❗ El campo debe contener solo numeros'
+                    ).required('❗ El código postal es requerido'),
+                    street: Yup.string().required(
+                      '❗ La dirección es requerida'
+                    ),
                     locality: Yup.string().required(
-                      'La localidad es requerida'
+                      '❗ La localidad es requerida'
                     ),
                   })}
                 />

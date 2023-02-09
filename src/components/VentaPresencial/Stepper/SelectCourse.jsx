@@ -5,8 +5,13 @@ import { FormStep } from './MultiStep';
 import ReactPaginate from 'react-paginate';
 
 const SelectCourseStep = () => {
-  const { fetchProducts, products, selectedCourses, setSelectedCourses, setAppEnv } =
-    useContext(AppContext);
+  const {
+    fetchProducts,
+    products,
+    selectedCourses,
+    setSelectedCourses,
+    setAppEnv,
+  } = useContext(AppContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [elementsPerPage, setElementsPerPage] = useState(3);
@@ -20,7 +25,7 @@ const SelectCourseStep = () => {
       (product) => product.id === courseId
     );
 
-    const {id,precio} = courseSelected
+    const { id, precio } = courseSelected;
 
     const courseIndex = selectedCourses.findIndex(
       (course) => course.id === courseId
@@ -30,30 +35,32 @@ const SelectCourseStep = () => {
       setSelectedCourses((prevState) => {
         const newState = [...prevState];
         newState.splice(courseIndex, 1);
-       
-        setAppEnv((prevState) =>({
+
+        setAppEnv((prevState) => ({
           ...prevState,
-          products: [...newState]
-        }))
-        
+          products: [...newState],
+        }));
+
         return newState;
       });
     } else {
       setSelectedCourses((prevState) => {
-        const newState = [...prevState, {id,precio,quantity: 1,discount: 0}]
-        setAppEnv((prevState) =>({
+        const newState = [
           ...prevState,
-          products: [...newState]
-        }))
-        
+          { id, precio, quantity: 1, discount: 0 },
+        ];
+        setAppEnv((prevState) => ({
+          ...prevState,
+          products: [...newState],
+        }));
+
         return newState;
       });
     }
 
-    setAppEnv((prevState) =>({
+    setAppEnv((prevState) => ({
       ...prevState,
-
-    }))
+    }));
 
     console.log({ selectedCourses });
   };
@@ -69,13 +76,13 @@ const SelectCourseStep = () => {
 
   return (
     <>
-      <FormStep stepNumber={3} stepName="Seleccion de Curso">
+      <FormStep stepNumber={3} stepName="Seleccionar cursos">
         <div className="field">
           <div className="control">
             <input
               className="input"
               type="text"
-              placeholder="Buscar producto por nombre"
+              placeholder="Buscar curso por nombre"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

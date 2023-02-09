@@ -39,7 +39,7 @@ function SelectCountryStep() {
   };
 
   return (
-    <FormStep stepNumber={1} stepName="Seleccione un país">
+    <FormStep stepNumber={1} stepName="Selecciona un país">
       <div id="pais-grid" className="grid-country">
         {countryOptions.map(({ ...props }) => (
           <ButtonField
