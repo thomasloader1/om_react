@@ -12,6 +12,8 @@ import { useLead } from '../Hook/useLead';
 import { useContact } from '../Hook/useContact';
 import Spinner from '../../PasarelaCobros/Spinner';
 import { motion } from 'framer-motion';
+import { useContract } from '../Hook/useContract';
+
 
 function VentaPresencialApp() {
   const {
@@ -25,6 +27,8 @@ function VentaPresencialApp() {
   const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
   const { createLeadSales } = useLead();
   const { createContactSales } = useContact();
+  const { createContractSales } = useContract();
+
 
   useEffect(() => {
     if (appEnv != null && typeof appEnv !== 'undefined') {
@@ -96,7 +100,9 @@ function VentaPresencialApp() {
                       ...prevFormikValues,
                       ...values,
                     }));
-                    updateProgress(values, 2);
+                      createContractSales(values);
+                      
+                    // updateProgress(values, 2);
                   }}
                   validationSchema={Yup.object({
                     country: Yup.string().required('El pais es requerido'),

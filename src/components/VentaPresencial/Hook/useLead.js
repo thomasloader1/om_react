@@ -8,7 +8,7 @@ export const useLead = () => {
   const { setAppEnv } = useContext(AppContext);
   const [fetching, setFetching] = useState(false);
   const { modalAlert } = useSwal();
-  const { id} = useParams()
+  const { id } = useParams();
 
   const createLeadSales = async (dataLead) => {
     setFetching(true);
