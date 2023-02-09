@@ -25,7 +25,7 @@ const SelectCourseStep = () => {
       (product) => product.id === courseId
     );
 
-    const { id, precio } = courseSelected;
+    const { id, precio, title } = courseSelected;
 
     const courseIndex = selectedCourses.findIndex(
       (course) => course.id === courseId
@@ -47,7 +47,7 @@ const SelectCourseStep = () => {
       setSelectedCourses((prevState) => {
         const newState = [
           ...prevState,
-          { id, precio, quantity: 1, discount: 0 },
+          { id, precio,title, quantity: 1, discount: 0 },
         ];
         setAppEnv((prevState) => ({
           ...prevState,
