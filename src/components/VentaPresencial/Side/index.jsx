@@ -39,7 +39,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     ? cardComplete
     : dni && address && [...address].length > 10;
 
-  useEffect(() => {
+/*   useEffect(() => {
     if (generateButton) {
       optionsGlobal.sideItemOptionsVP[4].status = 'completed';
       optionsGlobal.sideItemOptionsVP[4].value = 'Completos';
@@ -50,7 +50,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       setOptions({ ...optionsGlobal });
     }
     return () => null;
-  }, [generateButton]);
+  }, [generateButton]); */
 
   const handleSubmitMercadoPago = () => {
     setFetching(true);

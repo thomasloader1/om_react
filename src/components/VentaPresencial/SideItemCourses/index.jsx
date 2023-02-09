@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MdOutlineEditNote, MdDeleteOutline } from 'react-icons/md';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 
-function SideItemCourses({ currentStep, label, status, onDelete }) {
+function SideItemCourses({ currentStep, label, status, onDelete, className }) {
   const { selectedCourses } = useContext(AppContext);
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -18,16 +18,11 @@ function SideItemCourses({ currentStep, label, status, onDelete }) {
       setTotalPrice(0);
     }
   }, [selectedCourses]);
-  const stepStatus = {
-    current: `card current`,
-    selection: `card current`,
-    completed: `card completed`,
-  };
-  const classNameStatus = status !== '' ? `${stepStatus[status]}` : '';
+ 
 
   return (
     <>
-      <div className={`side-item courses ${classNameStatus}`}>
+      <div className={`side-item courses ${className}`}>
         <span className="side-item-info">
           <div className="numstep">{currentStep}</div>
 

@@ -165,7 +165,6 @@ function SideItem({
     }
   };
 
-  // console.log(disableEdit)
   if (currentStep === 4) {
     return (
       <div className="side-body">
@@ -174,6 +173,7 @@ function SideItem({
           label="seleccion de cursos"
           status={classNameStatus}
           onDelete={handleDeleteCourse}
+          className={classNameStatus}
         />
       </div>
     );
