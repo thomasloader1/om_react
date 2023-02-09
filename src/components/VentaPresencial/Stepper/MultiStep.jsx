@@ -6,6 +6,7 @@ import InfoNotify from '../../PasarelaCobros/InfoNotify';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import Side from '../Side';
 import FormNavigation from '../StepControl/FormNavigation';
+import {motion} from 'framer-motion'
 
 const MultiStep = ({
   children,
@@ -79,17 +80,30 @@ const MultiStep = ({
             <>
               <Form className={className} ref={formRef}>
                 {step}
+                
                 {formik.errors && Object.keys(formik.errors).length > 0 && (
+                  <motion.div 
+                  initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                        exit={{opacity: 0}}>
                   <Block style={{ margin: '1rem 0' }}>
                     <Notification color="danger" light="true">
                       {Object.entries(formik.errors).map((e) => (
-                        <p key={e[0]} className="field">
+                        <motion.p key={e[0]} className="field"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                        exit={{opacity: 0}}
+                        >
                           {e[1]}
-                        </p>
+                        </motion.p>
                       ))}
                     </Notification>
                   </Block>
+                  </motion.div>
                 )}
+
                 {formik.values &&
                   Object.entries(formik.values).map((e) => {
                     return <InfoNotify key={e[0]} messages={e} />;
