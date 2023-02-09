@@ -5,7 +5,6 @@ import { useContext } from 'react';
 import { Button } from 'react-bulma-components';
 import { useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
-import { useAppEnv } from '../Hook/useAppEnv';
 import { useSwal } from '../Hook/useSwal';
 
 const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
@@ -17,9 +16,10 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
   const disabledButton = isLastStep === !cardComplete || savingProgress;
   const disabledSavingProgress = !formik.dirty;
 
+ // console.log("FormNavigation",{values, formik, formValid: formik.isValid})
+
   const handleSaveProgress = async () => {
     setFieldValue('savingProgress', true);
-    console.log({ stepNumberGlobal, ...values });
 
     try {
       switch (stepNumberGlobal) {
@@ -31,14 +31,13 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
 
           const {contact, lead, progress} = response.data;
 
-
           setAppEnv((prevState) => ({
             ...prevState,
             ...progress,
             lead: {...lead},
             contact:{...contact}
           }));
-          console.log({ stepNumberGlobal, response });
+
           break;
         }
         case 1: {
@@ -47,11 +46,12 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
             ...values,
           });
           const { lead } = response.data;
+          
           setAppEnv((prevState) => ({
             ...prevState,
             lead,
           }));
-          console.log({ stepNumberGlobal, response });
+
           break;
         }
         default: {
@@ -108,7 +108,7 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
       {!isLastStep && (
         <Button
           className={`flex-grow-1 is-primary is-normal is-fullwidth`}
-          disabled={disabledButton}
+          disabled={disabledButton || !formik.isValid}
           type="submit"
         >
           {isLastStep ? 'Pagar' : 'Siguiente'}

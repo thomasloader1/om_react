@@ -1,9 +1,9 @@
-import { Form, Formik } from 'formik';
 import React, { useState, useContext } from 'react';
+import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
+import { Form, Formik } from 'formik';
 import { Block, Notification } from 'react-bulma-components';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import InfoNotify from '../../PasarelaCobros/InfoNotify';
-import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import Side from '../Side';
 import FormNavigation from '../StepControl/FormNavigation';
 import {motion} from 'framer-motion'
@@ -26,26 +26,32 @@ const MultiStep = ({
 
   const next = (values) => {
     setSpanshot(values);
+    
     const indexOfNextStep = stepNumberGlobal + 1;
+   
     sideItemOptionsVP[stepNumberGlobal].status = 'completed';
     sideItemOptionsVP[indexOfNextStep].status = 'current';
+    
     setOptions((prevState) => ({
       ...prevState,
       sideItemOptionsVP: [...sideItemOptionsVP],
     }));
-    //setStepNumber(stepNumber + 1);
+
     setStepNumberGlobal((step) => step + 1);
   };
   const previous = (values) => {
     setSpanshot(values);
+    
     const indexOfPrevStep = stepNumberGlobal - 1;
+    
     sideItemOptionsVP[stepNumberGlobal].status = '';
     sideItemOptionsVP[indexOfPrevStep].status = 'current';
+    
     setOptions((prevState) => ({
       ...prevState,
       sideItemOptionsVP: [...sideItemOptionsVP],
     }));
-    //setStepNumber(stepNumber - 1);
+    
     setStepNumberGlobal((step) => step - 1);
   };
 

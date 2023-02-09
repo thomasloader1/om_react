@@ -7,7 +7,11 @@ import { useFormikContext } from 'formik';
 
 const ContactStep = () => {
   const { appEnv } = useContext(AppContext);
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue, setFieldTouched} = useFormikContext();
+
+  useEffect(() =>{
+    setFieldTouched("dni", true)
+  },[])
 
   useEffect(() => {
     if (
