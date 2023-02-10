@@ -26,7 +26,7 @@ export const useContract = () => {
         ...progress,
       }));
 
-      createContractCRM(contract_id, contract);
+      createContractCRM(contract);
     } catch (e) {
       console.log(e);
       const { message } = e.response.data;
@@ -34,14 +34,15 @@ export const useContract = () => {
       setFetching(false);
     }
   };
-  const createContractCRM = async (contract_id, contract) => {
-    console.log({ contract_id, contract });
+  const createContractCRM = async (contract) => {
+    console.log({ contract });
     // console.log(responseCreateLeadSales);
     try {
       const { data } = await axios.post('/api/createContractZohoCRM', {
-        contract_id,
+        idPurchaseProgress: id,
         ...contract,
       });
+
       const { id, result } = data;
       console.log({ data });
       // updateEntityIdCRMContactSales(
