@@ -47,7 +47,7 @@ const SelectCourseStep = () => {
       setSelectedCourses((prevState) => {
         const newState = [
           ...prevState,
-          { id, precio,title, quantity: 1, discount: 0 },
+          { id, precio, title, quantity: 1, discount: 0 },
         ];
         setAppEnv((prevState) => ({
           ...prevState,
@@ -101,10 +101,12 @@ const SelectCourseStep = () => {
                 specialty={product.area}
                 hours={product.horas}
                 courseId={product.id}
-                name={product.title}
+                title={product.title}
                 price={product.precio}
                 onSelectedCourse={handleSelectCourse}
                 checked={isChecked}
+                name="products"
+                id="products"
               />
             );
           })}

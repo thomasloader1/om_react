@@ -9,33 +9,52 @@ import { useSwal } from '../Hook/useSwal';
 
 const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
   const { values, setFieldValue, ...formik } = useFormikContext();
-  const { stepNumberGlobal, setAppEnv } = useContext(AppContext);
+  const { stepNumberGlobal, setAppEnv, appEnv } = useContext(AppContext);
   const { id } = useParams();
   const { modalAlert } = useSwal();
   const { cardComplete, savingProgress } = values;
   const disabledButton = isLastStep === !cardComplete || savingProgress;
   const disabledSavingProgress = !formik.dirty;
 
- // console.log("FormNavigation",{values, formik, formValid: formik.isValid})
+  // console.log("FormNavigation",{values, formik, formValid: formik.isValid})
 
   const handleSaveProgress = async () => {
     setFieldValue('savingProgress', true);
 
     try {
       switch (stepNumberGlobal) {
+        case 3: {
+          const { products } = appEnv;
+          const response = await axios.post(`/api/contractSaveProgress/${id}`, {
+            step_number: 4,
+            products,
+          });
+
+          const { contact, contract, lead, progress } = response.data;
+
+          setAppEnv((prevState) => ({
+            ...prevState,
+            ...progress,
+            lead: { ...lead },
+            contact: { ...contact },
+            contract: { ...contract },
+          }));
+
+          break;
+        }
         case 2: {
           const response = await axios.post(`/api/contactSaveProgress/${id}`, {
             step_number: 3,
             ...values,
           });
 
-          const {contact, lead, progress} = response.data;
+          const { contact, lead, progress } = response.data;
 
           setAppEnv((prevState) => ({
             ...prevState,
             ...progress,
-            lead: {...lead},
-            contact:{...contact}
+            lead: { ...lead },
+            contact: { ...contact },
           }));
 
           break;
@@ -46,7 +65,7 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
             ...values,
           });
           const { lead } = response.data;
-          
+
           setAppEnv((prevState) => ({
             ...prevState,
             lead,

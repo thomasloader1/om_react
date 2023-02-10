@@ -1,6 +1,7 @@
 import React from 'react';
 import { MdQueryBuilder } from 'react-icons/md';
 import { Box } from 'react-bulma-components';
+import { useField } from 'formik';
 
 function CourseItem({
   profession,
@@ -8,6 +9,8 @@ function CourseItem({
   hours,
   courseId,
   name,
+  id,
+  title,
   price,
   checked,
   onSelectedCourse,
@@ -21,6 +24,8 @@ function CourseItem({
     ? 'medicina'
     : 'enfermeria';
 
+  const [field, meta] = useField({ name, id });
+
   return (
     <>
       <Box className="course" key={courseId}>
@@ -30,6 +35,8 @@ function CourseItem({
             type="checkbox"
             checked={checked}
             onClick={() => onSelectedCourse(courseId)}
+            {...field}
+            {...meta}
           />
         </div>
 
@@ -49,7 +56,7 @@ function CourseItem({
             </span>
           </div>
           <label htmlFor={courseId} className="course-name">
-            <h3>{name}</h3>
+            <h3>{title}</h3>
           </label>
         </div>
 

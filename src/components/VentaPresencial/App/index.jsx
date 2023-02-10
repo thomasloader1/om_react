@@ -14,7 +14,6 @@ import Spinner from '../../PasarelaCobros/Spinner';
 import { motion } from 'framer-motion';
 import { useContract } from '../Hook/useContract';
 
-
 function VentaPresencialApp() {
   const {
     setFormikValues,
@@ -28,7 +27,6 @@ function VentaPresencialApp() {
   const { createLeadSales } = useLead();
   const { createContactSales } = useContact();
   const { createContractSales } = useContract();
-
 
   useEffect(() => {
     if (appEnv != null && typeof appEnv !== 'undefined') {
@@ -51,7 +49,7 @@ function VentaPresencialApp() {
             height: '100vh',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
         >
           <Spinner />
@@ -81,16 +79,16 @@ function VentaPresencialApp() {
                   telephone: '',
                   speciality: '',
                   method_contact: '',
-                  dni:'',
-                  sex:'',
-                  date_of_birth:'',
-                  registration_number:'',
-                  area_of_work:'',
-                  training_interest:'',
-                  province_state:'',
-                  postal_code:'',
-                  street:'',
-                  locality:'',
+                  dni: '',
+                  sex: '',
+                  date_of_birth: '',
+                  registration_number: '',
+                  area_of_work: '',
+                  training_interest: '',
+                  province_state: '',
+                  postal_code: '',
+                  street: '',
+                  locality: '',
                 }}
                 onSubmit={async (values) => {}}
               >
@@ -100,7 +98,7 @@ function VentaPresencialApp() {
                       ...prevFormikValues,
                       ...values,
                     }));
-                      
+
                     updateProgress(values, 2);
                   }}
                   validationSchema={Yup.object({
@@ -128,27 +126,27 @@ function VentaPresencialApp() {
                     telephone: Yup.string().required(
                       '❗ El teléfono es requerido'
                     ),
-                    profession: Yup.string().required(
-                      '❗ La profesión es requerida'
-                    ).test(
-                      'is-not-zero',
-                      '❗ Seleccione una profesion valida',
-                      (value) => value !== '0'
-                    ),
-                    speciality: Yup.string().required(
-                      '❗ La especialidad es requerida'
-                    ).test(
-                      'is-not-zero',
-                      '❗ Seleccione una especialidad valida',
-                      (value) => value !== '0'
-                    ),
-                    method_contact: Yup.string().required(
-                      '❗ El método de contacto es requerido'
-                    ).test(
-                      'is-not-zero',
-                      '❗ Seleccione un método de contacto valido',
-                      (value) => value !== '0'
-                    ),
+                    profession: Yup.string()
+                      .required('❗ La profesión es requerida')
+                      .test(
+                        'is-not-zero',
+                        '❗ Seleccione una profesion valida',
+                        (value) => value !== '0'
+                      ),
+                    speciality: Yup.string()
+                      .required('❗ La especialidad es requerida')
+                      .test(
+                        'is-not-zero',
+                        '❗ Seleccione una especialidad valida',
+                        (value) => value !== '0'
+                      ),
+                    method_contact: Yup.string()
+                      .required('❗ El método de contacto es requerido')
+                      .test(
+                        'is-not-zero',
+                        '❗ Seleccione un método de contacto valido',
+                        (value) => value !== '0'
+                      ),
                   })}
                 />
                 <ContactStep
@@ -196,11 +194,15 @@ function VentaPresencialApp() {
                       ...prevFormikValues,
                       ...values,
                     }));
-                      
+
                     createContractSales(values);
                   }}
-                  validationSchema={Yup.object({})}
-                  
+                  validationSchema={Yup.object().shape({
+                    /* products: Yup.array()
+                      .min(1)
+                      .of(Yup.string().required())
+                      .required(), */
+                  })}
                 />
 
                 <div></div>
