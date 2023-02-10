@@ -15,6 +15,7 @@ export const useContract = () => {
         setFetching(true);
 
         let valuess = {
+            "step_number": 4,
             "id": 1,
             "installments": "",
             "Fecha_de_Vto": "",
@@ -33,14 +34,14 @@ export const useContract = () => {
                 "id": 237618,
                 "precio": 46800,
                 "quantity": 1,
-                "discount": 0,
+                "discount": 14,
                 "contract_id": 1
                 },
                 {
                 "id": 231314,
                 "precio": 31200,
                 "quantity": 1,
-                "discount": 0,
+                "discount": 18,
                 "contract_id": 1
                 }
             ]

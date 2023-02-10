@@ -100,9 +100,8 @@ function VentaPresencialApp() {
                       ...prevFormikValues,
                       ...values,
                     }));
-                      createContractSales(values);
                       
-                    // updateProgress(values, 2);
+                    updateProgress(values, 2);
                   }}
                   validationSchema={Yup.object({
                     country: Yup.string().required('El pais es requerido'),
@@ -197,8 +196,11 @@ function VentaPresencialApp() {
                       ...prevFormikValues,
                       ...values,
                     }));
+                      
+                    createContractSales(values);
                   }}
                   validationSchema={Yup.object({})}
+                  
                 />
 
                 <div></div>
