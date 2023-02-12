@@ -60,6 +60,23 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
 
   //console.log({ formik });
 
+  const removeAccents = (country) => {
+    const accents = {
+      á: 'a',
+      é: 'e',
+      í: 'i',
+      ó: 'o',
+      ú: 'u',
+      Á: 'A',
+      É: 'E',
+      Í: 'I',
+      Ó: 'O',
+      Ú: 'U',
+    };
+    const regex = new RegExp(`[${Object.keys(accents).join('')}]`, 'g');
+    return country.replace(regex, (match) => accents[match]);
+  };
+
   const generateButton = userInfo.stepTwo.value.includes('Stripe')
     ? formik.isValid && cardComplete
     : formik.isValid && email;
@@ -219,6 +236,13 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       },
     };
     const months = formikValues.quotes && formikValues.quotes > 0 ? formikValues.quotes : 0;
+    const allIsoCodes = getAllISOCodes();
+    const clearedCountry = removeAccents(country);
+    const filterIso = allIsoCodes.filter((iso) => iso.countryName === clearedCountry);
+    //console.log({ allIsoCodes, country, clearedCountry, filterIso });
+    const [countryObject] = filterIso;
+    const { iso } = countryObject;
+
     body.append('months', months);
     body.append('amount', `${formikValues.amount}`);
     body.append('type', type);
@@ -229,6 +253,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     body.append('fullname', formik.values.fullName);
     body.append('sale_id', formikValues.contractId);
     body.append('mail', email);
+    body.append('country', iso);
 
     const { MP } = URLS;
 
