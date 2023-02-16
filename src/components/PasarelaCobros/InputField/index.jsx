@@ -1,10 +1,17 @@
 import { useField, useFormikContext } from 'formik';
-import React from 'react';
+import React, { useEffect } from 'react';
 import IntlTelInput from 'react-intl-tel-input';
 import 'react-intl-tel-input/dist/main.css';
+import { useIsoCodes } from '../../VentaPresencial/Hook/useIsoCodes';
+import { useState } from 'react';
+
 const InputField = ({ label, ...props }) => {
   const [field, meta] = useField(props);
-  const { setFieldTouched, setFieldValue } = useFormikContext();
+  const { setFieldTouched, setFieldValue, values } = useFormikContext();
+  const readOnly = props.name === 'country';
+  const { getIsoCodeFromSide } = useIsoCodes(values.country);
+  const { iso } = getIsoCodeFromSide();
+  const [defaultCountry, setDefaultCountry] = useState(iso);
 
   return (
     <div className="field">
@@ -15,12 +22,13 @@ const InputField = ({ label, ...props }) => {
         {props.id && props.name !== 'telephone' ? (
           <input
             className={meta.error ? 'input is-danger' : 'input'}
+            readOnly={readOnly}
             {...field}
             {...props}
           />
         ) : (
           <IntlTelInput
-            defaultCountry="ar"
+            defaultCountry={defaultCountry}
             containerClassName="intl-tel-input"
             inputClassName={meta.error ? 'input is-danger' : 'input'}
             type="tel"

@@ -13,6 +13,7 @@ import { useContact } from '../Hook/useContact';
 import Spinner from '../../PasarelaCobros/Spinner';
 import { motion } from 'framer-motion';
 import { useContract } from '../Hook/useContract';
+import ResumeStep from '../Stepper/Resume';
 
 function VentaPresencialApp() {
   const {
@@ -24,13 +25,17 @@ function VentaPresencialApp() {
   } = useAppEnv();
 
   const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
-  const { createLeadSales } = useLead();
+  const { fetching: processLead, createLeadSales } = useLead();
   const { createContactSales } = useContact();
-  const { createContractSales } = useContract();
+  const {
+    fetching: processContract,
+    completeData,
+    createContractSales,
+  } = useContract();
 
   useEffect(() => {
     if (appEnv != null && typeof appEnv !== 'undefined') {
-      console.log({ appEnv });
+      // console.log({ appEnv });
       setValues(appEnv);
     }
 
@@ -90,7 +95,10 @@ function VentaPresencialApp() {
                   street: '',
                   locality: '',
                 }}
-                onSubmit={async (values) => {}}
+                onSubmit={async (values) => {
+                  console.log('Ir a pagar a:', { appEnv });
+                  window.location.href = `http://localhost:3001/superpasarela/#/vp/${appEnv.id}`;
+                }}
               >
                 <SelectCountryStep
                   onSubmit={(values) => {
@@ -205,13 +213,15 @@ function VentaPresencialApp() {
                   })}
                 />
 
-                <div></div>
+                <ResumeStep
+                  processContract={processContract}
+                  completeData={completeData}
+                />
               </MultiStep>
             </motion.div>
           </section>
         </motion.div>
       )}
-      <pre>{JSON.stringify(appEnv, null, 2)}</pre>
     </>
   );
 }

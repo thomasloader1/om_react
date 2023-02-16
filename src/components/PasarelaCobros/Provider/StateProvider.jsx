@@ -19,7 +19,7 @@ function StateProvider({ children }) {
   const { fetching: fetchSpecialties, data: specialties } =
     useApi('/api/specialities');
   const { fetching: fetchMethods, data: methods } = useApi('/api/methods');
-  const { fetching: fetchProducts, data: products } = useApi('/api/products');
+  const [products, setProducts] = useState([]);
 
   const [options, setOptions] = useState({
     countryOptions,
@@ -65,8 +65,8 @@ function StateProvider({ children }) {
         specialties,
         fetchMethods,
         methods,
-        fetchProducts,
         products,
+        setProducts,
         selectedCourses,
         setSelectedCourses,
       }}

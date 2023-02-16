@@ -12,11 +12,12 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
   const { stepNumberGlobal, setAppEnv, appEnv } = useContext(AppContext);
   const { id } = useParams();
   const { modalAlert } = useSwal();
-  const { cardComplete, savingProgress } = values;
-  const disabledButton = isLastStep === !cardComplete || savingProgress;
+  const { savingProgress } = values;
+  const disabledPrevButton = savingProgress;
+  const disabledNextButton = savingProgress;
   const disabledSavingProgress = !formik.dirty;
 
-  // console.log("FormNavigation",{values, formik, formValid: formik.isValid})
+  // console.log('FormNavigation', { values, formik, formValid: formik.isValid });
 
   const handleSaveProgress = async () => {
     setFieldValue('savingProgress', true);
@@ -108,7 +109,7 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
           className="flex-grow-1 is-primary is-normal is-fullwidth"
           type="button"
           onClick={onBackClick}
-          disabled={disabledButton}
+          disabled={disabledPrevButton}
         >
           Volver
         </Button>
@@ -116,23 +117,22 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
 
       <Button
         className={`flex-grow-1 is-success is-normal is-fullwidth ${
-          disabledButton ? 'is-loading is-hover' : 'is-outlined'
+          savingProgress ? 'is-loading is-hover' : 'is-outlined'
         }`}
         type="button"
         onClick={handleSaveProgress}
-        disabled={disabledButton || disabledSavingProgress}
+        disabled={savingProgress || disabledSavingProgress}
       >
         Guardar
       </Button>
-      {!isLastStep && (
-        <Button
-          className={`flex-grow-1 is-primary is-normal is-fullwidth`}
-          disabled={disabledButton || !formik.isValid}
-          type="submit"
-        >
-          {isLastStep ? 'Pagar' : 'Siguiente'}
-        </Button>
-      )}
+
+      <Button
+        className={`flex-grow-1 is-primary is-normal is-fullwidth`}
+        disabled={disabledNextButton || !formik.isValid}
+        type="submit"
+      >
+        {isLastStep ? 'Ir a Pagar' : 'Siguiente'}
+      </Button>
     </div>
   );
 };
