@@ -12,12 +12,14 @@ import GeneratePaymentLinkStep from '../Stepper/GeneratePaymentLinkStep';
 
 import useStripeEnv from '../Hooks/useStripeEnv';
 import { useProgress } from '../Hooks/useProgress';
+import { useLocation } from 'react-router';
 
 function PasarelaApp() {
   const { setFormikValues, checkoutLink, appRef } = useContext(AppContext);
   const [stepNumber, setStepNumber] = useState(0);
   const { stripePromise } = useStripeEnv();
-  const { fetching, appEnv } = useProgress();
+  const { fetching, progressId, getProgress } = useProgress();
+  const location = useLocation();
 
   const validationSchemaFinalStep = Yup.object({
     fullName: Yup.string()
@@ -36,10 +38,10 @@ function PasarelaApp() {
   });
 
   useEffect(() => {
-    if (!fetching && appEnv != null && typeof appEnv !== 'undefined') {
-      console.log(appEnv);
+    if (location.pathname.includes('vp')) {
+      getProgress();
     }
-  }, [appEnv]);
+  }, [progressId]);
 
   useEffect(() => {
     setStepNumber(stepNumber);

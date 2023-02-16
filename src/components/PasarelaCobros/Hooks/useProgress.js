@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useContext, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { fireToast } from './useSwal';
 
@@ -9,8 +9,10 @@ export const useProgress = () => {
   const { appEnv, setAppEnv } = useContext(AppContext);
   const [fetching, setFetching] = useState(false);
   const progressId = Number(id);
+  const navigate = useNavigate();
 
   const getProgress = async () => {
+    setFetching(true);
     try {
       const response = await axios.get(`/api/progress/${progressId}`);
       const { data } = response;
@@ -28,17 +30,12 @@ export const useProgress = () => {
     } catch (e) {
       console.group('getProgress(): catch', { e });
       fireToast(e.response.data);
-
+      navigate('/vp/error');
       console.groupEnd();
     } finally {
       setFetching(false);
     }
   };
 
-  useEffect(() => {
-    setFetching(true);
-    getProgress();
-  }, [progressId]);
-
-  return { fetching, appEnv, getProgress };
+  return { fetching, progressId, appEnv, getProgress };
 };
