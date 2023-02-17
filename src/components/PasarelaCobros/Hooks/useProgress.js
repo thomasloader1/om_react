@@ -30,6 +30,7 @@ export const useProgress = () => {
     } catch (e) {
       console.group('getProgress(): catch', { e });
       fireToast(e.response.data);
+
       navigate('/vp/error');
       console.groupEnd();
     } finally {
