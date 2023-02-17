@@ -6,7 +6,7 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
   const { selectedCourses, appEnv, stepNumberGlobal } = useContext(AppContext);
   const [totalPrice, setTotalPrice] = useState(0);
 
-  const selectionCourses = stepNumberGlobal === 5 && selectedCourses.length > 0;
+  const selectionCourses = stepNumberGlobal === 3 && selectedCourses.length > 0;
 
   useEffect(() => {
     if (selectedCourses.length > 0) {

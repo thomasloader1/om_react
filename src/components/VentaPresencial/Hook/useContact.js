@@ -4,6 +4,19 @@ import { useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useSwal } from './useSwal';
 
+const { NODE_ENV, REACT_APP_API } = process.env;
+const isProduction = NODE_ENV === 'production';
+
+const apiStepConversionContact = isProduction
+  ? `${REACT_APP_API}/api/db/stepConversionContact`
+  : '/api/db/stepConversionContact';
+const apiConvertLeadZohoCRM = isProduction
+  ? `${REACT_APP_API}/api/convertLeadZohoCRM`
+  : '/api/convertLeadZohoCRM';
+const apiUpdateEntityIdContactSales = isProduction
+  ? `${REACT_APP_API}/api/updateEntityIdContactSales`
+  : '/api/updateEntityIdContactSales';
+
 export const useContact = () => {
   const [fetching, setFetching] = useState(false);
   const { id } = useParams();
@@ -16,7 +29,7 @@ export const useContact = () => {
 
     setFetching(true);
     try {
-      const { data } = await axios.post('/api/db/stepConversionContact', {
+      const { data } = await axios.post(apiStepConversionContact, {
         idPurchaseProgress: id,
         ...values,
         step_number: 4,
@@ -40,7 +53,7 @@ export const useContact = () => {
     console.log({ contact, leadId });
     // console.log(responseCreateLeadSales);
     try {
-      const { data } = await axios.post('/api/convertLeadZohoCRM', {
+      const { data } = await axios.post(apiConvertLeadZohoCRM, {
         contact,
         lead_id: leadId,
       });
@@ -57,7 +70,7 @@ export const useContact = () => {
     try {
       contact.entity_id_crm = id;
       const resEntityIdLeadCRM = await axios.post(
-        '/api/updateEntityIdContactSales',
+        apiUpdateEntityIdContactSales,
         contact
       );
     } catch (e) {

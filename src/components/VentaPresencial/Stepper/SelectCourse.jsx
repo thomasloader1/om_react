@@ -9,6 +9,13 @@ import { useFormikContext } from 'formik';
 import Spinner from '../../PasarelaCobros/Spinner';
 import { motion } from 'framer-motion';
 
+const { NODE_ENV, REACT_APP_API } = process.env;
+const isProduction = NODE_ENV === 'production';
+
+const apiProducts = isProduction
+  ? `${REACT_APP_API}/api/products/`
+  : '/api/products/';
+
 const SelectCourseStep = () => {
   const formik = useFormikContext();
   const { getIsoCodeFromSide } = useIsoCodes(formik.values?.country);
@@ -16,7 +23,7 @@ const SelectCourseStep = () => {
   const countryParam = iso != null ? iso.toLowerCase() : 'cl';
 
   const { fetching, products } = useProducts(
-    `/api/products/${countryParam}`,
+    `${apiProducts}${countryParam}`,
     formik.values?.country
   );
   // console.log({ iso }, { fetching, products });
@@ -107,9 +114,11 @@ const SelectCourseStep = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            flexDirection: 'column',
           }}
         >
           <Spinner />
+          <p>Solicitando productos</p>
         </motion.div>
       ) : (
         <>

@@ -15,6 +15,8 @@ import { motion } from 'framer-motion';
 import { useContract } from '../Hook/useContract';
 import ResumeStep from '../Stepper/Resume';
 
+const { NODE_ENV, REACT_APP_SPP } = process.env;
+
 function VentaPresencialApp() {
   const {
     setFormikValues,
@@ -96,8 +98,13 @@ function VentaPresencialApp() {
                   locality: '',
                 }}
                 onSubmit={async (values) => {
-                  console.log('Ir a pagar a:', { appEnv });
-                  window.location.href = `http://localhost:3001/superpasarela/#/vp/${appEnv.id}`;
+                  const uriRedirect =
+                    NODE_ENV === 'production'
+                      ? REACT_APP_SPP
+                      : 'http://localhost:3001/superpasarela/';
+                  //console.log('Ir a pagar a:', { appEnv, uriRedirect });
+
+                  window.location.href = `${uriRedirect}#/vp/${appEnv.id}`;
                 }}
               >
                 <SelectCountryStep

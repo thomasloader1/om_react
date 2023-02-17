@@ -4,6 +4,13 @@ import { useNavigate, useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useSwal } from './useSwal';
 
+const { NODE_ENV, REACT_APP_API } = process.env;
+const isProduction = NODE_ENV === 'production';
+
+const apiProgress = isProduction
+  ? `${REACT_APP_API}/api/progress`
+  : '/api/progress';
+
 export const useProgress = () => {
   const { id } = useParams();
   const { appEnv, setAppEnv } = useContext(AppContext);
@@ -17,7 +24,7 @@ export const useProgress = () => {
     //console.log('createProgress');
 
     try {
-      const { data } = await axios.post('/api/progress', { step_number: 1 });
+      const { data } = await axios.post(apiProgress, { step_number: 1 });
       navigate(`/ventapresencial/${data.id}`);
     } catch (e) {
       console.log({ e });
@@ -29,7 +36,7 @@ export const useProgress = () => {
 
   const getProgress = async () => {
     try {
-      const response = await axios.get(`/api/progress/${progressId}`);
+      const response = await axios.get(`${apiProgress}/${progressId}`);
       const { data } = response;
       const { progress, lead, contact, contract, products } = data;
 
@@ -55,7 +62,7 @@ export const useProgress = () => {
 
   const updateProgress = async (values, step) => {
     try {
-      const { data } = await axios.put(`/api/progress/${id}`, {
+      const { data } = await axios.put(`${apiProgress}/${id}`, {
         ...values,
         step_number: step,
       });

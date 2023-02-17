@@ -7,6 +7,22 @@ import { useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useSwal } from '../Hook/useSwal';
 
+const { NODE_ENV, REACT_APP_API } = process.env;
+const isProduction = NODE_ENV === 'production';
+
+const apiContractSaveProgress = isProduction
+  ? `${REACT_APP_API}/api/contractSaveProgress`
+  : '/api/contractSaveProgress';
+const apiContactSaveProgress = isProduction
+  ? `${REACT_APP_API}/api/contactSaveProgress`
+  : '/api/contactSaveProgress';
+const apiLeadSaveProgress = isProduction
+  ? `${REACT_APP_API}/api/leadSaveProgress`
+  : '/api/leadSaveProgress';
+const apiProgress = isProduction
+  ? `${REACT_APP_API}/api/progress`
+  : '/api/progress';
+
 const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
   const { values, setFieldValue, ...formik } = useFormikContext();
   const { stepNumberGlobal, setAppEnv, appEnv } = useContext(AppContext);
@@ -26,10 +42,13 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
       switch (stepNumberGlobal) {
         case 3: {
           const { products } = appEnv;
-          const response = await axios.post(`/api/contractSaveProgress/${id}`, {
-            step_number: 4,
-            products,
-          });
+          const response = await axios.post(
+            `${apiContractSaveProgress}/${id}`,
+            {
+              step_number: 4,
+              products,
+            }
+          );
 
           const { contact, contract, lead, progress } = response.data;
 
@@ -44,7 +63,7 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
           break;
         }
         case 2: {
-          const response = await axios.post(`/api/contactSaveProgress/${id}`, {
+          const response = await axios.post(`${apiContactSaveProgress}/${id}`, {
             step_number: 3,
             ...values,
           });
@@ -61,7 +80,7 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
           break;
         }
         case 1: {
-          const response = await axios.post(`/api/leadSaveProgress/${id}`, {
+          const response = await axios.post(`${apiLeadSaveProgress}/${id}`, {
             step_number: 2,
             ...values,
           });
@@ -75,7 +94,7 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
           break;
         }
         default: {
-          const response = await axios.put(`/api/progress/${id}`, {
+          const response = await axios.put(`${apiProgress}/${id}`, {
             step_number: 1,
             ...values,
           });
