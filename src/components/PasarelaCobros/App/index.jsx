@@ -16,7 +16,7 @@ import { useLocation } from 'react-router';
 
 function PasarelaApp() {
   const { setFormikValues, checkoutLink, appRef } = useContext(AppContext);
-  const [stepNumber, setStepNumber] = useState(0);
+  const [stepNumber, setStepNumber] = useState(2);
   const { stripePromise } = useStripeEnv();
   const { fetching, progressId, getProgress } = useProgress();
   const location = useLocation();
@@ -39,7 +39,7 @@ function PasarelaApp() {
 
   useEffect(() => {
     if (location.pathname.includes('vp')) {
-      getProgress();
+      getProgress()
     }
   }, [progressId]);
 

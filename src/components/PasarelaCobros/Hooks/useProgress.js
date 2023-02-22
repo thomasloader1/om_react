@@ -5,9 +5,17 @@ import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { fireToast } from './useSwal';
 
 export const useProgress = () => {
+  const {
+    userInfo,
+    setOptions,
+    options: optionsGlobal,
+  } = useContext(AppContext);
   const { id } = useParams();
   const { appEnv, setAppEnv } = useContext(AppContext);
   const [fetching, setFetching] = useState(false);
+  const [stepNumber, setStepNumber] = useState(0);
+
+  // updateSideItemStep
   const progressId = Number(id);
   const navigate = useNavigate();
 
@@ -19,14 +27,24 @@ export const useProgress = () => {
       console.log('getProgress', { data });
       const { progress, lead, contact, contract, products } = data;
 
-      setAppEnv((prevState) => ({
-        ...prevState,
-        ...progress,
-        lead,
-        contact,
-        contract,
-        products,
-      }));
+      if(progress.step_number === '5'){
+          setAppEnv((prevState) => ({
+          ...prevState,
+          ...progress,
+          lead,
+          contact,
+          contract,
+          products
+        }));
+        
+        optionsGlobal.sideItemOptions[0].value = progress.country;
+        optionsGlobal.sideItemOptions[0].status = 'completed';
+        optionsGlobal.sideItemOptions[1].status = 'current';
+
+        setOptions({ ...optionsGlobal });
+        
+      }
+
     } catch (e) {
       console.group('getProgress(): catch', { e });
       fireToast(e.response.data);
