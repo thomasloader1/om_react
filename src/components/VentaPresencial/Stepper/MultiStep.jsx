@@ -29,21 +29,6 @@ const MultiStep = ({
   const isLastStep = stepNumberGlobal === totalSteps - 1;
   const isMediaQSmall = useMediaQSmall();
 
-  const { expand, toggleState } = useToggle(false);
-  const variantStyles = {
-    open: {
-      opacity: 1,
-      transition: {
-        duration: 0.3,
-      },
-    },
-    closed: {
-      opacity: 0,
-      transition: {
-        duration: 0.3,
-      },
-    },
-  };
   const next = (values) => {
     setSpanshot(values);
 
@@ -86,6 +71,21 @@ const MultiStep = ({
       actions.setTouched({});
       next(values);
     }
+  };
+  const { expand, toggleState } = useToggle(false);
+  const variantStyles = {
+    open: {
+      opacity: 1,
+      transition: {
+        duration: 0.3,
+      },
+    },
+    closed: {
+      opacity: 0,
+      transition: {
+        duration: 0.3,
+      },
+    },
   };
 
   return (
@@ -207,8 +207,6 @@ const MultiStep = ({
 
 export default MultiStep;
 export const FormStep = ({ stepNumber = 0, stepName = '', children }) => {
-  const { toggleState } = useToggle(false);
-
   return (
     <>
       {stepNumber !== 0 && (
@@ -217,9 +215,7 @@ export const FormStep = ({ stepNumber = 0, stepName = '', children }) => {
             {stepNumber}
           </span>
           {stepName}
-          {stepNumber === 4 && (
-            <MdTune className="is-size-4 rotate-90" onClick={toggleState} />
-          )}
+          <MdTune className="is-size-4 rotate-90" />
         </h2>
       )}
 

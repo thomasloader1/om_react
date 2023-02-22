@@ -723,6 +723,12 @@ pre {
       grid-template-columns: 1fr;
       grid-template-rows: max-content auto max-content;
       padding: 0 24px 24px;
+
+      & .title {
+        svg {
+          display: block;
+        }
+      }
       & > [class*='grid'] {
         overflow-y: scroll;
         grid-template-columns: 1fr;

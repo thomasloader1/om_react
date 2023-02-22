@@ -76,7 +76,7 @@ const SelectCourseStep = () => {
 
   return (
     <>
-      <FormStep stepNumber={3} stepName="Seleccionar cursos">
+      <FormStep stepNumber={4} stepName="Seleccionar cursos">
         <div className="field searchbar-desktop">
           <div className="control">
             <input

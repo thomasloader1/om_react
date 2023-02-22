@@ -5,6 +5,7 @@ export const useToggle = () => {
 
   const toggleState = () => {
     setExpand((prevState) => !prevState);
+    console.log(expand);
   };
   return { expand, toggleState };
 };
