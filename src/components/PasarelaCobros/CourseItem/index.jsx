@@ -6,7 +6,7 @@ import { Box } from 'react-bulma-components';
 
 const PROFESSION = {
   Medicina: 'medicina',
-  Enfermeria: 'enfermeria'
+  Enfermeria: 'enfermeria',
 };
 function CourseItem({ ...props }) {
   return (
@@ -24,7 +24,8 @@ function CourseItem({ ...props }) {
             <h4 className="course-specialty">{props.specialty}</h4>
             <span className="course-hours is-flex is-align-items-center">
               <MdQueryBuilder />
-              {props.hours} horas
+              {props.hours} <span className="d-desktop">horas</span>
+              <span className="d-mobile">hs</span>
             </span>
           </div>
           <label htmlFor={props.courseId} className="course-name">
@@ -40,6 +41,6 @@ function CourseItem({ ...props }) {
   );
 }
 CourseItem.propTypes = {
-  profession: PropTypes.oneOf(Object.values(PROFESSION))
+  profession: PropTypes.oneOf(Object.values(PROFESSION)),
 };
 export default CourseItem;

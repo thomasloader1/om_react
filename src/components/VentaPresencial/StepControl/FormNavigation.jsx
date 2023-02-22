@@ -6,6 +6,8 @@ import { Button } from 'react-bulma-components';
 import { useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useSwal } from '../Hook/useSwal';
+import { useMediaQSmall } from '../Hook/useMediaQuery';
+import IMAGES from '../../../img/pasarelaCobros/share';
 
 const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
   const { values, setFieldValue, ...formik } = useFormikContext();
@@ -15,6 +17,8 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
   const { cardComplete, savingProgress } = values;
   const disabledButton = isLastStep === !cardComplete || savingProgress;
   const disabledSavingProgress = !formik.dirty;
+  const isMediaQSmall = useMediaQSmall();
+  const { save } = IMAGES;
 
   // console.log("FormNavigation",{values, formik, formValid: formik.isValid})
 
@@ -105,7 +109,7 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
     <div className="controls">
       {hasPrevious && (
         <Button
-          className="flex-grow-1 is-primary is-normal is-fullwidth"
+          className="prev-button flex-grow-1 is-primary is-normal is-fullwidth is-outlined"
           type="button"
           onClick={onBackClick}
           disabled={disabledButton}
@@ -115,18 +119,20 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
       )}
 
       <Button
-        className={`flex-grow-1 is-success is-normal is-fullwidth ${
-          disabledButton ? 'is-loading is-hover' : 'is-outlined'
+        className={`save-button flex-grow-1 is-primary ${
+          !isMediaQSmall ? 'is-outlined' : ''
+        } is-normal is-fullwidth ${
+          disabledButton ? 'is-loading is-hover' : ''
         }`}
         type="button"
         onClick={handleSaveProgress}
         disabled={disabledButton || disabledSavingProgress}
       >
-        Guardar
+        <span>Guardar</span> <img alt="guardar" src={save} />
       </Button>
       {!isLastStep && (
         <Button
-          className={`flex-grow-1 is-primary is-normal is-fullwidth`}
+          className={`next-button flex-grow-1 is-primary is-normal is-fullwidth`}
           disabled={disabledButton || !formik.isValid}
           type="submit"
         >

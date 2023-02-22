@@ -14,6 +14,25 @@ import Spinner from '../../PasarelaCobros/Spinner';
 import { motion } from 'framer-motion';
 import { useContract } from '../Hook/useContract';
 
+const visibilityVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 1,
+    },
+  },
+};
+const childVisibilityVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 1,
+    },
+  },
+};
+
 function VentaPresencialApp() {
   const {
     setFormikValues,
@@ -41,9 +60,9 @@ function VentaPresencialApp() {
     <>
       {creatingProgress ? (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
+          variants={visibilityVariants}
+          initial="hidden"
+          animate="visible"
           exit={{ opacity: 0 }}
           style={{
             height: '100vh',
@@ -55,22 +74,18 @@ function VentaPresencialApp() {
           <Spinner />
         </motion.div>
       ) : (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
+        <motion.div variants={childVisibilityVariants}>
           <Header />
           <section className="container is-max-widescreen">
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1 }}
+              variants={childVisibilityVariants}
               className="pasarela columns mx-auto"
             >
               <MultiStep
                 stepStateNumber={{ stepNumberGlobal, setStepNumberGlobal }}
-                className="pasarela-1 column seleccion-pais"
+                className={`pasarela-1 column seleccion-pais ${
+                  stepNumberGlobal === 3 ? 'seleccion-de-cursos' : ''
+                }`}
                 initialValues={{
                   country: '',
                   name: '',

@@ -28,7 +28,7 @@ function CourseItem({
 
   return (
     <>
-      <Box className="course" key={courseId}>
+      <Box className={`course ${checked ? 'selected' : ''}`} key={courseId}>
         <div className="course-selection">
           <input
             id={courseId}
@@ -52,7 +52,8 @@ function CourseItem({
             <h4 className="course-specialty">{specialtyName}</h4>
             <span className="course-hours is-flex is-align-items-center">
               <MdQueryBuilder />
-              {hours} horas
+              {hours} <span className="d-desktop"> horas</span>
+              <span className="d-mobile"> hs</span>
             </span>
           </div>
           <label htmlFor={courseId} className="course-name">

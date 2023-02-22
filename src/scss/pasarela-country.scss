@@ -9,7 +9,8 @@
 
   &-item {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+
     align-items: center;
     border-radius: 6px;
 
@@ -52,5 +53,13 @@
 
   .half {
     justify-content: center;
+  }
+}
+
+@media screen and (max-width: 766px) {
+  .grid-country {
+    &-item {
+      justify-content: center;
+    }
   }
 }

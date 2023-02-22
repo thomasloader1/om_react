@@ -61,3 +61,15 @@
     }
   }
 }
+@media screen and (max-width: 766px) {
+  .grid-create_lead {
+    grid-template-areas: unset;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    & > .field {
+      &:nth-child(n) {
+        grid-area: unset;
+      }
+    }
+  }
+}

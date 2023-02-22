@@ -23,11 +23,15 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
     selection: `card current`,
     completed: `card completed`,
   };
- // const classNameStatus = status !== '' ? `${stepStatus[status]}` : '';
+  // const classNameStatus = status !== '' ? `${stepStatus[status]}` : '';
 
   return (
     <>
-      <div className={`side-item courses ${selectedCourses.length > 0 ? 'selection' : ''}  ${className}`}>
+      <div
+        className={`side-item courses ${
+          selectedCourses.length > 0 ? 'selection' : ''
+        }  ${className}`}
+      >
         <span className="side-item-info">
           <div className="numstep">{currentStep}</div>
 

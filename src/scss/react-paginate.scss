@@ -26,3 +26,8 @@
     color: #fff;
   }
 }
+@media screen and (max-width: 766px) {
+  .pagination-container {
+    display: none;
+  }
+}

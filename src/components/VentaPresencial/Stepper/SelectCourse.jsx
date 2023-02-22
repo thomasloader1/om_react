@@ -14,7 +14,7 @@ const SelectCourseStep = () => {
   } = useContext(AppContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
-  const [elementsPerPage, setElementsPerPage] = useState(3);
+  const [elementsPerPage, setElementsPerPage] = useState(6);
 
   const handlePageClick = (data) => {
     setCurrentPage(data.selected);
@@ -77,7 +77,7 @@ const SelectCourseStep = () => {
   return (
     <>
       <FormStep stepNumber={3} stepName="Seleccionar cursos">
-        <div className="field">
+        <div className="field searchbar-desktop">
           <div className="control">
             <input
               className="input"
@@ -113,8 +113,12 @@ const SelectCourseStep = () => {
         </div>
       </FormStep>
       <ReactPaginate
-        previousLabel={<button className="button is-primary">Anterior</button>}
-        nextLabel={<button className="button is-primary">Siguente</button>}
+        previousLabel={
+          <button className="button is-primary is-outlined">Anterior</button>
+        }
+        nextLabel={
+          <button className="button is-primary is-outlined">Siguente</button>
+        }
         breakLabel={<button className="button is-info break-me">...</button>}
         breakClassName={'break-me'}
         pageCount={Math.ceil(products.length / elementsPerPage)}

@@ -5,6 +5,7 @@ import './SideItem.scss';
 import { useContext } from 'react';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import SideItemCourses from '../SideItemCourses';
+import { motion } from 'framer-motion';
 
 function SideItem({
   currentStep,
@@ -16,6 +17,22 @@ function SideItem({
   formikInstance,
   disableEdit,
 }) {
+  const variantStyles = {
+    open: {
+      opacity: 1,
+      transition: {
+        delay: 0.5,
+        duration: 0.5,
+      },
+    },
+    closed: {
+      opacity: 0,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
+
   const stepStatus = {
     current: `card current ${className}`,
     completed: `card completed ${className}`,
@@ -180,15 +197,34 @@ function SideItem({
   }
 
   return (
-    <div className={`side-item ${classNameStatus}`}>
-      <span className="side-item-info">
+    <motion.div className={`side-item ${classNameStatus}`}>
+      <motion.span className="side-item-info">
         <div className="numstep">{currentStep}</div>
 
-        <div className="is-flex is-flex-direction-column is-align-items-flex-start">
+        <motion.div
+          className="is-flex is-flex-direction-column is-align-items-flex-start"
+          initial={{
+            opacity: 0,
+            transition: {
+              delay: 0.5,
+              duration: 0.5,
+            },
+          }}
+          animate={{
+            opacity: 1,
+            transition: {
+              delay: 0.5,
+              duration: 0.5,
+            },
+          }}
+          exit={{
+            opacity: 0,
+          }}
+        >
           <h3 className="subtitle is-uppercase">{!label ? 'Label' : label}</h3>
           <h4 className="title is-6">{titleCurrentStep}</h4>
-        </div>
-      </span>
+        </motion.div>
+      </motion.span>
 
       <button
         type="button"
@@ -206,7 +242,7 @@ function SideItem({
           }}
         />
       </button>
-    </div>
+    </motion.div>
   );
 }
 
