@@ -41,7 +41,7 @@ function StateProvider({ children }) {
   const appRef = useRef(null);
   const formRef = useRef(null);
   const { expand: expandMenu, toggleState: toggleMenu } = useToggle(false);
-  const { expand: exptandCoures, toggleState: toggleCourses } =
+  const { expand: expandSelectCourses, toggleState: toggleSelectCourses } =
     useToggle(false);
 
   return (
@@ -75,8 +75,8 @@ function StateProvider({ children }) {
         setSelectedCourses,
         expandMenu,
         toggleMenu,
-        exptandCoures,
-        toggleCourses,
+        expandSelectCourses,
+        toggleSelectCourses,
       }}
     >
       {children}

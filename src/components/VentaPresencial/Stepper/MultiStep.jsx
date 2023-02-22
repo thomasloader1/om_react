@@ -8,7 +8,6 @@ import Side from '../Side';
 import FormNavigation from '../StepControl/FormNavigation';
 import { motion } from 'framer-motion';
 import { MdTune, MdClose } from 'react-icons/md';
-import { useToggle } from '../../PasarelaCobros/Hooks/useToggle';
 import { useMediaQSmall } from '../Hook/useMediaQuery';
 
 const MultiStep = ({
@@ -19,7 +18,13 @@ const MultiStep = ({
   stepStateNumber,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const { options, setOptions, formRef } = useContext(AppContext);
+  const {
+    options,
+    setOptions,
+    formRef,
+    expandSelectCourses,
+    toggleSelectCourses,
+  } = useContext(AppContext);
   const { stepNumberGlobal, setStepNumberGlobal } = stepStateNumber;
   const { sideItemOptionsVP } = options;
   const [spanshot, setSpanshot] = useState(initialValues);
@@ -29,21 +34,6 @@ const MultiStep = ({
   const isLastStep = stepNumberGlobal === totalSteps - 1;
   const isMediaQSmall = useMediaQSmall();
 
-  const { expand, toggleState } = useToggle(false);
-  const variantStyles = {
-    open: {
-      opacity: 1,
-      transition: {
-        duration: 0.3,
-      },
-    },
-    closed: {
-      opacity: 0,
-      transition: {
-        duration: 0.3,
-      },
-    },
-  };
   const next = (values) => {
     setSpanshot(values);
 
@@ -86,6 +76,21 @@ const MultiStep = ({
       actions.setTouched({});
       next(values);
     }
+  };
+
+  const variantStyles = {
+    open: {
+      opacity: 1,
+      transition: {
+        duration: 0.3,
+      },
+    },
+    closed: {
+      opacity: 0,
+      transition: {
+        duration: 0.3,
+      },
+    },
   };
 
   return (
@@ -165,15 +170,18 @@ const MultiStep = ({
                 />
                 <motion.div
                   className={`searchcourses-overlay ${
-                    expand ? 'is-expanded' : ''
+                    expandSelectCourses ? 'is-expanded' : ''
                   }`}
                   variants={variantStyles}
                   initial="closed"
-                  animate={expand ? 'open' : 'closed'}
+                  animate={expandSelectCourses ? 'open' : 'closed'}
                 >
                   <h2 className="title has-text-white is-4">
                     Buscar por
-                    <MdClose className="is-size-4" onClick={toggleState} />
+                    <MdClose
+                      className="is-size-4"
+                      onClick={toggleSelectCourses}
+                    />
                   </h2>
                   <div>
                     <div className="field searchbar-mobile">
@@ -207,9 +215,15 @@ const MultiStep = ({
 
 export default MultiStep;
 export const FormStep = ({ stepNumber = 0, stepName = '', children }) => {
-  const { toggleState } = useToggle(false);
-  const toggleButton = stepNumber === 3 && (
-    <MdTune className="is-size-4 rotate-90" onClick={toggleState} />
+  const { toggleSelectCourses } = useContext(AppContext);
+
+  const toggleButton = stepNumber === 4 && (
+    <MdTune
+      className="is-size-4 rotate-90"
+      onClick={() => {
+        toggleSelectCourses();
+      }}
+    />
   );
 
   console.log({ stepNumber }, toggleButton);
@@ -217,13 +231,15 @@ export const FormStep = ({ stepNumber = 0, stepName = '', children }) => {
   return (
     <>
       {stepNumber !== 0 && (
-        <h2 className="title is-4">
-          <span className="has-text-white has-background-black is-circle">
-            {stepNumber}
-          </span>
-          {stepName}
-          {toggleButton}
-        </h2>
+        <>
+          <h2 className="title is-4">
+            <span className="has-text-white has-background-black is-circle">
+              {stepNumber}
+            </span>
+            {stepName}
+            {toggleButton}
+          </h2>
+        </>
       )}
 
       {children}
