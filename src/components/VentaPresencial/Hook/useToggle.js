@@ -1,8 +1,7 @@
-import { useContext, useState } from 'react';
-import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
+import { useState } from 'react';
 
-export const useToggle = () => {
-  const [expand, setExpand] = useState(false);
+export const useToggle = (value) => {
+  const [expand, setExpand] = useState(value);
 
   const toggleState = () => {
     setExpand((prevState) => !prevState);

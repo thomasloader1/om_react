@@ -208,6 +208,11 @@ const MultiStep = ({
 export default MultiStep;
 export const FormStep = ({ stepNumber = 0, stepName = '', children }) => {
   const { toggleState } = useToggle(false);
+  const toggleButton = stepNumber === 3 && (
+    <MdTune className="is-size-4 rotate-90" onClick={toggleState} />
+  );
+
+  console.log({ stepNumber }, toggleButton);
 
   return (
     <>
@@ -217,9 +222,7 @@ export const FormStep = ({ stepNumber = 0, stepName = '', children }) => {
             {stepNumber}
           </span>
           {stepName}
-          {stepNumber === 4 && (
-            <MdTune className="is-size-4 rotate-90" onClick={toggleState} />
-          )}
+          {toggleButton}
         </h2>
       )}
 

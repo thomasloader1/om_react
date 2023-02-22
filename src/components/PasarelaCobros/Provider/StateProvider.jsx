@@ -12,6 +12,7 @@ import {
   userFlow,
 } from '../../../config/config';
 import { useApi } from '../../VentaPresencial/Hook/useApi';
+import { useToggle } from '../../VentaPresencial/Hook/useToggle';
 
 function StateProvider({ children }) {
   const { fetching: fetchProfessions, data: professions } =
@@ -39,6 +40,9 @@ function StateProvider({ children }) {
   const [selectedCourses, setSelectedCourses] = useState([]);
   const appRef = useRef(null);
   const formRef = useRef(null);
+  const { expand: expandMenu, toggleState: toggleMenu } = useToggle(false);
+  const { expand: exptandCoures, toggleState: toggleCourses } =
+    useToggle(false);
 
   return (
     <AppContext.Provider
@@ -69,6 +73,10 @@ function StateProvider({ children }) {
         products,
         selectedCourses,
         setSelectedCourses,
+        expandMenu,
+        toggleMenu,
+        exptandCoures,
+        toggleCourses,
       }}
     >
       {children}
