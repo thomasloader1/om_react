@@ -6,7 +6,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import InfoNotify from '../../PasarelaCobros/InfoNotify';
 import Side from '../Side';
 import FormNavigation from '../StepControl/FormNavigation';
-import {motion} from 'framer-motion'
+import { motion } from 'framer-motion';
 
 const MultiStep = ({
   children,
@@ -26,12 +26,12 @@ const MultiStep = ({
 
   const next = (values) => {
     setSpanshot(values);
-    
+
     const indexOfNextStep = stepNumberGlobal + 1;
-   
+
     sideItemOptionsVP[stepNumberGlobal].status = 'completed';
     sideItemOptionsVP[indexOfNextStep].status = 'current';
-    
+
     setOptions((prevState) => ({
       ...prevState,
       sideItemOptionsVP: [...sideItemOptionsVP],
@@ -41,17 +41,17 @@ const MultiStep = ({
   };
   const previous = (values) => {
     setSpanshot(values);
-    
+
     const indexOfPrevStep = stepNumberGlobal - 1;
-    
+
     sideItemOptionsVP[stepNumberGlobal].status = '';
     sideItemOptionsVP[indexOfPrevStep].status = 'current';
-    
+
     setOptions((prevState) => ({
       ...prevState,
       sideItemOptionsVP: [...sideItemOptionsVP],
     }));
-    
+
     setStepNumberGlobal((step) => step - 1);
   };
 
@@ -86,33 +86,40 @@ const MultiStep = ({
             <>
               <Form className={className} ref={formRef}>
                 {step}
-                
+
                 {formik.errors && Object.keys(formik.errors).length > 0 && (
-                  <motion.div 
-                  initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                        exit={{opacity: 0}}>
-                  <Block style={{ margin: '1rem 0' }}>
-                    <Notification color="danger" light="true">
-                      {Object.entries(formik.errors).map((e) => (
-                        <motion.p key={e[0]} className="field"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                        exit={{opacity: 0}}
-                        >
-                          {e[1]}
-                        </motion.p>
-                      ))}
-                    </Notification>
-                  </Block>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Block style={{ margin: '1rem 0' }}>
+                      <Notification color="danger" light="true">
+                        {Object.entries(formik.errors).map((e) => {
+                          const [key, message] = e;
+                          return (
+                            <motion.p
+                              key={key}
+                              className="field"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ duration: 0.5 }}
+                              exit={{ opacity: 0 }}
+                            >
+                              {message}
+                            </motion.p>
+                          );
+                        })}
+                      </Notification>
+                    </Block>
                   </motion.div>
                 )}
 
                 {formik.values &&
                   Object.entries(formik.values).map((e) => {
-                    return <InfoNotify key={e[0]} messages={e} />;
+                    const [key] = e;
+                    return <InfoNotify key={key} messages={e} />;
                   })}
                 <FormNavigation
                   isLastStep={isLastStep}

@@ -9,9 +9,9 @@ const LeadStep = () => {
   const { professions, specialties, methods, appEnv } = useContext(AppContext);
   const { setFieldValue, setFieldTouched } = useFormikContext();
 
-  useEffect(() =>{
-    setFieldTouched("name", true)
-  },[])
+  useEffect(() => {
+    setFieldTouched('name', true);
+  }, []);
 
   useEffect(() => {
     console.log('Lead step', { appEnv });
