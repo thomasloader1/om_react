@@ -1,12 +1,38 @@
-import React, { useContext } from 'react';
+import { useFormikContext } from 'formik';
+import React, { useContext, useEffect } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import ButtonField from '../RadioButton/ButtonField';
 import { FormStep } from './MultiStep';
 
 function SelectCountryStep() {
-  const { options, setOptions, userInfo, setUserInfo } = useContext(AppContext);
+  const { options, setOptions, userInfo, setUserInfo, appEnv } = useContext(AppContext);
   const { countryOptions } = options;
   const { stepOne } = userInfo;
+  const { setFieldValue } = useFormikContext();
+
+  useEffect(() => {
+    if (appEnv != null && typeof appEnv?.country !== 'undefined') {
+      console.log('SelectCountry', { appEnv });
+      setFieldValue('country', appEnv.country);
+      const [countrySelected] = countryOptions.filter((option) => option.value === appEnv.country);
+
+      const { sideItemOptions } = options;
+      const { stepOne } = userInfo;
+
+      sideItemOptions[0].value = countrySelected.value;
+      stepOne.isoRef = countrySelected.idElement;
+      stepOne.value = countrySelected.value;
+
+      setOptions({
+        ...options,
+        sideItemOptions: [...sideItemOptions],
+      });
+
+      setUserInfo({
+        ...userInfo,
+      });
+    }
+  }, [appEnv]);
 
   return (
     <FormStep stepNumber={1} stepName='Selecciona un país'>

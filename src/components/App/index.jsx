@@ -6,18 +6,31 @@ import VentaPresencialApp from '../VentaPresencial/App';
 
 function App() {
   return (
-
     <Routes>
-      <Route path="/:id" element={<PasarelaApp />} />
-      <Route path="/ventapresencial" element={<VentaPresencialApp />} />
-
+      <Route path='/:id' element={<PasarelaApp />} />
+      <Route exact path='/vp/:id' element={<PasarelaApp />} />
+      <Route path='/ventapresencial' element={<VentaPresencialApp />} />
       <Route
-        path="*"
+        path='/vp/error'
         element={
           <main style={{ padding: '1rem' }}>
             <div>
               <Container>
-                <Notification color="danger">
+                <Notification color='danger'>
+                  No se pudo encontrar el proceso de compra o no tiene los pasos necesarios para avanzar con el pago.
+                </Notification>
+              </Container>
+            </div>
+          </main>
+        }
+      />
+      <Route
+        path='*'
+        element={
+          <main style={{ padding: '1rem' }}>
+            <div>
+              <Container>
+                <Notification color='danger'>
                   Para cobrar un contrato debe especificar un ID de contrato en la URL
                 </Notification>
               </Container>

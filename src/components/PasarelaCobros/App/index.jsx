@@ -1,21 +1,25 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { AppContext } from '../Provider/StateProvider';
 import { Elements } from '@stripe/react-stripe-js';
-import Header from '../Header';
 import * as Yup from 'yup';
 import MultiStep from '../Stepper/MultiStep';
-import { AppContext } from '../Provider/StateProvider';
+import Header from '../Header';
 import SelectCountryStep from '../Stepper/SelectCountryStep';
 import SelectPaymentMethodStep from '../Stepper/SelectPaymentMethodStep';
 import SelectPaymentModeStep from '../Stepper/SelectPaymentModeStep';
 import FormClientDataStep from '../Stepper/FormClientDataStep';
 import GeneratePaymentLinkStep from '../Stepper/GeneratePaymentLinkStep';
-import { useEffect } from 'react';
+
 import useStripeEnv from '../Hooks/useStripeEnv';
+import { useProgress } from '../Hooks/useProgress';
+import { useLocation } from 'react-router';
 
 function PasarelaApp() {
   const { setFormikValues, checkoutLink, appRef } = useContext(AppContext);
-  const [stepNumber, setStepNumber] = useState(0);
+  const [stepNumber, setStepNumber] = useState(2);
   const { stripePromise } = useStripeEnv();
+  const { fetching, progressId, getProgress } = useProgress();
+  const location = useLocation();
 
   const validationSchemaFinalStep = Yup.object({
     fullName: Yup.string()
@@ -32,6 +36,12 @@ function PasarelaApp() {
       .matches(/^[0-9]+$/i, 'El campo debe contener solo numeros'),
     email: Yup.string().email('❗ Ingresa un email valido').required('❗ El email es requerido'),
   });
+
+  useEffect(() => {
+    if (location.pathname.includes('vp')) {
+      getProgress()
+    }
+  }, [progressId]);
 
   useEffect(() => {
     setStepNumber(stepNumber);
