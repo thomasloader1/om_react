@@ -5,11 +5,12 @@ import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { fireToast } from './useSwal';
 
 export const useProgress = () => {
-  const { userInfo, setUserInfo, setOptions, options: optionsGlobal } = useContext(AppContext);
+  const { userInfo, setUserInfo,
+     setOptions, options: optionsGlobal,
+      stepNumber, setStepNumber } = useContext(AppContext);
   const { id } = useParams();
   const { appEnv, setAppEnv } = useContext(AppContext);
   const [fetching, setFetching] = useState(false);
-  const [stepNumber, setStepNumber] = useState(0);
 
   // updateSideItemStep
   const progressId = Number(id);
@@ -51,8 +52,10 @@ export const useProgress = () => {
             isoRef: iso,
           },
         });
+        console.log({stepNumber});
+        setStepNumber(1);
       } else {
-        throw new Error('Che el progreso le faltan cosas mostro');
+        throw new Error('El progreso no tiene datos suficientes para seguir con el pago.');
       }
     } catch (e) {
       console.group('getProgress(): catch', { e });

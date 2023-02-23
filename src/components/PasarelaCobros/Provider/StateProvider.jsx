@@ -24,10 +24,10 @@ function StateProvider({ children }) {
 
   const [formikValues, setFormikValues] = useState({});
   const [userInfo, setUserInfo] = useState(userFlow);
-  const [stepNumberGlobal, setStepNumberGlobal] = useState(1);
   const [stripeRequest, setStripeRequest] = useState(null);
   const [checkoutLink, setCheckoutLink] = useState('');
   const [appEnv, setAppEnv] = useState(null);
+  const [stepNumber, setStepNumber] = useState(0);
 
   const appRef = useRef(null);
   const formRef = useRef(null);
@@ -41,8 +41,6 @@ function StateProvider({ children }) {
         setFormikValues,
         userInfo,
         setUserInfo,
-        stepNumberGlobal,
-        setStepNumberGlobal,
         stripeRequest,
         setStripeRequest,
         checkoutLink,
@@ -51,6 +49,8 @@ function StateProvider({ children }) {
         formRef,
         appEnv,
         setAppEnv,
+        stepNumber,
+        setStepNumber
       }}
     >
       {children}

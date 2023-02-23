@@ -15,8 +15,7 @@ import { useProgress } from '../Hooks/useProgress';
 import { useLocation } from 'react-router';
 
 function PasarelaApp() {
-  const { setFormikValues, checkoutLink, appRef } = useContext(AppContext);
-  const [stepNumber, setStepNumber] = useState(0);
+  const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } = useContext(AppContext);
   const { stripePromise } = useStripeEnv();
   const { fetching, progressId, getProgress } = useProgress();
   const location = useLocation();
