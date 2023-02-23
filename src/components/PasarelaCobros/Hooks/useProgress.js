@@ -5,11 +5,7 @@ import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { fireToast } from './useSwal';
 
 export const useProgress = () => {
-  const {
-    userInfo,
-    setOptions,
-    options: optionsGlobal,
-  } = useContext(AppContext);
+  const { userInfo, setUserInfo, setOptions, options: optionsGlobal } = useContext(AppContext);
   const { id } = useParams();
   const { appEnv, setAppEnv } = useContext(AppContext);
   const [fetching, setFetching] = useState(false);
@@ -27,29 +23,41 @@ export const useProgress = () => {
       console.log('getProgress', { data });
       const { progress, lead, contact, contract, products } = data;
 
-      if(progress.step_number === '5'){
-          setAppEnv((prevState) => ({
+      if (Number(progress.step_number) === 5) {
+        setAppEnv((prevState) => ({
           ...prevState,
           ...progress,
           lead,
           contact,
           contract,
-          products
+          products,
         }));
-        
+
+        const [countryMatched] = optionsGlobal.countryOptions.filter(
+          (cp) => progress.country === cp.value,
+        );
+        const [_, iso] = countryMatched.idElement.split('_');
+
         optionsGlobal.sideItemOptions[0].value = progress.country;
         optionsGlobal.sideItemOptions[0].status = 'completed';
         optionsGlobal.sideItemOptions[1].status = 'current';
 
         setOptions({ ...optionsGlobal });
-        
+        setUserInfo({
+          ...userInfo,
+          stepOne: {
+            ...userInfo.stepOne,
+            value: progress.country,
+            isoRef: iso,
+          },
+        });
+      } else {
+        throw new Error('Che el progreso le faltan cosas mostro');
       }
-
     } catch (e) {
       console.group('getProgress(): catch', { e });
-      fireToast(e.response.data);
-
       navigate('/vp/error');
+      fireToast(e.response.data);
       console.groupEnd();
     } finally {
       setFetching(false);

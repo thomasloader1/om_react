@@ -256,7 +256,7 @@ export const sideItemOptions = [
     idElement: 'seleccion_pais',
     label: 'País',
     value: '',
-    status: 'completed',
+    status: 'current',
   },
   {
     step: 2,
