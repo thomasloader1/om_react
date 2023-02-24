@@ -8,6 +8,7 @@ import { useProducts } from '../Hook/useProducts';
 import { useFormikContext } from 'formik';
 import Spinner from '../../PasarelaCobros/Spinner';
 import { motion } from 'framer-motion';
+import MotionSpinner from '../../PasarelaCobros/Spinner/MotionSpinner';
 
 const { NODE_ENV, REACT_APP_API } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -104,22 +105,7 @@ const SelectCourseStep = () => {
   return (
     <>
       {fetching ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          exit={{ opacity: 0 }}
-          style={{
-            height: '50vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-          }}
-        >
-          <Spinner />
-          <p>Solicitando productos</p>
-        </motion.div>
+        <MotionSpinner text="Solicitando productos" viewHeight="50vh" />
       ) : (
         <>
           <FormStep stepNumber={3} stepName="Seleccionar cursos">

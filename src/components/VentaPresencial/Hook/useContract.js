@@ -19,12 +19,7 @@ export const useContract = () => {
   const [completeData, setCompleteData] = useState(null);
   const { id } = useParams();
   const { modalAlert } = useSwal();
-  const { setAppEnv, selectedCourses, stepNumberGlobal } =
-    useContext(AppContext);
-
-  useEffect(() => {
-    console.log({ stepNumberGlobal });
-  }, []);
+  const ctx = useContext(AppContext);
 
   const createContractSales = async (values) => {
     console.log('createContractSales', { values });
@@ -32,14 +27,14 @@ export const useContract = () => {
     try {
       const { data } = await axios.post(apiStepConversionContract, {
         idPurchaseProgress: id,
-        products: selectedCourses,
+        products: ctx.selectedCourses,
         step_number: 5,
       });
       console.log({ data });
       const { contract, progress } = data;
       createContractCRM();
 
-      setAppEnv((prevEnv) => ({
+      ctx.setAppEnv((prevEnv) => ({
         ...prevEnv,
         contract: { ...contract },
         ...progress,

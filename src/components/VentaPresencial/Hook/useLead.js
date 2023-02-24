@@ -18,7 +18,7 @@ const apiUpdateEntityIdLeadVentas = isProduction
   : '/api/updateEntityIdLeadVentas';
 
 export const useLead = () => {
-  const { setAppEnv } = useContext(AppContext);
+  const ctx = useContext(AppContext);
   const [fetching, setFetching] = useState(false);
   const { modalAlert } = useSwal();
   const { id } = useParams();
@@ -35,7 +35,7 @@ export const useLead = () => {
 
       const { progress, newOrUpdatedLead, lead_id } = data;
 
-      setAppEnv((prevEnv) => ({
+      ctx.setAppEnv((prevEnv) => ({
         ...prevEnv,
         lead: { ...newOrUpdatedLead },
         lead_id,

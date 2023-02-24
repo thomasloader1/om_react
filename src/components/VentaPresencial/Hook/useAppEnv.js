@@ -54,6 +54,9 @@ export const useAppEnv = () => {
             id,
             entity_id_crm,
             type_of_address,
+            training_interest,
+            registration_number,
+            area_of_work,
             ...formContact
           } = contact;
           const formIncomplete = Object.values(formContact).includes(null);

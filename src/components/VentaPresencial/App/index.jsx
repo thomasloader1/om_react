@@ -39,14 +39,12 @@ function VentaPresencialApp() {
 
   const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
   const { fetching: processLead, createLeadSales } = useLead();
-  const { createContactSales } = useContact();
+  const { fetching: processContact, createContactSales } = useContact();
   const {
     fetching: processContract,
     completeData,
     createContractSales,
   } = useContract();
-
-  const processEntity = processLead;
 
   const initialFormValues = {
     country: '',
@@ -78,91 +76,100 @@ function VentaPresencialApp() {
   }, [creatingProgress, appEnv, formikValues]);
 
   return (
-    <Suspense fallback={<MotionSpinner />}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      >
-        <Header />
-        <section className="container is-max-widescreen">
+    <>
+      {creatingProgress ? (
+        <MotionSpinner text="Cargando el progreso" />
+      ) : (
+        <Suspense fallback={<MotionSpinner text="Cargando Aplicacion" />}>
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
-            className="pasarela columns mx-auto"
           >
-            <MultiStepLazy
-              stepStateNumber={{ stepNumberGlobal, setStepNumberGlobal }}
-              className="pasarela-1 column seleccion-pais"
-              initialValues={initialFormValues}
-              onSubmit={async (values) => {
-                const uriRedirect =
-                  NODE_ENV === 'production'
-                    ? REACT_APP_SPP
-                    : 'http://localhost:3001/superpasarela/';
-                //console.log('Ir a pagar a:', { appEnv, uriRedirect });
+            <Header />
+            <section className="container is-max-widescreen">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="pasarela columns mx-auto"
+              >
+                <MultiStepLazy
+                  stepStateNumber={{ stepNumberGlobal, setStepNumberGlobal }}
+                  className="pasarela-1 column seleccion-pais"
+                  initialValues={initialFormValues}
+                  onSubmit={async (values) => {
+                    const uriRedirect =
+                      NODE_ENV === 'production'
+                        ? REACT_APP_SPP
+                        : 'http://localhost:3001/superpasarela/';
+                    //console.log('Ir a pagar a:', { appEnv, uriRedirect });
 
-                window.location.href = `${uriRedirect}#/vp/${appEnv.id}`;
-              }}
-            >
-              <SelectCountryStep
-                onSubmit={(values) => {
-                  setFormikValues((prevFormikValues) => ({
-                    ...prevFormikValues,
-                    ...values,
-                  }));
+                    window.location.href = `${uriRedirect}#/vp/${appEnv.id}`;
+                  }}
+                >
+                  <SelectCountryStep
+                    onSubmit={(values) => {
+                      setFormikValues((prevFormikValues) => ({
+                        ...prevFormikValues,
+                        ...values,
+                      }));
 
-                  updateProgress(values, 2);
-                }}
-                validationSchema={countryStepValidation}
-              />
+                      updateProgress(values, 2);
+                    }}
+                    validationSchema={countryStepValidation}
+                  />
 
-              <LeadStep
-                onSubmit={(values) => {
-                  setFormikValues((prevFormikValues) => ({
-                    ...prevFormikValues,
-                    ...values,
-                  }));
+                  <LeadStep
+                    loading={processLead}
+                    onSubmit={(values) => {
+                      setFormikValues((prevFormikValues) => ({
+                        ...prevFormikValues,
+                        ...values,
+                      }));
 
-                  createLeadSales(values);
-                }}
-                validationSchema={leadStepValidation}
-              />
+                      createLeadSales(values);
+                    }}
+                    validationSchema={leadStepValidation}
+                  />
 
-              <ContactStep
-                onSubmit={(values) => {
-                  setFormikValues((prevFormikValues) => ({
-                    ...prevFormikValues,
-                    ...values,
-                  }));
+                  <ContactStep
+                    loading={processLead}
+                    loadingText="Generando nuevo Lead"
+                    onSubmit={(values) => {
+                      setFormikValues((prevFormikValues) => ({
+                        ...prevFormikValues,
+                        ...values,
+                      }));
 
-                  createContactSales(values);
-                }}
-                validationSchema={contactStepValidation}
-              />
+                      createContactSales(values);
+                    }}
+                    validationSchema={contactStepValidation}
+                  />
 
-              <SelectCourse
-                onSubmit={(values) => {
-                  setFormikValues((prevFormikValues) => ({
-                    ...prevFormikValues,
-                    ...values,
-                  }));
+                  <SelectCourse
+                    onSubmit={(values) => {
+                      setFormikValues((prevFormikValues) => ({
+                        ...prevFormikValues,
+                        ...values,
+                      }));
 
-                  createContractSales(values);
-                }}
-                validationSchema={selectCoursesStepValidation}
-              />
+                      createContractSales(values);
+                    }}
+                    validationSchema={selectCoursesStepValidation}
+                  />
 
-              <ResumeStep
-                processContract={processContract}
-                completeData={completeData}
-              />
-            </MultiStepLazy>
+                  <ResumeStep
+                    processContract={processContract}
+                    completeData={completeData}
+                  />
+                </MultiStepLazy>
+              </motion.div>
+            </section>
           </motion.div>
-        </section>
-      </motion.div>
-    </Suspense>
+        </Suspense>
+      )}
+    </>
   );
 }
 

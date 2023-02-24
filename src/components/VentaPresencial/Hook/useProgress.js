@@ -38,9 +38,9 @@ export const useProgress = () => {
     try {
       const response = await axios.get(`${apiProgress}/${progressId}`);
       const { data } = response;
+      console.log('getProgress', { data });
       const { progress, lead, contact, contract, products } = data;
 
-      // console.log('getProgress', { response });
       setAppEnv((prevState) => ({
         ...prevState,
         ...progress,

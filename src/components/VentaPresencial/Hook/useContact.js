@@ -22,7 +22,7 @@ export const useContact = () => {
   const { id } = useParams();
   const { modalAlert } = useSwal();
 
-  const { setAppEnv } = useContext(AppContext);
+  const ctx = useContext(AppContext);
 
   const createContactSales = async (values) => {
     console.log('createContactSales', { values });
@@ -35,7 +35,7 @@ export const useContact = () => {
         step_number: 4,
       });
       const { contact, lead, progress } = data;
-      setAppEnv((prevState) => ({
+      ctx.setAppEnv((prevState) => ({
         ...prevState,
         ...progress,
         lead: { ...lead },
@@ -43,7 +43,7 @@ export const useContact = () => {
       }));
       createContactCRM(contact, lead.entity_id_crm);
     } catch (e) {
-      console.log(e);
+      console.log({ e });
       const { message } = e.response.data;
       modalAlert(message, 'error');
       setFetching(false);
@@ -60,6 +60,8 @@ export const useContact = () => {
       const { contact: contactResponse } = data;
       updateEntityIdCRMContactSales(contact, contactResponse.id);
     } catch (e) {
+      console.log({ e });
+
       const { message } = e.response.data;
       modalAlert(message, 'error');
       setFetching(false);
@@ -74,6 +76,8 @@ export const useContact = () => {
         contact
       );
     } catch (e) {
+      console.log({ e });
+
       const { message } = e.data;
       modalAlert(message, 'error');
       setFetching(false);

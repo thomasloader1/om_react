@@ -4,7 +4,7 @@ import Select from '../Select';
 import { useContext, useEffect } from 'react';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useFormikContext } from 'formik';
-
+import withSpinner from '../Hoc/withSpinner';
 const ContactStep = () => {
   const { appEnv } = useContext(AppContext);
   const { setFieldValue, setFieldTouched } = useFormikContext();
@@ -124,4 +124,4 @@ const ContactStep = () => {
   );
 };
 
-export default ContactStep;
+export default withSpinner(ContactStep);

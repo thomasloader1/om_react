@@ -39,13 +39,9 @@ export const useYupValidation = () => {
     date_of_birth: Yup.string().required(
       '❗ La fecha de nacimiento es requerida'
     ),
-    registration_number: Yup.number(
-      '❗ El campo debe contener solo numeros'
-    ).required('❗ El número de matrícula es requerido'),
-    area_of_work: Yup.string().required('❗ El área de trabajo es requerida'),
-    training_interest: Yup.string().required(
-      '❗ El interés de formación es requerido'
-    ),
+    registration_number: Yup.string(),
+    area_of_work: Yup.string(),
+    training_interest: Yup.string(),
     province_state: Yup.string().required(
       '❗ La provincia o estado son requeridos'
     ),

@@ -8,6 +8,10 @@ import { Block, Notification } from 'react-bulma-components';
 const ResumeStep = ({ processContract, completeData }) => {
   const { appEnv } = useContext(AppContext);
 
+  const contractNumber = completeData?.id
+    ? completeData?.id
+    : appEnv.contract.entity_id_crm;
+
   return (
     <>
       <FormStep stepNumber={5} stepName="Pago de contrato">
@@ -32,7 +36,7 @@ const ResumeStep = ({ processContract, completeData }) => {
           <Block style={{ margin: '1rem 0' }}>
             <Notification color="success" light="true">
               <p>
-                Se genero el contrato <b>{completeData?.id}</b> con pais{' '}
+                Se genero el contrato <b>{contractNumber}</b> con pais{' '}
                 <b>{appEnv?.country}</b> y esta listo para ser cobrado
               </p>
             </Notification>
