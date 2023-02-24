@@ -10,7 +10,7 @@ const ResumeStep = ({ processContract, completeData }) => {
 
   const contractNumber = completeData?.id
     ? completeData?.id
-    : appEnv.contract.entity_id_crm;
+    : appEnv?.contract?.entity_id_crm;
 
   return (
     <>

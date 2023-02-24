@@ -94,6 +94,8 @@ const SelectCourseStep = () => {
     (currentPage + 1) * elementsPerPage
   );
 
+  const isMobile = window.innerWidth < 768 ? 0 : 2;
+
   useEffect(() => {
     if (appEnv.products != null && typeof appEnv.products !== 'undefined') {
       setSelectedCourses(appEnv.products);
@@ -157,7 +159,7 @@ const SelectCourseStep = () => {
             onPageChange={handlePageClick}
             initialPage={0}
             forcePage={currentPage}
-            marginPagesDisplayed={2}
+            marginPagesDisplayed={isMobile}
             pageRangeDisplayed={3}
             containerClassName={'pagination-container'}
             pageClassName={'pagination-item'}

@@ -11,9 +11,6 @@
   border-radius: 5px;
   margin: 0 0.5rem;
   text-align: center;
-  a {
-    color: hsl(209deg, 100%, 22%);
-  }
 }
 
 .pagination-item:not(.break-me):hover {
@@ -21,8 +18,58 @@
 }
 
 .pagination-item.is-current {
-  background-color: hsl(340deg, 100%, 57%);
-  a {
-    color: #fff;
+  background-color: #00d1b2;
+  color: #fff;
+}
+
+.pagination-item.break-me {
+  background-color: #00d1b2;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.pagination-item.break-me:hover {
+  background-color: #00b89c;
+}
+
+@media (max-width: 768px) {
+  .pagination-container {
+    flex-wrap: wrap;
+  }
+
+  .pagination-item {
+    margin: 0.5rem 0.25rem;
+    font-size: 0.8rem;
+  }
+
+  .pagination-item:first-child,
+  .pagination-item:last-child {
+    margin: 0.5rem 0;
+  }
+
+  .pagination-item:not(.break-me):hover {
+    background-color: transparent;
+    border-color: #ddd;
+  }
+
+  .pagination-item.is-current {
+    background-color: transparent;
+    color: #00d1b2;
+  }
+
+  .pagination-item.break-me {
+    background-color: transparent;
+    color: #00d1b2;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    border-radius: 0;
+  }
+
+  .pagination-item.break-me:hover {
+    background-color: transparent;
+  }
+
+  li.break-me:not(:first) {
+    display: none;
   }
 }
