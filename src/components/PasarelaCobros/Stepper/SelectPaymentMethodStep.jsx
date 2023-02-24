@@ -25,7 +25,7 @@ function SelectPaymentMethodStep() {
     <FormStep stepNumber={2} stepName='Selecciona un método de pago'>
       <div id='metPago_grid' className='grid-payment_method'>
         {paymentOptions.map(
-          ({ allowedCountries, ...props }) =>
+          ({ allowedCountries, disabledCountries, ...props }) =>
             allowedCountries.includes(isoCountry) && (
               <ButtonField
                 {...props}
@@ -36,6 +36,7 @@ function SelectPaymentMethodStep() {
                 id={props.shortName}
                 name='payment_method'
                 key={props.shortName}
+                disabled={disabledCountries.includes(isoCountry)}
                 onClick={() => {
                   // // console.log(userInfo)
                   const { sideItemOptions } = options;
@@ -52,6 +53,7 @@ function SelectPaymentMethodStep() {
                   setUserInfo({
                     ...userInfo,
                   });
+
                   if (props.shortName === 'wp') {
                     window.location = 'https://www.webpay.cl/';
                   }

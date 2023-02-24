@@ -6,22 +6,10 @@ import InfoNotify from '../InfoNotify';
 import { AppContext } from '../Provider/StateProvider';
 import Side from '../Side';
 import FormNavigation from '../StepControl/FormNavigation';
-import { motion } from 'framer-motion'
+import { motion } from 'framer-motion';
 
-const MultiStep = ({
-  children,
-  initialValues,
-  className,
-  onSubmit,
-  stepStateNumber
-}) => {
-  const {
-    options,
-    setOptions,
-    stepNumberGlobal,
-    setStepNumberGlobal,
-    formRef
-  } = useContext(AppContext);
+const MultiStep = ({ children, initialValues, className, onSubmit, stepStateNumber }) => {
+  const { options, setOptions, formRef } = useContext(AppContext);
   const { stepNumber, setStepNumber } = stepStateNumber;
   const [spanshot, setSpanshot] = useState(initialValues);
   const steps = React.Children.toArray(children);
@@ -37,7 +25,6 @@ const MultiStep = ({
     options.sideItemOptions[indexOfNextStep].status = 'current';
     setOptions({ ...options });
     setStepNumber(stepNumber + 1);
-    setStepNumberGlobal(stepNumberGlobal + 1);
     /*  // console.log('next', {
       stepNumber,
       stepNumberGlobal,
@@ -52,7 +39,7 @@ const MultiStep = ({
     options.sideItemOptions[indexOfPrevStep].status = 'current';
     setOptions({ ...options });
     setStepNumber(stepNumber - 1);
-    setStepNumberGlobal(stepNumber - 1);
+
     /* // console.log('previous', {
       stepNumber,
       stepNumberGlobal,
@@ -80,51 +67,49 @@ const MultiStep = ({
     <SwitchTransition>
       <CSSTransition
         key={stepNumber}
-      addEndListener={(node, done) =>
-        node.addEventListener('transitionend', done, false)
-      }
-      classNames="fade"
-    >
-      <Formik
-        initialValues={spanshot}
-        onSubmit={handleSubmit}
-        validationSchema={step.props.validationSchema}
+        addEndListener={(node, done) => node.addEventListener('transitionend', done, false)}
+        classNames='fade'
       >
-        {(formik) => (
-          <>
-            <Form className={className} ref={formRef}>
-              {step}
-              {formik.errors && Object.keys(formik.errors).length > 0 && (
-                <Block style={{ margin: '1rem 0' }}>
-                  <Notification color="danger" light="true">
-                    {Object.entries(formik.errors).map((e) => (
-                      <p key={e[0]} className="field">
-                        {e[1]}
-                      </p>
-                    ))}
-                  </Notification>
-                </Block>
-              )}
-              {formik.values &&
-                Object.entries(formik.values).map((e) => {
-                  return <InfoNotify key={e[0]} messages={e} />;
-                })}
-              <FormNavigation
-                isLastStep={isLastStep}
-                hasPrevious={stepNumber > 0}
-                onBackClick={() => previous(formik.values)}
+        <Formik
+          initialValues={spanshot}
+          onSubmit={handleSubmit}
+          validationSchema={step.props.validationSchema}
+        >
+          {(formik) => (
+            <>
+              <Form className={className} ref={formRef}>
+                {step}
+                {formik.errors && Object.keys(formik.errors).length > 0 && (
+                  <Block style={{ margin: '1rem 0' }}>
+                    <Notification color='danger' light='true'>
+                      {Object.entries(formik.errors).map((e) => (
+                        <p key={e[0]} className='field'>
+                          {e[1]}
+                        </p>
+                      ))}
+                    </Notification>
+                  </Block>
+                )}
+                {formik.values &&
+                  Object.entries(formik.values).map((e) => {
+                    return <InfoNotify key={e[0]} messages={e} />;
+                  })}
+                <FormNavigation
+                  isLastStep={isLastStep}
+                  hasPrevious={stepNumber > 0}
+                  onBackClick={() => previous(formik.values)}
+                />
+              </Form>
+              <Side
+                options={options.sideItemOptions}
+                stepStateNumber={{ stepNumber, setStepNumber }}
+                formikInstance={formik}
               />
-            </Form>
-            <Side
-              options={options.sideItemOptions}
-              stepStateNumber={{ stepNumber, setStepNumber }}
-              formikInstance={formik}
-            />
-          </>
-        )}
-      </Formik>
-    </ CSSTransition>
-    </ SwitchTransition >
+            </>
+          )}
+        </Formik>
+      </CSSTransition>
+    </SwitchTransition>
   );
 };
 
@@ -133,10 +118,8 @@ export const FormStep = ({ stepNumber = 0, stepName = '', children }) => {
   return (
     <>
       {stepNumber !== 0 && (
-        <h2 className="title is-4">
-          <span className="has-text-white has-background-black is-circle">
-            {stepNumber}
-          </span>
+        <h2 className='title is-4'>
+          <span className='has-text-white has-background-black is-circle'>{stepNumber}</span>
           {stepName}
         </h2>
       )}

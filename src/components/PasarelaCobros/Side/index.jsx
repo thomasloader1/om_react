@@ -53,6 +53,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     setCheckoutLink,
     setOptions,
     options: optionsGlobal,
+    appEnv,
   } = useContext(AppContext);
   const formik = useFormikContext();
   const { cardComplete, email } = formik.values;
@@ -74,6 +75,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       Ú: 'U',
     };
     const regex = new RegExp(`[${Object.keys(accents).join('')}]`, 'g');
+
     return country.replace(regex, (match) => accents[match]);
   };
 
@@ -125,10 +127,12 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     handleRequestToGatewayAndCRM(paymentMethod.id);
   };
 
-  const handleRequestToGatewayAndCRM = (paymentMethodId) => {
+  const handleRequestToGatewayAndCRM = async (paymentMethodId) => {
     const { STRIPE, UPDATE_CONTRACT } = URLS;
     const allIsoCodes = getAllISOCodes();
-    const filterIso = allIsoCodes.filter((iso) => iso.countryName === country);
+    const thisCountry = country ? country : appEnv.country;
+    const clearedCountry = removeAccents(thisCountry);
+    const filterIso = allIsoCodes.filter((iso) => iso.countryName === clearedCountry);
     const countryObject = filterIso[0];
     const { currency, iso } = countryObject;
 
@@ -150,7 +154,48 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
     };
 
-    axios
+    try {
+      const { data } = await axios.post(STRIPE, postStripe);
+      setStripeRequest(data);
+      fireToast('Pago en Stripe correcto!', 'success', 5000);
+
+      const stripePayment = data;
+
+      try {
+        const postUpdateZohoStripe = {
+          installments: quotes ? quotes : 1,
+          email,
+          amount,
+          contractId: formikValues.contractId,
+          subscriptionId: stripePayment.id,
+          installment_amount: amount / (quotes ? quotes : 1),
+          address: formik.values.address,
+          dni: formik.values.dni,
+          phone: formik.values.phone,
+          fullname: formik.values.fullName,
+          is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
+        };
+
+        const { data } = await axios.post(UPDATE_CONTRACT, postUpdateZohoStripe);
+        console.log({ data });
+        fireToast('Contrato actualizado', 'success', 5000);
+      } catch (e) {
+        console.log({ e });
+        fireToast('Contrato no actualizado', 'error', 5000);
+      }
+    } catch (e) {
+      formRef.current.style.filter = 'blur(0px)';
+      formRef.current.style.position = 'relative';
+      formRef.current.style.zIndex = '0';
+      setOpenBlockLayer(false);
+
+      console.error({ e });
+      fireAlert(`${e.response.data}`, 'error');
+    } finally {
+      setFetching(false);
+    }
+
+    /* axios
       .post(STRIPE, postStripe)
       .then((res) => {
         console.log({ res });
@@ -196,7 +241,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       })
       .finally(() => {
         setFetching(false);
-      });
+      }); */
   };
 
   const handleCopyLink = () => {
@@ -237,7 +282,8 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     };
     const months = formikValues.quotes && formikValues.quotes > 0 ? formikValues.quotes : 0;
     const allIsoCodes = getAllISOCodes();
-    const clearedCountry = removeAccents(country);
+    const thisCountry = country ? country : appEnv.country;
+    const clearedCountry = removeAccents(thisCountry);
     const filterIso = allIsoCodes.filter((iso) => iso.countryName === clearedCountry);
     //console.log({ allIsoCodes, country, clearedCountry, filterIso });
     const [countryObject] = filterIso;

@@ -20,7 +20,7 @@ export const useContractZoho = (contractId) => {
   const URL =
     NODE_ENV === 'production'
       ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_OBTAINDATA}`
-      : `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_OBTAINDATA_TEST}`;
+      : `${REACT_APP_OCEANO_OBTAINDATA_TEST}`;
 
   useEffect(() => {
     const fetchData = async () => {

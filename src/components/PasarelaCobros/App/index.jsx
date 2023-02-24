@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import { Elements } from '@stripe/react-stripe-js';
 import * as Yup from 'yup';
@@ -15,7 +15,8 @@ import { useProgress } from '../Hooks/useProgress';
 import { useLocation } from 'react-router';
 
 function PasarelaApp() {
-  const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } = useContext(AppContext);
+  const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } =
+    useContext(AppContext);
   const { stripePromise } = useStripeEnv();
   const { fetching, progressId, getProgress } = useProgress();
   const location = useLocation();

@@ -104,6 +104,7 @@ export const paymentOptions = [
     className: 'button grid-payment_method-item tall',
     value: 'Mercado Pago',
     allowedCountries: ['arg', 'mex', 'chi', 'col', 'per', 'uru'],
+    disabledCountries: [],
   },
   {
     img: 'st',
@@ -112,6 +113,7 @@ export const paymentOptions = [
     idInputElement: '',
     value: 'Stripe',
     allowedCountries: ['bol', 'mex', 'chi', 'cos', 'ecu', 'sal', 'gua', 'hon', 'nic'],
+    disabledCountries: ['mex'],
   },
   {
     img: 'pp',
@@ -120,6 +122,7 @@ export const paymentOptions = [
     idInputElement: '',
     value: 'PayPal',
     allowedCountries: [],
+    disabledCountries: [],
   },
   {
     img: 'df',
@@ -128,6 +131,7 @@ export const paymentOptions = [
     idInputElement: '',
     value: 'Datafast',
     allowedCountries: ['ecu'],
+    disabledCountries: [],
   },
   {
     img: 'df',
@@ -136,6 +140,7 @@ export const paymentOptions = [
     idInputElement: '',
     value: 'Datafast',
     allowedCountries: ['ecu'],
+    disabledCountries: [],
   },
   {
     img: 'wp',
@@ -144,6 +149,7 @@ export const paymentOptions = [
     idInputElement: '',
     value: 'WebpayCL',
     allowedCountries: ['chi'],
+    disabledCountries: [],
   },
 ];
 export const paymentMethodOptions = [

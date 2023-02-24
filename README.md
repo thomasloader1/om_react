@@ -9,7 +9,9 @@ npm i
 ```
 
 ## Estructura de carpetas
+
 *Por cada componente que se crea debe de tener esta estructura en el proyecto*
+
 ```
 src
 └─── components
@@ -21,8 +23,8 @@ src
 │ ...
 ```
 
-
 ## Listado de complementos
+
 [Formik](https://formik.org/docs/overview)\
 [Storybook](https://storybook.js.org/docs/react/get-started/introduction)\
 [ESLint](https://eslint.org/docs/latest/user-guide/getting-started)\
@@ -34,7 +36,6 @@ src
 ### `npm start`
 
 Correr la aplicacion en modo dev [http://localhost:3000](http://localhost:3000)
-
 
 ### `npm test`
 
@@ -59,14 +60,17 @@ Corrije los errores de sintaxis y muestra por consola los errores que no puede m
 ## Referencias de complementos
 
 #### Entendiendo Storybook
+
 Lista de videos [La Cocina del Codigo](https://www.youtube.com/watch?v=WgsaTWmzvFE&list=PLfWyZ8S-Xzeed53YOiAa1U5WUSA4cRxFQ)\
 Video tutorial con Atomic [Guillermo Rodas 1h 38min](https://www.youtube.com/watch?v=zfxP2VvP_Dw)\
 
 #### Testing en componentes (React Testing Library & Jest)
+
 [Doc Testing Library](https://testing-library.com/)\
 [Doc Jest](https://jestjs.io/docs/getting-started)\
 Video tutorial [Midudev 37min](https://www.youtube.com/watch?v=KYjjtRgg_H0)\
 
 ### ESLint
+
 Video tutorial ESLint Airbnb [Leo Medina 15min](https://www.youtube.com/watch?v=4Md0Rdekt78)\
 Video tutorial de configuracion para usar ESLint con Prettier [MonkeyWit 21min](https://www.youtube.com/watch?v=1tYJqTDkvUQ)\
