@@ -175,6 +175,7 @@ const MultiStep = ({
                   variants={variantStyles}
                   initial="closed"
                   animate={expandSelectCourses ? 'open' : 'closed'}
+                  exit={{ opacity: 0 }}
                 >
                   <h2 className="title has-text-white is-4">
                     Buscar por

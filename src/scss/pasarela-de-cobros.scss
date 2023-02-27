@@ -115,7 +115,7 @@ h2.title {
     min-height: 376px;
     height: max-content;
 
-    & > *:nth-child(2) {
+    & > [class*='grid'] {
       flex-grow: 1;
       align-content: flex-start;
     }
@@ -1031,4 +1031,23 @@ pre {
     height: 100vh;
     overflow: hidden;
   }
+  .modal.is-active {
+    display: none;
+  }
+}
+
+.pagination-container {
+  /*   & > .break-me:not(:nth-child(7)) {
+    display: none;
+  }
+ */
+  .prev,
+  .next {
+    &.disabled {
+      display: none;
+    }
+  }
+  /*   .prev:not(.disabled) + li {
+    display: none;
+  } */
 }

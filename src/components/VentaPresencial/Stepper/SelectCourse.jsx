@@ -3,6 +3,8 @@ import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import CourseItem from '../CourseItem';
 import { FormStep } from './MultiStep';
 import ReactPaginate from 'react-paginate';
+import { useMediaQSmall } from '../Hook/useMediaQuery';
+import { MdArrowLeft, MdArrowRight } from 'react-icons/md';
 
 const SelectCourseStep = () => {
   const {
@@ -15,6 +17,7 @@ const SelectCourseStep = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [elementsPerPage, setElementsPerPage] = useState(6);
+  const isMediaQSmall = useMediaQSmall();
 
   const handlePageClick = (data) => {
     setCurrentPage(data.selected);
@@ -73,6 +76,9 @@ const SelectCourseStep = () => {
     currentPage * elementsPerPage,
     (currentPage + 1) * elementsPerPage
   );
+  let pageCount = products.length / elementsPerPage;
+
+  const isMobile = window.innerWidth < 768 ? 0 : 2;
 
   return (
     <>
@@ -114,19 +120,28 @@ const SelectCourseStep = () => {
       </FormStep>
       <ReactPaginate
         previousLabel={
-          <button className="button is-primary is-outlined">Anterior</button>
+          <button className="button is-primary is-outlined">
+            {isMediaQSmall ? <MdArrowLeft /> : 'Anterior'}
+          </button>
         }
         nextLabel={
-          <button className="button is-primary is-outlined">Siguente</button>
+          <button className="button is-primary is-outlined">
+            {isMediaQSmall ? <MdArrowRight /> : 'Siguiente'}
+          </button>
         }
         breakLabel={<button className="button is-info break-me">...</button>}
         breakClassName={'break-me'}
+        previousClassName={'prev'}
+        nextClassName={'next'}
         pageCount={Math.ceil(products.length / elementsPerPage)}
         onPageChange={handlePageClick}
+        disablePrevButton={currentPage === 0}
+        disableNextButton={currentPage === pageCount}
         initialPage={0}
         forcePage={currentPage}
-        marginPagesDisplayed={2}
+        marginPagesDisplayed={isMobile}
         pageRangeDisplayed={3}
+        disableInitialCallback={currentPage > 4}
         containerClassName={'pagination-container'}
         pageClassName={'pagination-item'}
         activeClassName={'is-current'}
