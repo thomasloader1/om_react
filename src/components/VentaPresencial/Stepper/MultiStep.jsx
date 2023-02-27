@@ -142,18 +142,21 @@ const MultiStep = ({
                       style={{ margin: '1rem 0' }}
                     >
                       <Notification color="danger" light="true">
-                        {Object.entries(formik.errors).map((e) => (
-                          <motion.p
-                            key={e[0]}
-                            className="field"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.5 }}
-                            exit={{ opacity: 0 }}
-                          >
-                            {e[1]}
-                          </motion.p>
-                        ))}
+                        {Object.entries(formik.errors).map((e) => {
+                          const [key, message] = e;
+                          return (
+                            <motion.p
+                              key={key}
+                              className="field"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ duration: 0.5 }}
+                              exit={{ opacity: 0 }}
+                            >
+                              {message}
+                            </motion.p>
+                          );
+                        })}
                       </Notification>
                     </Block>
                   </motion.div>
@@ -161,7 +164,8 @@ const MultiStep = ({
 
                 {formik.values &&
                   Object.entries(formik.values).map((e) => {
-                    return <InfoNotify key={e[0]} messages={e} />;
+                    const [key] = e;
+                    return <InfoNotify key={key} messages={e} />;
                   })}
                 <FormNavigation
                   isLastStep={isLastStep}

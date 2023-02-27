@@ -1,75 +1,69 @@
 import axios from 'axios';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useSwal } from './useSwal';
 
+const { NODE_ENV, REACT_APP_API } = process.env;
+const isProduction = NODE_ENV === 'production';
+
+const apiStepConversionContract = isProduction
+  ? `${REACT_APP_API}/api/db/stepConversionContract`
+  : '/api/db/stepConversionContract';
+const apiCreateSaleZohoCRM = isProduction
+  ? `${REACT_APP_API}/api/createSaleZohoCRM`
+  : '/api/createSaleZohoCRM';
+
 export const useContract = () => {
   const [fetching, setFetching] = useState(false);
+  const [completeData, setCompleteData] = useState(null);
   const { id } = useParams();
   const { modalAlert } = useSwal();
-  const { setAppEnv, selectedCourses } = useContext(AppContext);
+  const ctx = useContext(AppContext);
 
   const createContractSales = async (values) => {
     console.log('createContractSales', { values });
-
+    setFetching(true);
     try {
-      const { data } = await axios.post('/api/db/stepConversionContract', {
+      const { data } = await axios.post(apiStepConversionContract, {
         idPurchaseProgress: id,
-        products: selectedCourses,
-        step_number: 4,
+        products: ctx.selectedCourses,
+        step_number: 5,
       });
+      console.log({ data });
       const { contract, progress } = data;
-      setAppEnv((prevEnv) => ({
+      createContractCRM();
+
+      ctx.setAppEnv((prevEnv) => ({
         ...prevEnv,
         contract: { ...contract },
         ...progress,
       }));
-
-      createContractCRM(contract);
     } catch (e) {
-      console.log(e);
+      console.log({ e });
       const { message } = e.response.data;
       modalAlert(message, 'error');
       setFetching(false);
     }
   };
-  const createContractCRM = async (contract) => {
-    console.log({ contract });
+
+  const createContractCRM = async () => {
     // console.log(responseCreateLeadSales);
     try {
-      const { data } = await axios.post('/api/createContractZohoCRM', {
+      const response = await axios.post(apiCreateSaleZohoCRM, {
         idPurchaseProgress: id,
-        ...contract,
       });
-
-      const { id, result } = data;
-      console.log({ data });
-      // updateEntityIdCRMContactSales(
-      //     contact,
-      //     id
-      //  );
+      setCompleteData(response.data);
+      console.log({ response });
     } catch (e) {
+      console.log({ e });
       const { message } = e.response.data;
-      modalAlert(message, 'error');
-      setFetching(false);
-    }
-  };
-
-  const updateEntityIdCRMContactSales = async (contact, id) => {
-    try {
-      contact.entity_id_crm = id;
-      const resEntityIdLeadCRM = await axios.post(
-        '/api/updateEntityIdContactSales',
-        contact
-      );
-    } catch (e) {
-      const { message } = e.data;
       modalAlert(message, 'error');
       setFetching(false);
     } finally {
       setFetching(false);
     }
   };
-  return { fetching, createContractSales };
+
+  return { fetching, completeData, createContractSales };
 };

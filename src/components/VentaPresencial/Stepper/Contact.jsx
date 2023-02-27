@@ -4,16 +4,20 @@ import Select from '../Select';
 import { useContext, useEffect } from 'react';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useFormikContext } from 'formik';
-
+import withSpinner from '../Hoc/withSpinner';
 const ContactStep = () => {
   const { appEnv } = useContext(AppContext);
-  const { setFieldValue, setFieldTouched} = useFormikContext();
-
-  useEffect(() =>{
-    setFieldTouched("dni", true)
-  },[])
+  const { setFieldValue, validateForm, ...formik } = useFormikContext();
 
   useEffect(() => {
+    setFieldValue('country', appEnv.country);
+    formik.setErrors({});
+    console.log({ formik });
+  }, []);
+
+  useEffect(() => {
+    console.log('useEffect() contact step', { appEnv });
+
     if (
       appEnv !== null &&
       appEnv?.contact !== null &&
@@ -35,9 +39,9 @@ const ContactStep = () => {
       <FormStep stepNumber={3} stepName="Convertir a contacto">
         <div id="medModPago_grid" className="grid-conversion_contact">
           <InputField
-            label="DNI"
+            label="Numero de Identificacion"
             type="text"
-            placeholder="Ingresar DNI"
+            placeholder="Ingresar Numero de Identificacion"
             id="dni"
             name="dni"
           />
@@ -63,6 +67,7 @@ const ContactStep = () => {
             label="Pais"
             type="text"
             placeholder="Ingresar país"
+            className="input is-disabled"
             id="country"
             name="country"
           />
@@ -121,4 +126,4 @@ const ContactStep = () => {
   );
 };
 
-export default ContactStep;
+export default withSpinner(ContactStep);

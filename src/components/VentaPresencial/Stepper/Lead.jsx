@@ -4,14 +4,15 @@ import InputField from '../../PasarelaCobros/InputField';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import Select from '../Select';
 import { FormStep } from './MultiStep';
+import withSpinner from '../Hoc/withSpinner';
 
 const LeadStep = () => {
   const { professions, specialties, methods, appEnv } = useContext(AppContext);
   const { setFieldValue, setFieldTouched } = useFormikContext();
 
-  useEffect(() =>{
-    setFieldTouched("name", true)
-  },[])
+  useEffect(() => {
+    setFieldTouched('name', true);
+  }, []);
 
   useEffect(() => {
     console.log('Lead step', { appEnv });
@@ -93,4 +94,4 @@ const LeadStep = () => {
   );
 };
 
-export default LeadStep;
+export default withSpinner(LeadStep);

@@ -8,12 +8,13 @@ export const useAppEnv = () => {
     setFormikValues,
     stepNumberGlobal,
     setStepNumberGlobal,
+    selectedCourses,
+    setSelectedCourses,
   } = useContext(AppContext);
 
-  console.log("useAppEnv()",{stepNumberGlobal})
+  //console.log("useAppEnv()",{stepNumberGlobal})
 
   const setValues = ({ step_number, ...values }) => {
-
     setFormikValues((prevState) => ({
       ...prevState,
       ...values,
@@ -22,7 +23,7 @@ export const useAppEnv = () => {
     step_number =
       step_number === undefined ? stepNumberGlobal + 1 : step_number;
 
-    const { country, lead, contact, contract } = values;
+    const { country, lead, contact, contract, products } = values;
 
     options.sideItemOptionsVP.map((option) => {
       const sameStep =
@@ -43,8 +44,21 @@ export const useAppEnv = () => {
           option.status = 'current';
         }
 
-        if (contact !== null && typeof contact !== 'undefined' && option.step === 3) {
-          const { lead_id, id,entity_id_crm, type_of_address, ...formContact } = contact;
+        if (
+          contact !== null &&
+          typeof contact !== 'undefined' &&
+          option.step === 3
+        ) {
+          const {
+            lead_id,
+            id,
+            entity_id_crm,
+            type_of_address,
+            training_interest,
+            registration_number,
+            area_of_work,
+            ...formContact
+          } = contact;
           const formIncomplete = Object.values(formContact).includes(null);
           //console.log({ formIncomplete, lead }, Object.values(lead));
           option.status = formIncomplete ? 'current' : 'completed';
@@ -53,12 +67,31 @@ export const useAppEnv = () => {
           option.status = 'current';
         }
 
-        if (contract !== null && typeof contract !== 'undefined' && option.step === 4) {
-          const { lead_id, id,entity_id_crm, ...formContact } = contract;
+        /* if (
+          contract !== null &&
+          typeof contract !== 'undefined' &&
+          option.step === 4
+        ) {
+          const { lead_id, id, entity_id_crm, ...formContact } = contract;
           const formIncomplete = Object.values(formContact).includes(null);
           //console.log({ formIncomplete, lead }, Object.values(lead));
           option.status = formIncomplete ? 'current' : 'completed';
           option.value = formIncomplete ? 'Sin completar' : 'Completado';
+        } else if (sameStep && option.step === 4) {
+          option.status = 'current';
+        } */
+
+        if (
+          products !== null &&
+          typeof products !== 'undefined' &&
+          option.step === 4
+        ) {
+          setSelectedCourses(products);
+          option.status =
+            contract !== null && typeof contract !== 'undefined'
+              ? 'completed'
+              : 'current';
+          //option.value = formIncomplete ? 'Sin completar' : 'Completado';
         } else if (sameStep && option.step === 4) {
           option.status = 'current';
         }
@@ -70,7 +103,7 @@ export const useAppEnv = () => {
     setOptions({ ...options });
     const stepIndex = step_number - 1;
     setStepNumberGlobal(stepIndex);
-  }; 
+  };
   return {
     setFormikValues,
     setValues,

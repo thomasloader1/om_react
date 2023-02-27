@@ -8,19 +8,35 @@ import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useSwal } from '../Hook/useSwal';
 import { useMediaQSmall } from '../Hook/useMediaQuery';
 import IMAGES from '../../../img/pasarelaCobros/share';
+const { NODE_ENV, REACT_APP_API } = process.env;
+const isProduction = NODE_ENV === 'production';
+
+const apiContractSaveProgress = isProduction
+  ? `${REACT_APP_API}/api/contractSaveProgress`
+  : '/api/contractSaveProgress';
+const apiContactSaveProgress = isProduction
+  ? `${REACT_APP_API}/api/contactSaveProgress`
+  : '/api/contactSaveProgress';
+const apiLeadSaveProgress = isProduction
+  ? `${REACT_APP_API}/api/leadSaveProgress`
+  : '/api/leadSaveProgress';
+const apiProgress = isProduction
+  ? `${REACT_APP_API}/api/progress`
+  : '/api/progress';
 
 const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
   const { values, setFieldValue, ...formik } = useFormikContext();
   const { stepNumberGlobal, setAppEnv, appEnv } = useContext(AppContext);
   const { id } = useParams();
   const { modalAlert } = useSwal();
-  const { cardComplete, savingProgress } = values;
-  const disabledButton = isLastStep === !cardComplete || savingProgress;
+  const { savingProgress } = values;
+  const disabledPrevButton = savingProgress;
+  const disabledNextButton = savingProgress;
   const disabledSavingProgress = !formik.dirty;
   const isMediaQSmall = useMediaQSmall();
   const { save } = IMAGES;
 
-  // console.log("FormNavigation",{values, formik, formValid: formik.isValid})
+  // console.log('FormNavigation', { values, formik, formValid: formik.isValid });
 
   const handleSaveProgress = async () => {
     setFieldValue('savingProgress', true);
@@ -29,10 +45,13 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
       switch (stepNumberGlobal) {
         case 3: {
           const { products } = appEnv;
-          const response = await axios.post(`/api/contractSaveProgress/${id}`, {
-            step_number: 4,
-            products,
-          });
+          const response = await axios.post(
+            `${apiContractSaveProgress}/${id}`,
+            {
+              step_number: 4,
+              products,
+            }
+          );
 
           const { contact, contract, lead, progress } = response.data;
 
@@ -47,7 +66,7 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
           break;
         }
         case 2: {
-          const response = await axios.post(`/api/contactSaveProgress/${id}`, {
+          const response = await axios.post(`${apiContactSaveProgress}/${id}`, {
             step_number: 3,
             ...values,
           });
@@ -64,7 +83,7 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
           break;
         }
         case 1: {
-          const response = await axios.post(`/api/leadSaveProgress/${id}`, {
+          const response = await axios.post(`${apiLeadSaveProgress}/${id}`, {
             step_number: 2,
             ...values,
           });
@@ -78,7 +97,7 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
           break;
         }
         default: {
-          const response = await axios.put(`/api/progress/${id}`, {
+          const response = await axios.put(`${apiProgress}/${id}`, {
             step_number: 1,
             ...values,
           });
@@ -112,7 +131,7 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
           className="prev-button flex-grow-1 is-primary is-normal is-fullwidth is-outlined"
           type="button"
           onClick={onBackClick}
-          disabled={disabledButton}
+          disabled={disabledPrevButton}
         >
           Volver
         </Button>
@@ -122,23 +141,21 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
         className={`save-button flex-grow-1 is-primary ${
           !isMediaQSmall ? 'is-outlined' : ''
         } is-normal is-fullwidth ${
-          disabledButton ? 'is-loading is-hover' : ''
+          savingProgress ? 'is-loading is-hover' : ''
         }`}
         type="button"
         onClick={handleSaveProgress}
-        disabled={disabledButton || disabledSavingProgress}
+        disabled={savingProgress || disabledSavingProgress}
       >
         <span>Guardar</span> <img alt="guardar" src={save} />
       </Button>
-      {!isLastStep && (
-        <Button
-          className={`next-button flex-grow-1 is-primary is-normal is-fullwidth`}
-          disabled={disabledButton || !formik.isValid}
-          type="submit"
-        >
-          {isLastStep ? 'Pagar' : 'Siguiente'}
-        </Button>
-      )}
+      <Button
+        className={`nex-button flex-grow-1 is-primary is-normal is-fullwidth`}
+        disabled={disabledNextButton || !formik.isValid}
+        type="submit"
+      >
+        {isLastStep ? 'Pagar' : 'Siguiente'}
+      </Button>
     </div>
   );
 };

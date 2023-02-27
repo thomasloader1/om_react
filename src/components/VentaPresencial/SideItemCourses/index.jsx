@@ -3,33 +3,30 @@ import { MdOutlineEditNote, MdDeleteOutline } from 'react-icons/md';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 
 function SideItemCourses({ currentStep, label, status, onDelete, className }) {
-  const { selectedCourses } = useContext(AppContext);
+  const { selectedCourses, appEnv, stepNumberGlobal } = useContext(AppContext);
   const [totalPrice, setTotalPrice] = useState(0);
+
+  const selectionCourses = stepNumberGlobal === 3 && selectedCourses.length > 0;
 
   useEffect(() => {
     if (selectedCourses.length > 0) {
-      const totalAmout = selectedCourses.reduce(
-        (acc, current) => acc + current.precio,
-        0
-      );
-      setTotalPrice(totalAmout);
-      console.log({ selectedCourses, totalAmout }, selectedCourses.length > 0);
-    } else {
-      setTotalPrice(0);
+      if (appEnv.products != null && typeof appEnv.products !== 'undefined') {
+        const totalAmout = selectedCourses.reduce(
+          (acc, current) => acc + Number(current.price),
+          0
+        );
+        setTotalPrice(totalAmout);
+      } else {
+        setTotalPrice(0);
+      }
     }
   }, [selectedCourses]);
-  const stepStatus = {
-    current: `card current`,
-    selection: `card current`,
-    completed: `card completed`,
-  };
-  // const classNameStatus = status !== '' ? `${stepStatus[status]}` : '';
 
   return (
     <>
       <div
         className={`side-item courses ${
-          selectedCourses.length > 0 ? 'selection' : ''
+          selectionCourses ? 'selection' : ''
         }  ${className}`}
       >
         <span className="side-item-info">
@@ -59,7 +56,7 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
           {selectedCourses.map((course) => (
             <li key={course.id} className="side-item-courses-selected">
               <span id={course.id} style={{ display: 'none' }}>
-                {course.precio}
+                {course.price}
               </span>
               <h4>{course.title}</h4>
               <button

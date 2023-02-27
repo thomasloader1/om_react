@@ -12,15 +12,32 @@ import {
   userFlow,
 } from '../../../config/config';
 import { useApi } from '../../VentaPresencial/Hook/useApi';
+
 import { useToggle } from '../../VentaPresencial/Hook/useToggle';
+import { useContact } from '../../VentaPresencial/Hook/useContact';
+import { useContract } from '../../VentaPresencial/Hook/useContract';
+import { useLead } from '../../VentaPresencial/Hook/useLead';
+
+const { NODE_ENV, REACT_APP_API } = process.env;
+const isProduction = NODE_ENV === 'production';
+
+const apiProfession = isProduction
+  ? `${REACT_APP_API}/api/professions`
+  : '/api/professions';
+const apiSpecialities = isProduction
+  ? `${REACT_APP_API}/api/specialities`
+  : '/api/specialities';
+const apiMethods = isProduction
+  ? `${REACT_APP_API}/api/methods`
+  : '/api/methods';
 
 function StateProvider({ children }) {
   const { fetching: fetchProfessions, data: professions } =
-    useApi('/api/professions');
+    useApi(apiProfession);
   const { fetching: fetchSpecialties, data: specialties } =
-    useApi('/api/specialities');
-  const { fetching: fetchMethods, data: methods } = useApi('/api/methods');
-  const { fetching: fetchProducts, data: products } = useApi('/api/products');
+    useApi(apiSpecialities);
+  const { fetching: fetchMethods, data: methods } = useApi(apiMethods);
+  const [products, setProducts] = useState([]);
 
   const [options, setOptions] = useState({
     countryOptions,
@@ -69,8 +86,8 @@ function StateProvider({ children }) {
         specialties,
         fetchMethods,
         methods,
-        fetchProducts,
         products,
+        setProducts,
         selectedCourses,
         setSelectedCourses,
         expandMenu,

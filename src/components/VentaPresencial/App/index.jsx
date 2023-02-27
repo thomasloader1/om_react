@@ -1,37 +1,25 @@
-import React, { useEffect } from 'react';
-import * as Yup from 'yup';
-import Header from '../../PasarelaCobros/Header';
-import MultiStep from '../Stepper/MultiStep';
-import LeadStep from '../Stepper/Lead';
-import ContactStep from '../Stepper/Contact';
-import SelectCourse from '../Stepper/SelectCourse';
-import SelectCountryStep from '../Stepper/SelectCountryStep';
+import React, { useEffect, lazy, Suspense } from 'react';
+
+import { motion } from 'framer-motion';
+
+import { useContract } from '../Hook/useContract';
+import { useYupValidation } from '../Hook/useYupValidation';
 import { useAppEnv } from '../Hook/useAppEnv';
 import { useProgress } from '../Hook/useProgress';
 import { useLead } from '../Hook/useLead';
 import { useContact } from '../Hook/useContact';
-import Spinner from '../../PasarelaCobros/Spinner';
-import { motion } from 'framer-motion';
-import { useContract } from '../Hook/useContract';
 
-const visibilityVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      duration: 1,
-    },
-  },
-};
-const childVisibilityVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      duration: 1,
-    },
-  },
-};
+import Header from '../../PasarelaCobros/Header';
+import LeadStep from '../Stepper/Lead';
+import ContactStep from '../Stepper/Contact';
+import SelectCourse from '../Stepper/SelectCourse';
+import SelectCountryStep from '../Stepper/SelectCountryStep';
+import ResumeStep from '../Stepper/Resume';
+import MotionSpinner from '../../PasarelaCobros/Spinner/MotionSpinner';
+
+const { NODE_ENV, REACT_APP_SPP } = process.env;
+
+const MultiStepLazy = lazy(() => import('../Stepper/MultiStep'));
 
 function VentaPresencialApp() {
   const {
@@ -42,14 +30,45 @@ function VentaPresencialApp() {
     setStepNumberGlobal,
   } = useAppEnv();
 
+  const {
+    countryStepValidation,
+    leadStepValidation,
+    contactStepValidation,
+    selectCoursesStepValidation,
+  } = useYupValidation();
+
   const { fetching: creatingProgress, appEnv, updateProgress } = useProgress();
-  const { createLeadSales } = useLead();
-  const { createContactSales } = useContact();
-  const { createContractSales } = useContract();
+  const { fetching: processLead, createLeadSales } = useLead();
+  const { fetching: processContact, createContactSales } = useContact();
+  const {
+    fetching: processContract,
+    completeData,
+    createContractSales,
+  } = useContract();
+
+  const initialFormValues = {
+    country: '',
+    name: '',
+    username: '',
+    profession: '',
+    telephone: '',
+    speciality: '',
+    method_contact: '',
+    dni: '',
+    sex: '',
+    date_of_birth: '',
+    registration_number: '',
+    area_of_work: '',
+    training_interest: '',
+    province_state: '',
+    postal_code: '',
+    street: '',
+    locality: '',
+  };
 
   useEffect(() => {
     if (appEnv != null && typeof appEnv !== 'undefined') {
-      console.log({ appEnv });
+      // console.log({ appEnv });
       setValues(appEnv);
     }
 
@@ -59,174 +78,99 @@ function VentaPresencialApp() {
   return (
     <>
       {creatingProgress ? (
-        <motion.div
-          variants={visibilityVariants}
-          initial="hidden"
-          animate="visible"
-          exit={{ opacity: 0 }}
-          style={{
-            height: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Spinner />
-        </motion.div>
+        <MotionSpinner text="Cargando el progreso" />
       ) : (
-        <motion.div variants={childVisibilityVariants}>
-          <Header />
-          <section className="container is-max-widescreen">
-            <motion.div
-              variants={childVisibilityVariants}
-              className="pasarela columns mx-auto"
-            >
-              <MultiStep
-                stepStateNumber={{ stepNumberGlobal, setStepNumberGlobal }}
-                className={`pasarela-1 column seleccion-pais ${
-                  stepNumberGlobal === 3 ? 'seleccion-de-cursos' : ''
-                }`}
-                initialValues={{
-                  country: '',
-                  name: '',
-                  username: '',
-                  profession: '',
-                  telephone: '',
-                  speciality: '',
-                  method_contact: '',
-                  dni: '',
-                  sex: '',
-                  date_of_birth: '',
-                  registration_number: '',
-                  area_of_work: '',
-                  training_interest: '',
-                  province_state: '',
-                  postal_code: '',
-                  street: '',
-                  locality: '',
-                }}
-                onSubmit={async (values) => {}}
+        <Suspense fallback={<MotionSpinner text="Cargando Aplicacion" />}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <Header />
+            <section className="container is-max-widescreen">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="pasarela columns mx-auto"
               >
-                <SelectCountryStep
-                  onSubmit={(values) => {
-                    setFormikValues((prevFormikValues) => ({
-                      ...prevFormikValues,
-                      ...values,
-                    }));
+                <MultiStepLazy
+                  stepStateNumber={{ stepNumberGlobal, setStepNumberGlobal }}
+                  className={`pasarela-1 column seleccion-pais ${
+                    stepNumberGlobal === 3 ? 'seleccion-de-cursos' : ''
+                  }`}
+                  initialValues={initialFormValues}
+                  onSubmit={async (values) => {
+                    const uriRedirect =
+                      NODE_ENV === 'production'
+                        ? REACT_APP_SPP
+                        : 'http://localhost:3001/superpasarela/';
+                    //console.log('Ir a pagar a:', { appEnv, uriRedirect });
 
-                    updateProgress(values, 2);
+                    window.location.href = `${uriRedirect}/#/vp/${appEnv.id}`;
                   }}
-                  validationSchema={Yup.object({
-                    country: Yup.string().required('El pais es requerido'),
-                  })}
-                />
+                >
+                  <SelectCountryStep
+                    onSubmit={(values) => {
+                      setFormikValues((prevFormikValues) => ({
+                        ...prevFormikValues,
+                        ...values,
+                      }));
 
-                <LeadStep
-                  onSubmit={(values) => {
-                    setFormikValues((prevFormikValues) => ({
-                      ...prevFormikValues,
-                      ...values,
-                    }));
+                      updateProgress(values, 2);
+                    }}
+                    validationSchema={countryStepValidation}
+                  />
 
-                    console.log({ values });
+                  <LeadStep
+                    loading={processLead}
+                    onSubmit={(values) => {
+                      setFormikValues((prevFormikValues) => ({
+                        ...prevFormikValues,
+                        ...values,
+                      }));
 
-                    createLeadSales(values);
-                  }}
-                  validationSchema={Yup.object({
-                    name: Yup.string().required('❗ El nombre es requerido'),
-                    username: Yup.string().required(
-                      '❗ El apellido es requerido'
-                    ),
-                    email: Yup.string().required('❗ El e-mail es requerido'),
-                    telephone: Yup.string().required(
-                      '❗ El teléfono es requerido'
-                    ),
-                    profession: Yup.string()
-                      .required('❗ La profesión es requerida')
-                      .test(
-                        'is-not-zero',
-                        '❗ Seleccione una profesion valida',
-                        (value) => value !== '0'
-                      ),
-                    speciality: Yup.string()
-                      .required('❗ La especialidad es requerida')
-                      .test(
-                        'is-not-zero',
-                        '❗ Seleccione una especialidad valida',
-                        (value) => value !== '0'
-                      ),
-                    method_contact: Yup.string()
-                      .required('❗ El método de contacto es requerido')
-                      .test(
-                        'is-not-zero',
-                        '❗ Seleccione un método de contacto valido',
-                        (value) => value !== '0'
-                      ),
-                  })}
-                />
-                <ContactStep
-                  onSubmit={(values) => {
-                    setFormikValues((prevFormikValues) => ({
-                      ...prevFormikValues,
-                      ...values,
-                    }));
+                      createLeadSales(values);
+                    }}
+                    validationSchema={leadStepValidation}
+                  />
 
-                    createContactSales(values);
-                  }}
-                  validationSchema={Yup.object({
-                    dni: Yup.number().required('❗ El DNI es requerido'),
-                    sex: Yup.string().required('❗ El sexo es requerido'),
-                    date_of_birth: Yup.string().required(
-                      '❗ La fecha de nacimiento es requerida'
-                    ),
-                    registration_number: Yup.number(
-                      '❗ El campo debe contener solo numeros'
-                    ).required('❗ El número de matrícula es requerido'),
-                    area_of_work: Yup.string().required(
-                      '❗ El área de trabajo es requerida'
-                    ),
-                    training_interest: Yup.string().required(
-                      '❗ El interés de formación es requerido'
-                    ),
-                    province_state: Yup.string().required(
-                      '❗ La provincia o estado son requeridos'
-                    ),
-                    country: Yup.string().required('❗ El país es requerido'),
-                    postal_code: Yup.number(
-                      '❗ El campo debe contener solo numeros'
-                    ).required('❗ El código postal es requerido'),
-                    street: Yup.string().required(
-                      '❗ La dirección es requerida'
-                    ),
-                    locality: Yup.string().required(
-                      '❗ La localidad es requerida'
-                    ),
-                  })}
-                />
-                <SelectCourse
-                  onSubmit={(values) => {
-                    setFormikValues((prevFormikValues) => ({
-                      ...prevFormikValues,
-                      ...values,
-                    }));
+                  <ContactStep
+                    loading={processLead}
+                    loadingText="Generando nuevo Lead"
+                    onSubmit={(values) => {
+                      setFormikValues((prevFormikValues) => ({
+                        ...prevFormikValues,
+                        ...values,
+                      }));
 
-                    createContractSales(values);
-                  }}
-                  validationSchema={Yup.object().shape({
-                    /* products: Yup.array()
-                      .min(1)
-                      .of(Yup.string().required())
-                      .required(), */
-                  })}
-                />
+                      createContactSales(values);
+                    }}
+                    validationSchema={contactStepValidation}
+                  />
 
-                <div></div>
-              </MultiStep>
-            </motion.div>
-          </section>
-        </motion.div>
+                  <SelectCourse
+                    onSubmit={(values) => {
+                      setFormikValues((prevFormikValues) => ({
+                        ...prevFormikValues,
+                        ...values,
+                      }));
+
+                      createContractSales(values);
+                    }}
+                    validationSchema={selectCoursesStepValidation}
+                  />
+
+                  <ResumeStep
+                    processContract={processContract}
+                    completeData={completeData}
+                  />
+                </MultiStepLazy>
+              </motion.div>
+            </section>
+          </motion.div>
+        </Suspense>
       )}
-      <pre>{JSON.stringify(appEnv, null, 2)}</pre>
     </>
   );
 }
