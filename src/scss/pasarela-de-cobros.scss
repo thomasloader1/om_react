@@ -638,3 +638,16 @@ h2.title {
     }
   }
 }
+
+.is-disabled {
+  & {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    &:active,
+    &:hover {
+      border-color: hsl(0deg, 0%, 86%);
+      cursor: not-allowed;
+    }
+  }
+}

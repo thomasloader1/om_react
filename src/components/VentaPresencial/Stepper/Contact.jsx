@@ -7,11 +7,12 @@ import { useFormikContext } from 'formik';
 import withSpinner from '../Hoc/withSpinner';
 const ContactStep = () => {
   const { appEnv } = useContext(AppContext);
-  const { setFieldValue, setFieldTouched } = useFormikContext();
+  const { setFieldValue, validateForm, ...formik } = useFormikContext();
 
   useEffect(() => {
-    setFieldTouched('dni', true);
     setFieldValue('country', appEnv.country);
+    formik.setErrors({});
+    console.log({ formik });
   }, []);
 
   useEffect(() => {
@@ -38,9 +39,9 @@ const ContactStep = () => {
       <FormStep stepNumber={3} stepName="Convertir a contacto">
         <div id="medModPago_grid" className="grid-conversion_contact">
           <InputField
-            label="DNI"
+            label="Numero de Identificacion"
             type="text"
-            placeholder="Ingresar DNI"
+            placeholder="Ingresar Numero de Identificacion"
             id="dni"
             name="dni"
           />
@@ -66,6 +67,7 @@ const ContactStep = () => {
             label="Pais"
             type="text"
             placeholder="Ingresar país"
+            className="input is-disabled"
             id="country"
             name="country"
           />

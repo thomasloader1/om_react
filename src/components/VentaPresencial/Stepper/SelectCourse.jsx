@@ -6,9 +6,8 @@ import ReactPaginate from 'react-paginate';
 import { useIsoCodes } from '../Hook/useIsoCodes';
 import { useProducts } from '../Hook/useProducts';
 import { useFormikContext } from 'formik';
-import Spinner from '../../PasarelaCobros/Spinner';
-import { motion } from 'framer-motion';
 import MotionSpinner from '../../PasarelaCobros/Spinner/MotionSpinner';
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 
 const { NODE_ENV, REACT_APP_API } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -94,7 +93,23 @@ const SelectCourseStep = () => {
     (currentPage + 1) * elementsPerPage
   );
 
-  const isMobile = window.innerWidth < 768 ? 0 : 2;
+  const isMobile = window.innerWidth < 768;
+  const marginPagesDisplayed = isMobile ? 0 : 2;
+  const previousLabel = isMobile ? (
+    <button className="button is-primary">
+      <AiOutlineArrowLeft />
+    </button>
+  ) : (
+    <button className="button is-primary">Anterior</button>
+  );
+
+  const nextLabel = isMobile ? (
+    <button className="button is-primary">
+      <AiOutlineArrowRight />
+    </button>
+  ) : (
+    <button className="button is-primary">Siguiente</button>
+  );
 
   useEffect(() => {
     if (appEnv.products != null && typeof appEnv.products !== 'undefined') {
@@ -147,10 +162,8 @@ const SelectCourseStep = () => {
             </div>
           </FormStep>
           <ReactPaginate
-            previousLabel={
-              <button className="button is-primary">Anterior</button>
-            }
-            nextLabel={<button className="button is-primary">Siguente</button>}
+            previousLabel={previousLabel}
+            nextLabel={nextLabel}
             breakLabel={
               <button className="button is-info break-me">...</button>
             }
@@ -159,7 +172,7 @@ const SelectCourseStep = () => {
             onPageChange={handlePageClick}
             initialPage={0}
             forcePage={currentPage}
-            marginPagesDisplayed={isMobile}
+            marginPagesDisplayed={marginPagesDisplayed}
             pageRangeDisplayed={3}
             containerClassName={'pagination-container'}
             pageClassName={'pagination-item'}

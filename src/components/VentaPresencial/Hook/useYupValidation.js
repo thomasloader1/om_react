@@ -34,7 +34,7 @@ export const useYupValidation = () => {
   });
 
   const contactStepValidation = Yup.object({
-    dni: Yup.number().required('❗ El DNI es requerido'),
+    dni: Yup.number().required('❗ El Numero de Identificacion es requerido'),
     sex: Yup.string().required('❗ El sexo es requerido'),
     date_of_birth: Yup.string().required(
       '❗ La fecha de nacimiento es requerida'
