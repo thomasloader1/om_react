@@ -9,6 +9,7 @@ function FormClientDataStep() {
   if (userInfo.stepTwo.value === 'Mercado Pago') {
     return (
       <FormStep stepNumber={4} stepName='Confirma los datos del cliente'>
+        <div className='is-divider m-0 mb-1'></div>
         <div id='grid-client_data'>
           <ResumeTicket contractId={formikValues.contractId} />
         </div>
@@ -17,6 +18,7 @@ function FormClientDataStep() {
   } else {
     return (
       <FormStep stepNumber={4} stepName='Confirma los datos del cliente'>
+        <div className='is-divider'></div>
         <div id='grid-client_data'>
           <ResumeTicket contractId={formikValues.contractId} />
         </div>
