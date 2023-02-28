@@ -2,7 +2,7 @@
 
 Este es un documento donde se explican las dudas sobre la implementacion y funcionamiento de la Venta Presencial
 
-### Antes de comenzar
+## Antes de comenzar
 
 La Venta Presencial funciona y comunica diversos datos mediante una configuracion previa situada en `src/config/config.js`
 
