@@ -23,7 +23,28 @@ se carga un nuevo id y como tiene datos cargador, aparentemente en cache, se ve 
 > Img del issue 4
     ![No se pudo cargar la imagen: 2-issue][urlIssue4]
 
+## 5-Issue-Cada vez que se ingresa por vp se genera un nuevo progreso.
 
+## 6-WARNING-Respuesta warnink status 200 de CRM ZOHO 
+
+  Al ejecutarse el evento `/api/createLeadZohoCRM`, que genera el lead del CRMZOHO, se obtiene un warning 'not content' pero el result es ok. 
+  Apesar del warning el status es 200, el lead se genera con todos los datos, porque obtenemos como response un objeto como el siguiente: 
+  
+  
+```javascript
+    {
+        result: "ok",
+        id:"con el respoectivo id del crm",
+        detail:""
+    }
+```
+## 7-Issue-Actualizar datos de LEAD despues de realizar una conversion a contacto.
+
+- Problema: 
+    Cuando haces una conversion a contacto eliminas el lead del crm y se convierte en contacto. En este caso si desde VP queres actualizar el lead, se va a generar un nuevo lead siempre. Como resultado no actualizamos lead de crm, y cuando queremos actualizar el zohoCRM `no queda claro si hay que crear un lead nuevo o actualizar el contacto de zoho donde estarian los datos del lead que se borro`
+
+- Solucion:
+    Cuando se vuelve hasta el paso de contacto se valida si ya paso por el paso de conversion a contacto, eso se puede hacer `consultando si el step es mayor al step de conversion > 3`. Hay que buscar los datos desde el crm o vp, mapearlo en el form y realizar las respectivas actualizaciones en vp y en ZOHOCRM.
 
 
 [urlIssue1y2]: img/1-Issue.PNG
