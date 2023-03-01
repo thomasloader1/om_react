@@ -60,6 +60,8 @@ function StateProvider({ children }) {
   const { expand: expandMenu, toggleState: toggleMenu } = useToggle(false);
   const { expand: expandSelectCourses, toggleState: toggleSelectCourses } =
     useToggle(false);
+  const { expand: expandSelectedCourses, toggleState: toggleSelectedCourses } =
+    useToggle(false);
 
   return (
     <AppContext.Provider
@@ -94,6 +96,8 @@ function StateProvider({ children }) {
         toggleMenu,
         expandSelectCourses,
         toggleSelectCourses,
+        expandSelectedCourses,
+        toggleSelectedCourses,
       }}
     >
       {children}

@@ -188,19 +188,7 @@ const MultiStep = ({
                       onClick={toggleSelectCourses}
                     />
                   </h2>
-                  <div>
-                    <div className="field searchbar-mobile">
-                      <div className="control">
-                        <input
-                          className="input"
-                          type="text"
-                          placeholder="Buscar curso por nombre"
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  <div></div>
                 </motion.div>
               </Form>
 

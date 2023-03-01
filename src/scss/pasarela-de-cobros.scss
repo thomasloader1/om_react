@@ -29,6 +29,9 @@ $texto-light: #808fa6;
 .d-mobile {
   display: none;
 }
+.hidden {
+  display: none !important;
+}
 @media screen and (max-width: 766px) {
   .d-desktop {
     display: none;
@@ -68,6 +71,17 @@ header.container {
         max-height: unset;
       }
     }
+  }
+}
+@media screen and (min-width: 769px) {
+  header {
+    z-index: 10;
+  }
+  .navbar {
+    background: linear-gradient(180deg, #fff, 93%, transparent);
+    max-width: 70.66%;
+    padding: 1.5rem 1.5rem 2.5rem;
+    margin: -1.5rem -1.5rem -2.5rem;
   }
 }
 .column {
@@ -736,7 +750,7 @@ pre {
       height: 100%;
       grid-template-columns: 1fr;
       grid-template-rows: max-content auto max-content;
-      padding: 0 24px 24px;
+      padding: 0 0 24px;
 
       & .title {
         svg {
@@ -907,12 +921,49 @@ pre {
       }
 
       &.selection ~ .side-item-courses {
-        display: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: fixed;
+        inset: 164px 0 64px 72px;
+        background-color: #fff;
+        box-shadow: none;
+      }
+      &-courses {
+        &-list {
+          padding: 0 1rem 1rem;
+          max-height: unset;
+        }
+        .delete-selection {
+          position: absolute;
+          right: 00.25rem;
+          bottom: 0.25rem;
+          transform: scale(0.8);
+        }
+        &-total {
+          margin: 0.5rem 1rem;
+          padding: 0.75rem;
+          background-color: hsl(0deg, 0%, 100%);
+          border-radius: 6px;
+          box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
+            0 0px 0 1px rgb(10 10 10 / 2%);
+
+          span {
+            font-size: 8px;
+          }
+          h3 {
+            font-size: 1rem;
+          }
+        }
       }
     }
   }
 
   .pasarela-1 {
+    padding: 0;
+    & > * {
+      padding-inline: 1rem;
+    }
     & .title {
       margin-bottom: 12px;
       font-size: 18px;
@@ -954,7 +1005,7 @@ pre {
     }
     &-name {
       h3 {
-        font-size: 0.75rem;
+        font-size: 0.875rem;
       }
     }
     &-price {
@@ -972,6 +1023,8 @@ pre {
     position: absolute;
     inset: 0 0 0 4.5rem;
     background-color: rgba(63, 108, 187, 0.8);
+    box-shadow: 0 0 12px 3px rgba(0, 0, 0, 0.3);
+
     &.is-expanded {
       display: block;
     }
@@ -1003,7 +1056,7 @@ pre {
       }
       img {
         display: block;
-        transform: scale(0.8);
+        transform: scale(1.1);
       }
     }
   }
@@ -1047,14 +1100,5 @@ pre {
   }
   .modal.is-active {
     display: none;
-  }
-}
-
-.pagination-container {
-  .prev,
-  .next {
-    &.disabled {
-      display: none;
-    }
   }
 }

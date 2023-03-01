@@ -82,6 +82,11 @@ function VentaPresencialApp() {
       ) : (
         <Suspense fallback={<MotionSpinner text="Cargando Aplicacion" />}>
           <motion.div
+            style={{
+              height: '100vh',
+              width: '100vw',
+              overflow: 'hidden scroll',
+            }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
@@ -104,7 +109,7 @@ function VentaPresencialApp() {
                     const uriRedirect =
                       NODE_ENV === 'production'
                         ? REACT_APP_SPP
-                        : 'http://localhost:3001/superpasarela/';
+                        : 'http://localhost:3001/superpasarela';
                     //console.log('Ir a pagar a:', { appEnv, uriRedirect });
 
                     window.location.href = `${uriRedirect}/#/vp/${appEnv.id}`;
