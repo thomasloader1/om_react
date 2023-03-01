@@ -82,6 +82,11 @@ function VentaPresencialApp() {
       ) : (
         <Suspense fallback={<MotionSpinner text="Cargando Aplicacion" />}>
           <motion.div
+            style={{
+              height: '100vh',
+              width: '100vw',
+              overflow: 'hidden scroll',
+            }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
@@ -96,16 +101,18 @@ function VentaPresencialApp() {
               >
                 <MultiStepLazy
                   stepStateNumber={{ stepNumberGlobal, setStepNumberGlobal }}
-                  className="pasarela-1 column seleccion-pais"
+                  className={`pasarela-1 column seleccion-pais ${
+                    stepNumberGlobal === 3 ? 'seleccion-de-cursos' : ''
+                  }`}
                   initialValues={initialFormValues}
                   onSubmit={async (values) => {
                     const uriRedirect =
                       NODE_ENV === 'production'
                         ? REACT_APP_SPP
-                        : 'http://localhost:3001/superpasarela/';
+                        : 'http://localhost:3001/superpasarela';
                     //console.log('Ir a pagar a:', { appEnv, uriRedirect });
 
-                    window.location.href = `${uriRedirect}#/vp/${appEnv.id}`;
+                    window.location.href = `${uriRedirect}/#/vp/${appEnv.id}`;
                   }}
                 >
                   <SelectCountryStep

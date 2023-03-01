@@ -2,74 +2,87 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 1rem;
-}
+  margin: 0 0 12px;
+  gap: clamp(0.25rem, 1.5vw, 0.5rem);
 
-.pagination-item {
-  padding: 0.5rem 1rem;
-  border: 1px solid #ddd;
+  a {
+    color: unset;
+  }
+}
+.pagination-item,
+.break-me {
   border-radius: 5px;
-  margin: 0 0.5rem;
   text-align: center;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }
 
-.pagination-item:not(.break-me):hover {
-  background-color: #ddd;
-}
-
-.pagination-item.is-current {
-  background-color: #00d1b2;
-  color: #fff;
-}
-
-.pagination-item.break-me {
-  background-color: #00d1b2;
-  color: #fff;
-  border-radius: 5px;
-}
-
-.pagination-item.break-me:hover {
-  background-color: #00b89c;
-}
-
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .pagination-container {
     flex-wrap: wrap;
   }
 
-  .pagination-item {
-    margin: 0.5rem 0.25rem;
+  .pagination-item,
+  .break-me {
+    height: 2rem;
+    width: 2rem;
     font-size: 0.8rem;
+    border: none;
+    a {
+      padding: 0;
+    }
   }
-
-  .pagination-item:first-child,
-  .pagination-item:last-child {
-    margin: 0.5rem 0;
+  .pagination-item.is-current {
+    background-color: #00b6de;
+    color: #fff;
+    font-weight: 700;
   }
-
-  .pagination-item:not(.break-me):hover {
+  .break-me button.button {
+    color: #000;
     background-color: transparent;
-    border-color: #ddd;
+  }
+  .pagination-item:nth-child(5) {
+    display: none;
+  }
+  .previous,
+  .next {
+    button {
+      padding: 0.25rem;
+    }
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .pagination-container {
+    margin: 1rem 0 0;
+  }
+  .pagination-item,
+  .break-me {
+    border: 1px solid #ddd;
+
+    width: 2.5rem;
+    height: 2.5rem;
+    a {
+      padding: 0.5rem 1rem;
+    }
+  }
+  .pagination-item:not(.break-me):hover {
+    background-color: #ddd;
   }
 
   .pagination-item.is-current {
-    background-color: transparent;
-    color: #00d1b2;
+    background-color: hsl(340, 100%, 57%);
+    color: #fff;
   }
 
   .pagination-item.break-me {
-    background-color: transparent;
-    color: #00d1b2;
-    border: none;
-    border-bottom: 1px solid #ddd;
-    border-radius: 0;
+    background-color: hsl(340, 100%, 57%);
+    color: #fff;
+    border-radius: 5px;
   }
 
   .pagination-item.break-me:hover {
-    background-color: transparent;
-  }
-
-  li.break-me:not(:first) {
-    display: none;
+    background-color: hsl(340, 100%, 57%);
   }
 }

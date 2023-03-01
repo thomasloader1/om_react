@@ -7,7 +7,7 @@ import { useIsoCodes } from '../Hook/useIsoCodes';
 import { useProducts } from '../Hook/useProducts';
 import { useFormikContext } from 'formik';
 import MotionSpinner from '../../PasarelaCobros/Spinner/MotionSpinner';
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
+import { IoMdArrowDropleft, IoMdArrowDropright } from 'react-icons/io';
 
 const { NODE_ENV, REACT_APP_API } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -17,6 +17,9 @@ const apiProducts = isProduction
   : '/api/products/';
 
 const SelectCourseStep = () => {
+  const isMobile = window.innerWidth < 768;
+  const marginPagesDisplayed = isMobile ? 0 : 2;
+
   const formik = useFormikContext();
   const { getIsoCodeFromSide } = useIsoCodes(formik.values?.country);
   const { iso } = getIsoCodeFromSide();
@@ -28,11 +31,19 @@ const SelectCourseStep = () => {
   );
   // console.log({ iso }, { fetching, products });
 
-  const { selectedCourses, setSelectedCourses, appEnv, setAppEnv } =
-    useContext(AppContext);
+  const {
+    toggleSelectedCourses,
+    expandSelectCourses,
+    selectedCourses,
+    setSelectedCourses,
+    appEnv,
+    setAppEnv,
+  } = useContext(AppContext);
+  const elementsRenderPerMQ = isMobile ? 10 : 6;
+
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
-  const [elementsPerPage, setElementsPerPage] = useState(3);
+  const [elementsPerPage, setElementsPerPage] = useState(elementsRenderPerMQ);
 
   const handlePageClick = (data) => {
     setCurrentPage(data.selected);
@@ -93,24 +104,21 @@ const SelectCourseStep = () => {
     (currentPage + 1) * elementsPerPage
   );
 
-  const isMobile = window.innerWidth < 768;
-  const marginPagesDisplayed = isMobile ? 0 : 2;
   const previousLabel = isMobile ? (
-    <button className="button is-primary">
-      <AiOutlineArrowLeft />
+    <button className="button is-primary is-inverted is-small">
+      <IoMdArrowDropleft />
     </button>
   ) : (
     <button className="button is-primary">Anterior</button>
   );
 
   const nextLabel = isMobile ? (
-    <button className="button is-primary">
-      <AiOutlineArrowRight />
+    <button className="button is-primary is-inverted is-small">
+      <IoMdArrowDropright />
     </button>
   ) : (
     <button className="button is-primary">Siguiente</button>
   );
-
   useEffect(() => {
     if (appEnv.products != null && typeof appEnv.products !== 'undefined') {
       setSelectedCourses(appEnv.products);
@@ -125,8 +133,41 @@ const SelectCourseStep = () => {
         <MotionSpinner text="Solicitando productos" viewHeight="50vh" />
       ) : (
         <>
-          <FormStep stepNumber={3} stepName="Seleccionar cursos">
-            <div className="field">
+          <FormStep stepNumber={4} stepName="Seleccionar cursos">
+            {isMobile && !expandSelectCourses ? (
+              <div
+                className="is-flex is-justify-content-space-between is-align-items-center"
+                style={{
+                  fontSize: '11px',
+                  marginTop: '-0.25rem',
+                  marginBottom: '0.75rem',
+                }}
+              >
+                <p className="" style={{ fontSize: '11px' }}>
+                  {selectedCourses.length}
+                  {selectedCourses.length === 0 || selectedCourses.length >= 1
+                    ? ' cursos seleccionados'
+                    : ' curso seleccionado'}
+                </p>
+                <div
+                  className="has-text-primary is-uppercase"
+                  style={{ fontSize: '11px' }}
+                  onClick={toggleSelectedCourses}
+                >
+                  {selectedCourses.length > 0 ? 'ver selección' : ''}
+                </div>
+              </div>
+            ) : (
+              ''
+            )}
+            <div
+              className="field"
+              style={{
+                zIndex: expandSelectCourses ? 10 : '',
+                display: isMobile && !expandSelectCourses ? 'none' : 'block',
+                marginBottom: isMobile && expandSelectCourses ? '0.5rem' : '0',
+              }}
+            >
               <div className="control">
                 <input
                   className="input"
@@ -137,7 +178,13 @@ const SelectCourseStep = () => {
                 />
               </div>
             </div>
-            <div id="medModPago_grid" className={'courses-grid'}>
+            <div
+              id="medModPago_grid"
+              className={'courses-grid'}
+              style={{
+                zIndex: isMobile && expandSelectCourses ? '2' : '',
+              }}
+            >
               {elementsToShow.map((product) => {
                 const isChecked = selectedCourses.some((course) => {
                   return product.product_code === Number(course.product_code);
@@ -168,7 +215,7 @@ const SelectCourseStep = () => {
               <button className="button is-info break-me">...</button>
             }
             breakClassName={'break-me'}
-            pageCount={Math.ceil(products.length / elementsPerPage)}
+            pageCount={Math.ceil(filteredProducts.length / elementsPerPage)}
             onPageChange={handlePageClick}
             initialPage={0}
             forcePage={currentPage}
@@ -176,7 +223,7 @@ const SelectCourseStep = () => {
             pageRangeDisplayed={3}
             containerClassName={'pagination-container'}
             pageClassName={'pagination-item'}
-            activeClassName={'is-current'}
+            activeClassName={'is-current is-primary'}
           />
         </>
       )}

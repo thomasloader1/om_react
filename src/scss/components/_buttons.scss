@@ -1,122 +1,123 @@
-@use "../abstracts" as *;
+@use '../abstracts' as *;
 
 .btn {
-   @include flex(center, center);
-   min-width: min-content;
-   width: max-content;
-   border-radius: 4px;
-   @include font(0.75rem, 700, 1.1em);
-   font-family: "Roboto", sans-serif !important;
-   padding: 6px 0.5rem 6px;
-   text-transform: uppercase;
-   text-decoration: none;
-   cursor: pointer;
+  @include flex(center, center);
+  min-width: min-content;
+  width: max-content;
+  border-radius: 4px;
+  border: none;
+  @include font(0.75rem, 700, 1.1em);
+  font-family: 'Roboto', sans-serif !important;
+  padding: 6px 0.5rem 6px;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 @each $color, $shades in $colors {
-   .btn-#{$color} {
-      background-color: map-get($shades, "");
-      color: #fff;
+  .btn-#{$color} {
+    background-color: map-get($shades, '');
+    color: #fff;
 
+    &:hover {
+      background: map-get($shades, '-light');
+      color: #fff;
+    }
+    &:focus {
+      background: map-get($shades, '-dark');
+      color: #fff;
+      box-shadow: inset 0 0 2px 3px rgba(0, 0, 0, 0.08);
+    }
+    &.outlined {
+      background-color: transparent;
+      color: map-get($shades, '');
+      border: 1px solid map-get($shades, '');
       &:hover {
-         background: map-get($shades, "-light");
-         color: #fff;
+        color: map-get($shades, '-light');
+        border-color: map-get($shades, '-light');
       }
       &:focus {
-         background: map-get($shades, "-dark");
-         color: #fff;
-         box-shadow: inset 0 0 2px 3px rgba(0, 0, 0, 0.08);
+        color: map-get($shades, '-dark');
+        border-color: map-get($shades, '-dark');
+        box-shadow: none;
       }
-      &.outlined {
-         background-color: transparent;
-         color: map-get($shades, "");
-         border: 1px solid map-get($shades, "");
-         &:hover {
-            color: map-get($shades, "-light");
-            border-color: map-get($shades, "-light");
-         }
-         &:focus {
-            color: map-get($shades, "-dark");
-            border-color: map-get($shades, "-dark");
-            box-shadow: none;
-         }
+    }
+    &.naked {
+      text-decoration: underline;
+      background-color: transparent !important;
+      color: map-get($shades, '');
+      border: transparent solid map-get($shades, '');
+      &:hover {
+        color: map-get($shades, '-light');
       }
-      &.naked {
-         text-decoration: underline;
-         background-color: transparent !important;
-         color: map-get($shades, "");
-         border: transparent solid map-get($shades, "");
-         &:hover {
-            color: map-get($shades, "-light");
-         }
-         &:focus {
-            color: map-get($shades, "-dark");
-            box-shadow: none;
-         }
+      &:focus {
+        color: map-get($shades, '-dark');
+        box-shadow: none;
       }
-      &.disabled,
-      &-disabled {
-         background-color: #ccc;
-         color: #fff;
-      }
-   }
+    }
+    &.disabled,
+    &-disabled {
+      background-color: #ccc;
+      color: #fff;
+    }
+  }
 }
 
 @each $color, $shades in $colors {
-   .btn-#{$color}-dark {
-      background-color: map-get($shades, "-dark");
-      color: #fff;
+  .btn-#{$color}-dark {
+    background-color: map-get($shades, '-dark');
+    color: #fff;
 
+    &:hover {
+      background: map-get($shades, '');
+      color: #fff;
+    }
+    &:focus {
+      background: map-get($shades, '-light');
+      color: #fff;
+      box-shadow: inset 0 0 2px 3px rgba(0, 0, 0, 0.08);
+    }
+    &.outlined {
+      background-color: transparent;
+      color: map-get($shades, '-dark');
+      border: 1px solid map-get($shades, '-dark');
       &:hover {
-         background: map-get($shades, "");
-         color: #fff;
+        color: map-get($shades, '');
+        border-color: map-get($shades, '');
       }
       &:focus {
-         background: map-get($shades, "-light");
-         color: #fff;
-         box-shadow: inset 0 0 2px 3px rgba(0, 0, 0, 0.08);
+        color: map-get($shades, '-light');
+        border-color: map-get($shades, '-light');
+        box-shadow: none;
       }
-      &.outlined {
-         background-color: transparent;
-         color: map-get($shades, "-dark");
-         border: 1px solid map-get($shades, "-dark");
-         &:hover {
-            color: map-get($shades, "");
-            border-color: map-get($shades, "");
-         }
-         &:focus {
-            color: map-get($shades, "-light");
-            border-color: map-get($shades, "-light");
-            box-shadow: none;
-         }
+    }
+    &.naked {
+      text-decoration: underline;
+      background-color: transparent !important;
+      color: map-get($shades, '-dark');
+      border: transparent solid map-get($shades, '-dark');
+      &:hover {
+        color: map-get($shades, '');
       }
-      &.naked {
-         text-decoration: underline;
-         background-color: transparent !important;
-         color: map-get($shades, "-dark");
-         border: transparent solid map-get($shades, "-dark");
-         &:hover {
-            color: map-get($shades, "");
-         }
-         &:focus {
-            color: map-get($shades, "");
-            box-shadow: none;
-         }
+      &:focus {
+        color: map-get($shades, '');
+        box-shadow: none;
       }
-      &.disabled,
-      &-disabled {
-         background-color: #ccc;
-         color: #fff;
-      }
-   }
+    }
+    &[disabled],
+    &.disabled,
+    &-disabled {
+      background-color: #f5f5f5;
+      color: #acacac;
+    }
+  }
 }
 
 @media screen and (min-width: 768px) {
-   .btn {
-      &-big {
-         font-size: 1rem;
-         line-height: 19px;
-         padding: 0.375rem 1rem;
-      }
-   }
+  .btn {
+    &-big {
+      font-size: 1rem;
+      line-height: 19px;
+      padding: 0.375rem 1rem;
+    }
+  }
 }

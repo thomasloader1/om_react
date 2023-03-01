@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 /* eslint-disable react/prop-types */
-import React, { createContext, useState } from 'react';
-import { useRef } from 'react';
+import React, { createContext, useState, useRef } from 'react';
 import {
   countryOptions,
   sideItemOptions,
@@ -12,7 +11,7 @@ import {
   userFlow,
 } from '../../../config/config';
 import { useApi } from '../../VentaPresencial/Hook/useApi';
-
+import { useToggle } from '../../VentaPresencial/Hook/useToggle';
 const { NODE_ENV, REACT_APP_API } = process.env;
 const isProduction = NODE_ENV === 'production';
 
@@ -52,6 +51,11 @@ function StateProvider({ children }) {
   const [selectedCourses, setSelectedCourses] = useState([]);
   const appRef = useRef(null);
   const formRef = useRef(null);
+  const { expand: expandMenu, toggleState: toggleMenu } = useToggle(false);
+  const { expand: expandSelectCourses, toggleState: toggleSelectCourses } =
+    useToggle(false);
+  const { expand: expandSelectedCourses, toggleState: toggleSelectedCourses } =
+    useToggle(false);
 
   return (
     <AppContext.Provider
@@ -82,6 +86,12 @@ function StateProvider({ children }) {
         setProducts,
         selectedCourses,
         setSelectedCourses,
+        expandMenu,
+        toggleMenu,
+        expandSelectCourses,
+        toggleSelectCourses,
+        expandSelectedCourses,
+        toggleSelectedCourses,
       }}
     >
       {children}

@@ -13,6 +13,7 @@ Esta configuracion se comparte mediante un Provider (`src/components/PasarelaCob
 Ya teniendo esta base se puede manipular gran parte de la aplicacion para modificar y mostrar resultados segun la nececidad
 
 ### Variables Globales
+
 ~~~javascript
 const [options, setOptions] = useState({
     countryOptions,
@@ -67,16 +68,18 @@ const [options, setOptions] = useState({
 ~~~
 
 # Manejando estados de Formik
-Formik es una libreria para manipular el comportamiento y la informacion que tiene un formulario, nosotros incorporamos Yup para sumarle validaciones en español cuando un atributo no es valido 
+
+Formik es una libreria para manipular el comportamiento y la informacion que tiene un formulario, nosotros incorporamos Yup para sumarle validaciones en español cuando un atributo no es valido
 
 Para poder manipular el estado de formik o mejor dicho usar el objeto de formik se puede hacer lo siguiente:
 
 - Partiendo del componente MultiStep (`src/components/VentaPresencial/Stepper/MultiStep.jsx`) se puede acceder al objeto de Formik mediante un custom hook de la propia libreria (`useFormikContext()`) siempre que el componente sea HIJO / CHILDREN de MultiStep
 
 ### Formas de uso
-> _Recordar que esto es valido siempre que desde donde se llame __tiene que ser hijo / children de MultiStep__, de lo contrario dispara un warning dicendo que el contexto de formik no esta instanciado o accesible desde donde se requiera._
+>
+> _Recordar que esto es valido siempre que desde donde se llame **tiene que ser hijo / children de MultiStep**, de lo contrario dispara un warning dicendo que el contexto de formik no esta instanciado o accesible desde donde se requiera._
 
-Como un objeto comun: 
+Como un objeto comun:
 
 `const formik = useFormikContext()`
 
@@ -84,10 +87,11 @@ Usando destructuring de lo que se necesita:
 
  `const { values, setFieldValue, ...formik } = useFormikContext()`
 
- # Funcionamiento de RadioButton
+# Funcionamiento de RadioButton
+ >
  > Tener en cuenta que cada interaccion con este componente va a modificar o deberia el Estado de la aplicacion (Provider / Contexto)
 
- El RadioButton que se usa en la Venta Presencial realmente es ButtonField que tambien lo usa la Super Pasarela (`src/components/PasarelaCobros/RadioButton/ButtonField.jsx`) 
+ El RadioButton que se usa en la Venta Presencial realmente es ButtonField que tambien lo usa la Super Pasarela (`src/components/PasarelaCobros/RadioButton/ButtonField.jsx`)
 
  Por lo general, hablando de la aplicacion, se recorren las variables del provider y se le pasan los atributos al componente para que se muestre con las caracteristicas que necesita tener
 
@@ -131,4 +135,4 @@ const handleClick = (propsOfContryOptions) => {
 
  Por necesidad de persistir los datos seleccionados en la memoria del navegador se modifican las variables globales haciendo el ***Spread Operator*** para darle todo lo que ya tenia y en caso de que dentro de ese objeto haya un arreglo/objeto se indica explicitamente el nombre del atributo y se asigna con sixtaxis de JSON el valor de ese atributo indicado, tal como muestra el ejemplo dentro de la implementacion del handleClick
 
- # El uso que se le da a useEffect
+# El uso que se le da a useEffect

@@ -6,6 +6,8 @@ import { Button } from 'react-bulma-components';
 import { useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useSwal } from '../Hook/useSwal';
+import { useMediaQSmall } from '../Hook/useMediaQuery';
+import IMAGES from '../../../img/pasarelaCobros/share';
 
 const { NODE_ENV, REACT_APP_API } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -32,6 +34,8 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
   const disabledPrevButton = savingProgress;
   const disabledNextButton = savingProgress;
   const disabledSavingProgress = !formik.dirty;
+  const isMediaQSmall = useMediaQSmall();
+  const { save } = IMAGES;
 
   // console.log('FormNavigation', { values, formik, formValid: formik.isValid });
 
@@ -125,7 +129,7 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
     <div className="controls">
       {hasPrevious && (
         <Button
-          className="flex-grow-1 is-primary is-normal is-fullwidth"
+          className="prev-button flex-grow-1 is-primary is-normal is-fullwidth is-outlined"
           type="button"
           onClick={onBackClick}
           disabled={disabledPrevButton}
@@ -135,14 +139,23 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
       )}
 
       <Button
-        className={`flex-grow-1 is-success is-normal is-fullwidth ${
-          savingProgress ? 'is-loading is-hover' : 'is-outlined'
+        className={`save-button flex-grow-1 is-primary ${
+          !isMediaQSmall ? 'is-outlined' : ''
+        } is-normal is-fullwidth ${
+          savingProgress ? 'is-loading is-hover' : ''
         }`}
         type="button"
         onClick={handleSaveProgress}
         disabled={savingProgress || disabledSavingProgress}
       >
-        Guardar
+        <span>Guardar</span> <img alt="guardar" src={save} />
+      </Button>
+      <Button
+        className={`nex-button flex-grow-1 is-primary is-normal is-fullwidth`}
+        disabled={disabledNextButton || !formik.isValid}
+        type="submit"
+      >
+        {isLastStep ? 'Pagar' : 'Siguiente'}
       </Button>
 
       <Button

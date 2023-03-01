@@ -39,7 +39,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     ? cardComplete
     : dni && address && [...address].length > 10;
 
-/*   useEffect(() => {
+  /*   useEffect(() => {
     if (generateButton) {
       optionsGlobal.sideItemOptionsVP[4].status = 'completed';
       optionsGlobal.sideItemOptionsVP[4].value = 'Completos';
@@ -143,18 +143,8 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
           </>
         )}
       </div>
-      <motion.div
-        style={{
-          width: '100%',
-          height: '100vh',
-          position: 'absolute',
-          top: '0',
-          right: '-69%',
-          zIndex: '-99',
-          backgroundColor: '#F4F5F7',
-          //backgroundColor:"red",
-        }}
-      ></motion.div>
+      <motion.div id="background-side"></motion.div>
+
       {openBlockLayer && (
         <>
           <motion.div

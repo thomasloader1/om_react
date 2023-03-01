@@ -4,9 +4,18 @@ import { Form } from 'react-bulma-components';
 import { Image } from 'semantic-ui-react';
 import IMAGES from '../../../img/pasarelaCobros/share';
 
-const ButtonField = ({ img, showText, idElement, className, classLabel, shortName, idInputElement, ...props }) => {
-  const [field, meta] = useField(props)
-  const { value } = props
+const ButtonField = ({
+  img,
+  showText,
+  idElement,
+  className,
+  classLabel,
+  shortName,
+  idInputElement,
+  ...props
+}) => {
+  const [field, meta] = useField(props);
+  const { value } = props;
 
   const imageIcon = img && <Image src={IMAGES[img]} alt={value} size="small" />;
   const labelOfElement = showText ? value : '';
@@ -20,7 +29,7 @@ const ButtonField = ({ img, showText, idElement, className, classLabel, shortNam
             {...field}
             id={idElement}
             htmlFor={idElement}
-            className={className+` ${meta.error && 'error'}`}
+            className={className + ` ${meta.error && 'error'}`}
             value={value}
           >
             {imageIcon}
@@ -28,8 +37,7 @@ const ButtonField = ({ img, showText, idElement, className, classLabel, shortNam
           </Form.Radio>
         </Form.Control>
       </Form.Field>
-     {/*  <pre>{JSON.stringify(field, null, 1)}</pre> */}
-
+      {/*  <pre>{JSON.stringify(field, null, 1)}</pre> */}
     </>
   );
 };
