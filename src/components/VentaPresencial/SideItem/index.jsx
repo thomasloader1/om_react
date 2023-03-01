@@ -217,9 +217,6 @@ function SideItem({
               duration: 0.5,
             },
           }}
-          exit={{
-            opacity: 0,
-          }}
         >
           <h3 className="subtitle is-uppercase">{!label ? 'Label' : label}</h3>
           <h4 className="title is-6">{titleCurrentStep}</h4>
