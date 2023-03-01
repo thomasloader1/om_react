@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import { fireAlert, fireToast } from '../Hooks/useSwal';
 import { MdContentCopy, MdCheckCircleOutline } from 'react-icons/md';
 import { BsCashCoin } from 'react-icons/bs';
+import { useMediaQSmall } from '../Hooks/useMediaQuery';
 
 const {
   REACT_APP_OCEANO_URL,
@@ -61,6 +62,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
   const { country, quotes, amount, sale, contact, products } = formikValues;
 
   //console.log({ formik });
+  const isMobile = useMediaQSmall();
 
   const removeAccents = (country) => {
     const accents = {
@@ -312,7 +314,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
                 }`}
                 label={
                   <>
-                    <MdCheckCircleOutline />
+                    {isMobile && (stripeRequest ? <MdCheckCircleOutline /> : <BsCashCoin />)}
                     <span> {stripeRequest ? 'Pago Realizado' : 'Generar pago'}</span>
                   </>
                 }
@@ -326,10 +328,10 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
                 className={`bigger is-medium ${fetching && 'is-loading'} ${
                   checkoutLink ? 'payment-generated' : 'generate-payment'
                 }`}
-                color={`${checkoutLink ? 'success' : 'link'}`}
+                color={`${checkoutLink ? 'success' : 'primary'}`}
                 label={
                   <>
-                    {checkoutLink ? <MdCheckCircleOutline /> : <BsCashCoin />}
+                    {isMobile && (checkoutLink ? <MdCheckCircleOutline /> : <BsCashCoin />)}
                     <span>{checkoutLink ? 'Link generado' : 'Generar link'}</span>
                     {/*<div className='tooltip'>{checkoutLink ? '' : 'Generar link'}</div>*/}
                   </>
