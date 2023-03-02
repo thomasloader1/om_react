@@ -1223,14 +1223,18 @@ pre {
 .modal-generated-link {
   padding: 1.5rem 2rem;
   height: 300px;
-
-  background-color: white;
+  background-color: #e6f7ef;
+  color: #257953;
   margin: auto 0px;
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+
+  h2 {
+    color: #257953;
+  }
 
   &>div.is-flex {
     gap: 1rem;

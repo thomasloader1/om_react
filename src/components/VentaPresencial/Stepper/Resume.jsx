@@ -35,8 +35,8 @@ const ResumeStep = ({ processContract, completeData }) => {
           </motion.div>
         ) : (
           <motion.div
-            className='modal-generated-link is-success'
-            animate={{ backgroundColor: '#f4f5f7', boxShadow: '5px 5px 2rem rgba(0,0,0, 0.3)' }}
+            className='modal-generated-link'
+            animate={{ boxShadow: '5px 5px 2rem rgba(0,0,0, 0.3)' }}
             transition={{ ease: 'easeOut', duration: 0.5 }}
           >
             <motion.h2 className='title is-4'>¡Contrato Generado!</motion.h2>
