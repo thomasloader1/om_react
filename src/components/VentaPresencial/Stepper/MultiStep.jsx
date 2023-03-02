@@ -17,7 +17,6 @@ const MultiStep = ({
   onSubmit,
   stepStateNumber,
 }) => {
-  const [searchTerm, setSearchTerm] = useState('');
   const {
     options,
     setOptions,
@@ -218,8 +217,6 @@ export const FormStep = ({ stepNumber = 0, stepName = '', children }) => {
       }}
     />
   );
-
-  console.log({ stepNumber }, toggleButton);
 
   return (
     <>

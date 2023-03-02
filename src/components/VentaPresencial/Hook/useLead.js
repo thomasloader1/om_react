@@ -71,9 +71,14 @@ export const useLead = () => {
   const updateEntityIdCRMLeadSales = async (dataLead, resCreateLeadCRM) => {
     try {
       dataLead.entity_id_crm = resCreateLeadCRM.data.id;
-      const resEntityIdLeadCRM = await axios.post(apiUpdateEntityIdLeadVentas, {
+      const { data } = await axios.post(apiUpdateEntityIdLeadVentas, {
         ...dataLead,
       });
+
+      ctx.setAppEnv((prevState) => ({
+        ...prevState,
+        contact_id: data.entity_id_crm,
+      }));
     } catch (e) {
       const { message } = e.response.data;
       modalAlert(message, 'error');
