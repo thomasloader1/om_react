@@ -17,7 +17,6 @@ const MultiStep = ({
   onSubmit,
   stepStateNumber,
 }) => {
-  const [searchTerm, setSearchTerm] = useState('');
   const {
     options,
     setOptions,
@@ -73,7 +72,7 @@ const MultiStep = ({
     if (isLastStep) {
       return onSubmit(values, actions);
     } else {
-      actions.setTouched({});
+      //actions.setTouched({});
       next(values);
     }
   };
@@ -127,9 +126,8 @@ const MultiStep = ({
 
                 {formik.errors && Object.keys(formik.errors).length > 0 && (
                   <motion.div
-                    className={`notification-container ${
-                      isMediaQSmall ? 'modal is-active' : ''
-                    }`}
+                    className={`notification-container ${isMediaQSmall ? 'modal is-active' : ''
+                      }`}
                     initial={{ opacity: 0, y: '100vh', zIndex: '10' }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
@@ -173,9 +171,8 @@ const MultiStep = ({
                   onBackClick={() => previous(formik.values)}
                 />
                 <motion.div
-                  className={`searchcourses-overlay ${
-                    expandSelectCourses ? 'is-expanded' : ''
-                  }`}
+                  className={`searchcourses-overlay ${expandSelectCourses ? 'is-expanded' : ''
+                    }`}
                   variants={variantStyles}
                   initial="closed"
                   animate={expandSelectCourses ? 'open' : 'closed'}
@@ -218,8 +215,6 @@ export const FormStep = ({ stepNumber = 0, stepName = '', children }) => {
       }}
     />
   );
-
-  console.log({ stepNumber }, toggleButton);
 
   return (
     <>

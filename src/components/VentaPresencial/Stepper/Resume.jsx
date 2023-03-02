@@ -4,6 +4,7 @@ import { FormStep } from './MultiStep';
 import { motion } from 'framer-motion';
 import Spinner from '../../PasarelaCobros/Spinner';
 import { Block, Notification } from 'react-bulma-components';
+import withSpinner from '../Hoc/withSpinner';
 
 const ResumeStep = ({ processContract, completeData }) => {
   const { appEnv } = useContext(AppContext);
@@ -33,18 +34,33 @@ const ResumeStep = ({ processContract, completeData }) => {
             <p>Creando nuevo contrato, espere porfavor</p>
           </motion.div>
         ) : (
-          <Block style={{ margin: '1rem 0' }}>
+          <motion.div
+            className='modal-generated-link is-success'
+            animate={{ backgroundColor: '#f4f5f7', boxShadow: '5px 5px 2rem rgba(0,0,0, 0.3)' }}
+            transition={{ ease: 'easeOut', duration: 0.5 }}
+          >
+            <motion.h2 className='title is-4'>¡Contrato Generado!</motion.h2>
+
+            <div className=' mt-3'>
+              Se genero el contrato <b>{contractNumber}</b> con pais{' '}
+              <b>{appEnv?.country}</b> y esta listo para ser cobrado
+
+            </div>
+
+            {/* <Block style={{ margin: '1rem 0' }}>
             <Notification color="success" light="true">
               <p>
-                Se genero el contrato <b>{contractNumber}</b> con pais{' '}
-                <b>{appEnv?.country}</b> y esta listo para ser cobrado
+                
               </p>
             </Notification>
-          </Block>
+          </Block> */}
+          </motion.div>
+
+
         )}
       </FormStep>
     </>
   );
 };
 
-export default ResumeStep;
+export default withSpinner(ResumeStep);
