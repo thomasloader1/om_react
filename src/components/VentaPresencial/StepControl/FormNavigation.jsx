@@ -139,11 +139,9 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
       )}
 
       <Button
-        className={`save-button flex-grow-1 is-primary ${
-          !isMediaQSmall ? 'is-outlined' : ''
-        } is-normal is-fullwidth ${
-          savingProgress ? 'is-loading is-hover' : ''
-        }`}
+        className={`save-button flex-grow-1 is-primary ${!isMediaQSmall ? 'is-outlined' : ''
+          } is-normal is-fullwidth ${savingProgress ? 'is-loading is-hover' : ''
+          }`}
         type="button"
         onClick={handleSaveProgress}
         disabled={savingProgress || disabledSavingProgress}
@@ -152,7 +150,7 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
       </Button>
 
       <Button
-        className={`flex-grow-1 is-primary is-normal is-fullwidth`}
+        className={`flex-grow-1 is-primary is-normal is-fullwidth next-button`}
         disabled={disabledNextButton || !formik.isValid}
         type="submit"
       >
