@@ -35,16 +35,20 @@ const ResumeStep = ({ processContract, completeData }) => {
           </motion.div>
         ) : (
           <motion.div
-            className='modal-generated-link'
-            animate={{ boxShadow: '5px 5px 2rem rgba(0,0,0, 0.3)' }}
+            className="modal-generated-link"
+            animate={{ boxShadow: 'rgb(229 227 236) 0px 0px 8px 3px' }}
             transition={{ ease: 'easeOut', duration: 0.5 }}
           >
-            <motion.h2 className='title is-4'>¡Contrato Generado!</motion.h2>
+            <motion.h2 className="title is-4">¡Contrato Generado!</motion.h2>
 
-            <div className=' mt-3'>
+            <div
+              className=" mt-3"
+              style={{
+                textAlign: 'center',
+              }}
+            >
               Se genero el contrato <b>{contractNumber}</b> con pais{' '}
               <b>{appEnv?.country}</b> y esta listo para ser cobrado
-
             </div>
 
             {/* <Block style={{ margin: '1rem 0' }}>
@@ -55,8 +59,6 @@ const ResumeStep = ({ processContract, completeData }) => {
             </Notification>
           </Block> */}
           </motion.div>
-
-
         )}
       </FormStep>
     </>
