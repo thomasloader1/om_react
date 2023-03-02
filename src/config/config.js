@@ -336,7 +336,7 @@ export const sideItemOptionsVP = [
   {
     step: 5,
     idElement: 'seleccion_pais',
-    label: 'DATOS DE LA TARJETA',
+    label: 'FINALIZACION DE CONTRATO',
     value: '',
     status: '',
   },
