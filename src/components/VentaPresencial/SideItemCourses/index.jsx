@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
   MdOutlineEditNote,
   MdDeleteOutline,
-  MdQueryBuilder,
 } from 'react-icons/md';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { Box } from 'react-bulma-components';
@@ -32,9 +31,8 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
   return (
     <>
       <div
-        className={`side-item courses ${
-          selectionCourses ? 'selection' : ''
-        }  ${className}`}
+        className={`side-item courses ${selectionCourses ? 'selection' : ''
+          }  ${className}`}
       >
         <span className="side-item-info">
           <div className="numstep">{currentStep}</div>
@@ -59,38 +57,23 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
         </button>
       </div>
       <div
-        className={`side-item-courses ${
-          isMobile &&
+        className={`side-item-courses ${isMobile &&
           (expandSelectedCourses && selectedCourses.length > 0
             ? 'is-flex'
             : 'hidden')
-        } `}
+          } `}
       >
         <ul className="side-item-courses-list">
           {selectedCourses.map((course) =>
+
             isMobile ? (
               <Box
                 className={`course `}
-                key={course.id}
+                key={`box_${course.product_code}`}
                 style={{ position: 'relative' }}
               >
                 <div className="course-content">
-                  {/*<div className="course-content-header">
-                     <h4
-                      className={`tags course-profession tags-${professionClassName}`}
-                    >
-                      {professionClassName.includes('medicina')
-                        ? 'Medicina'
-                        : 'Enfermeria'}
-                    </h4> 
-                    <h4 className="course-specialty">{}</h4>
-                    <span className="course-hours is-flex is-align-items-center">
-                      <MdQueryBuilder />
-                      {course.hours} <span className="d-desktop"> horas</span>
-                      <span className="d-mobile"> hs</span>
-                    </span>
-                  </div>*/}
-                  <label htmlFor={course.id} className="course-name">
+                  <label htmlFor={course.product_code} className="course-name">
                     <h3>{course.title}</h3>
                   </label>
                 </div>
@@ -105,10 +88,10 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
               </Box>
             ) : (
               <li
-                key={course.id}
+                key={`li_${course.product_code}`}
                 className="side-item-courses-selected is-justify-content-space-between"
               >
-                <span id={course.id} style={{ display: 'none' }}>
+                <span id={course.product_code} style={{ display: 'none' }}>
                   {course.price}
                 </span>
                 <h4>{course.title}</h4>
@@ -116,12 +99,13 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
                   type="button"
                   className="button is-ghost"
                   aria-label="Eliminar curso"
-                  onClick={() => onDelete(course.id)}
+                  onClick={() => onDelete(course.product_code)}
                 >
                   <MdDeleteOutline className="is-size-3" />
                 </button>
               </li>
             )
+
           )}
         </ul>
         <div className="side-item-courses-total">

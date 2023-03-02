@@ -1,4 +1,4 @@
-@use '../../node_modules/bulma/bulma.sass';
+@use './bulma';
 @use 'abstracts' as *;
 @use './components/buttons';
 @use 'cardAsesor';
@@ -16,6 +16,7 @@
 .button + .button {
   margin: 0;
 }
+
 :root {
   --animate-delay: 0.5s;
 }
@@ -29,20 +30,25 @@ $texto-light: #808fa6;
 .d-mobile {
   display: none;
 }
+
 .hidden {
   display: none !important;
 }
+
 @media screen and (max-width: 766px) {
   .d-desktop {
     display: none;
   }
+
   .d-mobile {
     display: unset;
   }
 }
+
 .rotate-90 {
   rotate: -90deg;
 }
+
 button.button > .ui.radio {
   input[type='radio'] {
     visibility: hidden;
@@ -53,9 +59,11 @@ body,
 input {
   font-family: 'Roboto', sans-serif !important;
 }
+
 body * {
   transition: all 0.3s ease-in;
 }
+
 header.container {
   position: absolute;
   width: 100%;
@@ -73,21 +81,25 @@ header.container {
     }
   }
 }
+
 @media screen and (min-width: 769px) {
   header {
     z-index: 10;
   }
+
   .navbar {
-    background: linear-gradient(180deg, #fff, 93%, transparent);
+    background: linear-gradient(180deg, #fff, 93%, rgba(255, 255, 255, 0));
     max-width: 70.66%;
     padding: 1.5rem 1.5rem 2.5rem;
     margin: -1.5rem -1.5rem -2.5rem;
   }
 }
+
 .column {
   padding: 0;
   margin: 0;
 }
+
 .columns {
   margin: 0;
 }
@@ -133,12 +145,14 @@ h2.title {
       flex-grow: 1;
       align-content: flex-start;
     }
+
     .title {
       svg {
         display: none;
       }
     }
   }
+
   &-overlay,
   .searchcourses-overlay {
     display: none;
@@ -185,6 +199,7 @@ h2.title {
       width: 100%;
       height: 100%;
       cursor: pointer;
+
       &[type='radio'] {
         visibility: hidden;
       }
@@ -208,6 +223,7 @@ h2.title {
     justify-content: center;
   }
 }
+
 .stepControls,
 .edit_stepControls {
   margin: 2rem 0 0 !important;
@@ -218,10 +234,12 @@ h2.title {
   h3 {
     font-weight: 500;
   }
+
   & > div {
     justify-content: center;
     gap: 1rem;
   }
+
   &-item {
     display: flex;
     align-items: center;
@@ -251,6 +269,7 @@ h2.title {
       color: $accent;
       border-color: $accent;
     }
+
     input {
       position: absolute;
       opacity: 0.001;
@@ -273,6 +292,7 @@ h2.title {
   inset: 0;
   background-color: #f4f5f7;
 }
+
 .overlay-left {
   position: absolute;
   min-height: 100vh;
@@ -286,17 +306,20 @@ h2.title {
 
 .side {
   padding-bottom: 3rem;
+
   &-decision,
   &-body {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
   }
+
   &-body {
     .button.bigger {
       font-weight: 700;
       height: 5rem;
     }
+
     .field {
       & .half:not(:last-child) {
         margin: 0;
@@ -313,6 +336,7 @@ h2.title {
         pointer-events: all;
         cursor: pointer;
       }
+
       .icon:hover {
         i {
           color: $success;
@@ -334,21 +358,26 @@ h2.title {
       .title {
         display: initial;
       }
+
       .subtitle {
         margin-bottom: 1.5rem;
       }
+
       .button {
         display: block;
       }
     }
+
     &.current {
       .numstep {
         background-color: $accent;
       }
+
       .button {
         display: none;
       }
     }
+
     &.completed {
       box-shadow: none;
       border: 1px solid $success;
@@ -356,21 +385,26 @@ h2.title {
       .numstep {
         background-color: $success;
       }
+
       .button {
         display: block;
         color: $texto-light;
       }
+
       .button:hover {
         cursor: pointer;
         color: $success;
       }
+
       .button:target {
         outline: none;
       }
     }
+
     &.selection ~ .side-item-courses {
       display: block;
     }
+
     &-courses {
       margin-top: -2rem;
       display: none;
@@ -379,12 +413,14 @@ h2.title {
         0 0 0 1px rgb(10 10 10 / 2%);
       //border: 1px solid #efefef;
       border-radius: 0 0 10px 10px;
+
       &-list {
         display: flex;
         flex-direction: column;
         max-height: 196px;
         overflow-y: auto;
       }
+
       &-selected {
         padding: 1rem 1.5rem;
         display: flex;
@@ -395,6 +431,7 @@ h2.title {
         &:not(:first-child) {
           border-top: 1px solid #d9d9d9;
         }
+
         &:first-child {
           padding-top: 1.75rem;
         }
@@ -402,18 +439,22 @@ h2.title {
         h4 {
           @include font(1rem, 500, 1.1719rem, color(medicina, '-dark'));
         }
+
         .button {
           color: $texto-light;
           padding: 0;
         }
+
         .button:hover {
           cursor: pointer;
           color: $danger;
         }
+
         .button:target {
           outline: none;
         }
       }
+
       &-total {
         padding: 1rem 1.5rem;
         display: flex;
@@ -425,6 +466,7 @@ h2.title {
         span {
           @include font(0.875rem, 500, 1.1719rem, #808fa6);
         }
+
         h3 {
           @include font(2rem, 700, 1, color(texto, '-light'));
         }
@@ -435,6 +477,7 @@ h2.title {
       display: flex;
       align-items: center;
       gap: 1rem;
+
       .numstep {
         width: 1.5rem;
         height: 1.5rem;
@@ -446,6 +489,7 @@ h2.title {
         border-radius: 2rem;
         background-color: $texto-light;
       }
+
       .title {
         display: none;
         color: #292d32;
@@ -486,26 +530,32 @@ h2.title {
       justify-content: space-between;
     }
   }
+
   .datos-tarjeta {
     .finalResume-item {
       margin-bottom: 0.75rem;
     }
   }
+
   .datos-cliente,
   .datos-tarjeta {
     row-gap: 1.25rem;
   }
+
   .finalResume-confirmation {
     gap: 1rem;
+
     .control,
     .field,
     .field label {
       width: 100%;
     }
+
     label {
       display: flex;
       align-items: center;
     }
+
     input {
       position: absolute;
       text-align: center;
@@ -517,11 +567,13 @@ h2.title {
       height: 100%;
     }
   }
+
   .finalResume-item {
     h4 {
       font-weight: 600;
       font-size: 20px;
     }
+
     label {
       color: #808fa6;
       text-transform: uppercase;
@@ -535,6 +587,7 @@ h2.title {
       }
     }
   }
+
   h2 {
     margin-bottom: -0.25rem;
   }
@@ -557,11 +610,13 @@ h2.title {
   #numeroContrato_resume {
     grid-column: span 2;
   }
+
   #emailCliente_resume {
     display: flex;
     font-size: 14px;
     text-transform: uppercase;
   }
+
   .is-divider {
     margin: 1rem 0;
   }
@@ -576,7 +631,7 @@ h2.title {
   margin-top: 2.5rem;
   display: grid;
   grid-template-areas: 'back save next';
-  grid-auto-columns: 1fr;
+  grid-auto-columns: repeat(3, 1fr);
   gap: 1rem;
 
   .prev-button {
@@ -594,10 +649,6 @@ h2.title {
   .next-button {
     grid-area: next;
   }
-
-  /* & button[type='submit'] {
-    grid-column: 2/3;
-  } */
 }
 
 // Lista de cursos
@@ -607,6 +658,7 @@ h2.title {
   grid-template-columns: min(100%, 800px);
   flex-flow: column nowrap;
   gap: 0.5rem;
+
   .course {
     margin-bottom: 0;
   }
@@ -624,6 +676,7 @@ h2.title {
   &-selection {
     display: flex;
     align-items: center;
+
     input {
       width: 22px;
       height: 22px;
@@ -646,6 +699,7 @@ h2.title {
       gap: 0.5rem;
     }
   }
+
   &-specialty,
   &-hours {
     text-transform: uppercase;
@@ -657,11 +711,13 @@ h2.title {
       width: 1.1em;
     }
   }
+
   &-name {
     h3 {
       @include font(1.125rem, 700, 1.2, color(medicina, '-dark'));
     }
   }
+
   &-price {
     display: flex;
     align-items: flex-end;
@@ -678,6 +734,7 @@ h2.title {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
+
     &:active,
     &:hover {
       border-color: hsl(0deg, 0%, 86%);
@@ -689,6 +746,7 @@ h2.title {
 pre {
   display: none;
 }
+
 @media screen and (min-width: 767px) {
   .pasarela {
     overflow: unset;
@@ -712,32 +770,38 @@ pre {
         width: 150px;
       }
     }
+
     .navbar-burger {
       width: 100%;
+
       span {
         width: 24px;
         left: calc(50% - 12px);
       }
+
       &:hover {
         background-color: transparent;
       }
     }
   }
+
   .pasarela {
-    padding-top: calc(80px + 20px);
+    padding-top: calc(5rem + 1.25rem);
     padding-bottom: 0 !important;
     height: 100vh;
     display: grid;
-    grid-template-columns: 72px auto;
-    overflow-y: scroll;
+    grid-template-columns: 4.5rem auto;
+    overflow-y: auto;
+
     .notification {
       margin: 1rem;
       padding: 1rem;
-      font-size: 14px;
+      font-size: 0.875rem;
       display: flex;
       flex-direction: column;
-      row-gap: 4px;
+      row-gap: 0.25rem;
     }
+
     .label {
       margin-bottom: 2px;
       color: #292d32;
@@ -745,24 +809,27 @@ pre {
       font-weight: 500;
       font-size: 0.75rem;
     }
+
     form {
       order: 2;
       height: 100%;
       grid-template-columns: 1fr;
       grid-template-rows: max-content auto max-content;
-      padding: 0 0 24px;
+      padding: 0 1rem 1.5rem;
 
       & .title {
         svg {
           display: block;
         }
       }
+
       & > [class*='grid'] {
         overflow-y: scroll;
         grid-template-columns: 1fr;
         width: 100%;
         margin-bottom: 12px;
       }
+
       /* & > *:nth-child(2) {
         overflow-y: scroll;
         grid-template-columns: 1fr;
@@ -772,23 +839,28 @@ pre {
       .grid-med_mod_payment-mp {
         overflow: initial;
       }
+
       .grid-country-item {
         justify-content: start;
       }
+
       .field {
         margin: 0;
         width: 100%;
       }
+
       .grid-payment_method {
         &-item {
           &.tall {
             height: 60px;
           }
+
           img {
             height: 85%;
           }
         }
       }
+
       .grid-med_mod_payment-mp {
         grid-template-columns: 1fr;
         grid-template-areas:
@@ -812,6 +884,7 @@ pre {
       #mod_traditional_field {
         grid-area: mod;
       }
+
       #grid-client_data,
       #grid-payment_mp {
         display: flex;
@@ -819,6 +892,7 @@ pre {
         height: 100%;
         padding-top: 0.75rem;
       }
+
       #finalResume {
         padding: 0;
         width: 100%;
@@ -826,16 +900,19 @@ pre {
         flex-direction: column;
         border-radius: unset;
         filter: none;
+
         .finalResume-confirmation {
           display: flex;
           flex-direction: column;
           gap: 0.75rem;
           padding-block: 1rem;
+
           .field label {
             height: max-content;
             padding: 0.75rem;
           }
         }
+
         .finalResume-item {
           margin: 0;
           overflow-wrap: anywhere;
@@ -844,9 +921,11 @@ pre {
             font-size: 1rem;
           }
         }
+
         h2 {
           font-size: 1.125rem !important;
         }
+
         .datos-cliente,
         .datos-tarjeta {
           display: flex;
@@ -859,12 +938,15 @@ pre {
             gap: 12px;
           }
         }
+
         #emailCliente_resume {
           flex-direction: column;
+
           h4 {
             margin: 0;
           }
         }
+
         #numeroContrato_resume h4,
         #montoTotalContrato_resume h4 {
           font-size: 18px;
@@ -885,6 +967,7 @@ pre {
     & > .title {
       display: none;
     }
+
     &-item {
       padding: 0;
       min-height: 28.25px;
@@ -899,6 +982,7 @@ pre {
       &-info > *:not(.numstep) {
         display: none !important;
       }
+
       button {
         height: 1.75rem;
         padding: 0 !important;
@@ -907,15 +991,18 @@ pre {
           font-size: 1.5rem !important;
         }
       }
+
       &.current,
       &.completed {
         .subtitle {
           margin-bottom: 0;
         }
+
         .title {
           margin-top: 0;
         }
       }
+
       &.completed .button {
         display: none;
       }
@@ -929,17 +1016,20 @@ pre {
         background-color: #fff;
         box-shadow: none;
       }
+
       &-courses {
         &-list {
           padding: 0 1rem 1rem;
           max-height: unset;
         }
+
         .delete-selection {
           position: absolute;
           right: 00.25rem;
           bottom: 0.25rem;
           transform: scale(0.8);
         }
+
         &-total {
           margin: 0.5rem 1rem;
           padding: 0.75rem;
@@ -951,6 +1041,7 @@ pre {
           span {
             font-size: 8px;
           }
+
           h3 {
             font-size: 1rem;
           }
@@ -959,20 +1050,24 @@ pre {
     }
   }
 
-  .pasarela-1 {
+  .pasarela-1.seleccion-de-cursos {
     padding: 0;
+
     & > * {
       padding-inline: 1rem;
     }
+
     & .title {
       margin-bottom: 12px;
       font-size: 18px;
       justify-content: space-between;
+
       span {
         display: none;
       }
     }
   }
+
   .course {
     padding: 0.5rem 0.75rem;
     justify-content: flex-start;
@@ -987,33 +1082,40 @@ pre {
     &-selection {
       display: none;
     }
+
     &-content {
       gap: 6px;
+
       &-header {
         flex-flow: row nowrap;
         gap: 0.25rem;
+
         & > * {
           font-size: 0.5rem !important;
         }
       }
     }
+
     &-specialty {
       text-overflow: ellipsis;
       overflow-y: clip;
       white-space: nowrap;
       max-width: 14ch;
     }
+
     &-name {
       h3 {
         font-size: 0.875rem;
       }
     }
+
     &-price {
       h3 {
         font-size: 1.125rem;
       }
     }
   }
+
   .searchbar-desktop {
     display: none;
   }
@@ -1029,17 +1131,21 @@ pre {
       display: block;
     }
   }
+
   .controls {
     margin-top: 0;
     grid-template-areas: 'back next';
     grid-template-columns: 1fr 1fr;
     column-gap: 8px;
+
     .next-button {
       grid-area: next;
     }
+
     button[type='submit'] {
       grid-area: next;
     }
+
     .save-button {
       width: max-content;
       padding: 0 3px;
@@ -1049,6 +1155,7 @@ pre {
       border-radius: 50%;
       aspect-ratio: 1/1;
       background-color: hsl(340deg, 100%, 57%);
+
       &[disabled] {
         opacity: 0.5;
         background-color: hsl(340deg, 100%, 57%);
@@ -1057,6 +1164,7 @@ pre {
       span {
         display: none;
       }
+
       img {
         display: block;
         transform: scale(1.1);
@@ -1096,12 +1204,35 @@ pre {
       }
     }
   }
+
   .is-expanded ~ .pasarela {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
   }
+
   .modal.is-active {
     display: none;
+  }
+}
+
+.modal-generated-link {
+  padding: 1.5rem 2rem;
+  height: 300px;
+  background-color: #e6f7ef;
+  color: #257953;
+  margin: auto 0px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  h2 {
+    color: #257953;
+  }
+
+  & > div.is-flex {
+    gap: 1rem;
   }
 }

@@ -152,7 +152,7 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
       </Button>
 
       <Button
-        className={`flex-grow-1 is-primary is-normal is-fullwidth`}
+        className={`flex-grow-1 is-primary is-normal is-fullwidth next-button`}
         disabled={disabledNextButton || !formik.isValid}
         type="submit"
       >

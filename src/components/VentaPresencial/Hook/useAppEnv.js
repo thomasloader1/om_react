@@ -80,7 +80,7 @@ export const useAppEnv = () => {
         } else if (sameStep && option.step === 4) {
           option.status = 'current';
         } */
-
+        console.log({ products, selectedCourses })
         if (
           products !== null &&
           typeof products !== 'undefined' &&

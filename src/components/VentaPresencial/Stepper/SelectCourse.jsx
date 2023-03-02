@@ -8,6 +8,8 @@ import { useProducts } from '../Hook/useProducts';
 import { useFormikContext } from 'formik';
 import MotionSpinner from '../../PasarelaCobros/Spinner/MotionSpinner';
 import { IoMdArrowDropleft, IoMdArrowDropright } from 'react-icons/io';
+import withSpinner from '../Hoc/withSpinner';
+
 
 const { NODE_ENV, REACT_APP_API } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -231,4 +233,4 @@ const SelectCourseStep = () => {
   );
 };
 
-export default SelectCourseStep;
+export default withSpinner(SelectCourseStep);
