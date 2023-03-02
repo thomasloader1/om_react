@@ -55,6 +55,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     setCheckoutLink,
     setOptions,
     options: optionsGlobal,
+    appEnv,
   } = useContext(AppContext);
   const formik = useFormikContext();
   const { cardComplete, email } = formik.values;
@@ -239,7 +240,8 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     };
     const months = formikValues.quotes && formikValues.quotes > 0 ? formikValues.quotes : 0;
     const allIsoCodes = getAllISOCodes();
-    const clearedCountry = removeAccents(country);
+    const thisCountry = country ? country : appEnv?.country;
+    const clearedCountry = removeAccents(thisCountry);
     const filterIso = allIsoCodes.filter((iso) => iso.countryName === clearedCountry);
     //console.log({ allIsoCodes, country, clearedCountry, filterIso });
     const [countryObject] = filterIso;

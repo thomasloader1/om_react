@@ -3,11 +3,27 @@ import { useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { fireToast } from './useSwal';
+const {
+  NODE_ENV,
+  REACT_APP_OCEANO_URL,
+  REACT_APP_OCEANO_PROGRESS,
+  REACT_APP_OCEANO_PROGRESS_LOCAL,
+} = process.env;
+
+const PROGRESS =
+  NODE_ENV === 'production'
+    ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_PROGRESS}`
+    : `${REACT_APP_OCEANO_PROGRESS_LOCAL}`;
 
 export const useProgress = () => {
-  const { userInfo, setUserInfo,
-     setOptions, options: optionsGlobal,
-      stepNumber, setStepNumber } = useContext(AppContext);
+  const {
+    userInfo,
+    setUserInfo,
+    setOptions,
+    options: optionsGlobal,
+    stepNumber,
+    setStepNumber,
+  } = useContext(AppContext);
   const { id } = useParams();
   const { appEnv, setAppEnv } = useContext(AppContext);
   const [fetching, setFetching] = useState(false);
@@ -19,7 +35,7 @@ export const useProgress = () => {
   const getProgress = async () => {
     setFetching(true);
     try {
-      const response = await axios.get(`/api/progress/${progressId}`);
+      const response = await axios.get(`${PROGRESS}/${progressId}`);
       const { data } = response;
       console.log('getProgress', { data });
       const { progress, lead, contact, contract, products } = data;
@@ -52,7 +68,7 @@ export const useProgress = () => {
             isoRef: iso,
           },
         });
-        console.log({stepNumber});
+        console.log({ stepNumber });
         setStepNumber(1);
       } else {
         throw new Error('El progreso no tiene datos suficientes para seguir con el pago.');
