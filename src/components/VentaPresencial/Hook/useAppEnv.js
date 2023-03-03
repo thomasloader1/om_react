@@ -67,19 +67,6 @@ export const useAppEnv = () => {
           option.status = 'current';
         }
 
-        /* if (
-          contract !== null &&
-          typeof contract !== 'undefined' &&
-          option.step === 4
-        ) {
-          const { lead_id, id, entity_id_crm, ...formContact } = contract;
-          const formIncomplete = Object.values(formContact).includes(null);
-          //console.log({ formIncomplete, lead }, Object.values(lead));
-          option.status = formIncomplete ? 'current' : 'completed';
-          option.value = formIncomplete ? 'Sin completar' : 'Completado';
-        } else if (sameStep && option.step === 4) {
-          option.status = 'current';
-        } */
         console.log({ products, selectedCourses })
         if (
           products !== null &&
@@ -92,7 +79,8 @@ export const useAppEnv = () => {
               ? 'completed'
               : 'current';
           //option.value = formIncomplete ? 'Sin completar' : 'Completado';
-        } else if (sameStep && option.step === 4) {
+        } else if (products == null &&
+          typeof products === 'undefined' && sameStep && option.step === 4) {
           option.status = 'current';
         }
       }

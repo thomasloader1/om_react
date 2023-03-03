@@ -26,6 +26,7 @@ const MultiStep = ({
   } = useContext(AppContext);
   const { stepNumberGlobal, setStepNumberGlobal } = stepStateNumber;
   const { sideItemOptionsVP } = options;
+
   const [spanshot, setSpanshot] = useState(initialValues);
   const steps = React.Children.toArray(children);
   const step = steps[stepNumberGlobal];
@@ -45,6 +46,8 @@ const MultiStep = ({
       ...prevState,
       sideItemOptionsVP: [...sideItemOptionsVP],
     }));
+
+    console.log({ stepNumberGlobal, indexOfNextStep, currentStepObject: sideItemOptionsVP[stepNumberGlobal] })
 
     setStepNumberGlobal((step) => step + 1);
   };
