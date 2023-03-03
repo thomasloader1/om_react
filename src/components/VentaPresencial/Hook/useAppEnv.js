@@ -83,6 +83,23 @@ export const useAppEnv = () => {
           typeof products === 'undefined' && sameStep && option.step === 4) {
           option.status = 'current';
         }
+
+         if (
+          contract !== null &&
+          typeof products !== 'undefined' &&
+          option.step === 5
+        ) {
+          option.status =
+            contract !== null && typeof contract !== 'undefined'
+              ? 'completed'
+               : 'current';
+          option.value = typeof contract === 'undefined'? 'Sin completar' : 'Completado';
+           
+          //option.value = formIncomplete ? 'Sin completar' : 'Completado';
+        } else if (sameStep && option.step === 5) {
+           option.status = 'current';
+           option.value = 'Sin completar';
+        }
       }
 
       return { ...option };

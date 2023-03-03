@@ -4,17 +4,16 @@
 
     La barra en el paso 4 no se termina de seleccionar cuando uno pasa al paso 5.
 
-## 2-Issue-`Paso 5 tiene un titulo erroneo en el Stepper Side`
+## 2-Issue-`Paso 5 tiene un titulo erroneo en el Stepper Side` ✅
 
     En vez de `DATOS DE LA TARJETA` debe tener `FINALIZACION DE CONTRATO`.
 
 > Img del issue 1 y 2
     ![No se pudo cargar la imagen: 1-issue][urlIssue1y2]
 
-## 3-Issue-En el paso 3 me tiro error de street.
+## 3-Issue-En el paso 3 me tiro error de street. ✅
+
     El paso tres tiro un error en street y no volvio, avanzo al paso siguiente.
-
-
 
 ## 4-Issue-Trae los datos cacheados
 Al terminar un proceso de pago hasta el paso 5 y querer iniciar uno nuevo al ingresar la url: oceanomedicina.net/vp/#
@@ -67,6 +66,20 @@ Undefined index: street
 
 ## 10-Issue-Siempre se genera un contrato nuevo.
     Al haber generado un contrato, y volver atras se vuelve, y haber .
+## 11-Issue- Cuando avanzabas despues de seleccionar los cursos ✅
+
+    Cuando dabas en siguiente tiva error con el 'name' en el createLeadZohoCRM.
+    Despues de hacer pull no tiro mas.
+    veo en el codigo de api-payments hay una linea donde dice: 
+
+    data,['contact_id']
+    
+    y este dato no esta entre las variables que utiliza.
+
+> Img del issue 11
+    ![No se pudo cargar la imagen: 11-issue][urlIssue11]
 
 [urlIssue1y2]: img/1-Issue.PNG
 [urlIssue4]: img/2-Issue.PNG
+[urlIssue11]: img/3-Issue.PNG
+

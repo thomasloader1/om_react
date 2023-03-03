@@ -143,6 +143,15 @@ function SideItem({
         console.log({ rest, formikInstance, userInfo });
         break;
       }
+        case 5: {
+       
+        userInfo.stepFive.value = '';
+
+        setUserInfo({ ...userInfo });
+
+        console.log({ userInfo });
+        break;
+      }
       default: {
         console.log('default case editStep()');
         break;
