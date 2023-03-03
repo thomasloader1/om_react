@@ -35,12 +35,14 @@ export const useContact = () => {
         step_number: 4,
       });
       const { contact, lead, progress } = data;
+
       ctx.setAppEnv((prevState) => ({
         ...prevState,
         ...progress,
         lead: { ...lead },
         contact: { ...contact },
       }));
+
       createContactCRM(contact, lead.entity_id_crm);
     } catch (e) {
       console.log({ e });
@@ -58,8 +60,6 @@ export const useContact = () => {
         contact,
         lead_id: leadId,
       });
-
-      console.warn({ data })
 
       const { contact: contactResponse } = data;
       updateEntityIdCRMContactSales(contact, contactResponse.id);
