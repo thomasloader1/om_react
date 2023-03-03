@@ -66,6 +66,20 @@ Undefined index: street
 
 ## 10-Issue-Siempre se genera un contrato nuevo.
     Al haber generado un contrato, y volver atras se vuelve, y haber .
+## 11-Issue- Cuando avanzabas despues de seleccionar los cursos ✅
+
+    Cuando dabas en siguiente tiva error con el 'name' en el createLeadZohoCRM.
+    Despues de hacer pull no tiro mas.
+    veo en el codigo de api-payments hay una linea donde dice: 
+
+    data,['contact_id']
+    
+    y este dato no esta entre las variables que utiliza.
+
+> Img del issue 11
+    ![No se pudo cargar la imagen: 11-issue][urlIssue11]
 
 [urlIssue1y2]: img/1-Issue.PNG
 [urlIssue4]: img/2-Issue.PNG
+[urlIssue11]: img/3-Issue.PNG
+
