@@ -50,14 +50,6 @@ const ResumeStep = ({ processContract, completeData }) => {
               Se genero el contrato <b>{contractNumber}</b> con pais{' '}
               <b>{appEnv?.country}</b> y esta listo para ser cobrado
             </div>
-
-            {/* <Block style={{ margin: '1rem 0' }}>
-            <Notification color="success" light="true">
-              <p>
-                
-              </p>
-            </Notification>
-          </Block> */}
           </motion.div>
         )}
       </FormStep>
