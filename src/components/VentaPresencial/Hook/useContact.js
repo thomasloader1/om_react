@@ -16,7 +16,11 @@ const apiConvertLeadZohoCRM = isProduction
 const apiUpdateEntityIdContactSales = isProduction
   ? `${REACT_APP_API}/api/updateEntityIdContactSales`
   : '/api/updateEntityIdContactSales';
-
+const genders = [
+      { id: 1, name: 'Masculino' },
+      { id: 2, name: 'Femenino' },
+      { id: 3, name: 'Prefiero no aclararlo' },
+    ]
 export const useContact = () => {
   const [fetching, setFetching] = useState(false);
   const { id } = useParams();
@@ -54,6 +58,11 @@ export const useContact = () => {
   const createContactCRM = async (contact, leadId) => {
     console.log({ contact, leadId });
     // console.log(responseCreateLeadSales);
+    
+    const gender = genders.find((item) => item.id === parseInt(contact.sex));
+      if (gender) {
+        contact.sex = gender.name;
+      }
     try {
       const { data } = await axios.post(apiConvertLeadZohoCRM, {
         idPurchaseProgress: id,
