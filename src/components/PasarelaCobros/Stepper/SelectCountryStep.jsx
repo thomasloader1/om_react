@@ -49,7 +49,7 @@ function SelectCountryStep() {
             key={props.idElement}
             disabled={!active}
             onClick={() => {
-              if (contractData?.sale.Pais === props.value) {
+              if (contractData?.sale?.Pais === props.value) {
 
                 const { sideItemOptions } = options;
                 const { stepOne } = userInfo;
@@ -67,14 +67,14 @@ function SelectCountryStep() {
                   ...userInfo,
                 });
               } else {
-                fireModalAlert("Pais Invalido", `El pais del Contrato es <b>${contractData?.sale.Pais}</b>, si esto no deberia ser asi cambie el Pais desde el CRM y vuelva a cargar la pagina`)
+                fireModalAlert("Pais Invalido", `El pais del Contrato es <b>${contractData?.sale?.Pais}</b>, si esto no deberia ser asi cambie el Pais desde el CRM y vuelva a cargar la pagina`)
               }
 
             }}
           />
         ))}
       </div>
-      <pre>{JSON.stringify(contractData?.sale.Pais, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(contractData?.sale?.Pais, null, 2)}</pre> */}
     </FormStep>
   );
 }

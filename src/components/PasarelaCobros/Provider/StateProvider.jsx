@@ -22,7 +22,7 @@ function StateProvider({ children }) {
     sideItemOptions,
   });
 
-  const [contractData, setContractData] = useState(null)
+  const [contractData, setContractData] = useState({})
   const [formikValues, setFormikValues] = useState({});
   const [userInfo, setUserInfo] = useState(userFlow);
   const [stripeRequest, setStripeRequest] = useState(null);

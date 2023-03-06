@@ -22,7 +22,9 @@ function PasarelaApp() {
   const { fetching, progressId, getProgress } = useProgress();
   const location = useLocation();
   const { id } = useParams();
-  const { data } = useContractZoho(id);
+
+  const needRunEffect = !location.pathname.includes('vp')
+  const { data } = useContractZoho(id, needRunEffect);
   console.log({ id, data })
 
   const validationSchemaFinalStep = Yup.object({

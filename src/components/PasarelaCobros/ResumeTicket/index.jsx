@@ -7,7 +7,8 @@ import { useContext } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import Spinner from '../Spinner';
 import ButtonField from '../RadioButton/ButtonField';
-import { useParams } from 'react-router';
+import { useLocation, useParams } from 'react-router';
+import { useContractZoho } from '../Hooks/useContractZoho';
 
 function ResumeTicket() {
   const {
@@ -18,9 +19,12 @@ function ResumeTicket() {
     userInfo,
     setUserInfo,
     appRef,
-    contractData
+    contractData,
+    appEnv
   } = useContext(AppContext);
-  /* const { loading, data, error } = useContractZoho(contractId); */
+  const location = useLocation()
+  const needRunEffect = location.pathname.includes('vp')
+  const { loading, data, error } = useContractZoho(appEnv.contract.entity_id_crm, needRunEffect);
   const [openModal, setOpenModal] = useState(null)
   const { id } = useParams();
 
