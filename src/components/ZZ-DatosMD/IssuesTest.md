@@ -6,9 +6,13 @@ se carga un nuevo id y como tiene datos cargador, aparentemente en cache, se ve 
 
 > Img del issue 4
     ![No se pudo cargar la imagen: 2-issue][urlIssue4]
-## 9-Issue-Los cursos seleccionados, en el step 3, estan cacheados.
 
+## 9-Issue-Los cursos seleccionados, en el step 3, estan cacheados.
     Cuando inicias un nuevo progreso hay cursos seleccionados de algun progreso anterior.
+
+## Solucion: 
+    usar useEffect() para limpiar.
+
 
 ## 7-Issue-Actualizar datos de LEAD despues de realizar una conversion a contacto.
 
@@ -18,7 +22,7 @@ se carga un nuevo id y como tiene datos cargador, aparentemente en cache, se ve 
 - Solucion:
   Cuando se vuelve hasta el paso de contacto se valida si ya paso por el paso de conversion a contacto, eso se puede hacer `consultando si el step es mayor al step de conversion > 3`. Hay que buscar los datos desde el crm o vp, mapearlo en el form y realizar las respectivas actualizaciones en vp y en ZOHOCRM.
 
-## 5-Issue-Cada vez que se ingresa por vp se genera un nuevo prog
+## 5-Issue-Cada vez que se ingresa por vp se genera un nuevo progreso
 ## 10-Issue-Siempre se genera un contrato nuevo.
     Al haber generado un contrato, y volver atras se vuelve, y haber.ss
 
