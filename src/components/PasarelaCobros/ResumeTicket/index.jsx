@@ -24,7 +24,7 @@ function ResumeTicket() {
   } = useContext(AppContext);
   const location = useLocation()
   const needRunEffect = location.pathname.includes('vp')
-  const { loading, data, error } = useContractZoho(appEnv.contract.entity_id_crm, needRunEffect);
+  const { loading, data, error } = useContractZoho(appEnv?.contract?.entity_id_crm, needRunEffect);
   const [openModal, setOpenModal] = useState(null)
   const { id } = useParams();
 
