@@ -22,6 +22,7 @@ function StateProvider({ children }) {
     sideItemOptions,
   });
 
+  const [contractData, setContractData] = useState(null)
   const [formikValues, setFormikValues] = useState({});
   const [userInfo, setUserInfo] = useState(userFlow);
   const [stripeRequest, setStripeRequest] = useState(null);
@@ -50,7 +51,8 @@ function StateProvider({ children }) {
         appEnv,
         setAppEnv,
         stepNumber,
-        setStepNumber
+        setStepNumber,
+        contractData, setContractData
       }}
     >
       {children}

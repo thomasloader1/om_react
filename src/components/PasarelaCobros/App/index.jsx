@@ -12,7 +12,8 @@ import GeneratePaymentLinkStep from '../Stepper/GeneratePaymentLinkStep';
 
 import useStripeEnv from '../Hooks/useStripeEnv';
 import { useProgress } from '../Hooks/useProgress';
-import { useLocation } from 'react-router';
+import { useLocation, useParams } from 'react-router';
+import { useContractZoho } from '../Hooks/useContractZoho';
 
 function PasarelaApp() {
   const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } =
@@ -20,6 +21,9 @@ function PasarelaApp() {
   const { stripePromise } = useStripeEnv();
   const { fetching, progressId, getProgress } = useProgress();
   const location = useLocation();
+  const { id } = useParams();
+  const { data } = useContractZoho(id);
+  console.log({ id, data })
 
   const validationSchemaFinalStep = Yup.object({
     fullName: Yup.string()
@@ -49,7 +53,7 @@ function PasarelaApp() {
     return () => null;
   }, [stepNumber]);
 
-  const handleSubmitByStepTwo = async () => {};
+  const handleSubmitByStepTwo = async () => { };
 
   return (
     <div ref={appRef}>
@@ -126,7 +130,7 @@ function PasarelaApp() {
               />
             </MultiStep>
           </div>
-          {/* <pre>{JSON.stringify(formikValues, null, 2)}</pre> */}
+          {/* <pre>{JSON.stringify(contractData, null, 2)}</pre> */}
         </section>
       </Elements>
     </div>

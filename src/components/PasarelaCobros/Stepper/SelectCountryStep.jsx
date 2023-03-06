@@ -3,9 +3,11 @@ import React, { useContext, useEffect } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import ButtonField from '../RadioButton/ButtonField';
 import { FormStep } from './MultiStep';
+import { fireModalAlert } from '../Hooks/useSwal'
 
 function SelectCountryStep() {
-  const { options, setOptions, userInfo, setUserInfo, appEnv } = useContext(AppContext);
+  const { options, setOptions, userInfo, setUserInfo, appEnv, contractData } = useContext(AppContext);
+
   const { countryOptions } = options;
   const { stepOne } = userInfo;
   const { setFieldValue } = useFormikContext();
@@ -47,26 +49,32 @@ function SelectCountryStep() {
             key={props.idElement}
             disabled={!active}
             onClick={() => {
-              const { sideItemOptions } = options;
-              const { stepOne } = userInfo;
+              if (contractData?.sale.Pais === props.value) {
 
-              sideItemOptions[0].value = props.value;
-              stepOne.isoRef = props.idElement;
-              stepOne.value = props.value;
+                const { sideItemOptions } = options;
+                const { stepOne } = userInfo;
 
-              setOptions({
-                ...options,
-                sideItemOptions: [...sideItemOptions],
-              });
+                sideItemOptions[0].value = props.value;
+                stepOne.isoRef = props.idElement;
+                stepOne.value = props.value;
 
-              setUserInfo({
-                ...userInfo,
-              });
+                setOptions({
+                  ...options,
+                  sideItemOptions: [...sideItemOptions],
+                });
+
+                setUserInfo({
+                  ...userInfo,
+                });
+              } else {
+                fireModalAlert("Pais Invalido", `El pais del Contrato es <b>${contractData?.sale.Pais}</b>, si esto no deberia ser asi cambie el Pais desde el CRM y vuelva a cargar la pagina`)
+              }
+
             }}
           />
         ))}
       </div>
-      {/* <pre>{JSON.stringify(options.sideItemOptions, null, 2)}</pre> */}
+      <pre>{JSON.stringify(contractData?.sale.Pais, null, 2)}</pre>
     </FormStep>
   );
 }

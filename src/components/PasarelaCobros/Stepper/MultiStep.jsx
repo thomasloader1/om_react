@@ -1,12 +1,11 @@
-import { Form, Formik } from 'formik';
 import React, { useState, useContext } from 'react';
+import { AppContext } from '../Provider/StateProvider';
+import { Form, Formik } from 'formik';
 import { Block, Notification } from 'react-bulma-components';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import InfoNotify from '../InfoNotify';
-import { AppContext } from '../Provider/StateProvider';
 import Side from '../Side';
 import FormNavigation from '../StepControl/FormNavigation';
-import { motion } from 'framer-motion';
 
 const MultiStep = ({ children, initialValues, className, onSubmit, stepStateNumber }) => {
   const { options, setOptions, formRef } = useContext(AppContext);

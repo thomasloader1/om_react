@@ -21,10 +21,11 @@ export function fireToast(title, icon = 'error', timer = 3000) {
   });
 }
 
-export function fireAlert(title, icon = 'error', timer = 3000) {
+export function fireAlert(title, text = "", icon = 'error', timer = 3000) {
   toast.fire({
     title: <p>{title}</p>,
     toast: false,
+    text,
     icon,
     position: 'center-center',
     showConfirmButton: false,
@@ -34,5 +35,17 @@ export function fireAlert(title, icon = 'error', timer = 3000) {
       alert.addEventListener('mouseenter', Swal.stopTimer);
       alert.addEventListener('mouseleave', Swal.resumeTimer);
     },
+  });
+}
+
+export function fireModalAlert(title, html = "", icon = 'error') {
+  toast.fire({
+    title: <p>{title}</p>,
+    toast: false,
+    html,
+    icon,
+    position: 'center-center',
+    showConfirmButton: true,
+
   });
 }

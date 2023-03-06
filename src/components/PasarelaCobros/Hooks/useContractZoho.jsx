@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { AppContext } from '../Provider/StateProvider';
 
 const {
   REACT_APP_OCEANO_URL,
@@ -12,7 +13,7 @@ export const useContractZoho = (contractId) => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-
+  const { setContractData } = useContext(AppContext)
   const body = new FormData();
   body.append('key', '9j9fj0Do204==3fja134');
   body.append('id', contractId);
@@ -24,21 +25,29 @@ export const useContractZoho = (contractId) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.post(URL, body, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
-      //  // console.log({ response })
+      try {
+        const response = await axios.post(URL, body, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        });
 
-      setData(response.data);
-      setLoading(response.data.lenght > 0);
+        setData(response.data);
+        setContractData(response.data)
 
-      // // console.log({ response, data })
+
+
+      } catch (e) {
+        setError(e.response.data)
+      } finally {
+        setLoading(false);
+      }
+
+
     };
 
     fetchData();
-  }, []);
+  }, [contractId]);
 
   return { data, loading, error };
 };

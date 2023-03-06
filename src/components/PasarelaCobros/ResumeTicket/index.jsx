@@ -5,12 +5,11 @@ import moment from 'moment';
 import { Block, Notification, Columns, Modal, Media, Content } from 'react-bulma-components';
 import { useContext } from 'react';
 import { AppContext } from '../Provider/StateProvider';
-import { useContractZoho } from '../Hooks/useContractZoho';
 import Spinner from '../Spinner';
 import ButtonField from '../RadioButton/ButtonField';
 import { useParams } from 'react-router';
 
-function ResumeTicket({ contractId }) {
+function ResumeTicket() {
   const {
     formikValues,
     setFormikValues,
@@ -18,9 +17,10 @@ function ResumeTicket({ contractId }) {
     setOptions,
     userInfo,
     setUserInfo,
-    appRef
+    appRef,
+    contractData
   } = useContext(AppContext);
-  const { loading, data, error } = useContractZoho(contractId);
+  /* const { loading, data, error } = useContractZoho(contractId); */
   const [openModal, setOpenModal] = useState(null)
   const { id } = useParams();
 
@@ -38,14 +38,16 @@ function ResumeTicket({ contractId }) {
     );
   }
 
-  const { sale, contact, products } = data;
-
+  const { sale, contact, products } = contractData;
+  const isTraditional = formikValues.mod.includes("Tradicional")
+  const totalMonths = isTraditional ? 1 : formikValues.quotes
+  const payPerMonth = isTraditional ? sale?.Grand_Total : (sale?.Grand_Total / formikValues.quotes)
   return (
     <>
-      {loading ? (
+      {contractData == null ? (
         <Spinner />
       ) : (
-        
+
         <div id="finalResume" className="column">
           <div className="columns is-multiline datos-cliente">
             <h2 className="column is-full title is-size-4">
@@ -80,14 +82,14 @@ function ResumeTicket({ contractId }) {
               className="column is-one-third finalResume-item"
             >
               <label>MESES TOTALES</label>
-              <h4>{sale.Cantidad}</h4>
+              <h4>{totalMonths}</h4>
             </div>
             <div
               id="montoTotalMes_resume"
               className="column is-one-third finalResume-item"
             >
               <label>monto a pagar POR MES</label>
-              <h4>{sale.Valor_Cuota}</h4>
+              <h4>{payPerMonth}</h4>
             </div>
             <div
               id="montoTotalMes_resume"
@@ -175,7 +177,7 @@ function ResumeTicket({ contractId }) {
                 name="checkContract"
                 value="Datos erroneos"
                 onClick={() => {
-                  
+
                   const { sideItemOptions } = options;
                   const { stepFour } = userInfo;
                   appRef.current.style.filter = 'blur(8px)'
@@ -197,6 +199,7 @@ function ResumeTicket({ contractId }) {
               />
             </Columns.Column>
           </Columns>
+          {/* <pre>{JSON.stringify(formikValues, null, 2)}</pre> */}
         </div>
       )}
       <Modal
@@ -208,7 +211,7 @@ function ResumeTicket({ contractId }) {
           return setOpenModal();
         }}
       >
-       
+
         <Modal.Card>
           <Modal.Card.Header>
             <Modal.Card.Title>Datos incorrectos del contrato</Modal.Card.Title>
@@ -217,9 +220,9 @@ function ResumeTicket({ contractId }) {
             <Media>
               <Media.Item>
                 <Content>
-                 <p>Deberia editar los datos en la plataforma de Zoho y luego volver a hacer el procedimiento de compra</p>
+                  <p>Deberia editar los datos en la plataforma de Zoho y luego volver a hacer el procedimiento de compra</p>
 
-                 <a href={`https://crm.zoho.com/crm/org651130949/tab/SalesOrders/${id}`} className='button is-primary is-normal is-fullwidth'>Salir de pasarela y editar contrato</a>
+                  <a href={`https://crm.zoho.com/crm/org651130949/tab/SalesOrders/${id}`} className='button is-primary is-normal is-fullwidth'>Salir de pasarela y editar contrato</a>
                 </Content>
               </Media.Item>
             </Media>
