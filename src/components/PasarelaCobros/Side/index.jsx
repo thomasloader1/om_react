@@ -311,9 +311,8 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
           <>
             {userInfo.stepTwo.value.includes('Stripe') ? (
               <Button
-                className={`bigger is-medium ${fetching && 'is-loading'}${
-                  stripeRequest ? 'payment-generated' : 'generate-payment'
-                }`}
+                className={`bigger is-medium ${fetching && 'is-loading'}${stripeRequest ? 'payment-generated' : 'generate-payment'
+                  }`}
                 label={
                   <>
                     {isMobile && (stripeRequest ? <MdCheckCircleOutline /> : <BsCashCoin />)}
@@ -327,9 +326,8 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
               />
             ) : (
               <Button
-                className={`bigger is-medium ${fetching && 'is-loading'} ${
-                  checkoutLink ? 'payment-generated' : 'generate-payment'
-                }`}
+                className={`bigger is-medium ${fetching && 'is-loading'} ${checkoutLink ? 'payment-generated' : 'generate-payment'
+                  }`}
                 color={`${checkoutLink ? 'success' : 'primary'}`}
                 label={
                   <>
@@ -372,7 +370,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
             >
               {userInfo.stepTwo.value.includes('Stripe') ? (
                 <>
-                  <motion.h2 className='title is-2 has-text-white'>Pago realizado!</motion.h2>
+                  <motion.h2 className='title is-2 has-text-success my-5'>Pago realizado!</motion.h2>
                   <a
                     href='https://crm.zoho.com/crm/org631172874/tab/SalesOrders'
                     className='button is-success'
