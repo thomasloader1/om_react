@@ -1,7 +1,7 @@
 import { useField, useFormikContext } from 'formik';
 import React, { useEffect } from 'react';
 
-const SelectQuote = ({ selectName = 'Seleccione las cuotas deseadas', country, ...props }) => {
+const SelectQuote = ({ selectName = 'Seleccionar las cuotas', country, ...props }) => {
   const [field, meta] = useField(props);
   const formik = useFormikContext();
 

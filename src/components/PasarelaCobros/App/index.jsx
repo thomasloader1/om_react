@@ -23,9 +23,9 @@ function PasarelaApp() {
   const location = useLocation();
   const { id } = useParams();
 
-  const needRunEffect = !location.pathname.includes('vp')
+  const needRunEffect = !location.pathname.includes('vp');
   const { data } = useContractZoho(id, needRunEffect);
-  console.log({ id, data })
+  console.log({ id, data });
 
   const validationSchemaFinalStep = Yup.object({
     fullName: Yup.string()
@@ -55,7 +55,7 @@ function PasarelaApp() {
     return () => null;
   }, [stepNumber]);
 
-  const handleSubmitByStepTwo = async () => { };
+  const handleSubmitByStepTwo = async () => {};
 
   return (
     <div ref={appRef}>
@@ -106,7 +106,7 @@ function PasarelaApp() {
                 }}
                 validationSchema={Yup.object({
                   contractId: Yup.string('Coloque un id'),
-                  mod: Yup.string().required('❗ Seleccione un modo de pago'),
+                  mod: Yup.string().required('❗ Selecciona un modo de pago'),
                   quotes: Yup.string().when('mod', {
                     is: (val) => !(val && val.includes('Tradicional')),
                     then: Yup.string().required('❗ Especifique las cuotas'),

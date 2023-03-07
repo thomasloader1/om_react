@@ -1,82 +1,87 @@
 #grid-payment_stripe {
-    display: grid;
-    grid-template-areas: 'fullName fullName phone' 'address address dni' 'email email email' 'card card card' 'notify notify notify';
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+  display: grid;
+  grid-template-areas: 'fullName fullName phone' 'address address dni' 'email email email' 'card card card' 'notify notify notify';
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 
-    .field:nth-child(1) {
-        grid-area: fullName;
+  .field:nth-child(1) {
+    grid-area: fullName;
+  }
+
+  .field:nth-child(2) {
+    grid-area: phone;
+  }
+
+  .field:nth-child(3) {
+    grid-area: address;
+  }
+
+  .field:nth-child(4) {
+    grid-area: dni;
+  }
+
+  .field:nth-child(5) {
+    grid-area: email;
+  }
+
+  .checkout_stripe {
+    grid-area: card;
+
+    #card_element {
+      margin: 10px 0;
+      width: 100%;
+      background-color: hsl(0deg, 0%, 100%);
+      border-radius: 4px;
+      color: hsl(0deg, 0%, 21%);
+      border: 1px solid hsl(0deg, 0%, 86%);
+      padding: 10px;
+    }
+    iframe[name='__privateStripeFrame4086'] {
+      width: 100% !important;
+    }
+    #serverNotify {
+      grid-area: notify;
     }
 
-    .field:nth-child(2) {
-        grid-area: phone;
+    button {
+      width: 100%;
     }
+  }
 
-    .field:nth-child(3) {
-        grid-area: address;
-    }
-
-    .field:nth-child(4) {
-        grid-area: dni;
-    }
-
-    .field:nth-child(5) {
-        grid-area: email;
-    }
-
-    .checkout_stripe {
-        grid-area: card;
-
-        #card_element {
-            margin: 10px 0;
-            width: 700px;
-            background-color: hsl(0deg, 0%, 100%);
-            border-radius: 4px;
-            color: hsl(0deg, 0%, 21%);
-            border: 1px solid hsl(0deg, 0%, 86%);
-            padding: 10px;
-        }
-
-        #serverNotify {
-            grid-area: notify;
-        }
-
-        button {
-            width: 100%;
-        }
-    }
-
-    pre {
-        grid-area: console;
-        max-width: 300px;
-    }
+  pre {
+    grid-area: console;
+    max-width: 300px;
+  }
 }
-
+@media screen and (max-width: 766px) {
+  #grid-payment_stripe {
+    grid-template-areas: unset;
+  }
+}
 #grid-payment_mp {
-    display: grid;
-    grid-template-areas: 'fullName fullName phone' 'address address dni' 'email email email';
-    gap: 1rem;
+  display: grid;
+  grid-template-areas: 'fullName fullName phone' 'address address dni' 'email email email';
+  gap: 1rem;
 
-    .field:nth-child(1) {
-        grid-area: fullName;
-    }
+  .field:nth-child(1) {
+    grid-area: fullName;
+  }
 
-    .field:nth-child(2) {
-        grid-area: phone;
-    }
+  .field:nth-child(2) {
+    grid-area: phone;
+  }
 
-    .field:nth-child(3) {
-        grid-area: address;
-    }
+  .field:nth-child(3) {
+    grid-area: address;
+  }
 
-    .field:nth-child(4) {
-        grid-area: dni;
-    }
+  .field:nth-child(4) {
+    grid-area: dni;
+  }
 
-    .field:nth-child(5) {
-        grid-area: email;
-    }
-
+  .field:nth-child(5) {
+    grid-area: email;
+  }
 }

@@ -12,42 +12,37 @@ import SelectPaymentModeStep from './SelectPaymentModeStep';
 
 function Stepper() {
   const { options } = useContext(AppContext);
-  const { sideItemOptions } = options
+  const { sideItemOptions } = options;
   const { actualStep, setCurrentStep } = useCurrentStep(sideItemOptions);
 
   const validationSchema = Yup.object({
-    country: Yup.string().required('Seleccione un pais')
-  })
+    country: Yup.string().required('Selecciona un pais'),
+  });
 
-  console.group("Stepper")
+  console.group('Stepper');
   // console.log({ options })
-  console.groupEnd("Stepper")
-
+  console.groupEnd('Stepper');
 
   return (
-    <section className="container is-max-widescreen">
+    <section className='container is-max-widescreen'>
       <Formik
         initialValues={{
-          country: ''
+          country: '',
         }}
         onSubmit={(values) => {
-          alert(JSON.stringify(values, null, 2))
+          alert(JSON.stringify(values, null, 2));
         }}
         validationSchema={validationSchema}
       >
         {(formik) => (
           <form onSubmit={formik.handleSubmit}>
-
             <Step
               currentStep={actualStep.step}
-              stepTitle={`Seleccione un ${actualStep.label}`}
+              stepTitle={`Selecciona un ${actualStep.label}`}
               setCurrentStep={setCurrentStep}
             >
               <div>
-                <SelectCountryStep
-                  currentStep={actualStep.step}
-                  setCurrentStep={setCurrentStep}
-                />
+                <SelectCountryStep currentStep={actualStep.step} setCurrentStep={setCurrentStep} />
               </div>
               <div>
                 <SelectPaymentMethodStep
@@ -62,10 +57,7 @@ function Stepper() {
                 />
               </div>
               <div>
-                <FormClientDataStep
-                  currentStep={actualStep.step}
-                  setCurrentStep={setCurrentStep}
-                />
+                <FormClientDataStep currentStep={actualStep.step} setCurrentStep={setCurrentStep} />
               </div>
               <div>
                 <GeneratePaymentLinkStep
@@ -79,7 +71,6 @@ function Stepper() {
             </Step>
           </form>
         )}
-
       </Formik>
     </section>
   );

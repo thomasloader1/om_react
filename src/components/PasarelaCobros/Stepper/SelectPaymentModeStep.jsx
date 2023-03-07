@@ -29,7 +29,7 @@ function SelectPaymentModeStep() {
 
   return (
     <>
-      <FormStep stepNumber={3} stepName='Seleccione un modo de pago'>
+      <FormStep stepNumber={3} stepName='Selecciona un modo de pago'>
         <div id='medModPago_grid' className='grid-med_mod_payment-mp'>
           {options.paymentModeOptions.map(({ ...props }) => (
             <ButtonField

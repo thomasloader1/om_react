@@ -91,7 +91,7 @@ function VentaPresencialApp() {
               }}
               validationSchema={Yup.object({
                 contractId: Yup.string().required('Ingrese el ID del contrato es requerido'),
-                mod: Yup.string().required('Seleccione un modo de pago'),
+                mod: Yup.string().required('Selecciona un modo de pago'),
                 quotes: Yup.string().when('mod', {
                   is: (val) => !(val && val.includes('Tradicional')),
                   then: Yup.string().required('Especifique las cuotas'),

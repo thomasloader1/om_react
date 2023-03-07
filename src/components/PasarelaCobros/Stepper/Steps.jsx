@@ -32,7 +32,7 @@ export function SelectCountryStep({ countryOptions, currentStep, setCurrentStep 
       country: '',
     },
     validationSchema: Yup.object({
-      country: Yup.string().required('Seleccione un pais'),
+      country: Yup.string().required('Selecciona un pais'),
     }),
     onSubmit: (values) => {
       // console.log('formik values', values);
@@ -125,7 +125,7 @@ export function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
 
   const initialValuesSpecial = { numberSO: '' };
   const validationSchemaSpecial = {
-    numberSO: Yup.string().min(1).required('Ingrese un numero de SO'),
+    numberSO: Yup.string().min(1).required('Ingresar un numero de SO'),
   };
 
   const formik = useFormik({

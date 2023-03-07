@@ -1,5 +1,5 @@
-@use '../../node_modules/bulma/bulma.sass';
-@use 'abstracts';
+@use './bulma';
+@use 'abstracts' as *;
 @use 'cardAsesor';
 @use 'pasarela-country.scss';
 @use 'pasarela-client-form.scss';
@@ -590,11 +590,12 @@ h2.title {
 
         & > *,
         & > [id*=''] {
-          grid-area: unset;
+          grid-area: unset !important;
         }
       }
       & > .is-divider {
         display: initial;
+        margin-block: 0.25rem;
       }
       .grid {
         &-country-item {

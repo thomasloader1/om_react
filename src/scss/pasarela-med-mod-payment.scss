@@ -51,6 +51,9 @@
     select {
       width: 100%;
     }
+    &::after {
+      margin-top: 0;
+    }
   }
   .select.is-danger {
     grid-area: quotes;
@@ -85,6 +88,15 @@
 
     .field:nth-child(3) {
       grid-area: unset;
+      margin-bottom: 0;
+    }
+  }
+  .grid-med_mod_payment-mp .select.is-link {
+    grid-area: unset;
+    margin: 0;
+
+    &::after {
+      margin-top: 5px;
     }
   }
 }

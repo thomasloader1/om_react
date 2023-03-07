@@ -5,7 +5,7 @@ import RadioButton from '../RadioButton';
 
 import Step from './index';
 import {
-  countryOptions
+  countryOptions,
   /*   paymentOptions,
   paymentMedOptions,
   paymentModOptions,
@@ -16,7 +16,7 @@ import {
 export default {
   title: 'components/Pasarela de Cobros/Step',
   component: Step,
-  argTypes: {}
+  argTypes: {},
 };
 
 function Template(args) {
@@ -26,14 +26,14 @@ function Template(args) {
 export const SeleccionPais = Template.bind({});
 SeleccionPais.args = {
   children: (
-    <div id="pais-grid" className="gridCuartos">
+    <div id='pais-grid' className='gridCuartos'>
       {countryOptions.map(({ ...props }) => (
-        <RadioButton {...props} name="pais" />
+        <RadioButton {...props} name='pais' />
       ))}
     </div>
   ),
   currentStep: 1,
-  stepTitle: 'Seleccione país'
+  stepTitle: 'Selecciona país',
 };
 
 /* export const SeleccionMetPago = Template.bind({});
@@ -47,7 +47,7 @@ SeleccionMetPago.args = {
   ),
   idStepElement: 'seleccion_metPago',
   currentStep: 2,
-  stepTitle: 'Seleccione método de pago'
+  stepTitle: 'Selecciona método de pago'
 };
 
 export const SeleccionMedModPago = Template.bind({});
@@ -69,7 +69,7 @@ SeleccionMedModPago.args = {
   ),
   idStepElement: 'seleccion_medModPago',
   currentStep: 3,
-  stepTitle: 'Seleccione medio y modo de pago'
+  stepTitle: 'Selecciona medio y modo de pago'
 };
 
 export const DatosPersonales = Template.bind({});
@@ -84,5 +84,5 @@ DatosPersonales.args = {
   ),
   idStepElement: 'seleccion_medModPago',
   currentStep: 4,
-  stepTitle: 'Seleccione medio y modo de pago'
+  stepTitle: 'Selecciona medio y modo de pago'
 }; */
