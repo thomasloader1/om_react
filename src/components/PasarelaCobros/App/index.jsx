@@ -14,6 +14,7 @@ import useStripeEnv from '../Hooks/useStripeEnv';
 import { useProgress } from '../Hooks/useProgress';
 import { useLocation, useParams } from 'react-router';
 import { useContractZoho } from '../Hooks/useContractZoho';
+import MotionSpinner from '../Spinner/MotionSpinner';
 
 function PasarelaApp() {
   const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } =
@@ -24,8 +25,7 @@ function PasarelaApp() {
   const { id } = useParams();
 
   const needRunEffect = !location.pathname.includes('vp');
-  const { data } = useContractZoho(id, needRunEffect);
-  console.log({ id, data });
+  const { loading, data } = useContractZoho(id, needRunEffect);
 
   const validationSchemaFinalStep = Yup.object({
     fullName: Yup.string()
@@ -61,79 +61,84 @@ function PasarelaApp() {
     <div ref={appRef}>
       <Header />
       <Elements stripe={stripePromise}>
-        <section className={'container is-max-widescreen'}>
-          <div className='pasarela columns mx-auto'>
-            <MultiStep
-              stepStateNumber={{ stepNumber, setStepNumber }}
-              className='pasarela-1 column seleccion-pais'
-              initialValues={{
-                fullName: '',
-                phone: '',
-                address: '',
-                dni: '',
-                email: '',
-              }}
-              onSubmit={handleSubmitByStepTwo}
-            >
-              <SelectCountryStep
-                onSubmit={(values) => {
-                  setFormikValues((prevFormikValues) => ({
-                    ...prevFormikValues,
-                    ...values,
-                  }));
+        {loading ? (
+          <MotionSpinner text='Recuperando datos del Contrato' />
+        ) : (
+          <section className={'container is-max-widescreen'}>
+            <div className='pasarela columns mx-auto'>
+              <MultiStep
+                stepStateNumber={{ stepNumber, setStepNumber }}
+                className='pasarela-1 column seleccion-pais'
+                initialValues={{
+                  fullName: '',
+                  phone: '',
+                  address: '',
+                  dni: '',
+                  email: '',
+                  mod: '',
                 }}
-                validationSchema={Yup.object({
-                  country: Yup.string().required('❗ El pais es requerido'),
-                })}
-              />
-              <SelectPaymentMethodStep
-                onSubmit={(values) => {
-                  setFormikValues((prevFormikValues) => ({
-                    ...prevFormikValues,
-                    ...values,
-                  }));
-                }}
-                validationSchema={Yup.object({
-                  payment_method: Yup.string().required('❗ El método de pago es requerido'),
-                })}
-              />
-              <SelectPaymentModeStep
-                onSubmit={(values) => {
-                  setFormikValues((prevFormikValues) => ({
-                    ...prevFormikValues,
-                    ...values,
-                  }));
-                }}
-                validationSchema={Yup.object({
-                  contractId: Yup.string('Coloque un id'),
-                  mod: Yup.string().required('❗ Selecciona un modo de pago'),
-                  quotes: Yup.string().when('mod', {
-                    is: (val) => !(val && val.includes('Tradicional')),
-                    then: Yup.string().required('❗ Especifique las cuotas'),
-                    otherwise: null,
-                  }),
-                })}
-              />
-              <FormClientDataStep
-                onSubmit={(values) => {
-                  setFormikValues((prevFormikValues) => ({
-                    ...prevFormikValues,
-                    ...values,
-                  }));
-                }}
-                validationSchema={Yup.object({
-                  checkContract: Yup.string().required('❗ El campo es requerido'),
-                })}
-              />
+                onSubmit={handleSubmitByStepTwo}
+              >
+                <SelectCountryStep
+                  onSubmit={(values) => {
+                    setFormikValues((prevFormikValues) => ({
+                      ...prevFormikValues,
+                      ...values,
+                    }));
+                  }}
+                  validationSchema={Yup.object({
+                    country: Yup.string().required('❗ El pais es requerido'),
+                  })}
+                />
+                <SelectPaymentMethodStep
+                  onSubmit={(values) => {
+                    setFormikValues((prevFormikValues) => ({
+                      ...prevFormikValues,
+                      ...values,
+                    }));
+                  }}
+                  validationSchema={Yup.object({
+                    payment_method: Yup.string().required('❗ El método de pago es requerido'),
+                  })}
+                />
+                <SelectPaymentModeStep
+                  onSubmit={(values) => {
+                    setFormikValues((prevFormikValues) => ({
+                      ...prevFormikValues,
+                      ...values,
+                    }));
+                  }}
+                  validationSchema={Yup.object({
+                    contractId: Yup.string('Coloque un id'),
+                    mod: Yup.string().required('❗ Selecciona un modo de pago'),
+                    quotes: Yup.string().when('mod', {
+                      is: (val) => !(val && val.includes('Tradicional')),
+                      then: Yup.string().required('❗ Especifique las cuotas'),
+                      otherwise: null,
+                    }),
+                  })}
+                />
+                <FormClientDataStep
+                  onSubmit={(values) => {
+                    setFormikValues((prevFormikValues) => ({
+                      ...prevFormikValues,
+                      ...values,
+                    }));
+                  }}
+                  validationSchema={Yup.object({
+                    checkContract: Yup.string().required('❗ El campo es requerido'),
+                  })}
+                />
 
-              <GeneratePaymentLinkStep
-                checkoutLink={checkoutLink}
-                validationSchema={validationSchemaFinalStep}
-              />
-            </MultiStep>
-          </div>
-          {/* <pre>{JSON.stringify(contractData, null, 2)}</pre> */}
-        </section>
+                <GeneratePaymentLinkStep
+                  checkoutLink={checkoutLink}
+                  validationSchema={validationSchemaFinalStep}
+                />
+              </MultiStep>
+            </div>
+            {/* <pre>{JSON.stringify(contractData, null, 2)}</pre> */}
+          </section>
+        )}
       </Elements>
     </div>
   );

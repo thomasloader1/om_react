@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import ButtonField from '../RadioButton/ButtonField';
-import SelectQuote from '../SelectQuote';
 import { FormStep } from './MultiStep';
 
 function SelectPaymentMethodStep() {
@@ -16,10 +15,6 @@ function SelectPaymentMethodStep() {
   };
 
   const isoCountry = getIsoCountry();
-
-  console.group('SelectPaymentMethodStep');
-  // console.log({ options, userInfo, isoCountry })
-  console.groupEnd();
 
   return (
     <FormStep stepNumber={2} stepName='Selecciona un método de pago'>
@@ -38,7 +33,6 @@ function SelectPaymentMethodStep() {
                 key={props.shortName}
                 disabled={disabledCountries.includes(isoCountry)}
                 onClick={() => {
-                  // // console.log(userInfo)
                   const { sideItemOptions } = options;
                   const { stepTwo } = userInfo;
 
@@ -57,7 +51,6 @@ function SelectPaymentMethodStep() {
                   if (props.shortName === 'wp') {
                     window.location = 'https://www.webpay.cl/';
                   }
-                  console.log({ props });
                 }}
               />
             ),
