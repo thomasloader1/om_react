@@ -35,12 +35,14 @@ export const useContact = () => {
         step_number: 4,
       });
       const { contact, lead, progress } = data;
+
       ctx.setAppEnv((prevState) => ({
         ...prevState,
         ...progress,
         lead: { ...lead },
         contact: { ...contact },
       }));
+
       createContactCRM(contact, lead.entity_id_crm);
     } catch (e) {
       console.log({ e });
@@ -52,11 +54,14 @@ export const useContact = () => {
   const createContactCRM = async (contact, leadId) => {
     console.log({ contact, leadId });
     // console.log(responseCreateLeadSales);
+    
     try {
       const { data } = await axios.post(apiConvertLeadZohoCRM, {
+        idPurchaseProgress: id,
         contact,
         lead_id: leadId,
       });
+
       const { contact: contactResponse } = data;
       updateEntityIdCRMContactSales(contact, contactResponse.id);
     } catch (e) {
@@ -80,7 +85,6 @@ export const useContact = () => {
 
       const { message } = e.data;
       modalAlert(message, 'error');
-      setFetching(false);
     } finally {
       setFetching(false);
     }

@@ -26,6 +26,7 @@ const MultiStep = ({
   } = useContext(AppContext);
   const { stepNumberGlobal, setStepNumberGlobal } = stepStateNumber;
   const { sideItemOptionsVP } = options;
+
   const [spanshot, setSpanshot] = useState(initialValues);
   const steps = React.Children.toArray(children);
   const step = steps[stepNumberGlobal];
@@ -45,6 +46,8 @@ const MultiStep = ({
       ...prevState,
       sideItemOptionsVP: [...sideItemOptionsVP],
     }));
+
+    console.log({ stepNumberGlobal, indexOfNextStep, currentStepObject: sideItemOptionsVP[stepNumberGlobal] })
 
     setStepNumberGlobal((step) => step + 1);
   };
@@ -72,7 +75,7 @@ const MultiStep = ({
     if (isLastStep) {
       return onSubmit(values, actions);
     } else {
-      actions.setTouched({});
+      //actions.setTouched({});
       next(values);
     }
   };
@@ -126,9 +129,8 @@ const MultiStep = ({
 
                 {formik.errors && Object.keys(formik.errors).length > 0 && (
                   <motion.div
-                    className={`notification-container ${
-                      isMediaQSmall ? 'modal is-active' : ''
-                    }`}
+                    className={`notification-container ${isMediaQSmall ? 'modal is-active' : ''
+                      }`}
                     initial={{ opacity: 0, y: '100vh', zIndex: '10' }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
@@ -172,9 +174,8 @@ const MultiStep = ({
                   onBackClick={() => previous(formik.values)}
                 />
                 <motion.div
-                  className={`searchcourses-overlay ${
-                    expandSelectCourses ? 'is-expanded' : ''
-                  }`}
+                  className={`searchcourses-overlay ${expandSelectCourses ? 'is-expanded' : ''
+                    }`}
                   variants={variantStyles}
                   initial="closed"
                   animate={expandSelectCourses ? 'open' : 'closed'}

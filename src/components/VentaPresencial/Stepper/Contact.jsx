@@ -12,7 +12,6 @@ const ContactStep = () => {
   useEffect(() => {
     setFieldValue('country', appEnv.country);
     formik.setErrors({});
-    console.log({ formik });
   }, []);
 
   useEffect(() => {
@@ -28,7 +27,7 @@ const ContactStep = () => {
           appEnv?.contact[key] !== null && appEnv?.contact[key]
             ? appEnv?.contact[key]
             : '';
-        console.log({ key, value });
+
         setFieldValue(key, value);
       });
     }

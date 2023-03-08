@@ -101,9 +101,8 @@ function VentaPresencialApp() {
               >
                 <MultiStepLazy
                   stepStateNumber={{ stepNumberGlobal, setStepNumberGlobal }}
-                  className={`pasarela-1 column seleccion-pais ${
-                    stepNumberGlobal === 3 ? 'seleccion-de-cursos' : ''
-                  }`}
+                  className={`pasarela-1 column seleccion-pais ${stepNumberGlobal === 3 ? 'seleccion-de-cursos' : ''
+                    }`}
                   initialValues={initialFormValues}
                   onSubmit={async (values) => {
                     const uriRedirect =
@@ -155,6 +154,8 @@ function VentaPresencialApp() {
                   />
 
                   <SelectCourse
+                    loading={processContact}
+                    loadingText="Conviertiendo Lead a Contacto"
                     onSubmit={(values) => {
                       setFormikValues((prevFormikValues) => ({
                         ...prevFormikValues,
@@ -168,6 +169,8 @@ function VentaPresencialApp() {
 
                   <ResumeStep
                     processContract={processContract}
+                    loading={processContract}
+                    loadingText="Generando un nuevo Contrato"
                     completeData={completeData}
                   />
                 </MultiStepLazy>

@@ -31,7 +31,7 @@ export const sideItemOptions = [
   {
     step: 5,
     idElement: 'seleccion_pais',
-    label: 'DATOS DE LA TARJETA',
+    label: 'FINALIZACION DE CONTRATO',
     valueSelected: '',
     status: ''
   }

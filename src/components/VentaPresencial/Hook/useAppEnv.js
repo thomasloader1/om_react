@@ -15,6 +15,8 @@ export const useAppEnv = () => {
   //console.log("useAppEnv()",{stepNumberGlobal})
 
   const setValues = ({ step_number, ...values }) => {
+    console.group("Ejecucion de setValues en useAppEnv")
+    console.log({ values })
     setFormikValues((prevState) => ({
       ...prevState,
       ...values,
@@ -67,33 +69,34 @@ export const useAppEnv = () => {
           option.status = 'current';
         }
 
-        /* if (
-          contract !== null &&
-          typeof contract !== 'undefined' &&
-          option.step === 4
-        ) {
-          const { lead_id, id, entity_id_crm, ...formContact } = contract;
-          const formIncomplete = Object.values(formContact).includes(null);
-          //console.log({ formIncomplete, lead }, Object.values(lead));
-          option.status = formIncomplete ? 'current' : 'completed';
-          option.value = formIncomplete ? 'Sin completar' : 'Completado';
-        } else if (sameStep && option.step === 4) {
-          option.status = 'current';
-        } */
-
+        console.log({ products, selectedCourses })
         if (
           products !== null &&
           typeof products !== 'undefined' &&
           option.step === 4
         ) {
           setSelectedCourses(products);
+          option.status = 'completed'
+        } else if (products == null &&
+          typeof products === 'undefined' && sameStep && option.step === 4) {
+          option.status = 'current';
+        }
+
+        if (
+          contract !== null &&
+          typeof products !== 'undefined' &&
+          option.step === 5
+        ) {
           option.status =
             contract !== null && typeof contract !== 'undefined'
               ? 'completed'
               : 'current';
+          option.value = typeof contract === 'undefined' ? 'Sin completar' : 'Completado';
+
           //option.value = formIncomplete ? 'Sin completar' : 'Completado';
-        } else if (sameStep && option.step === 4) {
+        } else if (sameStep && option.step === 5) {
           option.status = 'current';
+          option.value = 'Sin completar';
         }
       }
 
@@ -103,6 +106,7 @@ export const useAppEnv = () => {
     setOptions({ ...options });
     const stepIndex = step_number - 1;
     setStepNumberGlobal(stepIndex);
+    console.groupEnd()
   };
   return {
     setFormikValues,

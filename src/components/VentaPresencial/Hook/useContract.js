@@ -31,13 +31,14 @@ export const useContract = () => {
         step_number: 5,
       });
       console.log({ data });
-      const { contract, progress } = data;
+      const { contract, progress, products } = data;
       createContractCRM();
 
       ctx.setAppEnv((prevEnv) => ({
         ...prevEnv,
         contract: { ...contract },
         ...progress,
+        products
       }));
     } catch (e) {
       console.log({ e });
