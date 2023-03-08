@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import { useSwal } from './useSwal';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useParams } from 'react-router';
+import { useProgress } from './useProgress';
 
 const { NODE_ENV, REACT_APP_API } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -18,6 +19,7 @@ const apiUpdateEntityIdLeadVentas = isProduction
   : '/api/updateEntityIdLeadVentas';
 
 export const useLead = () => {
+  const { updateProgress } = useProgress();
   const ctx = useContext(AppContext);
   const [fetching, setFetching] = useState(false);
   const { modalAlert } = useSwal();
@@ -44,7 +46,8 @@ export const useLead = () => {
       createLeadCRM(dataLead, lead_id, newOrUpdatedLead);
     } catch (e) {
       console.log(e);
-      const { message } = e.response.data;
+      const { message, progress } = e.response.data;
+      updateProgress([],2);
       modalAlert(message, 'error');
       setFetching(false);
     }

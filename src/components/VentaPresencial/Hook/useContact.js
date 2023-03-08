@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useContext, useState } from 'react';
 import { useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
+import { useProgress } from './useProgress';
 import { useSwal } from './useSwal';
 
 const { NODE_ENV, REACT_APP_API } = process.env;
@@ -18,6 +19,7 @@ const apiUpdateEntityIdContactSales = isProduction
   : '/api/updateEntityIdContactSales';
 
 export const useContact = () => {
+  const { updateProgress } = useProgress();
   const [fetching, setFetching] = useState(false);
   const { id } = useParams();
   const { modalAlert } = useSwal();
@@ -47,6 +49,7 @@ export const useContact = () => {
     } catch (e) {
       console.log({ e });
       const { message } = e.response.data;
+      updateProgress([],3);
       modalAlert(message, 'error');
       setFetching(false);
     }
