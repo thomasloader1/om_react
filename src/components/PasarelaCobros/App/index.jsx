@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import { Elements } from '@stripe/react-stripe-js';
 import * as Yup from 'yup';
@@ -9,6 +9,7 @@ import SelectPaymentMethodStep from '../Stepper/SelectPaymentMethodStep';
 import SelectPaymentModeStep from '../Stepper/SelectPaymentModeStep';
 import FormClientDataStep from '../Stepper/FormClientDataStep';
 import GeneratePaymentLinkStep from '../Stepper/GeneratePaymentLinkStep';
+import { useMediaQSmall } from '../Hooks/useMediaQuery';
 
 import useStripeEnv from '../Hooks/useStripeEnv';
 import { useProgress } from '../Hooks/useProgress';
@@ -16,6 +17,11 @@ import { useLocation, useParams } from 'react-router';
 import { useContractZoho } from '../Hooks/useContractZoho';
 
 function PasarelaApp() {
+  const pasarelaContainerRef = useRef(null);
+  const isMobile = useMediaQSmall();
+  const setHeightMobile = () => {
+    pasarelaContainerRef.current.style.height = `${window.innerHeight}px`;
+  };
   const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } =
     useContext(AppContext);
   const { stripePromise } = useStripeEnv();
@@ -55,6 +61,12 @@ function PasarelaApp() {
     return () => null;
   }, [stepNumber]);
 
+  useEffect(() => {
+    if (isMobile) {
+      setHeightMobile();
+    }
+  }, [isMobile]);
+
   const handleSubmitByStepTwo = async () => {};
 
   return (
@@ -62,7 +74,11 @@ function PasarelaApp() {
       <Header />
       <Elements stripe={stripePromise}>
         <section className={'container is-max-widescreen'}>
-          <div className='pasarela columns mx-auto'>
+          <div
+            id='pasarla-container'
+            ref={pasarelaContainerRef}
+            className='pasarela columns mx-auto'
+          >
             <MultiStep
               stepStateNumber={{ stepNumber, setStepNumber }}
               className='pasarela-1 column seleccion-pais'

@@ -1,9 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { CardElement } from '@stripe/react-stripe-js';
 import { AppContext } from '../Provider/StateProvider';
 import { useFormikContext } from 'formik';
+import InputField from '../InputField';
+import { useMediaQSmall } from '../Hooks/useMediaQuery';
 
 const CheckoutForm = () => {
+  const isMobile = useMediaQSmall();
   const { options, setOptions } = useContext(AppContext);
   const formik = useFormikContext();
 
@@ -24,6 +27,36 @@ const CheckoutForm = () => {
 
   return (
     <>
+      {isMobile ? (
+        <div className='cardInputsMobile'>
+          <InputField
+            type='text'
+            id='cardNumber'
+            name='cardNumber'
+            label='Número de tarjeta'
+            placeholder='Ingresar el número de tarjeta'
+          />
+
+          <InputField type='number' id='cardCVV' name='cardCVV' label='CVV' placeholder='XXX' />
+          <InputField
+            type='text'
+            id='cardExpDate'
+            name='cardExpDate'
+            label='Vencimiento'
+            placeholder='MM / AA'
+          />
+          <InputField
+            type='text'
+            id='cardPostalCode'
+            name='cardPostalCode'
+            label='Cód. Postal'
+            placeholder='C.P.'
+          />
+        </div>
+      ) : (
+        ''
+      )}
+
       <label htmlFor='card_element' className='label'>
         Tarjeta
       </label>

@@ -3,10 +3,11 @@ import React, { useContext, useEffect } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import ButtonField from '../RadioButton/ButtonField';
 import { FormStep } from './MultiStep';
-import { fireModalAlert } from '../Hooks/useSwal'
+import { fireModalAlert } from '../Hooks/useSwal';
 
 function SelectCountryStep() {
-  const { options, setOptions, userInfo, setUserInfo, appEnv, contractData } = useContext(AppContext);
+  const { options, setOptions, userInfo, setUserInfo, appEnv, contractData } =
+    useContext(AppContext);
 
   const { countryOptions } = options;
   const { stepOne } = userInfo;
@@ -50,7 +51,6 @@ function SelectCountryStep() {
             disabled={!active}
             onClick={() => {
               if (contractData?.sale?.Pais === props.value) {
-
                 const { sideItemOptions } = options;
                 const { stepOne } = userInfo;
 
@@ -67,9 +67,11 @@ function SelectCountryStep() {
                   ...userInfo,
                 });
               } else {
-                fireModalAlert("Pais Invalido", `El pais del Contrato es <b>${contractData?.sale?.Pais}</b>, si esto no deberia ser asi cambie el Pais desde el CRM y vuelva a cargar la pagina`)
+                fireModalAlert(
+                  'País Inválido',
+                  `El país del Contrato es <b>${contractData?.sale?.Pais}</b>, si esto no debería ser así cambia el país desde el CRM y vuelva a cargar la página`,
+                );
               }
-
             }}
           />
         ))}

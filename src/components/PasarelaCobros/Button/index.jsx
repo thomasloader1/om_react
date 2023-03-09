@@ -7,17 +7,17 @@ const SIZES = {
   N: 'normal',
   S: 'small',
   M: 'medium',
-  L: 'large'
+  L: 'large',
 };
 const STATES = {
   NONE: '',
   FOCUS: 'focus',
   HOVER: 'hover',
-  ACTIVE: 'active'
+  ACTIVE: 'active',
 };
 const COLORVARIANT = {
   LIGHT: 'light',
-  NORMAL: ''
+  NORMAL: '',
 };
 
 function Btn({
@@ -35,7 +35,7 @@ function Btn({
   fullwidth,
   inverted,
   icon,
-  onClick
+  onClick,
 }) {
   return (
     <Button
@@ -69,12 +69,11 @@ Btn.propTypes = {
   rounded: PropTypes.bool,
   fullwidth: PropTypes.bool,
   inverted: PropTypes.bool,
-  label: PropTypes.string,
   color: PropTypes.string,
   size: PropTypes.oneOf(Object.values(SIZES)),
   icon: PropTypes.string,
   className: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
 };
 
 Btn.defaultProps = {
@@ -92,6 +91,6 @@ Btn.defaultProps = {
   label: 'Button',
   className: '',
   icon: '',
-  onClick: () => {}
+  onClick: () => {},
 };
 export default Btn;
