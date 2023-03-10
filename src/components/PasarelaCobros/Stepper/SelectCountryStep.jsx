@@ -68,8 +68,8 @@ function SelectCountryStep() {
                 });
               } else {
                 fireModalAlert(
-                  'Pais Invalido',
-                  `El pais del Contrato es <b>${contractData?.sale?.Pais}</b>, si esto no deberia ser asi cambie el Pais desde el CRM y vuelva a cargar la pagina`,
+                  'País Inválido',
+                  `El país del Contrato es <b>${contractData?.sale?.Pais}</b>, si esto no debería ser así cambia el país desde el CRM y vuelva a cargar la página`,
                 );
               }
             }}

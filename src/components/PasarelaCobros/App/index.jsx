@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import { Elements } from '@stripe/react-stripe-js';
 import * as Yup from 'yup';
@@ -9,6 +9,7 @@ import SelectPaymentMethodStep from '../Stepper/SelectPaymentMethodStep';
 import SelectPaymentModeStep from '../Stepper/SelectPaymentModeStep';
 import FormClientDataStep from '../Stepper/FormClientDataStep';
 import GeneratePaymentLinkStep from '../Stepper/GeneratePaymentLinkStep';
+import { useMediaQSmall } from '../Hooks/useMediaQuery';
 
 import useStripeEnv from '../Hooks/useStripeEnv';
 import { useProgress } from '../Hooks/useProgress';
@@ -17,6 +18,11 @@ import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
 
 function PasarelaApp() {
+  const pasarelaContainerRef = useRef(null);
+  const isMobile = useMediaQSmall();
+  const setHeightMobile = () => {
+    pasarelaContainerRef.current.style.height = `${window.innerHeight}px`;
+  };
   const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } =
     useContext(AppContext);
   const { stripePromise } = useStripeEnv();
@@ -55,7 +61,13 @@ function PasarelaApp() {
     return () => null;
   }, [stepNumber]);
 
-  const handleSubmitByStepTwo = async () => {};
+  useEffect(() => {
+    if (isMobile) {
+      setHeightMobile();
+    }
+  }, [isMobile]);
+
+  const handleSubmitByStepTwo = async () => { };
 
   return (
     <div ref={appRef}>

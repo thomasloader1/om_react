@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useContext, useState } from 'react';
 import './Side.scss';
@@ -42,6 +43,7 @@ const URLS = {
 };
 
 function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
+  const isMobile = useMediaQSmall();
   const [fetching, setFetching] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
@@ -61,7 +63,6 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
   const formik = useFormikContext();
   const { cardComplete, email } = formik.values;
   const { country, quotes, amount, sale, contact, products } = formikValues;
-  const isMobile = useMediaQSmall();
 
   const removeAccents = (country) => {
     const accents = {
@@ -313,12 +314,19 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
           <>
             {userInfo.stepTwo.value.includes('Stripe') ? (
               <Button
-                className={`bigger is-medium ${fetching && 'is-loading'}${stripeRequest ? 'payment-generated' : 'generate-payment'
+                className={`bigger is-medium ${fetching && ' is-loading'}${stripeRequest ? ' payment-generated' : ' generate-payment'
                   }`}
                 label={
                   <>
-                    {isMobile && (stripeRequest ? <MdCheckCircleOutline /> : <BsCashCoin />)}
-                    <span> {stripeRequest ? 'Pago Realizado' : 'Generar pago'}</span>
+                    {isMobile ? (
+                      stripeRequest ? (
+                        <MdCheckCircleOutline />
+                      ) : (
+                        <BsCashCoin />
+                      )
+                    ) : (
+                      <span> {stripeRequest ? 'Pago Realizado' : 'Generar pago'}</span>
+                    )}
                   </>
                 }
                 color={`${checkoutLink ? 'success' : 'primary'}`}
@@ -328,13 +336,20 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
               />
             ) : (
               <Button
-                className={`bigger is-medium ${fetching && 'is-loading'} ${checkoutLink ? 'payment-generated' : 'generate-payment'
+                className={`bigger is-medium ${fetching && ' is-loading'} ${checkoutLink ? ' payment-generated' : ' generate-payment'
                   }`}
                 color={`${checkoutLink ? 'success' : 'primary'}`}
                 label={
                   <>
-                    {isMobile && (checkoutLink ? <MdCheckCircleOutline /> : <BsCashCoin />)}
-                    <span>{checkoutLink ? 'Link generado' : 'Generar link'}</span>
+                    {isMobile ? (
+                      checkoutLink ? (
+                        <MdCheckCircleOutline />
+                      ) : (
+                        <BsCashCoin />
+                      )
+                    ) : (
+                      <span>{checkoutLink ? 'Link generado' : 'Generar link'}</span>
+                    )}
                     {/*<div className='tooltip'>{checkoutLink ? '' : 'Generar link'}</div>*/}
                   </>
                 }
@@ -372,7 +387,9 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
             >
               {userInfo.stepTwo.value.includes('Stripe') ? (
                 <>
-                  <motion.h2 className='title is-2 has-text-success my-5'>Pago realizado!</motion.h2>
+                  <motion.h2 className='title is-2 has-text-success my-5'>
+                    Pago realizado!
+                  </motion.h2>
                   <a
                     href='https://crm.zoho.com/crm/org631172874/tab/SalesOrders'
                     className='button is-success'
