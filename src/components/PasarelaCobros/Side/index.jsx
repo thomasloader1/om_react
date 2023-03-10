@@ -61,8 +61,6 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
   const formik = useFormikContext();
   const { cardComplete, email } = formik.values;
   const { country, quotes, amount, sale, contact, products } = formikValues;
-
-  //console.log({ formik });
   const isMobile = useMediaQSmall();
 
   const removeAccents = (country) => {
@@ -133,8 +131,12 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
   const handleRequestToGatewayAndCRM = (paymentMethodId) => {
     const { STRIPE, UPDATE_CONTRACT } = URLS;
     const allIsoCodes = getAllISOCodes();
-    const filterIso = allIsoCodes.filter((iso) => iso.countryName === country);
+    const thisCountry = country ? country : appEnv?.country
+    const clearedCountry = removeAccents(thisCountry);
+
+    const filterIso = allIsoCodes.filter((iso) => iso.countryName === clearedCountry);
     const countryObject = filterIso[0];
+    console.log({ filterIso, countryObject })
     const { currency, iso } = countryObject;
 
     const postStripe = {
