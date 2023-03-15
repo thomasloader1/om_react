@@ -13,7 +13,7 @@ export const useContractZoho = (contractId, runEffect = true) => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const { setContractData } = useContext(AppContext)
+  const { setContractData } = useContext(AppContext);
   const body = new FormData();
   body.append('key', '9j9fj0Do204==3fja134');
   body.append('id', contractId);
@@ -22,7 +22,6 @@ export const useContractZoho = (contractId, runEffect = true) => {
     NODE_ENV === 'production'
       ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_OBTAINDATA}`
       : `${REACT_APP_OCEANO_OBTAINDATA_TEST}`;
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,23 +33,20 @@ export const useContractZoho = (contractId, runEffect = true) => {
         });
 
         setData(response.data);
-        setContractData(response.data)
-
+        setContractData(response.data);
       } catch (e) {
-        setError(e.response.data)
+        setError(e.response.data);
       } finally {
         setLoading(false);
       }
-
-
     };
 
     if (runEffect) {
       fetchData();
+    } else {
+      setLoading(false);
     }
   }, [contractId]);
-
-
 
   return { data, loading, error };
 };

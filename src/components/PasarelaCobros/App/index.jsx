@@ -62,13 +62,13 @@ function PasarelaApp() {
   }, [stepNumber]);
 
   useEffect(() => {
-    console.log({ isMobile, fetching })
+    console.log({ isMobile, fetching });
     if (isMobile && !loading) {
       setHeightMobile();
     }
   }, [isMobile, loading]);
 
-  const handleSubmitByStepTwo = async () => { };
+  const handleSubmitByStepTwo = async () => {};
 
   return (
     <div ref={appRef}>
@@ -78,7 +78,11 @@ function PasarelaApp() {
           <MotionSpinner text='Recuperando datos del Contrato' />
         ) : (
           <section className={'container is-max-widescreen'}>
-            <div id='pasarela-container' ref={pasarelaContainerRef} className='pasarela columns mx-auto'>
+            <div
+              id='pasarela-container'
+              ref={pasarelaContainerRef}
+              className='pasarela columns mx-auto'
+            >
               <MultiStep
                 stepStateNumber={{ stepNumber, setStepNumber }}
                 className='pasarela-1 column seleccion-pais'

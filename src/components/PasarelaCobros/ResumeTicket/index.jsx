@@ -1,14 +1,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import moment from 'moment';
 import { Block, Notification, Columns, Modal, Media, Content } from 'react-bulma-components';
-import { useContext } from 'react';
 import { AppContext } from '../Provider/StateProvider';
-import Spinner from '../Spinner';
 import ButtonField from '../RadioButton/ButtonField';
 import { useLocation, useParams } from 'react-router';
 import { useContractZoho } from '../Hooks/useContractZoho';
+import MotionSpinner from '../Spinner/MotionSpinner';
 
 function ResumeTicket() {
   const {
@@ -20,132 +19,101 @@ function ResumeTicket() {
     setUserInfo,
     appRef,
     contractData,
-    appEnv
+    appEnv,
   } = useContext(AppContext);
-  const location = useLocation()
-  const needRunEffect = location.pathname.includes('vp')
+  const location = useLocation();
+  const needRunEffect = location.pathname.includes('vp');
   const { loading, data, error } = useContractZoho(appEnv?.contract?.entity_id_crm, needRunEffect);
-  const [openModal, setOpenModal] = useState(null)
+  const [openModal, setOpenModal] = useState(null);
   const { id } = useParams();
 
-  const { stepFour } = userInfo
+  const { stepFour } = userInfo;
 
   if (typeof data === 'string') {
     return (
       <Block>
-        <Notification color="danger">
+        <Notification color='danger'>
           No se encontro ningun Contrato correspondiente al ID:{' '}
-          <strong>{formikValues.contractId}</strong>, vuelva atras y verifique
-          denuevo el numero
+          <strong>{formikValues.contractId}</strong>, vuelva atras y verifique denuevo el numero
         </Notification>
       </Block>
     );
   }
 
   const { sale, contact, products } = contractData;
-  const isTraditional = formikValues.mod.includes("Tradicional")
-  const totalMonths = isTraditional ? 1 : formikValues.quotes
-  const payPerMonth = isTraditional ? sale?.Grand_Total : (sale?.Grand_Total / formikValues.quotes)
+  const isTraditional = formikValues.mod.includes('Tradicional');
+  const totalMonths = isTraditional ? 1 : formikValues.quotes;
+  const payPerMonth = isTraditional ? sale?.Grand_Total : sale?.Grand_Total / formikValues.quotes;
   return (
     <>
-      {contractData == null ? (
-        <Spinner />
+      {loading ? (
+        <MotionSpinner text='Recuperando contrato' />
       ) : (
-
-        <div id="finalResume" className="column">
-          <div className="columns is-multiline datos-cliente">
-            <h2 className="column is-full title is-size-4">
-              Datos del contrato
-            </h2>
-            <div className="column datos-cliente-header">
-              <div id="emailCliente_resume" className="finalResume-item">
+        <div id='finalResume' className='column'>
+          <div className='columns is-multiline datos-cliente'>
+            <h2 className='column is-full title is-size-4'>Datos del contrato</h2>
+            <div className='column datos-cliente-header'>
+              <div id='emailCliente_resume' className='finalResume-item'>
                 <label>CORREO ELECTRÓNICO</label>
                 <h4>{contact.Email}</h4>
               </div>
-              <div id="todayDate_resume" className="finalResume-item">
+              <div id='todayDate_resume' className='finalResume-item'>
                 {/*<label>FECHA DE CONTRATO</label>*/}
                 <h4>{moment(sale.Fecha_Creaci_n).format('lll')}</h4>
               </div>
             </div>
-            <div
-              id="numeroContrato_resume"
-              className="column is-two-thirds finalResume-item"
-            >
+            <div id='numeroContrato_resume' className='column is-two-thirds finalResume-item'>
               <label>Número de contrato</label>
               <h4>{sale.SO_Number}</h4>
             </div>
-            <div
-              id="montoTotalContrato_resume"
-              className="column finalResume-item"
-            >
+            <div id='montoTotalContrato_resume' className='column finalResume-item'>
               <label>MONTO TOTAL DEL CONTRATO</label>
               <h4>{sale.Grand_Total}</h4>
             </div>
-            <div
-              id="mesesTotales_resume"
-              className="column is-one-third finalResume-item"
-            >
+            <div id='mesesTotales_resume' className='column is-one-third finalResume-item'>
               <label>MESES TOTALES</label>
               <h4>{totalMonths}</h4>
             </div>
-            <div
-              id="montoTotalMes_resume"
-              className="column is-one-third finalResume-item"
-            >
+            <div id='montoTotalMes_resume' className='column is-one-third finalResume-item'>
               <label>monto a pagar POR MES</label>
               <h4>{payPerMonth}</h4>
             </div>
-            <div
-              id="montoTotalMes_resume"
-              className="column is-one-third finalResume-item"
-            >
+            <div id='montoTotalMes_resume' className='column is-one-third finalResume-item'>
               <label>Estado del contrato</label>
               <h4>{sale.Status}</h4>
             </div>
           </div>
-          <div className="is-divider"></div>
-          <div className="columns is-multiline datos-tarjeta">
-            <h2 className="column is-full title is-size-4">
-              Datos del contacto
-            </h2>
-            <div
-              id="tipoTarjeta_resume"
-              className="column is-two-thirds finalResume-item"
-            >
+          <div className='is-divider'></div>
+          <div className='columns is-multiline datos-tarjeta'>
+            <h2 className='column is-full title is-size-4'>Datos del contacto</h2>
+            <div id='tipoTarjeta_resume' className='column is-two-thirds finalResume-item'>
               <label>Nombre completo</label>
               <h4>{contact.Full_Name}</h4>
             </div>
-            <div
-              id="numeroTarjeta_resume"
-              className="column is-one-third finalResume-item"
-            >
+            <div id='numeroTarjeta_resume' className='column is-one-third finalResume-item'>
               <label>Pais</label>
               <h4>{contact.Pais}</h4>
             </div>
-            <div
-              id="fechaVencimiento_resume"
-              className="column is-one-third finalResume-item"
-            >
+            <div id='fechaVencimiento_resume' className='column is-one-third finalResume-item'>
               <label>Telefono</label>
               <h4>{contact.Home_Phone}</h4>
             </div>
 
-            <div
-              id="tipoNumDocumento_resume"
-              className="column is-one-third finalResume-item"
-            >
+            <div id='tipoNumDocumento_resume' className='column is-one-third finalResume-item'>
               <label>Tipo Y NÚMERO DE DOC</label>
               <h4>DNI: {contact.DNI}</h4>
             </div>
           </div>
-          <Columns className="finalResume-confirmation">
+          <Columns className='finalResume-confirmation'>
             <Columns.Column>
               <ButtonField
-                className={`grid-payment_method-item button ${"Datos correctos" === stepFour.value && 'active'}`}
+                className={`grid-payment_method-item button ${
+                  'Datos correctos' === stepFour.value && 'active'
+                }`}
                 showText={true}
-                id="checkContract"
-                name="checkContract"
-                value="Datos correctos"
+                id='checkContract'
+                name='checkContract'
+                value='Datos correctos'
                 onClick={() => {
                   // // console.log(userInfo)
                   const { sideItemOptions } = options;
@@ -155,11 +123,11 @@ function ResumeTicket() {
 
                   setOptions({
                     ...options,
-                    sideItemOptions: [...sideItemOptions]
+                    sideItemOptions: [...sideItemOptions],
                   });
 
                   setUserInfo({
-                    ...userInfo
+                    ...userInfo,
                   });
 
                   setFormikValues({
@@ -167,7 +135,7 @@ function ResumeTicket() {
                     amount: sale.Grand_Total,
                     sale,
                     contact,
-                    products
+                    products,
                   });
                 }}
               />
@@ -175,29 +143,30 @@ function ResumeTicket() {
 
             <Columns.Column>
               <ButtonField
-                className={`grid-payment_method-item button ${"Datos erroneos" === stepFour.value && 'active'}`}
+                className={`grid-payment_method-item button ${
+                  'Datos erroneos' === stepFour.value && 'active'
+                }`}
                 showText={true}
-                id="checkContract"
-                name="checkContract"
-                value="Datos erroneos"
+                id='checkContract'
+                name='checkContract'
+                value='Datos erroneos'
                 onClick={() => {
-
                   const { sideItemOptions } = options;
                   const { stepFour } = userInfo;
-                  appRef.current.style.filter = 'blur(8px)'
+                  appRef.current.style.filter = 'blur(8px)';
 
                   sideItemOptions[3].value = 'Datos erroneos';
                   stepFour.value = 'Datos erroneos';
 
-                  setOpenModal('card')
+                  setOpenModal('card');
 
                   setOptions({
                     ...options,
-                    sideItemOptions: [...sideItemOptions]
+                    sideItemOptions: [...sideItemOptions],
                   });
 
                   setUserInfo({
-                    ...userInfo
+                    ...userInfo,
                   });
                 }}
               />
@@ -210,12 +179,11 @@ function ResumeTicket() {
         show={openModal === 'card'}
         showClose={false}
         onClose={() => {
-          appRef.current.style.filter = 'blur(0px)'
+          appRef.current.style.filter = 'blur(0px)';
 
           return setOpenModal();
         }}
       >
-
         <Modal.Card>
           <Modal.Card.Header>
             <Modal.Card.Title>Datos incorrectos del contrato</Modal.Card.Title>
@@ -224,9 +192,17 @@ function ResumeTicket() {
             <Media>
               <Media.Item>
                 <Content>
-                  <p>Deberia editar los datos en la plataforma de Zoho y luego volver a hacer el procedimiento de compra</p>
+                  <p>
+                    Deberia editar los datos en la plataforma de Zoho y luego volver a hacer el
+                    procedimiento de compra
+                  </p>
 
-                  <a href={`https://crm.zoho.com/crm/org651130949/tab/SalesOrders/${id}`} className='button is-primary is-normal is-fullwidth'>Salir de pasarela y editar contrato</a>
+                  <a
+                    href={`https://crm.zoho.com/crm/org651130949/tab/SalesOrders/${id}`}
+                    className='button is-primary is-normal is-fullwidth'
+                  >
+                    Salir de pasarela y editar contrato
+                  </a>
                 </Content>
               </Media.Item>
             </Media>
