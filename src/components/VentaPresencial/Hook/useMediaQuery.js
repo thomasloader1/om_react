@@ -1,22 +1,25 @@
 import { useEffect, useState } from 'react';
 
 export function useMediaQuery(query) {
-  const [matches, setMatches] = useState(false);
+  const [state, setState] = useState({
+    matches: window.matchMedia(query).matches,
+    media: window.matchMedia(query),
+  });
 
   useEffect(() => {
-    const media = window.matchMedia(query);
-    if (media.matches !== matches) {
-      setMatches(media.matches);
-    }
     const listener = () => {
-      setMatches(media.matches);
+      setState({
+        matches: state.media.matches,
+        media: state.media,
+      });
     };
-    media.addEventListener('change', listener);
-    return () => media.removeEventListener('change', listener);
-  }, [matches, query]);
+    state.media.addEventListener('change', listener);
+    return () => state.media.removeEventListener('change', listener);
+  }, [state.media, query]);
 
-  return matches;
+  return state;
 }
 
-export const useMediaQSmall = () => useMediaQuery('(max-width: 766px)');
-export const useMediaQMedium = () => useMediaQuery('(min-width: 767px)');
+export const useMediaQSmall = () => useMediaQuery('(max-width: 766px)').matches;
+export const useMediaQMedium = () =>
+  useMediaQuery('(min-width: 767px)').matches;
