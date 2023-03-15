@@ -37,21 +37,20 @@
       border: 1px solid hsl(0deg, 0%, 86%);
       padding: 10px;
     }
+
     iframe[name='__privateStripeFrame4086'] {
       width: 100% !important;
-    }
-    #serverNotify {
-      grid-area: notify;
     }
 
     button {
       width: 100%;
     }
+
     .ElementsApp {
       font-size: 1rem;
     }
 
-    .cardInputsMobile {
+    /* .cardInputsMobile {
       display: grid;
       grid-template-columns: 52px 1fr 1fr;
       row-gap: 1rem;
@@ -62,7 +61,7 @@
       .field:first-child {
         grid-column: span 3;
       }
-    }
+    } */
   }
 
   pre {
@@ -70,17 +69,21 @@
     max-width: 300px;
   }
 }
+
 @media screen and (max-width: 766px) {
   #grid-payment_stripe {
     grid-template-areas: unset;
   }
+
   .checkout_stripe {
-    label[for='card_element'],
+
+    /* label[for='card_element'],
     #card_element {
       display: none;
-    }
+    } */
   }
 }
+
 #grid-payment_mp {
   display: grid;
   grid-template-areas: 'fullName fullName phone' 'address address dni' 'email email email';

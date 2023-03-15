@@ -48,6 +48,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
   const stripe = useStripe();
   const elements = useElements();
   const [openBlockLayer, setOpenBlockLayer] = useState(false);
+
   const {
     formikValues,
     stripeRequest,
@@ -61,6 +62,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     appEnv,
   } = useContext(AppContext);
   const formik = useFormikContext();
+
   const { cardComplete, email } = formik.values;
   const { country, quotes, amount, sale, contact, products } = formikValues;
 

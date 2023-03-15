@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef } from 'react';
+import * as Yup from 'yup';
 import { AppContext } from '../Provider/StateProvider';
 import { Elements } from '@stripe/react-stripe-js';
-import * as Yup from 'yup';
-import MultiStep from '../Stepper/MultiStep';
 import Header from '../Header';
+import MultiStep from '../Stepper/MultiStep';
 import SelectCountryStep from '../Stepper/SelectCountryStep';
 import SelectPaymentMethodStep from '../Stepper/SelectPaymentMethodStep';
 import SelectPaymentModeStep from '../Stepper/SelectPaymentModeStep';
@@ -18,7 +18,7 @@ import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
 
 function PasarelaApp() {
-  const pasarelaContainerRef = useRef(null);
+  const pasarelaContainerRef = useRef();
   const isMobile = useMediaQSmall();
   const setHeightMobile = () => {
     pasarelaContainerRef.current.style.height = `${window.innerHeight}px`;
@@ -31,7 +31,7 @@ function PasarelaApp() {
   const { id } = useParams();
 
   const needRunEffect = !location.pathname.includes('vp');
-  const { loading, data } = useContractZoho(id, needRunEffect);
+  const { loading } = useContractZoho(id, needRunEffect);
 
   const validationSchemaFinalStep = Yup.object({
     fullName: Yup.string()
@@ -62,10 +62,11 @@ function PasarelaApp() {
   }, [stepNumber]);
 
   useEffect(() => {
-    if (isMobile) {
+    console.log({ isMobile, fetching })
+    if (isMobile && !loading) {
       setHeightMobile();
     }
-  }, [isMobile]);
+  }, [isMobile, loading]);
 
   const handleSubmitByStepTwo = async () => { };
 
@@ -77,7 +78,7 @@ function PasarelaApp() {
           <MotionSpinner text='Recuperando datos del Contrato' />
         ) : (
           <section className={'container is-max-widescreen'}>
-            <div className='pasarela columns mx-auto'>
+            <div id='pasarela-container' ref={pasarelaContainerRef} className='pasarela columns mx-auto'>
               <MultiStep
                 stepStateNumber={{ stepNumber, setStepNumber }}
                 className='pasarela-1 column seleccion-pais'
