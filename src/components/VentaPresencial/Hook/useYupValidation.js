@@ -54,10 +54,16 @@ export const useYupValidation = () => {
   });
 
   const selectCoursesStepValidation = Yup.object().shape({
-    /* products: Yup.array()
-                      .min(1)
-                      .of(Yup.string().required())
-                      .required(), */
+    products: Yup.array('No se puede avanzar si no selecciona un curso')
+      .min(1, 'Debe haber al menos un producto')
+      .of(
+        Yup.object().shape({
+          product_code: Yup.number().required(),
+          price: Yup.number().required(),
+          title: Yup.string().required(),
+        })
+      )
+      .required('Se requiere al menos un producto'),
   });
 
   return {

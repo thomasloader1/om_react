@@ -64,6 +64,7 @@ function VentaPresencialApp() {
     postal_code: '',
     street: '',
     locality: '',
+    products: [],
   };
 
   useEffect(() => {
@@ -101,8 +102,9 @@ function VentaPresencialApp() {
               >
                 <MultiStepLazy
                   stepStateNumber={{ stepNumberGlobal, setStepNumberGlobal }}
-                  className={`pasarela-1 column seleccion-pais ${stepNumberGlobal === 3 ? 'seleccion-de-cursos' : ''
-                    }`}
+                  className={`pasarela-1 column seleccion-pais ${
+                    stepNumberGlobal === 3 ? 'seleccion-de-cursos' : ''
+                  }`}
                   initialValues={initialFormValues}
                   onSubmit={async (values) => {
                     const uriRedirect =

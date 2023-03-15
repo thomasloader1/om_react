@@ -10,7 +10,6 @@ import MotionSpinner from '../../PasarelaCobros/Spinner/MotionSpinner';
 import { IoMdArrowDropleft, IoMdArrowDropright } from 'react-icons/io';
 import withSpinner from '../Hoc/withSpinner';
 
-
 const { NODE_ENV, REACT_APP_API } = process.env;
 const isProduction = NODE_ENV === 'production';
 
@@ -72,6 +71,8 @@ const SelectCourseStep = () => {
           products: [...newState],
         }));
 
+        formik.setFieldValue('products', [...newState]);
+
         return newState;
       });
     } else {
@@ -84,6 +85,8 @@ const SelectCourseStep = () => {
           ...prevState,
           products: [...newState],
         }));
+
+        formik.setFieldValue('products', [...newState]);
 
         return newState;
       });
