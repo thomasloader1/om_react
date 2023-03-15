@@ -1,4 +1,4 @@
-import React, { useEffect, lazy, Suspense } from 'react';
+import React, { useEffect, useRef, lazy, Suspense } from 'react';
 
 import { motion } from 'framer-motion';
 
@@ -8,6 +8,7 @@ import { useAppEnv } from '../Hook/useAppEnv';
 import { useProgress } from '../Hook/useProgress';
 import { useLead } from '../Hook/useLead';
 import { useContact } from '../Hook/useContact';
+import { useMediaQSmall } from '../Hook/useMediaQuery';
 
 import Header from '../../PasarelaCobros/Header';
 import LeadStep from '../Stepper/Lead';
@@ -22,6 +23,11 @@ const { NODE_ENV, REACT_APP_SPP } = process.env;
 const MultiStepLazy = lazy(() => import('../Stepper/MultiStep'));
 
 function VentaPresencialApp() {
+  const pasarelaContainerRef = useRef(null);
+  const isMobile = useMediaQSmall();
+  const setHeightMobile = () => {
+    pasarelaContainerRef.current.style.height = `${window.innerHeight}px`;
+  };
   const {
     setFormikValues,
     formikValues,
@@ -75,6 +81,12 @@ function VentaPresencialApp() {
     return () => null;
   }, [creatingProgress, appEnv, formikValues]);
 
+  useEffect(() => {
+    if (isMobile) {
+      setHeightMobile();
+    }
+  }, [isMobile]);
+
   return (
     <>
       {creatingProgress ? (
@@ -98,11 +110,13 @@ function VentaPresencialApp() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1 }}
                 className="pasarela columns mx-auto"
+                ref={pasarelaContainerRef}
               >
                 <MultiStepLazy
                   stepStateNumber={{ stepNumberGlobal, setStepNumberGlobal }}
-                  className={`pasarela-1 column seleccion-pais ${stepNumberGlobal === 3 ? 'seleccion-de-cursos' : ''
-                    }`}
+                  className={`pasarela-1 column seleccion-pais ${
+                    stepNumberGlobal === 3 ? 'seleccion-de-cursos' : ''
+                  }`}
                   initialValues={initialFormValues}
                   onSubmit={async (values) => {
                     const uriRedirect =
