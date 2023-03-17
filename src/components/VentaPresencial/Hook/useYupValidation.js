@@ -46,9 +46,17 @@ export const useYupValidation = () => {
       '❗ La provincia o estado son requeridos'
     ),
     country: Yup.string().required('❗ El país es requerido'),
-    postal_code: Yup.number('❗ El campo debe contener solo numeros').required(
-      '❗ El código postal es requerido'
-    ),
+    // postal_code: Yup.number('❗ El campo debe contener solo numeros').required(
+    //   '❗ El código postal es requerido'
+    // ),
+    postal_code: Yup
+      .string()
+      .when("country", (country, schema) => {
+      console.log("Estees el valor del yup ",country)
+        if(country.trim() !== "Chile")
+          return schema.required('❗ El código postal es requerido')
+        return schema
+      }),
     street: Yup.string().required('❗ La dirección es requerida'),
     locality: Yup.string().required('❗ La Ciudad o Comuna es requerida'),
   });

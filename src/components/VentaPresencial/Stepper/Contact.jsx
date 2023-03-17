@@ -77,13 +77,22 @@ const ContactStep = () => {
             id="province_state"
             name="province_state"
           />
-          <InputField
+          {appEnv.country !== 'Chile' && (
+            <InputField
+              label="Código postal"
+              type="text"
+              placeholder="Ingresar código postal"
+              id="postal_code"
+              name="postal_code"
+            />
+          )}
+          {/* <InputField
             label="Código postal"
             type="text"
             placeholder="Ingresar código postal"
             id="postal_code"
             name="postal_code"
-          />
+          /> */}
           <InputField
             label="Dirección"
             type="text"
