@@ -92,9 +92,9 @@ const ContactStep = () => {
             name="street"
           />
           <InputField
-            label="Localidad"
+            label="Ciudad o Comuna"
             type="text"
-            placeholder="Ingresar localidad"
+            placeholder="Ingresar Ciudad o Comuna"
             id="locality"
             name="locality"
           />

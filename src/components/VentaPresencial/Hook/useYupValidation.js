@@ -50,7 +50,7 @@ export const useYupValidation = () => {
       '❗ El código postal es requerido'
     ),
     street: Yup.string().required('❗ La dirección es requerida'),
-    locality: Yup.string().required('❗ La localidad es requerida'),
+    locality: Yup.string().required('❗ La Ciudad o Comuna es requerida'),
   });
 
   const selectCoursesStepValidation = Yup.object().shape({
