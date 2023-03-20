@@ -79,7 +79,10 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
                 </div>
 
                 <div className="course-price">
-                  <h3>${course.price}</h3>
+                  <h3>${course.price.toLocaleString('es',
+                      {
+                        useGrouping: true, minimumIntegerDigits: 1
+                      })}</h3>
                   <MdDeleteOutline
                     className="is-size-3 delete-selection"
                     onClick={() => onDelete(course.id)}
@@ -92,7 +95,10 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
                 className="side-item-courses-selected is-justify-content-space-between"
               >
                 <span id={course.product_code} style={{ display: 'none' }}>
-                  {course.price}
+                  {course.price.toLocaleString('es',
+                    {
+                      useGrouping: true, minimumIntegerDigits: 1
+                    })}
                 </span>
                 <h4>{course.title}</h4>
                 <button
@@ -110,7 +116,10 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
         </ul>
         <div className="side-item-courses-total">
           <span>COSTO TOTAL</span>
-          <h3>${totalPrice}</h3>
+          <h3>${totalPrice.toLocaleString('es',
+            {
+              useGrouping: true, minimumIntegerDigits: 1
+            })}</h3>
         </div>
       </div>
     </>

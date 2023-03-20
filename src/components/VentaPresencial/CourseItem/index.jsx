@@ -62,7 +62,10 @@ function CourseItem({
         </div>
 
         <div className="course-price">
-          <h3>${price}</h3>
+          <h3>${price.toLocaleString('es',
+            {
+              useGrouping: true, minimumIntegerDigits: 1
+            })}</h3>
         </div>
       </Box>
     </>
