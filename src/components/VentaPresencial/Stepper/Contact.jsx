@@ -110,7 +110,7 @@ const ContactStep = () => {
           <InputField
             label="Número de matrícula"
             type="text"
-            placeholder="Ingresar matrícula"
+            placeholder="Ingresar nro. de matrícula o ID del médico"
             id="registration_number"
             name="registration_number"
           />
