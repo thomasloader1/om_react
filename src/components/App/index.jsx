@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useContext,useEffect } from 'react';
 import { Container, Notification } from 'react-bulma-components';
 import { Route, Routes, useLocation } from 'react-router';
 // import PasarelaApp from '../PasarelaCobros/App';
 import VentaPresencialApp from '../VentaPresencial/App';
 import LoginForm from '../LoginForm';
 import { useState } from 'react';
+import Axios from 'axios';
+import { AppContext } from '../PasarelaCobros/Provider/StateProvider';
+
 const titles = {
   superpasarela: 'Pasarela de cobros',
   ventapresencial: 'Venta presencial',
@@ -13,14 +16,47 @@ const titles = {
 function App() {
   const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { tokenLogin,setTokenLogin } = useContext(AppContext);
+
+  // const handleLogin = (username, password) => {
+  //   // TODO: Validar las credenciales y establecer el estado de autenticación
+  //   if (username === 'admin' && password === '123456') {
+  //     setIsAuthenticated(true);
+  //   } else {
+  //     alert("Usuario o contraseña no validos. Intente nuevamente.")
+  //   }
+  // };
 
   const handleLogin = (username, password) => {
-    // TODO: Validar las credenciales y establecer el estado de autenticación
-    if (username === 'admin' && password === '123456') {
+    // event.preventDefault();
+    const config = {
+      headers: { Authorization: `Bearer ${token}` }
+    };
+    const bodyParameters = {
+      email: username, password
+    };
+    Axios.post(
+      'http://127.0.0.1:8000/api/login2',
+      bodyParameters,
+      config
+    )
+    .then(response => {
+      console.log("Respuesta con token del login: ",response);
+      // Aquí puedes hacer algo con la respuesta del servidor
       setIsAuthenticated(true);
-    } else {
-      alert("Usuario o contraseña no validos. Intente nuevamente.")
-    }
+      setTokenLogin(`Bearer ${response.data.access_token}`);
+      console.log('token state: ', tokenLogin);
+    })
+    .catch(error => {
+      console.log("Error en login de axios: ",error);
+      // setError('Error al intentar iniciar sesión');
+      if (error.response && error.response.data) {
+        alert(error.response.data.messagge);
+        console.log("mensaje del server: ",error.response.data.messagge);
+      } else {
+        alert('Error al intentar iniciar sesión');
+      }
+    });
   };
 
   useEffect(() => {

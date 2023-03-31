@@ -14,6 +14,7 @@ const apiProgress = isProduction
 export const useProgress = () => {
   const { id } = useParams();
   const { appEnv, setAppEnv } = useContext(AppContext);
+  const { tokenLogin,  } = useContext(AppContext);
 
   const [fetching, setFetching] = useState(false);
   const progressId = Number(id);
@@ -36,7 +37,10 @@ export const useProgress = () => {
 
   const getProgress = async () => {
     try {
-      const response = await axios.get(`${apiProgress}/${progressId}`);
+      const response = await axios.get(
+        `${apiProgress}/${progressId}`,
+        { headers: { Authorization: tokenLogin } }
+      );
       const { data } = response;
       console.log('getProgress', { data });
       const { progress, lead, contact, contract, products } = data;

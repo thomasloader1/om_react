@@ -32,10 +32,12 @@ export const useContact = () => {
     setFetching(true);
     try {
       const { data } = await axios.post(apiStepConversionContact, {
-        idPurchaseProgress: id,
-        ...values,
-        step_number: 4,
-      });
+          idPurchaseProgress: id,
+          ...values,
+          step_number: 4,
+        },
+        { headers: { Authorization: ctx.tokenLogin } }
+      );
       const { contact, lead, progress } = data;
 
       ctx.setAppEnv((prevState) => ({
@@ -45,7 +47,7 @@ export const useContact = () => {
         contact: { ...contact },
       }));
 
-      createContactCRM(contact, lead.entity_id_crm);
+      createContactCRM(contact, lead.entity_id_crm, progress);
     } catch (e) {
       console.log({ e });
       const { message } = e.response.data;
@@ -54,19 +56,21 @@ export const useContact = () => {
       setFetching(false);
     }
   };
-  const createContactCRM = async (contact, leadId) => {
+  const createContactCRM = async (contact, leadId, progress) => {
     console.log({ contact, leadId });
     // console.log(responseCreateLeadSales);
     
     try {
       const { data } = await axios.post(apiConvertLeadZohoCRM, {
-        idPurchaseProgress: id,
-        contact,
-        lead_id: leadId,
-      });
+          idPurchaseProgress: id,
+          contact,
+          lead_id: leadId,
+        },
+        { headers: { Authorization: ctx.tokenLogin } }
+      );
 
       const { contact: contactResponse } = data;
-      updateEntityIdCRMContactSales(contact, contactResponse.id);
+      updateEntityIdCRMContactSales(contact, contactResponse.id, progress);
     } catch (e) {
       console.log({ e });
 
@@ -76,12 +80,12 @@ export const useContact = () => {
     }
   };
 
-  const updateEntityIdCRMContactSales = async (contact, id) => {
+  const updateEntityIdCRMContactSales = async (contact, id, progress) => {
     try {
       contact.entity_id_crm = id;
       const resEntityIdLeadCRM = await axios.post(
         apiUpdateEntityIdContactSales,
-        contact
+        {... contact, progress}
       );
     } catch (e) {
       console.log({ e });

@@ -49,6 +49,7 @@ function StateProvider({ children }) {
   const [checkoutLink, setCheckoutLink] = useState('');
   const [appEnv, setAppEnv] = useState(null);
   const [selectedCourses, setSelectedCourses] = useState([]);
+  const [tokenLogin, setTokenLogin] = useState(null);
   const appRef = useRef(null);
   const formRef = useRef(null);
   const { expand: expandMenu, toggleState: toggleMenu } = useToggle(false);
@@ -72,6 +73,8 @@ function StateProvider({ children }) {
         setStripeRequest,
         checkoutLink,
         setCheckoutLink,
+        tokenLogin,
+        setTokenLogin,
         appRef,
         formRef,
         appEnv,

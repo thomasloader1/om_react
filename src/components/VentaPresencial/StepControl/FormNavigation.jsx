@@ -27,7 +27,7 @@ const apiProgress = isProduction
 
 const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
   const { values, setFieldValue, ...formik } = useFormikContext();
-  const { stepNumberGlobal, setAppEnv, appEnv } = useContext(AppContext);
+  const { tokenLogin,stepNumberGlobal, setAppEnv, appEnv } = useContext(AppContext);
   const { id } = useParams();
   const { modalAlert } = useSwal();
   const { savingProgress } = values;
@@ -51,7 +51,9 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
             {
               step_number: 4,
               products,
-            }
+            },
+                    { headers: { Authorization: tokenLogin } }
+
           );
 
           const { contact, contract, lead, progress } = response.data;
@@ -67,10 +69,14 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
           break;
         }
         case 2: {
-          const response = await axios.post(`${apiContactSaveProgress}/${id}`, {
-            step_number: 3,
-            ...values,
-          });
+          const response = await axios.post(
+            `${apiContactSaveProgress}/${id}`,
+            {
+              step_number: 3,
+              ...values,
+            },
+            { headers: { Authorization: tokenLogin } }
+          );
 
           const { contact, lead, progress } = response.data;
 
@@ -84,10 +90,10 @@ const FormNavigation = ({ hasPrevious, isLastStep, onBackClick }) => {
           break;
         }
         case 1: {
-          const response = await axios.post(`${apiLeadSaveProgress}/${id}`, {
-            step_number: 2,
-            ...values,
-          });
+        console.log("llamando al apiLeadSaveProgress que requiere auntenticacion, este el el token: ", {tokenLogin})
+          const response = await axios.post(`${apiLeadSaveProgress}/${id}`,
+            { step_number: 2, ...values, }, { headers: { Authorization: tokenLogin } }
+          );
           const { lead } = response.data;
 
           setAppEnv((prevState) => ({

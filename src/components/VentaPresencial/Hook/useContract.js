@@ -29,7 +29,9 @@ export const useContract = () => {
         idPurchaseProgress: id,
         products: ctx.selectedCourses,
         step_number: 5,
-      });
+      },
+      { headers: { Authorization: ctx.tokenLogin } }
+      );
       console.log({ data });
       const { contract, progress, products } = data;
       createContractCRM();

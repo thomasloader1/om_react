@@ -5,12 +5,15 @@ function LoginForm({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     // TODO: Validar las credenciales y llamar a la función onLogin si son correctas
     onLogin(username, password);
   };
+
+  // const handleSubmit = (event) => {
+  // };
 
   return (
     <div class="hero-body">
