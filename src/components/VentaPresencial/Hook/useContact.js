@@ -2,7 +2,6 @@ import axios from 'axios';
 import { useContext, useState } from 'react';
 import { useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
-import { useProgress } from './useProgress';
 import { useSwal } from './useSwal';
 
 const { NODE_ENV, REACT_APP_API } = process.env;
@@ -19,7 +18,7 @@ const apiUpdateEntityIdContactSales = isProduction
   : '/api/updateEntityIdContactSales';
 
 export const useContact = () => {
-  const { updateProgress } = useProgress();
+  // const { updateProgress } = useProgress();
   const [fetching, setFetching] = useState(false);
   const { id } = useParams();
   const { modalAlert } = useSwal();
@@ -32,10 +31,10 @@ export const useContact = () => {
     setFetching(true);
     try {
       const { data } = await axios.post(apiStepConversionContact, {
-          idPurchaseProgress: id,
-          ...values,
-          step_number: 4,
-        },
+        idPurchaseProgress: id,
+        ...values,
+        step_number: 4,
+      },
         { headers: { Authorization: ctx.tokenLogin } }
       );
       const { contact, lead, progress } = data;
@@ -51,7 +50,6 @@ export const useContact = () => {
     } catch (e) {
       console.log({ e });
       const { message } = e.response.data;
-      updateProgress([],3);
       modalAlert(message, 'error');
       setFetching(false);
     }
@@ -59,13 +57,13 @@ export const useContact = () => {
   const createContactCRM = async (contact, leadId, progress) => {
     console.log({ contact, leadId });
     // console.log(responseCreateLeadSales);
-    
+
     try {
       const { data } = await axios.post(apiConvertLeadZohoCRM, {
-          idPurchaseProgress: id,
-          contact,
-          lead_id: leadId,
-        },
+        idPurchaseProgress: id,
+        contact,
+        lead_id: leadId,
+      },
         { headers: { Authorization: ctx.tokenLogin } }
       );
 
@@ -85,7 +83,7 @@ export const useContact = () => {
       contact.entity_id_crm = id;
       const resEntityIdLeadCRM = await axios.post(
         apiUpdateEntityIdContactSales,
-        {... contact, progress}
+        { ...contact, progress }
       );
     } catch (e) {
       console.log({ e });

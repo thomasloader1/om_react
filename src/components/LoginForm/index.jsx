@@ -4,13 +4,15 @@ import { useContext } from 'react';
 import { useState } from 'react';
 import { AppContext } from '../PasarelaCobros/Provider/StateProvider';
 import { useNavigate } from 'react-router';
+import useToken from '../VentaPresencial/Hook/useToken';
 
 function LoginForm({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { setIsAuthenticated, setTokenLogin, tokenLogin } = useContext(AppContext);
+  const { setToken } = useToken()
+  const { setIsAuthenticated, setTokenLogin } = useContext(AppContext);
 
   const handleLogin = async (username, password) => {
 
@@ -27,17 +29,14 @@ function LoginForm({ onLogin }) {
       const bodyParameters = {
         email: username, password, remember_me: true
       };
-      const response = await axios.post(
-        '/api/login',
-        bodyParameters,
-        // config
-      );
+      const response = await axios.post('/api/login', bodyParameters,/*config*/);
       console.log("Respuesta con token del login: ", response);
       setIsAuthenticated(true);
-      localStorage.setItem('tokenLogin', `Bearer ${response.data.access_token}`);
+
+      setToken(response.data.access_token);
+
       setTokenLogin(`Bearer ${response.data.access_token}`);
-      console.log('token state: ', tokenLogin);
-      navigate("/")
+      navigate("/ventapresencial/")
     } catch (error) {
       console.log("Error en login de axios: ", error);
 
@@ -59,12 +58,12 @@ function LoginForm({ onLogin }) {
       <div class="container">
         <div class="columns is-centered">
           <div class="column is-5-tablet is-4-desktop is-3-widescreen">
-            <form action="" class="box" onSubmit={handleSubmit}>
+            <form action="" className="box" onSubmit={handleSubmit}>
               <h2 className="title is-4">Login Venta Presencial</h2>
               <div class="field">
-                <label for="" class="label">Usuario:</label>
+                <label htmlFor="username" className="label">Usuario:</label>
                 <div class="control">
-                  <input type="text" value={username} class="input" onChange={(e) => setUsername(e.target.value)} required />
+                  <input id='username' type="text" value={username} className="input" onChange={(e) => setUsername(e.target.value)} required />
                 </div>
               </div>
               <div class="field">

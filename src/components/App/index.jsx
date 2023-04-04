@@ -34,7 +34,7 @@ function App() {
         element={<VentaPresencialApp />}
       /> */}
       <Route exact path="/" element={<VentaPresencialApp />} />
-      <Route exact path="/ventapresencial/login" element={<LoginForm />} />
+      <Route exact path="/vp/login" element={<LoginForm />} />
       <Route exact path="/ventapresencial/:id" element={<VentaPresencialApp />} />
       <Route
         path="*"

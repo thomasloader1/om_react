@@ -19,7 +19,7 @@ const apiUpdateEntityIdLeadVentas = isProduction
   : '/api/updateEntityIdLeadVentas';
 
 export const useLead = () => {
-  const { updateProgress } = useProgress();
+  //const { updateProgress } = useProgress();
   const ctx = useContext(AppContext);
   const [fetching, setFetching] = useState(false);
   const { modalAlert } = useSwal();
@@ -33,7 +33,7 @@ export const useLead = () => {
         idPurchaseProgress: id,
         ...dataLead,
         step_number: 3,
-      },{ headers: { Authorization: ctx.tokenLogin } });
+      }, { headers: { Authorization: ctx.tokenLogin } });
 
       const { progress, newOrUpdatedLead, lead_id } = data;
 
@@ -47,7 +47,7 @@ export const useLead = () => {
     } catch (e) {
       console.log(e);
       const { message, progress } = e.response.data;
-      updateProgress([],2);
+
       modalAlert(message, 'error');
       setFetching(false);
     }
