@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useSwal } from './useSwal';
+import { useLogin } from './useLogin';
 
 const { NODE_ENV, REACT_APP_API } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -14,12 +15,13 @@ const apiProgress = isProduction
 export const useProgress = () => {
   const { id } = useParams();
   const { appEnv, setAppEnv } = useContext(AppContext);
-  const { tokenLogin,  } = useContext(AppContext);
+  const { tokenLogin, } = useContext(AppContext);
 
   const [fetching, setFetching] = useState(false);
   const progressId = Number(id);
   const navigate = useNavigate();
   const { fireErrorToast } = useSwal();
+
 
   const createProgress = async () => {
     //console.log('createProgress');
@@ -64,6 +66,7 @@ export const useProgress = () => {
     }
   };
 
+
   const updateProgress = async (values, step) => {
     try {
       const { data } = await axios.put(`${apiProgress}/${id}`, {
@@ -83,15 +86,43 @@ export const useProgress = () => {
     }
   };
 
+  const validateToken = async () => {
+    try {
+      const tokenLoginFromLS = localStorage.getItem('tokenLogin');
+
+      if (typeof tokenLoginFromLS !== 'undefined' && tokenLoginFromLS !== null) {
+        const apiResponse = await axios.get(
+          "/api/tokenIsValid", { headers: { Authorization: tokenLoginFromLS } }
+        );
+        const { data } = apiResponse;
+        console.log('isLogedIn', data);
+        return true
+        // ctx.setIsAuthenticated(true);
+      }
+
+    } catch (e) {
+      console.log('error isLogedIn', { e });
+      // ctx.setIsAuthenticated(false);
+      return false
+    }
+  }
+
+
+
+
   useEffect(() => {
     setFetching(true);
 
     //console.log('useEffect en useProgress()', { id, progressId });
 
     const prepareProgress = async () => {
-      if (typeof id === 'undefined') {
+      const isTokenValid = await validateToken();
+
+      if (typeof id === 'undefined' && isTokenValid) {
         await createProgress();
         return;
+      } else {
+        navigate("/ventapresencial/login")
       }
 
       getProgress();

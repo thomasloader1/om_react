@@ -23,7 +23,7 @@ const { NODE_ENV, REACT_APP_SPP } = process.env;
 const MultiStepLazy = lazy(() => import('../Stepper/MultiStep'));
 
 function VentaPresencialApp() {
-  const pasarelaContainerRef = useRef(null);
+  const pasarelaContainerRef = useRef();
   const isMobile = useMediaQSmall();
   const setHeightMobile = () => {
     pasarelaContainerRef.current.style.height = `${window.innerHeight}px`;
@@ -82,11 +82,11 @@ function VentaPresencialApp() {
     return () => null;
   }, [creatingProgress, appEnv, formikValues]);
 
-  useEffect(() => {
+/*   useEffect(() => {
     if (isMobile) {
       setHeightMobile();
     }
-  }, [isMobile]);
+  }, [isMobile]); */
 
   return (
     <>
@@ -96,13 +96,13 @@ function VentaPresencialApp() {
         <Suspense fallback={<MotionSpinner text="Cargando Aplicacion" />}>
           <motion.div
             style={{
-              height: '100vh',
+              height: isMobile ? `${window.innerHeight}px` :'100vh',
               width: '100vw',
               overflow: 'hidden scroll',
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
+              transition={{ duration: 1 }}
           >
             <Header />
             <section className="container is-max-widescreen">
@@ -120,7 +120,7 @@ function VentaPresencialApp() {
                   }`}
                   initialValues={initialFormValues}
                   onSubmit={async (values) => {
-                    const uriRedirect =
+                    const uriRedirect = 
                       NODE_ENV === 'production'
                         ? REACT_APP_SPP
                         : 'http://localhost:3001/superpasarela';
@@ -188,7 +188,8 @@ function VentaPresencialApp() {
                     loadingText="Generando un nuevo Contrato"
                     completeData={completeData}
                   />
-                </MultiStepLazy>
+                  </MultiStepLazy>
+                  
               </motion.div>
             </section>
           </motion.div>

@@ -4,7 +4,6 @@ import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import ButtonField from '../../PasarelaCobros/RadioButton/ButtonField';
 import { FormStep } from './MultiStep';
 import { motion } from 'framer-motion';
-import axios from 'axios';
 
 const visibilityVariants = {
   hidden: { opacity: 0 },
@@ -25,28 +24,12 @@ const itemVisibilityVariant = {
   },
 };
 
-const hacerLlamadaAxios = (tokenLogin) => {
-  console.log("llamando al progress que requiere auntenticacion, este el el token: ", tokenLogin)
-  axios.get('http://localhost:8000/api/progress/16',
-        { headers: { Authorization: tokenLogin } }
-      )
-    .then(response => {
-      // Manejar la respuesta de la llamada Axios
-      console.log("hacerLlamadaAxios, exito")
-    })
-    .catch(error => {
-      // Manejar el error de la llamada Axios
-      console.log("hacerLlamadaAxios, error: ",error)
-      
-    });
-}
 function SelectCountryStep() {
   const { options, setOptions, userInfo, setUserInfo, formikValues, appEnv } =
     useContext(AppContext);
   const { countryOptions, sideItemOptionsVP } = options;
   const { stepOne } = userInfo;
   const { setFieldValue, ...formik } = useFormikContext();
-  const { tokenLogin } = useContext(AppContext);
 
   useEffect(() => {
     if (
@@ -102,8 +85,6 @@ function SelectCountryStep() {
             }}
           />
         ))}
-
-        <button onClick={hacerLlamadaAxios(tokenLogin)}>Hacer llamada Axios</button>
 
       </motion.div>
     </FormStep>
