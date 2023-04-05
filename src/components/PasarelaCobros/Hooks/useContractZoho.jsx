@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect, useContext } from 'react';
 import { AppContext } from '../Provider/StateProvider';
-
+import { fireModalAlert, fireToast } from '../Hooks/useSwal'
 const {
   REACT_APP_OCEANO_URL,
   REACT_APP_OCEANO_OBTAINDATA,
@@ -34,7 +34,9 @@ export const useContractZoho = (contractId, runEffect = true) => {
 
         setData(response.data);
         setContractData(response.data);
+        fireToast(`Contrato de ${response.data.sale.Pais} cargado`, 'info')
       } catch (e) {
+        fireModalAlert(e.response.data.detail)
         setError(e.response.data);
       } finally {
         setLoading(false);
