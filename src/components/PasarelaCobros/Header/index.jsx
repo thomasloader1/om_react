@@ -28,25 +28,13 @@ function Header() {
   };
   return (
     <header
-      className={`container is-max-widescreen py-5 ${
-        expand ? 'is-expanded' : ''
-      }`}
+      className={`container is-max-widescreen py-5 ${expand ? 'is-expanded' : ''
+        }`}
     >
-      {/*       <nav
-        className="navbar is-transparent"
-        role="navigation"
-        aria-label="main navigation"
-      >
-        <div className="navbar-brand">
-          <a className="navbar-item" href="">
-            <img src={logo} alt="Oceano Logo" width="100%" height="auto" />
-          </a>
-        </div>
-      </nav> */}
 
       <Navbar transparent="true">
         <Navbar.Brand>
-          <Navbar.Burger onClick={toggleState} />
+          <Navbar.Burger className='is-hidden-tablet-only' onClick={toggleState} />
           <Navbar.Item href="#">
             <motion.img
               animate={expand ? 'open' : 'closed'}

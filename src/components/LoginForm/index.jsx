@@ -54,38 +54,38 @@ function LoginForm({ onLogin }) {
   // };
 
   return (
-    <div class="hero-body">
-      <div class="container">
-        <div class="columns is-centered">
-          <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+    <div className="hero-body">
+      <div className="container">
+        <div className="columns is-centered">
+          <div className="column is-5-tablet is-4-desktop is-3-widescreen">
             <form action="" className="box" onSubmit={handleSubmit}>
               <h2 className="title is-4">Login Venta Presencial</h2>
-              <div class="field">
+              <div className="field">
                 <label htmlFor="username" className="label">Usuario:</label>
-                <div class="control">
+                <div className="control">
                   <input id='username' type="text" value={username} className="input" onChange={(e) => setUsername(e.target.value)} required />
                 </div>
               </div>
-              <div class="field">
-                <label for="" class="label">Contraseña</label>
-                <div class="control">
-                  <input type="password" class="input" value={password} onChange={(e) => setPassword(e.target.value)} required />
+              <div className="field">
+                <label htmlFor='' className="label">Contraseña</label>
+                <div className="control">
+                  <input type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </div>
-                {/* <div class="control has-icons-left">
-                  <input type="password" class="input" value={password} onChange={(e) => setPassword(e.target.value)} required/>
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-lock"></i>
+                {/* <div className="control has-icons-left">
+                  <input type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} required/>
+                  <span className="icon is-small is-left">
+                    <i className="fa fa-lock"></i>
                   </span>
                 </div> */}
               </div>
-              {/* <div class="field">
-                <label for="" class="checkbox">
+              {/* <div className="field">
+                <label htmlFor='' className="checkbox">
                   <input type="checkbox"/>
                 Remember me
                 </label>
               </div> */}
-              <div class="field">
-                <button class="button is-success">
+              <div className="field">
+                <button className="button is-success">
                   Login
                 </button>
               </div>

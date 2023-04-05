@@ -6,6 +6,7 @@ import VentaPresencialApp from '../VentaPresencial/App';
 import LoginForm from '../LoginForm';
 import Axios from 'axios';
 import { AppContext } from '../PasarelaCobros/Provider/StateProvider';
+import Welcome from '../Welcome';
 
 const titles = {
   superpasarela: 'Pasarela de cobros',
@@ -34,6 +35,7 @@ function App() {
         element={<VentaPresencialApp />}
       /> */}
       <Route exact path="/" element={<VentaPresencialApp />} />
+      <Route exact path="/ventapresencial" element={<Welcome />} />
       <Route exact path="/vp/login" element={<LoginForm />} />
       <Route exact path="/ventapresencial/:id" element={<VentaPresencialApp />} />
       <Route
