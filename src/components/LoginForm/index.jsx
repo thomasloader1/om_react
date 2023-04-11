@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { AppContext } from '../PasarelaCobros/Provider/StateProvider';
 import { useNavigate } from 'react-router';
 import useToken from '../VentaPresencial/Hook/useToken';
+import { useSwal } from '../VentaPresencial/Hook/useSwal'
 
 function LoginForm({ onLogin }) {
   const [username, setUsername] = useState('');
@@ -13,6 +14,7 @@ function LoginForm({ onLogin }) {
   const navigate = useNavigate();
   const { setToken } = useToken()
   const { setIsAuthenticated, setTokenLogin } = useContext(AppContext);
+  const { modalAlert } = useSwal()
 
   const handleLogin = async (username, password) => {
 
@@ -38,14 +40,11 @@ function LoginForm({ onLogin }) {
       setTokenLogin(`Bearer ${response.data.access_token}`);
       navigate("/ventapresencial/")
     } catch (error) {
-      console.log("Error en login de axios: ", error);
+      modalAlert('Las credenciales son invalidas', 'error')
 
       if (error.response && error.response.data) {
-        alert(error.response.data.messagge);
         localStorage.setItem('tokenLogin', ``);
-        console.log("mensaje del server: ", error.response.data.messagge);
-      } else {
-        alert('Error al intentar iniciar sesión');
+        console.log("mensaje del server: ", { error }, error.response.data.messagge);
       }
     }
   };
@@ -58,8 +57,8 @@ function LoginForm({ onLogin }) {
       <div className="container">
         <div className="columns is-centered">
           <div className="column is-5-tablet is-4-desktop is-3-widescreen">
+            <h2 className="title is-4">Login Venta Presencial</h2>
             <form action="" className="box" onSubmit={handleSubmit}>
-              <h2 className="title is-4">Login Venta Presencial</h2>
               <div className="field">
                 <label htmlFor="username" className="label">Usuario:</label>
                 <div className="control">
