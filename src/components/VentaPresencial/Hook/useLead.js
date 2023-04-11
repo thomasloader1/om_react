@@ -19,7 +19,7 @@ const apiUpdateEntityIdLeadVentas = isProduction
   : '/api/updateEntityIdLeadVentas';
 
 export const useLead = () => {
-  const { updateProgress } = useProgress();
+  //const { updateProgress } = useProgress();
   const ctx = useContext(AppContext);
   const [fetching, setFetching] = useState(false);
   const { modalAlert } = useSwal();
@@ -33,7 +33,7 @@ export const useLead = () => {
         idPurchaseProgress: id,
         ...dataLead,
         step_number: 3,
-      });
+      }, { headers: { Authorization: ctx.tokenLogin } });
 
       const { progress, newOrUpdatedLead, lead_id } = data;
 
@@ -47,7 +47,7 @@ export const useLead = () => {
     } catch (e) {
       console.log(e);
       const { message, progress } = e.response.data;
-      updateProgress([],2);
+
       modalAlert(message, 'error');
       setFetching(false);
     }
@@ -58,7 +58,11 @@ export const useLead = () => {
     // console.log(responseCreateLeadSales);
     let request = { leadId, ...dataLead };
     try {
-      const resCreateLeadCRM = await axios.post(apiCreateLeadZohoCRM, request);
+      const resCreateLeadCRM = await axios.post(
+        apiCreateLeadZohoCRM,
+        request,
+        { headers: { Authorization: ctx.tokenLogin } }
+      );
 
       updateEntityIdCRMLeadSales(
         { leadId, ...newOrUpdatedLead },
@@ -74,9 +78,11 @@ export const useLead = () => {
   const updateEntityIdCRMLeadSales = async (dataLead, resCreateLeadCRM) => {
     try {
       dataLead.entity_id_crm = resCreateLeadCRM.data.id;
-      const { data } = await axios.post(apiUpdateEntityIdLeadVentas, {
-        ...dataLead,
-      });
+      const { data } = await axios.post(
+        apiUpdateEntityIdLeadVentas,
+        { ...dataLead, },
+        { headers: { Authorization: ctx.tokenLogin } }
+      );
 
       ctx.setAppEnv((prevState) => ({
         ...prevState,

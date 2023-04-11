@@ -11,6 +11,8 @@ import {
   userFlow,
 } from '../../../config/config';
 import { useApi } from '../../VentaPresencial/Hook/useApi';
+import { useLogin } from '../../VentaPresencial/Hook/useLogin';
+
 import { useToggle } from '../../VentaPresencial/Hook/useToggle';
 const { NODE_ENV, REACT_APP_API } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -49,6 +51,9 @@ function StateProvider({ children }) {
   const [checkoutLink, setCheckoutLink] = useState('');
   const [appEnv, setAppEnv] = useState(null);
   const [selectedCourses, setSelectedCourses] = useState([]);
+  const [tokenLogin, setTokenLogin] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // useLogin();
   const appRef = useRef(null);
   const formRef = useRef(null);
   const { expand: expandMenu, toggleState: toggleMenu } = useToggle(false);
@@ -56,7 +61,6 @@ function StateProvider({ children }) {
     useToggle(false);
   const { expand: expandSelectedCourses, toggleState: toggleSelectedCourses } =
     useToggle(false);
-
   return (
     <AppContext.Provider
       value={{
@@ -72,6 +76,10 @@ function StateProvider({ children }) {
         setStripeRequest,
         checkoutLink,
         setCheckoutLink,
+        tokenLogin,
+        setTokenLogin,
+        isAuthenticated,
+        setIsAuthenticated,
         appRef,
         formRef,
         appEnv,

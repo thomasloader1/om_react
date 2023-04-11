@@ -5,13 +5,15 @@ import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 
 export const useProducts = (URL, country) => {
   const [fetching, setFetching] = useState(false);
-  const { products, setProducts } = useContext(AppContext);
+  const { products, setProducts,tokenLogin } = useContext(AppContext);
 
   useEffect(() => {
     setFetching(true);
     const fetchApi = async () => {
       try {
-        const apiResponse = await axios.get(URL);
+        const apiResponse = await axios.get(
+          URL, { headers: { Authorization: tokenLogin } }
+        );
         const { data } = apiResponse;
         setProducts(data);
       } catch (e) {
