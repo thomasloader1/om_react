@@ -3,7 +3,6 @@ import { useContext, useState } from 'react';
 import { useSwal } from './useSwal';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useParams } from 'react-router';
-import { useProgress } from './useProgress';
 
 const { NODE_ENV, REACT_APP_API } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -27,7 +26,6 @@ export const useLead = () => {
 
   const createLeadSales = async (dataLead) => {
     setFetching(true);
-
     try {
       const { data } = await axios.post(apiStepCreateLead, {
         idPurchaseProgress: id,

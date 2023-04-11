@@ -7,7 +7,7 @@ function Layout({ children }) {
         <div>
             <Header />
             <main className='container is-max-widescreen' >
-                <div className='pasarela columns is-centered mt-3'>
+                <div className='pasarela_cards mt-3'>
                     {children}
                 </div>
             </main>

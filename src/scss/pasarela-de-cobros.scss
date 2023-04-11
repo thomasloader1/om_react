@@ -12,8 +12,8 @@
 @use './react-paginate.scss';
 
 // Fix bug grilla con input radio
-.radio + .radio,
-.button + .button {
+.radio+.radio,
+.button+.button {
   margin: 0;
 }
 
@@ -49,7 +49,7 @@ $texto-light: #808fa6;
   rotate: -90deg;
 }
 
-button.button > .ui.radio {
+button.button>.ui.radio {
   input[type='radio'] {
     visibility: hidden;
   }
@@ -106,8 +106,7 @@ header.container {
 
 .invisible {
   display: none !important;
-  -webkit-animation: scale-in-center 0.5s cubic-bezier(0.215, 0.61, 0.355, 1)
-    both;
+  -webkit-animation: scale-in-center 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) both;
   animation: scale-in-center 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) both;
   animation-play-state: paused;
 }
@@ -141,7 +140,7 @@ h2.title {
     min-height: 376px;
     height: max-content;
 
-    & > [class*='grid'] {
+    &>[class*='grid'] {
       flex-grow: 1;
       align-content: flex-start;
     }
@@ -235,7 +234,7 @@ h2.title {
     font-weight: 500;
   }
 
-  & > div {
+  &>div {
     justify-content: center;
     gap: 1rem;
   }
@@ -401,7 +400,7 @@ h2.title {
       }
     }
 
-    &.selection ~ .side-item-courses {
+    &.selection~.side-item-courses {
       display: block;
     }
 
@@ -823,7 +822,7 @@ pre {
         }
       }
 
-      & > [class*='grid'] {
+      &>[class*='grid'] {
         overflow-y: scroll;
         grid-template-columns: 1fr;
         width: 100%;
@@ -964,7 +963,7 @@ pre {
       gap: 0.75rem;
     }
 
-    & > .title {
+    &>.title {
       display: none;
     }
 
@@ -979,7 +978,7 @@ pre {
         padding: 0;
       }
 
-      &-info > *:not(.numstep) {
+      &-info>*:not(.numstep) {
         display: none !important;
       }
 
@@ -1007,7 +1006,7 @@ pre {
         display: none;
       }
 
-      &.selection ~ .side-item-courses {
+      &.selection~.side-item-courses {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -1053,7 +1052,7 @@ pre {
   .pasarela-1.seleccion-de-cursos {
     padding: 0;
 
-    & > * {
+    &>* {
       padding-inline: 1rem;
     }
 
@@ -1090,7 +1089,7 @@ pre {
         flex-flow: row nowrap;
         gap: 0.25rem;
 
-        & > * {
+        &>* {
           font-size: 0.5rem !important;
         }
       }
@@ -1177,7 +1176,7 @@ pre {
       display: none;
     }
 
-    & ~ * {
+    &~* {
       .pasarela {
         grid-template-columns: min(80vw, 272px) auto;
 
@@ -1205,7 +1204,7 @@ pre {
     }
   }
 
-  .is-expanded ~ .pasarela {
+  .is-expanded~.pasarela {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
@@ -1232,7 +1231,11 @@ pre {
     color: #257953;
   }
 
-  & > div.is-flex {
+  &>div.is-flex {
     gap: 1rem;
   }
+}
+
+.pasarela_cards {
+  margin-top: 150px !important;
 }

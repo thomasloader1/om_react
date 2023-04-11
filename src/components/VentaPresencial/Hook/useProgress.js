@@ -3,7 +3,6 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useSwal } from './useSwal';
-import { useLogin } from './useLogin';
 import useToken from './useToken';
 
 const { NODE_ENV, REACT_APP_API } = process.env;
@@ -15,7 +14,7 @@ const apiProgress = isProduction
 
 export const useProgress = () => {
   const { id } = useParams();
-  const { appEnv, setAppEnv } = useContext(AppContext);
+  const { appEnv, setAppEnv, user } = useContext(AppContext);
   const { getTokenFromLS } = useToken();
 
   const [fetching, setFetching] = useState(false);
@@ -24,13 +23,13 @@ export const useProgress = () => {
   const { fireErrorToast } = useSwal();
   const { validateToken } = useToken()
 
-  console.log({ progressId })
+  console.log({ progressId, user })
 
 
   const createProgress = async () => {
 
     try {
-      const { data } = await axios.post(apiProgress, { step_number: 1 });
+      const { data } = await axios.post(apiProgress, { step_number: 1, user_id: user.id });
 
       navigate(`/ventapresencial/${data.id}`);
       //navigate(`/ventapresencial/${data.id}`);

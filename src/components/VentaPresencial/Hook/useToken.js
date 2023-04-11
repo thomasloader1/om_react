@@ -2,8 +2,15 @@ import axios from "axios";
 import { useContext } from "react";
 import { AppContext } from "../../PasarelaCobros/Provider/StateProvider";
 
+const { NODE_ENV, REACT_APP_API } = process.env;
+const isProduction = NODE_ENV === 'production';
+
+const apiTokenURL = isProduction
+    ? `${REACT_APP_API}/api/tokenIsValid`
+    : '/api/tokenIsValid';
+
 const useToken = () => {
-    const { setIsAuthenticated } = useContext(AppContext)
+    const { setIsAuthenticated, setUser } = useContext(AppContext)
 
     const setToken = (token) => {
         localStorage.setItem('tokenLogin', token);
@@ -21,12 +28,13 @@ const useToken = () => {
 
             if (typeof token !== 'undefined' && token != null) {
                 const apiResponse = await axios.get(
-                    "/api/tokenIsValid", { headers: { Authorization: `Bearer ${token}` } }
+                    apiTokenURL, { headers: { Authorization: `Bearer ${token}` } }
                 );
 
                 const { data } = apiResponse;
                 setIsAuthenticated(data.isValid);
                 console.log('isLogedIn', { data });
+                setUser(data.user)
                 return true
             }
 

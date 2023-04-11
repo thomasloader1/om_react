@@ -7,31 +7,30 @@ import { useNavigate } from 'react-router';
 import useToken from '../VentaPresencial/Hook/useToken';
 import { useSwal } from '../VentaPresencial/Hook/useSwal'
 
+const { NODE_ENV, REACT_APP_API } = process.env;
+const isProduction = NODE_ENV === 'production';
+
+const apiLogin = isProduction
+  ? `${REACT_APP_API}/api/login`
+  : '/api/login';
+
 function LoginForm({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
   const { setToken } = useToken()
-  const { setIsAuthenticated, setTokenLogin } = useContext(AppContext);
   const { modalAlert } = useSwal()
+  const { setIsAuthenticated, setTokenLogin } = useContext(AppContext);
+  const navigate = useNavigate();
 
-  const handleLogin = async (username, password) => {
-
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // TODO: Validar las credenciales y llamar a la función onLogin si son correctas
-    // event.preventDefault();
-    // const config = {
-    //   headers: { Authorization: `Bearer ${token}` }
-    // };
+
     try {
       const bodyParameters = {
         email: username, password, remember_me: true
       };
-      const response = await axios.post('/api/login', bodyParameters,/*config*/);
+      const response = await axios.post(apiLogin, bodyParameters,/*config*/);
       console.log("Respuesta con token del login: ", response);
       setIsAuthenticated(true);
 
@@ -48,9 +47,6 @@ function LoginForm({ onLogin }) {
       }
     }
   };
-
-  // const handleSubmit = (event) => {
-  // };
 
   return (
     <div className="hero-body">
@@ -70,19 +66,9 @@ function LoginForm({ onLogin }) {
                 <div className="control">
                   <input type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </div>
-                {/* <div className="control has-icons-left">
-                  <input type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} required/>
-                  <span className="icon is-small is-left">
-                    <i className="fa fa-lock"></i>
-                  </span>
-                </div> */}
+
               </div>
-              {/* <div className="field">
-                <label htmlFor='' className="checkbox">
-                  <input type="checkbox"/>
-                Remember me
-                </label>
-              </div> */}
+
               <div className="field">
                 <button className="button is-success">
                   Login

@@ -11,9 +11,8 @@ import {
   userFlow,
 } from '../../../config/config';
 import { useApi } from '../../VentaPresencial/Hook/useApi';
-import { useLogin } from '../../VentaPresencial/Hook/useLogin';
-
 import { useToggle } from '../../VentaPresencial/Hook/useToggle';
+
 const { NODE_ENV, REACT_APP_API } = process.env;
 const isProduction = NODE_ENV === 'production';
 
@@ -53,7 +52,7 @@ function StateProvider({ children }) {
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [tokenLogin, setTokenLogin] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // useLogin();
+  const [user, setUser] = useState(null)
   const appRef = useRef(null);
   const formRef = useRef(null);
   const { expand: expandMenu, toggleState: toggleMenu } = useToggle(false);
@@ -100,6 +99,7 @@ function StateProvider({ children }) {
         toggleSelectCourses,
         expandSelectedCourses,
         toggleSelectedCourses,
+        user, setUser
       }}
     >
       {children}

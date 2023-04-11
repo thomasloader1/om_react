@@ -23,9 +23,9 @@ class ApiService {
         return response;
     }
 
-    async createProgress() {
+    async createProgress(user_id) {
         try {
-            const { data } = await axios.post(this.baseUrl, { step_number: 1 });
+            const { data } = await axios.post(this.baseUrl, { step_number: 1, user_id });
             return data
         } catch (e) {
             return e
