@@ -6,7 +6,11 @@ function Layout({ children }) {
     return (
         <div>
             <Header />
-            <main className='container is-max-widescreen h-100vh'>{children}</main>
+            <main className='container is-max-widescreen' >
+                <div className='pasarela columns is-centered mt-3'>
+                    {children}
+                </div>
+            </main>
         </div>
     );
 }

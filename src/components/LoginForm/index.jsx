@@ -37,14 +37,15 @@ function LoginForm({ onLogin }) {
       setTokenLogin(`Bearer ${response.data.access_token}`);
       navigate('/ventapresencial/');
     } catch (error) {
-      console.log('Error en login de axios: ', error);
+      modalAlert('Las credenciales son invalidas', 'error');
 
       if (error.response && error.response.data) {
-        modalAlert(error.response.data.messagge, 'error');
         localStorage.setItem('tokenLogin', ``);
-        console.log('mensaje del server: ', error.response.data.messagge);
-      } else {
-        modalAlert('Error al intentar iniciar sesión', 'error');
+        console.log(
+          'mensaje del server: ',
+          { error },
+          error.response.data.messagge
+        );
       }
     }
   };
@@ -57,8 +58,8 @@ function LoginForm({ onLogin }) {
       <div className="container">
         <div className="columns is-centered">
           <div className="column is-5-tablet is-4-desktop is-3-widescreen">
+            <h2 className="title is-4">Login Venta Presencial</h2>
             <form action="" className="box" onSubmit={handleSubmit}>
-              <h2 className="title is-4">Login Venta Presencial</h2>
               <div className="field">
                 <label htmlFor="username" className="label">
                   Usuario:
