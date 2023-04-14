@@ -21,19 +21,19 @@ export const useProgress = () => {
   const progressId = Number(id);
   const navigate = useNavigate();
   const { fireErrorToast } = useSwal();
-  const { validateToken } = useToken()
+  const { validateToken } = useToken();
 
-  console.log({ progressId, user })
-
+  console.log({ progressId, user });
 
   const createProgress = async () => {
-
     try {
-      const { data } = await axios.post(apiProgress, { step_number: 1, user_id: user.id });
+      const { data } = await axios.post(apiProgress, {
+        step_number: 1,
+        user_id: user.id,
+      });
 
       navigate(`/ventapresencial/${data.id}`);
       //navigate(`/ventapresencial/${data.id}`);
-
     } catch (e) {
       console.log({ e });
       fireErrorToast(`${JSON.stringify(e, null, 2)}`);
@@ -43,12 +43,11 @@ export const useProgress = () => {
   };
 
   const getProgress = async () => {
-    const tokenLogin = getTokenFromLS()
+    const tokenLogin = getTokenFromLS();
     try {
-      const response = await axios.get(
-        `${apiProgress}/${progressId}`,
-        { headers: { Authorization: `Bearer ${tokenLogin}` } }
-      );
+      const response = await axios.get(`${apiProgress}/${progressId}`, {
+        headers: { Authorization: `Bearer ${tokenLogin}` },
+      });
       const { data } = response;
       console.log('getProgress', { data });
       const { progress, lead, contact, contract, products } = data;
@@ -63,7 +62,10 @@ export const useProgress = () => {
       }));
     } catch (e) {
       console.group('getProgress(): catch', { e });
-      if ((typeof id === 'undefined' && e.response.status !== 401) || e.response.status === 404) {
+      if (
+        (typeof id === 'undefined' && e.response.status !== 401) ||
+        e.response.status === 404
+      ) {
         createProgress();
       }
       console.groupEnd();
@@ -71,7 +73,6 @@ export const useProgress = () => {
       setFetching(false);
     }
   };
-
 
   const updateProgress = async (values, step) => {
     try {
@@ -92,9 +93,6 @@ export const useProgress = () => {
     }
   };
 
-
-
-
   useEffect(() => {
     setFetching(true);
 
@@ -102,10 +100,14 @@ export const useProgress = () => {
 
     const prepareProgress = async () => {
       const isTokenValid = await validateToken();
-      console.log({ isTokenValid })
+      console.log({ isTokenValid, progressIdIsNaN: Number.isNaN(progressId) });
       if (!isTokenValid) {
-        navigate("/vp/login")
-        return
+        navigate('/vp/login');
+        return;
+      }
+
+      if (Number.isNaN(progressId)) {
+        navigate('/ventapresencial');
       }
 
       if (typeof id === 'undefined') {

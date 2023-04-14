@@ -25,12 +25,14 @@ export const useContract = () => {
     console.log('createContractSales', { values });
     setFetching(true);
     try {
-      const { data } = await axios.post(apiStepConversionContract, {
-        idPurchaseProgress: id,
-        products: ctx.selectedCourses,
-        step_number: 5,
-      },
-      { headers: { Authorization: ctx.tokenLogin } }
+      const { data } = await axios.post(
+        apiStepConversionContract,
+        {
+          idPurchaseProgress: id,
+          products: ctx.selectedCourses,
+          step_number: 5,
+        },
+        { headers: { Authorization: ctx.tokenLogin } }
       );
       console.log({ data });
       const { contract, progress, products } = data;
@@ -40,7 +42,7 @@ export const useContract = () => {
         ...prevEnv,
         contract: { ...contract },
         ...progress,
-        products
+        products,
       }));
     } catch (e) {
       console.log({ e });
@@ -53,9 +55,13 @@ export const useContract = () => {
   const createContractCRM = async () => {
     // console.log(responseCreateLeadSales);
     try {
-      const response = await axios.post(apiCreateSaleZohoCRM, {
-        idPurchaseProgress: id,
-      });
+      const response = await axios.post(
+        apiCreateSaleZohoCRM,
+        {
+          idPurchaseProgress: id,
+        },
+        { headers: { Authorization: ctx.tokenLogin } }
+      );
       setCompleteData(response.data);
       console.log({ response });
     } catch (e) {

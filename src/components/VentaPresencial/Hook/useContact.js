@@ -30,11 +30,13 @@ export const useContact = () => {
 
     setFetching(true);
     try {
-      const { data } = await axios.post(apiStepConversionContact, {
-        idPurchaseProgress: id,
-        ...values,
-        step_number: 4,
-      },
+      const { data } = await axios.post(
+        apiStepConversionContact,
+        {
+          idPurchaseProgress: id,
+          ...values,
+          step_number: 4,
+        },
         { headers: { Authorization: ctx.tokenLogin } }
       );
       const { contact, lead, progress } = data;
@@ -59,11 +61,13 @@ export const useContact = () => {
     // console.log(responseCreateLeadSales);
 
     try {
-      const { data } = await axios.post(apiConvertLeadZohoCRM, {
-        idPurchaseProgress: id,
-        contact,
-        lead_id: leadId,
-      },
+      const { data } = await axios.post(
+        apiConvertLeadZohoCRM,
+        {
+          idPurchaseProgress: id,
+          contact,
+          lead_id: leadId,
+        },
         { headers: { Authorization: ctx.tokenLogin } }
       );
 
@@ -83,7 +87,8 @@ export const useContact = () => {
       contact.entity_id_crm = id;
       const resEntityIdLeadCRM = await axios.post(
         apiUpdateEntityIdContactSales,
-        { ...contact, progress }
+        { ...contact, progress },
+        { headers: { Authorization: ctx.tokenLogin } }
       );
     } catch (e) {
       console.log({ e });
