@@ -742,9 +742,25 @@ h2.title {
   }
 }
 
-pre {
-  display: none;
+.pasarela:has(pre) {
+
+  flex-wrap: wrap;
+
+  pre {
+    margin-top: 50px;
+    width: 100%;
+    background-color: #212121;
+    color: #fff;
+    font-family: 'Menlo', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 20px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    border-radius: 5px;
+  }
 }
+
 
 @media screen and (min-width: 767px) {
   .pasarela {

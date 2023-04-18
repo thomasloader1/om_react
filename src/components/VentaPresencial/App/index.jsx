@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, lazy, Suspense } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useRef, lazy, Suspense, useContext } from 'react';
 
 import { motion } from 'framer-motion';
 
@@ -17,17 +18,19 @@ import SelectCourse from '../Stepper/SelectCourse';
 import SelectCountryStep from '../Stepper/SelectCountryStep';
 import ResumeStep from '../Stepper/Resume';
 import MotionSpinner from '../../PasarelaCobros/Spinner/MotionSpinner';
+import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 
 const { NODE_ENV, REACT_APP_SPP } = process.env;
 
 const MultiStepLazy = lazy(() => import('../Stepper/MultiStep'));
 
 function VentaPresencialApp() {
+  //const { user, selectedCourses, tokenLogin, formikValues: ctxFV } = useContext(AppContext)
   const pasarelaContainerRef = useRef();
   const isMobile = useMediaQSmall();
-  const setHeightMobile = () => {
-    pasarelaContainerRef.current.style.height = `${window.innerHeight}px`;
-  };
+  /*   const setHeightMobile = () => {
+      pasarelaContainerRef.current.style.height = `${window.innerHeight}px`;
+    }; */
   const {
     setFormikValues,
     formikValues,
@@ -82,11 +85,11 @@ function VentaPresencialApp() {
     return () => null;
   }, [creatingProgress, appEnv, formikValues]);
 
-/*   useEffect(() => {
-    if (isMobile) {
-      setHeightMobile();
-    }
-  }, [isMobile]); */
+  /*   useEffect(() => {
+      if (isMobile) {
+        setHeightMobile();
+      }
+    }, [isMobile]); */
 
   return (
     <>
@@ -96,13 +99,13 @@ function VentaPresencialApp() {
         <Suspense fallback={<MotionSpinner text="Cargando Aplicacion" />}>
           <motion.div
             style={{
-              height: isMobile ? `${window.innerHeight}px` :'100vh',
+              height: isMobile ? `${window.innerHeight}px` : '100vh',
               width: '100vw',
               overflow: 'hidden scroll',
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-              transition={{ duration: 1 }}
+            transition={{ duration: 1 }}
           >
             <Header />
             <section className="container is-max-widescreen">
@@ -115,12 +118,11 @@ function VentaPresencialApp() {
               >
                 <MultiStepLazy
                   stepStateNumber={{ stepNumberGlobal, setStepNumberGlobal }}
-                  className={`pasarela-1 column seleccion-pais ${
-                    stepNumberGlobal === 3 ? 'seleccion-de-cursos' : ''
-                  }`}
+                  className={`pasarela-1 column seleccion-pais ${stepNumberGlobal === 3 ? 'seleccion-de-cursos' : ''
+                    }`}
                   initialValues={initialFormValues}
                   onSubmit={async (values) => {
-                    const uriRedirect = 
+                    const uriRedirect =
                       NODE_ENV === 'production'
                         ? REACT_APP_SPP
                         : 'http://localhost:3001/superpasarela';
@@ -170,7 +172,7 @@ function VentaPresencialApp() {
 
                   <SelectCourse
                     loading={processContact}
-                    loadingText="Conviertiendo Lead a Contacto"
+                    loadingText="Creando Contrato"
                     onSubmit={(values) => {
                       setFormikValues((prevFormikValues) => ({
                         ...prevFormikValues,
@@ -188,8 +190,8 @@ function VentaPresencialApp() {
                     loadingText="Generando un nuevo Contrato"
                     completeData={completeData}
                   />
-                  </MultiStepLazy>
-                  
+                </MultiStepLazy>
+                {/* <pre>{JSON.stringify({ user, selectedCourses, ctxFV, tokenLogin }, null, 2)}</pre> */}
               </motion.div>
             </section>
           </motion.div>

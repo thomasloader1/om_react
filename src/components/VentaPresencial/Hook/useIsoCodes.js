@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import { getAllISOCodes } from 'iso-country-currency';
 import { useState, useEffect, useContext, useMemo } from 'react';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';

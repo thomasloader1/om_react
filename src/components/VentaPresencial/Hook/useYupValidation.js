@@ -58,18 +58,19 @@ export const useYupValidation = () => {
     locality: Yup.string().required('❗ La Ciudad o Comuna es requerida'),
   });
 
+
   const selectCoursesStepValidation = Yup.object().shape({
-    products: Yup.array('No se puede avanzar si no selecciona un curso')
-      .min(1, 'Debe haber al menos un producto')
+    products: Yup.array()
       .of(
         Yup.object().shape({
-          product_code: Yup.number().required(),
-          price: Yup.number().required(),
-          title: Yup.string().required(),
-          discount: Yup.number(),
-        })
+          product_code: Yup.number().required('El código de producto es obligatorio'),
+          price: Yup.number().required('El precio es obligatorio'),
+          title: Yup.string().required('El título es obligatorio'),
+          quantity: Yup.number().required('La cantidad es obligatoria'),
+          discount: Yup.number().min(0, 'El descuento no puede ser menor a cero')
+        }).nullable()
       )
-      .required('Se requiere al menos un producto'),
+      .min(1, 'Debe seleccionar al menos un producto')
   });
 
   return {

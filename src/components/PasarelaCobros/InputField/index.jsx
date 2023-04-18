@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { useField, useFormikContext } from 'formik';
-import React, { useEffect } from 'react';
+import React from 'react';
 import IntlTelInput from 'react-intl-tel-input';
 import 'react-intl-tel-input/dist/main.css';
 import { useIsoCodes } from '../../VentaPresencial/Hook/useIsoCodes';
@@ -11,7 +12,7 @@ const InputField = ({ label, ...props }) => {
   const readOnly = props.name === 'country';
   const { getIsoCodeFromSide } = useIsoCodes(values.country);
   const { iso } = getIsoCodeFromSide();
-  const [defaultCountry, setDefaultCountry] = useState(iso);
+  const [defaultCountry] = useState(iso);
 
   return (
     <div className="field">

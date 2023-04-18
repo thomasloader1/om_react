@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react';
 import {
   MdOutlineEditNote,
@@ -17,7 +18,7 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
   useEffect(() => {
     if (selectedCourses.length > 0) {
       if (appEnv.products != null && typeof appEnv.products !== 'undefined') {
-        const totalAmout = selectedCourses.reduce(
+        const totalAmout = selectedCourses.filter(Boolean).reduce(
           (acc, current) => acc + Number(current.price),
           0
         );
@@ -27,6 +28,8 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
       }
     }
   }, [selectedCourses]);
+
+  // console.log({ selectedCourses })
 
   return (
     <>
@@ -64,7 +67,7 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
           } `}
       >
         <ul className="side-item-courses-list">
-          {selectedCourses.map((course) =>
+          {selectedCourses.filter(Boolean).map((course) =>
 
             isMobile ? (
               <Box
@@ -80,12 +83,12 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
 
                 <div className="course-price">
                   <h3>${course.price.toLocaleString('es',
-                      {
-                        useGrouping: true, minimumIntegerDigits: 1
-                      })}</h3>
+                    {
+                      useGrouping: true, minimumIntegerDigits: 1
+                    })}</h3>
                   <MdDeleteOutline
                     className="is-size-3 delete-selection"
-                    onClick={() => onDelete(course.id)}
+                    onClick={() => onDelete(course.product_code)}
                   />
                 </div>
               </Box>

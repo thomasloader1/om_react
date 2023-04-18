@@ -7,13 +7,21 @@ const apiProgressURL = isProduction
   : '/api/progress';
 
 class ApiService {
-  baseUrl = apiProgressURL;
-  token = localStorage.getItem('tokenLogin');
-  axiosConfig = { headers: { Authorization: `Bearer ${this.token}` } };
+
+  constructor() {
+    this.baseUrl = apiProgressURL;
+    this.token = localStorage.getItem('tokenLogin');
+    this.axiosConfig = { headers: { Authorization: `Bearer ${this.token}` } };
+  }
 
   async get(endpoint) {
     const response = await axios.get(`${this.baseUrl}/${endpoint}`);
     return response;
+  }
+
+  async getSalesByUser(userId) {
+    const { data } = await axios.get(`${this.baseUrl}`);
+    return data;
   }
 
   async post(endpoint, body) {
@@ -37,6 +45,11 @@ class ApiService {
     return data;
   }
 
+  async getApiResource(URL) {
+    return axios.get(URL, this.axiosConfig)
+
+  }
+
   async createProgress(user_id) {
     try {
       const { data } = await axios.post(this.baseUrl, {
@@ -49,7 +62,21 @@ class ApiService {
     }
   }
 
-  // Aquí puedes agregar más métodos según tus necesidades
+  async createContractCRM(URL, body) {
+    try {
+      const { data } = await axios.post(
+        URL,
+        body,
+        this.axiosConfig
+      );
+
+      return data
+
+    } catch (e) {
+      return e
+    }
+
+  }
 }
 
 export default new ApiService();

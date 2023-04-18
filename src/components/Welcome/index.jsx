@@ -1,13 +1,16 @@
-import React, { useContext, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useContext, useEffect, useState } from 'react';
 import Layout from '../Layout';
 import vpAppImg from '../../img/global/vp.png';
 import api from '../VentaPresencial/Services/api';
 import { useNavigate } from 'react-router';
 import useToken from '../VentaPresencial/Hook/useToken';
 import { AppContext } from '../PasarelaCobros/Provider/StateProvider';
+import { Link } from 'react-router-dom';
 
 const Welcome = () => {
   const { user } = useContext(AppContext);
+  const [oldSales, setOldSales] = useState([])
   const { loading, validateToken } = useToken();
   const navigate = useNavigate();
 
@@ -17,7 +20,9 @@ const Welcome = () => {
       if (!tokenIsValid) {
         navigate('/vp/login');
       }
-      console.log({ tokenIsValid, user });
+      // console.log({ tokenIsValid, user });
+      const oldSales = await api.getSalesByUser(user?.id)
+      setOldSales(oldSales)
     }
     isAuth();
   }, []);
@@ -53,6 +58,12 @@ const Welcome = () => {
                   Comenzar
                 </button>
               </div>
+            </div>
+          </div>
+          <div className="columns">
+            <div className="column">
+              <h2 className=''>Otras Ventas presenciales que hicistes</h2>
+              {oldSales.map(sale => (<Link className='button is-primary mx-1 mt-2' to={`/ventapresencial/${sale.id}`}>{sale.id}</Link>))}
             </div>
           </div>
         </Layout>

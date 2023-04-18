@@ -18,7 +18,6 @@ const apiUpdateEntityIdLeadVentas = isProduction
   : '/api/updateEntityIdLeadVentas';
 
 export const useLead = () => {
-  //const { updateProgress } = useProgress();
   const ctx = useContext(AppContext);
   const [fetching, setFetching] = useState(false);
   const { modalAlert } = useSwal();
@@ -44,7 +43,7 @@ export const useLead = () => {
       createLeadCRM(dataLead, lead_id, newOrUpdatedLead);
     } catch (e) {
       console.log(e);
-      const { message, progress } = e.response.data;
+      const { message } = e.response.data;
 
       modalAlert(message, 'error');
       setFetching(false);

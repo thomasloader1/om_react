@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useParams } from 'react-router';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { useSwal } from './useSwal';
+import api from '../Services/api';
 
 const { NODE_ENV, REACT_APP_API } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -25,15 +26,14 @@ export const useContract = () => {
     console.log('createContractSales', { values });
     setFetching(true);
     try {
-      const { data } = await axios.post(
-        apiStepConversionContract,
-        {
-          idPurchaseProgress: id,
-          products: ctx.selectedCourses,
-          step_number: 5,
-        },
-        { headers: { Authorization: ctx.tokenLogin } }
-      );
+
+      const body = {
+        idPurchaseProgress: id,
+        products: ctx.selectedCourses,
+        step_number: 5,
+      }
+
+      const data = api.createContractCRM(apiStepConversionContract, body)
       console.log({ data });
       const { contract, progress, products } = data;
       createContractCRM();

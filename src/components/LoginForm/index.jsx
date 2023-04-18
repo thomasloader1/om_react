@@ -19,7 +19,7 @@ function LoginForm({ onLogin }) {
   const [password, setPassword] = useState('');
   const { setToken } = useToken()
   const { modalAlert } = useSwal()
-  const { setIsAuthenticated, setTokenLogin } = useContext(AppContext);
+  const { setIsAuthenticated } = useContext(AppContext);
   const navigate = useNavigate();
 
 
@@ -36,7 +36,6 @@ function LoginForm({ onLogin }) {
 
       setToken(response.data.access_token);
 
-      setTokenLogin(`Bearer ${response.data.access_token}`);
       navigate("/ventapresencial/")
     } catch (error) {
       modalAlert('Las credenciales son invalidas', 'error')

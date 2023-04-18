@@ -3,7 +3,6 @@ import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { FormStep } from './MultiStep';
 import { motion } from 'framer-motion';
 import Spinner from '../../PasarelaCobros/Spinner';
-import { Block, Notification } from 'react-bulma-components';
 import withSpinner from '../Hoc/withSpinner';
 
 const ResumeStep = ({ processContract, completeData }) => {

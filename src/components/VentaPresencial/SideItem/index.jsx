@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import SideItemCourses from '../SideItemCourses';
 import { motion } from 'framer-motion';
+import { useFormikContext } from 'formik';
 
 function SideItem({
   currentStep,
@@ -17,21 +18,6 @@ function SideItem({
   formikInstance,
   disableEdit,
 }) {
-  const variantStyles = {
-    open: {
-      opacity: 1,
-      transition: {
-        delay: 0.5,
-        duration: 0.5,
-      },
-    },
-    closed: {
-      opacity: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
 
   const stepStatus = {
     current: `card current ${className}`,
@@ -51,14 +37,14 @@ function SideItem({
     selectedCourses,
     setSelectedCourses,
   } = useContext(AppContext);
-
+  const formik = useFormikContext()
   const classNameStatus = status !== '' ? `${stepStatus[status]}` : className;
   const titleCurrentStep =
     currentStep > 1 && !valueSelected
       ? 'Sin completar'
       : !valueSelected
-      ? 'Sin seleccionar'
-      : valueSelected;
+        ? 'Sin seleccionar'
+        : valueSelected;
 
   const editStep = (stepNumber) => {
     console.log({ formikInstance, formikValues, stepNumber });
@@ -143,8 +129,8 @@ function SideItem({
         console.log({ rest, formikInstance, userInfo });
         break;
       }
-        case 5: {
-       
+      case 5: {
+
         userInfo.stepFive.value = '';
 
         setUserInfo({ ...userInfo });
@@ -178,16 +164,21 @@ function SideItem({
     );
 
     const courseIndex = selectedCourses.findIndex(
-      (course) => course.id === courseId
+      (course) => course.product_code === courseId
     );
 
+    const [...currentCourses] = selectedCourses.filter(course => course.product_code !== courseId)
+
+    console.log({ courseIndex, courseId, selectedCourses, currentCourses })
     if (courseIndex !== -1) {
-      setSelectedCourses((prevState) => {
-        prevState.splice(courseIndex, 1);
-        return [...prevState];
-      });
+      formik.values.products = currentCourses
+      setSelectedCourses(currentCourses);
     } else {
-      setSelectedCourses((prevState) => [...prevState, courseSelected]);
+      setSelectedCourses((prevState) => {
+        const newState = [...prevState, courseSelected]
+        formik.values.products = newState
+        return newState
+      });
     }
   };
 

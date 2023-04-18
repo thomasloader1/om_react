@@ -7,12 +7,9 @@ import { motion } from 'framer-motion';
 import { useFormikContext } from 'formik';
 import axios from 'axios';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
-import { useEffect } from 'react';
 
 const {
   REACT_APP_OCEANO_URL,
-  REACT_APP_OCEANO_STRIPESUBSCRIPTION,
-  REACT_APP_OCEANO_STRIPESUBSCRIPTION_LOCAL,
   REACT_APP_OCEANO_GENERATECHECKOUTPRO,
   NODE_ENV,
 } = process.env;
@@ -29,29 +26,13 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     formRef,
     checkoutLink,
     setCheckoutLink,
-    setOptions,
-    options: optionsGlobal,
   } = useContext(AppContext);
 
-  const { cardComplete, dni, address, fullName, phone } = formik.values;
+  const { cardComplete, dni, address } = formik.values;
 
   const generateButton = userInfo.stepTwo.value.includes('Stripe')
     ? cardComplete
     : dni && address && [...address].length > 10;
-
-  /*   useEffect(() => {
-    if (generateButton) {
-      optionsGlobal.sideItemOptionsVP[4].status = 'completed';
-      optionsGlobal.sideItemOptionsVP[4].value = 'Completos';
-      setOptions({ ...optionsGlobal });
-    } else if (dni && address && fullName && phone) {
-      optionsGlobal.sideItemOptionsVP[4].status = 'current';
-      optionsGlobal.sideItemOptionsVP[4].value = 'Sin Completar';
-      setOptions({ ...optionsGlobal });
-    }
-    return () => null;
-  }, [generateButton]); */
-
   const handleSubmitMercadoPago = () => {
     setFetching(true);
     setOpenBlockLayer(true);
@@ -121,9 +102,8 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
           <>
             {userInfo.stepTwo.value.includes('Stripe') ? (
               <Button
-                className={`bigger is-primary is-medium ${
-                  fetching && 'is-loading'
-                }`}
+                className={`bigger is-primary is-medium ${fetching && 'is-loading'
+                  }`}
                 label={stripeRequest ? 'Pago Realizado' : 'Generar pago'}
                 fullwidth
                 onClick={() => console.log('NOPE')}
@@ -131,9 +111,8 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
               />
             ) : (
               <Button
-                className={`bigger is-primary is-medium ${
-                  fetching && 'is-loading'
-                }`}
+                className={`bigger is-primary is-medium ${fetching && 'is-loading'
+                  }`}
                 label={checkoutLink ? 'Link generado' : 'Generar link'}
                 fullwidth
                 onClick={handleSubmitMercadoPago}

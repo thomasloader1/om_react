@@ -16,20 +16,14 @@ const visibilityVariants = {
     },
   },
 };
-const itemVisibilityVariant = {
-  hidden: { y: 4, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-  },
-};
+
 
 function SelectCountryStep() {
   const { options, setOptions, userInfo, setUserInfo, formikValues, appEnv } =
     useContext(AppContext);
   const { countryOptions, sideItemOptionsVP } = options;
   const { stepOne } = userInfo;
-  const { setFieldValue, ...formik } = useFormikContext();
+  const { setFieldValue } = useFormikContext();
 
   useEffect(() => {
     if (
@@ -40,6 +34,7 @@ function SelectCountryStep() {
       setFieldValue('country', appEnv.country);
       //console.log({ formik });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appEnv?.country, formikValues?.country]);
 
   const handleClick = (propsOfContryOptions) => {
@@ -73,9 +68,8 @@ function SelectCountryStep() {
             initial="hidden"
             animate="visible"
             {...props}
-            className={`grid-country-item button ${
-              props.value === stepOne.value && 'active'
-            }`}
+            className={`grid-country-item button ${props.value === stepOne.value && 'active'
+              }`}
             showText={true}
             id={props.idElement}
             name="country"

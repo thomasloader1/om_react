@@ -25,12 +25,10 @@ const SelectCourseStep = () => {
   const { getIsoCodeFromSide } = useIsoCodes(formik.values?.country);
   const { iso } = getIsoCodeFromSide();
   const countryParam = iso != null ? iso.toLowerCase() : 'cl';
-
   const { fetching, products } = useProducts(
     `${apiProducts}${countryParam}`,
     formik.values?.country
   );
-  // console.log({ iso }, { fetching, products });
 
   const {
     toggleSelectedCourses,
@@ -44,7 +42,7 @@ const SelectCourseStep = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
-  const [elementsPerPage, setElementsPerPage] = useState(elementsRenderPerMQ);
+  const [elementsPerPage] = useState(elementsRenderPerMQ);
 
   const handlePageClick = (data) => {
     setCurrentPage(data.selected);
@@ -61,17 +59,19 @@ const SelectCourseStep = () => {
       (course) => course.product_code === courseId
     );
 
+
     if (courseIndex !== -1) {
       setSelectedCourses((prevState) => {
         const newState = [...prevState];
-        newState.splice(courseIndex, 1);
+        newState.splice(courseIndex, 1).filter(Boolean);
+        console.log({ newState })
 
         setAppEnv((prevState) => ({
           ...prevState,
           products: [...newState],
         }));
 
-        formik.setFieldValue('products', [...newState]);
+        formik.values.products = newState;
 
         return newState;
       });
@@ -81,22 +81,26 @@ const SelectCourseStep = () => {
           ...prevState,
           { product_code, price, title, quantity: 1, discount: 0 },
         ];
+        console.log({ newState })
+
         setAppEnv((prevState) => ({
           ...prevState,
           products: [...newState],
         }));
 
-        formik.setFieldValue('products', [...newState]);
+        formik.values.products = newState;
 
         return newState;
       });
     }
 
+    // console.log({ courseIndex, courseId, FormikValues: formik.values, selectedCourses })
+
+
     setAppEnv((prevState) => ({
       ...prevState,
     }));
 
-    // console.log({ selectedCourses });
   };
 
   const productsWithPrice = products.filter((product) => product.price !== 0);
@@ -104,7 +108,7 @@ const SelectCourseStep = () => {
   const filteredProducts = productsWithPrice.filter((product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  const elementsToShow = filteredProducts.slice(
+  const elementsToShow = filteredProducts.filter(Boolean).slice(
     currentPage * elementsPerPage,
     (currentPage + 1) * elementsPerPage
   );
@@ -124,9 +128,11 @@ const SelectCourseStep = () => {
   ) : (
     <button className="button is-primary">Siguiente</button>
   );
+
   useEffect(() => {
     if (appEnv.products != null && typeof appEnv.products !== 'undefined') {
       setSelectedCourses(appEnv.products);
+      formik.setFieldValue("products", appEnv.products)
     }
 
     return () => null;
@@ -191,7 +197,7 @@ const SelectCourseStep = () => {
               }}
             >
               {elementsToShow.map((product) => {
-                const isChecked = selectedCourses.some((course) => {
+                const isChecked = selectedCourses.filter(Boolean).some((course) => {
                   return product.product_code === Number(course.product_code);
                 });
 
@@ -230,6 +236,7 @@ const SelectCourseStep = () => {
             pageClassName={'pagination-item'}
             activeClassName={'is-current is-primary'}
           />
+          <pre>{JSON.stringify(formik.values, null, 2)}</pre>
         </>
       )}
     </>

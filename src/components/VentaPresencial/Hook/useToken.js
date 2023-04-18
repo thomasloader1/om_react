@@ -11,12 +11,13 @@ const apiTokenURL = isProduction
   : '/api/tokenIsValid';
 
 const useToken = () => {
-  const { setIsAuthenticated, setUser } = useContext(AppContext);
+  const { setIsAuthenticated, setUser, setTokenLogin } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const setToken = (token) => {
     localStorage.setItem('tokenLogin', token);
+    setTokenLogin(`Bearer ${token}`);
   };
 
   const getTokenFromLS = () => {
@@ -37,10 +38,11 @@ const useToken = () => {
         const { data } = apiResponse;
         setIsAuthenticated(data.isValid);
         console.log('isLogedIn', { data });
+        setTokenLogin(`Bearer ${token}`);
         setUser(data.user);
         setLoading(false);
 
-        return true;
+        return data;
       } else {
         throw new Error('No token');
       }

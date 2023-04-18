@@ -32,4 +32,8 @@ module.exports = {
       filename: 'css/mystyles.css',
     }),
   ],
+  ignoreWarnings: [
+    /Failed to parse source map from.*intlTelInput\.scss/,
+    /Failed to parse source map from.*sprite\.scss/,
+  ],
 };
