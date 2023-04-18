@@ -236,7 +236,7 @@ const SelectCourseStep = () => {
             pageClassName={'pagination-item'}
             activeClassName={'is-current is-primary'}
           />
-          <pre>{JSON.stringify(formik.values, null, 2)}</pre>
+          {/* <pre>{JSON.stringify(formik.values, null, 2)}</pre> */}
         </>
       )}
     </>

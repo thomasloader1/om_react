@@ -172,7 +172,7 @@ function VentaPresencialApp() {
 
                   <SelectCourse
                     loading={processContact}
-                    loadingText="Creando Contrato"
+                    loadingText="Convirtiendo Lead a Contacto"
                     onSubmit={(values) => {
                       setFormikValues((prevFormikValues) => ({
                         ...prevFormikValues,

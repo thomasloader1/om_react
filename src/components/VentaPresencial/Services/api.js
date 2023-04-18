@@ -20,7 +20,7 @@ class ApiService {
   }
 
   async getSalesByUser(userId) {
-    const { data } = await axios.get(`${this.baseUrl}`);
+    const { data } = await axios.get(`${this.baseUrl}?user=${userId}`);
     return data;
   }
 

@@ -9,7 +9,7 @@ import { AppContext } from '../PasarelaCobros/Provider/StateProvider';
 import { Link } from 'react-router-dom';
 
 const Welcome = () => {
-  const { user } = useContext(AppContext);
+  const { user, setUser } = useContext(AppContext);
   const [oldSales, setOldSales] = useState([])
   const { loading, validateToken } = useToken();
   const navigate = useNavigate();
@@ -17,11 +17,12 @@ const Welcome = () => {
   useEffect(() => {
     async function isAuth() {
       const tokenIsValid = await validateToken();
-      if (!tokenIsValid) {
+      if (!tokenIsValid.isValid) {
         navigate('/vp/login');
       }
+      setUser(tokenIsValid.user)
       // console.log({ tokenIsValid, user });
-      const oldSales = await api.getSalesByUser(user?.id)
+      const oldSales = await api.getSalesByUser(tokenIsValid.user?.id)
       setOldSales(oldSales)
     }
     isAuth();
@@ -60,12 +61,12 @@ const Welcome = () => {
               </div>
             </div>
           </div>
-          <div className="columns">
+          {/*  <div className="columns">
             <div className="column">
-              <h2 className=''>Otras Ventas presenciales que hicistes</h2>
-              {oldSales.map(sale => (<Link className='button is-primary mx-1 mt-2' to={`/ventapresencial/${sale.id}`}>{sale.id}</Link>))}
+              <h2 className='is-size-3'>Otras Ventas presenciales que generastes {user?.name}</h2>
+              {oldSales.map(sale => (<Link key={sale.id} className='button is-primary mx-1 mt-2' to={`/ventapresencial/${sale.id}`}>{sale.id}</Link>))}
             </div>
-          </div>
+          </div> */}
         </Layout>
       )}
     </>
