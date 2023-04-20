@@ -113,7 +113,7 @@ export const paymentOptions = [
     idInputElement: '',
     value: 'Stripe',
     allowedCountries: ['bol', 'mex', 'chi', 'cos', 'ecu', 'sal', 'gua', 'hon', 'nic'],
-    disabledCountries: ['mex'],
+    disabledCountries: [],
   },
   {
     img: 'pp',

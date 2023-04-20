@@ -14,12 +14,13 @@ const useStripeEnv = () => {
 
   if (NODE_ENV === 'development') {
     const publicTestKey =
-      formikValues.country !== 'Mexico' ? REACT_APP_STRIPE_PK_TEST_OM : REACT_APP_STRIPE_PK_TEST_MX;
+      formikValues.country !== 'México' ? REACT_APP_STRIPE_PK_TEST_OM : REACT_APP_STRIPE_PK_TEST_MX;
+    console.log({ publicTestKey }, formikValues.country, formikValues.country !== 'México');
     const stripePromise = loadStripe(publicTestKey);
     return { stripePromise };
   } else {
     const publicProdKey =
-      formikValues.country !== 'Mexico' ? REACT_APP_STRIPE_PK_PROD_OM : REACT_APP_STRIPE_PK_PROD_MX;
+      formikValues.country !== 'México' ? REACT_APP_STRIPE_PK_PROD_OM : REACT_APP_STRIPE_PK_PROD_MX;
     const stripePromise = loadStripe(publicProdKey);
     return { stripePromise };
   }

@@ -69,7 +69,6 @@ function PasarelaApp() {
   }, [isMobile, loading]);
 
   const handleSubmitByStepTwo = async () => {};
-
   return (
     <div ref={appRef}>
       <Header />
