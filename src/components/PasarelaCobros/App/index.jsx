@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import * as Yup from 'yup';
 import { AppContext } from '../Provider/StateProvider';
 import { Elements } from '@stripe/react-stripe-js';
@@ -12,26 +12,34 @@ import GeneratePaymentLinkStep from '../Stepper/GeneratePaymentLinkStep';
 import { useMediaQSmall } from '../Hooks/useMediaQuery';
 
 import useStripeEnv from '../Hooks/useStripeEnv';
+
 import { useProgress } from '../Hooks/useProgress';
 import { useLocation, useParams } from 'react-router';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
+import { loadStripe } from '@stripe/stripe-js';
 
 function PasarelaApp() {
+  const [isLoading, setIsLoading] = useState(true);
+  const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } = useContext(AppContext);
+
+  const location = useLocation();
+  const { id } = useParams();
+  const needRunEffect = !location.pathname.includes('vp');
+
+  const { loading, data } = useContractZoho(id, needRunEffect);
+
   const pasarelaContainerRef = useRef();
   const isMobile = useMediaQSmall();
+
   const setHeightMobile = () => {
     pasarelaContainerRef.current.style.height = `${window.innerHeight}px`;
   };
-  const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } =
-    useContext(AppContext);
-  const { stripePromise } = useStripeEnv();
-  const { fetching, progressId, getProgress } = useProgress();
-  const location = useLocation();
-  const { id } = useParams();
 
-  const needRunEffect = !location.pathname.includes('vp');
-  const { loading } = useContractZoho(id, needRunEffect);
+  const { fetching: stripeFetch, pk } = useStripeEnv(data?.sale?.Pais);
+  const stripePromise = loadStripe(pk)
+
+  const { fetching, progressId, getProgress } = useProgress();
 
   const validationSchemaFinalStep = Yup.object({
     fullName: Yup.string()
@@ -62,20 +70,19 @@ function PasarelaApp() {
   }, [stepNumber]);
 
   useEffect(() => {
-    console.log({ isMobile, fetching });
+    //console.log({ isMobile, fetching });
     if (isMobile && !loading) {
-      setHeightMobile();
+      // setHeightMobile();
     }
   }, [isMobile, loading]);
 
-  const handleSubmitByStepTwo = async () => {};
   return (
     <div ref={appRef}>
       <Header />
-      <Elements stripe={stripePromise}>
-        {loading ? (
-          <MotionSpinner text='Recuperando datos del Contrato' />
-        ) : (
+      {stripeFetch ? (
+        <MotionSpinner text='Recuperando datos del Contrato' />
+      ) : (
+        <Elements stripe={stripePromise}>
           <section className={'container is-max-widescreen'}>
             <div
               id='pasarela-container'
@@ -93,7 +100,7 @@ function PasarelaApp() {
                   email: '',
                   mod: '',
                 }}
-                onSubmit={handleSubmitByStepTwo}
+                onSubmit={() => { }}
               >
                 <SelectCountryStep
                   onSubmit={(values) => {
@@ -129,8 +136,8 @@ function PasarelaApp() {
                     mod: Yup.string().required('❗ Selecciona un modo de pago'),
                     quotes: Yup.string().when('mod', {
                       is: (val) => !(val && val.includes('Tradicional')),
-                      then: Yup.string().required('❗ Especifique las cuotas'),
-                      otherwise: null,
+                      then: (schema) => Yup.string().required('❗ Especifique las cuotas'),
+                      otherwise: (schema) => null,
                     }),
                   })}
                 />
@@ -154,9 +161,10 @@ function PasarelaApp() {
             </div>
             {/* <pre>{JSON.stringify(contractData, null, 2)}</pre> */}
           </section>
-        )}
-      </Elements>
+        </Elements>
+      )}
     </div>
+
   );
 }
 

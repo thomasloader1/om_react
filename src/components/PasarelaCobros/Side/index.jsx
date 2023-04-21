@@ -62,7 +62,8 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     appEnv,
   } = useContext(AppContext);
   const formik = useFormikContext();
-
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const [paymentError, setPaymentError] = useState('');
   const { cardComplete, email } = formik.values;
   const { country, quotes, amount, sale, contact, products } = formikValues;
 
@@ -115,12 +116,25 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       return;
     }
 
+    /* const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: 'card',
+      card: elements.getElement(CardElement),
+    }); */
+
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
       card: elements.getElement(CardElement),
     });
 
     console.log({ error, paymentMethod });
+
+
+    if (error) {
+      setPaymentError(error.message);
+    } else {
+      setPaymentMethod(paymentMethod.id);
+    }
+
 
     if (error) {
       fireToast('Eror al generar el PaymentMethod de Stripe');

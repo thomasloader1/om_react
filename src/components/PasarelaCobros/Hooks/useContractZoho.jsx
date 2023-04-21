@@ -35,14 +35,16 @@ export const useContractZoho = (contractId, runEffect = true) => {
         setData(response.data);
         setContractData(response.data);
         fireToast(`Contrato de ${response.data.sale.Pais} cargado`, 'info')
+        setLoading(false);
+
       } catch (e) {
         fireModalAlert(e.response.data.detail)
         setError(e.response.data);
-      } finally {
         setLoading(false);
+      } finally {
       }
     };
-
+    console.log({ runEffect })
     if (runEffect) {
       fetchData();
     } else {
