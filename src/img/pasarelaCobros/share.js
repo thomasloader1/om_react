@@ -22,7 +22,7 @@ import pp from './metPago/paypal.svg';
 import df from './metPago/datafast.jpg';
 import ba from './metPago/banorte.svg';
 import wp from './metPago/webpay.png';
-import logo from './logo-oceano-pagos.svg';
+import logo from './msk-logo.svg';
 
 const IMAGES = {
   asesorComercial,

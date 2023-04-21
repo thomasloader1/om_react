@@ -29,17 +29,6 @@ function Header() {
 
   return (
     <header className={`container is-max-widescreen py-5 ${expanded ? 'is-expanded' : ''}`}>
-      {/*       <nav
-        className="navbar is-transparent"
-        role="navigation"
-        aria-label="main navigation"
-      >
-        <div className="navbar-brand">
-          <a className="navbar-item" href="">
-            <img src={logo} alt="Oceano Logo" width="100%" height="auto" />
-          </a>
-        </div>
-      </nav> */}
 
       <Navbar transparent='true'>
         <Navbar.Brand>
@@ -48,10 +37,10 @@ function Header() {
             <motion.img
               animate={expanded ? 'open' : 'closed'}
               variants={variantStyles}
-              alt='Oceano Logo'
+              alt='MSK Logo'
               height='auto'
               src={logo}
-              width='100%'
+              width='180px'
             ></motion.img>
           </Navbar.Item>
         </Navbar.Brand>
