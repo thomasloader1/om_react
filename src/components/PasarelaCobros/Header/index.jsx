@@ -40,7 +40,7 @@ function Header() {
               alt='MSK Logo'
               height='auto'
               src={logo}
-              width='180px'
+              width='130px'
             ></motion.img>
           </Navbar.Item>
         </Navbar.Brand>
