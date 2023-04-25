@@ -266,6 +266,8 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     const [countryObject] = filterIso;
     const { iso } = countryObject;
 
+    const condicionalCountry = iso === 'MX' ? 'mx_msk' : iso
+
     body.append('months', months);
     body.append('amount', `${formikValues.amount}`);
     body.append('type', type);
@@ -276,7 +278,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     body.append('fullname', formik.values.fullName);
     body.append('sale_id', formikValues.contractId);
     body.append('mail', email);
-    body.append('country', iso);
+    body.append('country', condicionalCountry);
 
     const { MP } = URLS;
 
