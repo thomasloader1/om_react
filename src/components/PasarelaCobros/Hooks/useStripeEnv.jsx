@@ -1,10 +1,9 @@
-import { useContext, useEffect, useState } from 'react';
-import { AppContext } from '../Provider/StateProvider';
+import { useEffect, useState } from 'react';
 
 const useStripeEnv = (country) => {
   const [fetching, setFetching] = useState(true)
   const [pk, setPk] = useState('')
-  const { formikValues } = useContext(AppContext);
+  //const { formikValues } = useContext(AppContext);
   const {
     NODE_ENV,
     REACT_APP_STRIPE_PK_TEST_OM,

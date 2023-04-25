@@ -20,7 +20,7 @@ import MotionSpinner from '../Spinner/MotionSpinner';
 import { loadStripe } from '@stripe/stripe-js';
 
 function PasarelaApp() {
-  const [isLoading, setIsLoading] = useState(true);
+
   const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } = useContext(AppContext);
 
   const location = useLocation();
@@ -32,14 +32,16 @@ function PasarelaApp() {
   const pasarelaContainerRef = useRef();
   const isMobile = useMediaQSmall();
 
-  const setHeightMobile = () => {
-    pasarelaContainerRef.current.style.height = `${window.innerHeight}px`;
-  };
+  /*  const setHeightMobile = () => {
+     pasarelaContainerRef.current.style.height = `${window.innerHeight}px`;
+   }; */
 
   const { fetching: stripeFetch, pk } = useStripeEnv(data?.sale?.Pais);
+
+
   const stripePromise = loadStripe(pk)
 
-  const { fetching, progressId, getProgress } = useProgress();
+  const { progressId, getProgress } = useProgress();
 
   const validationSchemaFinalStep = Yup.object({
     fullName: Yup.string()

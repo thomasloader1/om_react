@@ -116,15 +116,12 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
       return;
     }
 
-    /* const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: elements.getElement(CardElement),
-    }); */
 
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
       card: elements.getElement(CardElement),
     });
+
 
     console.log({ error, paymentMethod });
 
@@ -136,13 +133,14 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     }
 
 
-    if (error) {
-      fireToast('Eror al generar el PaymentMethod de Stripe');
+    if (error?.message) {
+      fireToast(error.message);
       setFetching(false);
       return null;
+    } else {
+      handleRequestToGatewayAndCRM(paymentMethod.id);
     }
 
-    handleRequestToGatewayAndCRM(paymentMethod.id);
   };
 
   const handleRequestToGatewayAndCRM = (paymentMethodId) => {

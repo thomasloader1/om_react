@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useFormikContext } from 'formik';
 import React, { useContext, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router';
@@ -34,9 +35,8 @@ function SelectPaymentModeStep() {
           {options.paymentModeOptions.map(({ ...props }) => (
             <ButtonField
               {...props}
-              className={`grid-payment_method-item button ${
-                props.value === stepThree.value && 'active'
-              }`}
+              className={`grid-payment_method-item button ${props.value === stepThree.value && 'active'
+                }`}
               showText={true}
               id={props.idElement}
               name='mod'

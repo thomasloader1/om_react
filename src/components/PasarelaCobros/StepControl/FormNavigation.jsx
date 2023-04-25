@@ -26,10 +26,10 @@ const FormNavigation = (props) => {
   const stripe = useStripe();
   const elements = useElements();
   const [openModal, setOpenModal] = useState(null);
-  const { formikValues, stripeRequest, setStripeRequest, userInfo } = useContext(AppContext);
+  const { formikValues, setStripeRequest } = useContext(AppContext);
   const { country, quotes, amount, sale, contact, products } = formikValues;
 
-  const handleSubmit = async (event) => {
+  /* const handleSubmit = async (event) => {
     setFetching(true);
     event.preventDefault();
     event.stopPropagation();
@@ -68,7 +68,7 @@ const FormNavigation = (props) => {
     // console.log({ laravelResponse })
     setOpenModal('card');
     setFetching(false);
-  };
+  }; */
 
   return (
     <div className='controls'>
