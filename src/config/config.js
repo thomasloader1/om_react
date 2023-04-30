@@ -57,7 +57,7 @@ export const countryOptions = [
     idElement: 'pais_mex_input',
     img: 'mexFlag',
     value: 'México',
-    active: true,
+    active: false,
   },
   {
     idElement: 'pais_nic_input',
