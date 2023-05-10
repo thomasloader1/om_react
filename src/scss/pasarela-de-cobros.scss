@@ -6,21 +6,24 @@
 @use 'pasarela-med-mod-payment.scss';
 @use 'pasarela-payment_method.scss';
 @use 'pasarela-generate_payment.scss';
+@use 'phoneInputReact.scss';
 
 // Fix bug grilla con input radio
-.radio + .radio,
-.button + .button {
+.radio+.radio,
+.button+.button {
   margin: 0;
 }
+
 :root {
   --animate-delay: 0.5s;
 }
+
 $success: #32bea6;
 $accent: #00b6de;
 $texto-light: #808fa6;
 $buttonBg: #ff266e;
 
-button.button > .ui.radio {
+button.button>.ui.radio {
   input[type='radio'] {
     visibility: hidden;
   }
@@ -30,9 +33,11 @@ body,
 input {
   font-family: 'Roboto', sans-serif !important;
 }
+
 body * {
   transition: all 0.3s ease-in;
 }
+
 header.container {
   position: absolute;
   width: 100%;
@@ -48,21 +53,26 @@ header.container {
         max-height: unset;
       }
     }
+
     &-burger {
       margin: 0;
     }
+
     &-brand {
       justify-content: space-between;
     }
   }
 }
+
 .column {
   padding: 0;
   margin: 0;
 }
+
 .columns {
   margin: 0;
 }
+
 .button {
   //height: unset;
   border-radius: 6px;
@@ -117,12 +127,13 @@ h2.title {
     min-height: 376px;
     height: max-content;
 
-    & > [class*='grid'],
-    & > [id*='grid'] {
+    &>[class*='grid'],
+    &>[id*='grid'] {
       flex-grow: 1;
       align-content: flex-start;
     }
-    & > .is-divider {
+
+    &>.is-divider {
       display: none;
     }
   }
@@ -168,6 +179,7 @@ h2.title {
       width: 100%;
       height: 100%;
       cursor: pointer;
+
       &[type='radio'] {
         visibility: hidden;
       }
@@ -191,6 +203,7 @@ h2.title {
     justify-content: center;
   }
 }
+
 .stepControls,
 .edit_stepControls {
   margin: 2rem 0 0 !important;
@@ -201,10 +214,12 @@ h2.title {
   h3 {
     font-weight: 500;
   }
-  & > div {
+
+  &>div {
     justify-content: center;
     gap: 1rem;
   }
+
   &-item {
     display: flex;
     align-items: center;
@@ -234,6 +249,7 @@ h2.title {
       color: $accent;
       border-color: $accent;
     }
+
     input {
       position: absolute;
       opacity: 0.001;
@@ -256,6 +272,7 @@ h2.title {
   inset: 0;
   background-color: #f4f5f7;
 }
+
 .overlay-left {
   position: absolute;
   min-height: 100vh;
@@ -269,17 +286,20 @@ h2.title {
 
 .side {
   padding: 0 0 0 3rem;
+
   &-decision,
   &-body {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
   }
+
   &-body {
     .button.bigger {
       font-weight: 700;
       height: 5rem;
     }
+
     .field {
       & .half:not(:last-child) {
         margin: 0;
@@ -296,6 +316,7 @@ h2.title {
         pointer-events: all;
         cursor: pointer;
       }
+
       .icon:hover {
         i {
           color: $success;
@@ -317,21 +338,26 @@ h2.title {
       .title {
         display: initial;
       }
+
       .subtitle {
         margin-bottom: 1.5rem;
       }
+
       .button {
         display: block;
       }
     }
+
     &.current {
       .numstep {
         background-color: $accent;
       }
+
       .button {
         display: none;
       }
     }
+
     &.completed {
       box-shadow: none;
       border: 1px solid $success;
@@ -339,10 +365,12 @@ h2.title {
       .numstep {
         background-color: $success;
       }
+
       .button {
         display: block;
         color: $texto-light;
       }
+
       .button:hover {
         cursor: pointer;
         color: $success;
@@ -353,6 +381,7 @@ h2.title {
       display: flex;
       align-items: center;
       gap: 1rem;
+
       .numstep {
         width: 1.5rem;
         height: 1.5rem;
@@ -364,6 +393,7 @@ h2.title {
         border-radius: 2rem;
         background-color: $texto-light;
       }
+
       .title {
         display: none;
         color: #292d32;
@@ -405,27 +435,33 @@ h2.title {
         justify-content: space-between;
       }
     }
+
     &-tarjeta {
       .finalResume-item {
         margin-bottom: 0.75rem;
       }
     }
+
     &-cliente,
     &-tarjeta {
       row-gap: 1.25rem;
     }
   }
+
   .finalResume-confirmation {
     gap: 1rem;
+
     .control,
     .field,
     .field label {
       width: 100%;
     }
+
     label {
       display: flex;
       align-items: center;
     }
+
     input {
       position: absolute;
       text-align: center;
@@ -437,11 +473,13 @@ h2.title {
       height: 100%;
     }
   }
+
   .finalResume-item {
     h4 {
       font-weight: 600;
       font-size: 20px;
     }
+
     label {
       color: #808fa6;
       text-transform: uppercase;
@@ -455,6 +493,7 @@ h2.title {
       }
     }
   }
+
   h2 {
     margin-bottom: -0.25rem;
   }
@@ -477,11 +516,13 @@ h2.title {
   #numeroContrato_resume {
     grid-column: span 2;
   }
+
   #emailCliente_resume {
     display: flex;
     font-size: 14px;
     text-transform: uppercase;
   }
+
   .is-divider {
     margin: 1rem 0;
   }
@@ -502,6 +543,7 @@ h2.title {
     grid-column: 2/3;
   }
 }
+
 .modal-generated-link {
   padding: 1.5rem 2rem;
   width: 500px;
@@ -518,7 +560,8 @@ h2.title {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  & > div.is-flex {
+
+  &>div.is-flex {
     gap: 1rem;
 
     & .is-flex {
@@ -527,6 +570,7 @@ h2.title {
     }
   }
 }
+
 @media screen and (min-width: 767px) {
   .pasarela {
     overflow: unset;
@@ -550,30 +594,36 @@ h2.title {
         width: 150px;
       }
     }
+
     .navbar-burger {
       width: 100%;
+
       span {
         width: 24px;
         left: calc(50% - 12px);
       }
     }
   }
+
   .pasarela {
     display: grid;
     grid-template-columns: 72px auto;
     padding-top: calc(80px + 20px);
     padding-bottom: 0 !important;
     height: 100vh;
+
     .notification {
       padding: 12px;
       font-size: 12px;
     }
+
     .label {
       color: #808fa6;
       text-transform: uppercase;
       font-weight: 500;
       font-size: 12px;
     }
+
     form {
       order: 2;
       height: 100%;
@@ -581,33 +631,38 @@ h2.title {
       grid-template-rows: max-content auto max-content;
       padding: 0 24px 24px;
 
-      & > [class*='grid'],
-      & > [id*='grid'] {
+      &>[class*='grid'],
+      &>[id*='grid'] {
         overflow-y: scroll;
         grid-template-columns: repeat(auto-fill, minmax(198px, 1fr));
         width: 100%;
         padding-bottom: 12px;
 
-        & > *,
-        & > [id*=''] {
+        &>*,
+        &>[id*=''] {
           grid-area: unset !important;
         }
       }
-      & > .is-divider {
+
+      &>.is-divider {
         display: initial;
         margin-block: 0.25rem;
       }
+
       .grid {
         &-country-item {
           justify-content: start;
+
           &-med_mod_payment-mp {
             overflow: initial;
           }
+
           &-payment_method {
             &-item {
               &.tall {
                 height: 60px;
               }
+
               img {
                 height: 85%;
               }
@@ -615,6 +670,7 @@ h2.title {
           }
         }
       }
+
       .field {
         margin: 0;
         width: 100%;
@@ -627,6 +683,7 @@ h2.title {
         height: 100%;
         padding-top: 0.75rem;
       }
+
       #finalResume {
         padding: 0;
         width: 100%;
@@ -634,17 +691,20 @@ h2.title {
         flex-direction: column;
         border-radius: unset;
         filter: none;
+
         .finalResume {
           &-confirmation {
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
             padding-block: 1rem;
+
             .field label {
               height: max-content;
               padding: 0.75rem;
             }
           }
+
           &-item {
             margin: 0;
             overflow-wrap: anywhere;
@@ -654,9 +714,11 @@ h2.title {
             }
           }
         }
+
         h2 {
           font-size: 1.125rem !important;
         }
+
         .datos-cliente,
         .datos-tarjeta {
           display: flex;
@@ -669,19 +731,23 @@ h2.title {
             gap: 12px;
           }
         }
+
         #emailCliente_resume {
           order: 2;
           flex-direction: column;
+
           h4 {
             margin: 0;
             text-transform: none;
           }
         }
+
         #todayDate_resume {
           h4 {
             font-size: 14px;
           }
         }
+
         #numeroContrato_resume h4,
         #montoTotalContrato_resume h4 {
           font-size: 18px;
@@ -689,6 +755,7 @@ h2.title {
       }
     }
   }
+
   .modal-generated-link {
     padding: 0.5rem;
     width: auto;
@@ -696,7 +763,8 @@ h2.title {
     left: 5.25rem;
     right: 0.75rem;
     border-radius: 8px;
-    & > div.is-flex {
+
+    &>div.is-flex {
       width: 100%;
       gap: 0.5rem;
 
@@ -705,9 +773,11 @@ h2.title {
         gap: 0.5rem;
       }
     }
+
     .title {
       margin-bottom: 0.5rem;
     }
+
     .button {
       white-space: normal;
       height: auto;
@@ -724,9 +794,10 @@ h2.title {
       gap: 6px;
     }
 
-    & > .title {
+    &>.title {
       display: none;
     }
+
     &-item {
       padding: 0;
 
@@ -736,14 +807,17 @@ h2.title {
         background: transparent;
         padding: 0;
       }
+
       & .title {
         display: none;
       }
+
       &-info {
         .subtitle {
           display: none;
         }
       }
+
       button {
         height: 1.75rem;
         padding: 0 !important;
@@ -752,28 +826,33 @@ h2.title {
           font-size: 1.5rem !important;
         }
       }
+
       &.current,
       &.completed {
         .subtitle {
           margin-bottom: 0;
         }
+
         .title {
           margin-top: 0;
         }
       }
+
       &.completed .button {
         display: none;
       }
-      span.side-item-info > .is-flex {
+
+      span.side-item-info>.is-flex {
         display: none !important;
       }
     }
   }
 
   .pasarela-1 {
-    & > .title {
+    &>.title {
       margin-bottom: 12px;
       font-size: 18px;
+
       span {
         display: none;
       }
@@ -784,9 +863,11 @@ h2.title {
     margin-top: 0;
     grid-template-columns: 1fr;
     gap: 8px;
+
     button[type='submit'] {
       grid-column: auto;
     }
+
     button[type='button'] {
       order: 2;
     }
@@ -797,7 +878,7 @@ h2.title {
       display: none;
     }
 
-    & ~ * {
+    &~* {
       .pasarela {
         grid-template-columns: min(80vw, 272px) auto;
 

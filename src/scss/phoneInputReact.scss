@@ -1,0 +1,10 @@
+input.PhoneInputInput {
+    background-color: hsl(0, 0%, 100%);
+    border-color: transparent;
+    font-size: 1rem;
+    color: hsl(0, 0%, 21%);
+
+    &::placeholder {
+        color: hsl(0, 0%, 60%);
+    }
+}

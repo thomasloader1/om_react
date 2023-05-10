@@ -1,5 +1,5 @@
 import { useFormikContext } from 'formik';
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+/* import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'; */
 import axios from 'axios';
 import React, { useContext, useState } from 'react';
 import { Button } from 'react-bulma-components';
@@ -23,8 +23,8 @@ const FormNavigation = (props) => {
 
   const disabledButton = props.isLastStep === !formik.values.cardComplete;
 
-  const stripe = useStripe();
-  const elements = useElements();
+  /*   const stripe = useStripe();
+    const elements = useElements(); */
   const [openModal, setOpenModal] = useState(null);
   const { formikValues, setStripeRequest } = useContext(AppContext);
   const { country, quotes, amount, sale, contact, products } = formikValues;

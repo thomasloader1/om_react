@@ -1,14 +1,11 @@
-import React, { useContext } from 'react';
-import InputField from '../InputField';
-import { motion } from 'framer-motion';
-import { AppContext } from '../Provider/StateProvider';
-import CheckoutForm from './CheckoutForm';
-import { FormStep } from './MultiStep';
+import React from 'react';
+import RebillCheckoutForm from './RebillCheckoutForm';
 
 function GeneratePaymentLinkStep({ checkoutLink }) {
-  const { userInfo } = useContext(AppContext);
 
-  if (userInfo.stepTwo.value === 'Mercado Pago') {
+  return (<RebillCheckoutForm />)
+
+  /* if (userInfo.stepTwo.value === 'Mercado Pago') {
     return (
       <FormStep stepNumber={5} stepName='Finaliza la compra'>
         <div id='grid-payment_mp'>
@@ -98,7 +95,7 @@ function GeneratePaymentLinkStep({ checkoutLink }) {
         </FormStep>
       </>
     );
-  }
+  } */
 }
 
 export default GeneratePaymentLinkStep;

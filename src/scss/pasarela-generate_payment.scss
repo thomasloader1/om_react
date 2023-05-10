@@ -71,6 +71,8 @@
 }
 
 @media screen and (max-width: 766px) {
+
+  #grid-payment_rebill,
   #grid-payment_stripe {
     grid-template-areas: unset;
   }
@@ -107,5 +109,63 @@
 
   .field:nth-child(5) {
     grid-area: email;
+  }
+}
+
+
+#grid-payment_rebill {
+  display: grid;
+  grid-template-areas:
+    'fullName fullName phone'
+    'address address zip'
+    'email email dni';
+  gap: 1rem;
+
+  .field:nth-child(1) {
+    grid-area: fullName;
+  }
+
+  .field:nth-child(2) {
+    grid-area: phone;
+  }
+
+  .field:nth-child(3) {
+    grid-area: address;
+  }
+
+  .field:nth-child(4) {
+    grid-area: zip;
+  }
+
+  .field:nth-child(5) {
+    grid-area: dni;
+  }
+
+  .field:nth-child(6) {
+    grid-area: email;
+  }
+
+  @media only screen and (max-width: 768px) {
+    #grid-payment_rebill {
+      grid-template-areas:
+        'fullName fullName'
+        'phone phone'
+        'address zip'
+        'email dni';
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media only screen and (max-width: 480px) {
+    #grid-payment_rebill {
+      grid-template-areas:
+        'fullName'
+        'phone'
+        'address'
+        'zip'
+        'email'
+        'dni';
+      grid-template-columns: 1fr;
+    }
   }
 }

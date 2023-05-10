@@ -7,7 +7,7 @@ import SideItem from '../SideItem';
 import { motion } from 'framer-motion';
 import { useFormikContext } from 'formik';
 import axios from 'axios';
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+/* import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'; */
 import { getAllISOCodes } from 'iso-country-currency';
 import { AppContext } from '../Provider/StateProvider';
 import { useEffect } from 'react';
@@ -15,6 +15,7 @@ import { fireAlert, fireToast } from '../Hooks/useSwal';
 import { MdContentCopy, MdCheckCircleOutline } from 'react-icons/md';
 import { BsCashCoin } from 'react-icons/bs';
 import { useMediaQSmall } from '../Hooks/useMediaQuery';
+import { removeAccents } from '../../../utils/removeAccents';
 
 const {
   REACT_APP_OCEANO_URL,
@@ -45,8 +46,8 @@ const URLS = {
 function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
   const isMobile = useMediaQSmall();
   const [fetching, setFetching] = useState(false);
-  const stripe = useStripe();
-  const elements = useElements();
+  /*   const stripe = useStripe();
+    const elements = useElements(); */
   const [openBlockLayer, setOpenBlockLayer] = useState(false);
 
   const {
@@ -61,28 +62,12 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     options: optionsGlobal,
     appEnv,
   } = useContext(AppContext);
-  const formik = useFormikContext();
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [paymentError, setPaymentError] = useState('');
-  const { cardComplete, email } = formik.values;
-  const { country, quotes, amount, sale, contact, products } = formikValues;
 
-  const removeAccents = (country) => {
-    const accents = {
-      á: 'a',
-      é: 'e',
-      í: 'i',
-      ó: 'o',
-      ú: 'u',
-      Á: 'A',
-      É: 'E',
-      Í: 'I',
-      Ó: 'O',
-      Ú: 'U',
-    };
-    const regex = new RegExp(`[${Object.keys(accents).join('')}]`, 'g');
-    return country.replace(regex, (match) => accents[match]);
-  };
+  const formik = useFormikContext();
+  /*   const [paymentMethod, setPaymentMethod] = useState('');
+    const [paymentError, setPaymentError] = useState(''); */
+  const { cardComplete, email } = formik.values;
+  const { country } = formikValues;
 
   const generateButton = userInfo.stepTwo.value.includes('Stripe')
     ? formik.isValid && cardComplete
@@ -101,125 +86,125 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     return () => null;
   }, [generateButton]);
 
-  const handleSubmitStripe = async (event) => {
-    setFetching(true);
-    setOpenBlockLayer(true);
-
-    formRef.current.style.filter = 'blur(5px)';
-    formRef.current.style.position = 'relative';
-    formRef.current.style.zIndex = '-9999';
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (elements == null) {
-      return;
-    }
-
-
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: elements.getElement(CardElement),
-    });
-
-
-    console.log({ error, paymentMethod });
-
-
-    if (error) {
-      setPaymentError(error.message);
-    } else {
-      setPaymentMethod(paymentMethod.id);
-    }
-
-
-    if (error?.message) {
-      fireToast(error.message);
-      setFetching(false);
-      return null;
-    } else {
-      handleRequestToGatewayAndCRM(paymentMethod.id);
-    }
-
-  };
-
-  const handleRequestToGatewayAndCRM = (paymentMethodId) => {
-    const { STRIPE, UPDATE_CONTRACT } = URLS;
-    const allIsoCodes = getAllISOCodes();
-    const thisCountry = country ? country : appEnv?.country
-    const clearedCountry = removeAccents(thisCountry);
-
-    const filterIso = allIsoCodes.filter((iso) => iso.countryName === clearedCountry);
-    const countryObject = filterIso[0];
-    console.log({ filterIso, countryObject })
-    const { currency, iso } = countryObject;
-
-    const postStripe = {
-      currency,
-      country: iso,
-      installments: quotes ? quotes : 1,
-      email,
-      paymentMethodId: paymentMethodId,
-      amount,
-      contact,
-      sale,
-      products,
-      contractId: formikValues.contractId,
-      address: formik.values.address,
-      dni: formik.values.dni,
-      phone: formik.values.phone,
-      fullname: formik.values.fullName,
-      is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
-    };
-
-    axios
-      .post(STRIPE, postStripe)
-      .then((res) => {
-        console.log({ res });
-        setStripeRequest(res.data);
-        fireToast('Pago en Stripe correcto!', 'success', 5000);
-
-        const postUpdateZohoStripe = {
-          installments: quotes ? quotes : 1,
-          email,
-          amount,
-          contractId: formikValues.contractId,
-          subscriptionId: res.data.id,
-          installment_amount: amount / (quotes ? quotes : 1),
-          address: formik.values.address,
-          dni: formik.values.dni,
-          phone: formik.values.phone,
-          fullname: formik.values.fullName,
-          is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
-        };
-
-        axios
-          .post(UPDATE_CONTRACT, postUpdateZohoStripe)
-          .then((res) => {
-            console.log({ res });
-            fireToast('Contrato actualizado', 'success', 5000);
-          })
-          .catch((err) => {
-            console.log({ err });
-            fireToast('Contrato no actualizado', 'error', 5000);
-          })
-          .finally((res) => {
-            console.log({ res });
-          });
-      })
-      .catch((err) => {
-        formRef.current.style.filter = 'blur(0px)';
-        formRef.current.style.position = 'relative';
-        formRef.current.style.zIndex = '0';
-        setOpenBlockLayer(false);
-
-        console.error({ err });
-        fireAlert(`${err.response.data}`, 'error');
-      })
-      .finally(() => {
-        setFetching(false);
+  /*   const handleSubmitStripe = async (event) => {
+      setFetching(true);
+      setOpenBlockLayer(true);
+  
+      formRef.current.style.filter = 'blur(5px)';
+      formRef.current.style.position = 'relative';
+      formRef.current.style.zIndex = '-9999';
+  
+      event.preventDefault();
+      event.stopPropagation();
+  
+      if (elements == null) {
+        return;
+      }
+  
+  
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: elements.getElement(CardElement),
       });
-  };
+  
+  
+      console.log({ error, paymentMethod });
+  
+  
+      if (error) {
+        setPaymentError(error.message);
+      } else {
+        setPaymentMethod(paymentMethod.id);
+      }
+  
+  
+      if (error?.message) {
+        fireToast(error.message);
+        setFetching(false);
+        return null;
+      } else {
+        handleRequestToGatewayAndCRM(paymentMethod.id);
+      }
+  
+    }; */
+
+  /*   const handleRequestToGatewayAndCRM = (paymentMethodId) => {
+      const { STRIPE, UPDATE_CONTRACT } = URLS;
+      const allIsoCodes = getAllISOCodes();
+      const thisCountry = country ? country : appEnv?.country
+      const clearedCountry = removeAccents(thisCountry);
+  
+      const filterIso = allIsoCodes.filter((iso) => iso.countryName === clearedCountry);
+      const countryObject = filterIso[0];
+      console.log({ filterIso, countryObject })
+      const { currency, iso } = countryObject;
+  
+      const postStripe = {
+        currency,
+        country: iso,
+        installments: quotes ? quotes : 1,
+        email,
+        paymentMethodId: paymentMethodId,
+        amount,
+        contact,
+        sale,
+        products,
+        contractId: formikValues.contractId,
+        address: formik.values.address,
+        dni: formik.values.dni,
+        phone: formik.values.phone,
+        fullname: formik.values.fullName,
+        is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
+      };
+  
+      axios
+        .post(STRIPE, postStripe)
+        .then((res) => {
+          console.log({ res });
+          setStripeRequest(res.data);
+          fireToast('Pago en Stripe correcto!', 'success', 5000);
+  
+          const postUpdateZohoStripe = {
+            installments: quotes ? quotes : 1,
+            email,
+            amount,
+            contractId: formikValues.contractId,
+            subscriptionId: res.data.id,
+            installment_amount: amount / (quotes ? quotes : 1),
+            address: formik.values.address,
+            dni: formik.values.dni,
+            phone: formik.values.phone,
+            fullname: formik.values.fullName,
+            is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
+          };
+  
+          axios
+            .post(UPDATE_CONTRACT, postUpdateZohoStripe)
+            .then((res) => {
+              console.log({ res });
+              fireToast('Contrato actualizado', 'success', 5000);
+            })
+            .catch((err) => {
+              console.log({ err });
+              fireToast('Contrato no actualizado', 'error', 5000);
+            })
+            .finally((res) => {
+              console.log({ res });
+            });
+        })
+        .catch((err) => {
+          formRef.current.style.filter = 'blur(0px)';
+          formRef.current.style.position = 'relative';
+          formRef.current.style.zIndex = '0';
+          setOpenBlockLayer(false);
+  
+          console.error({ err });
+          fireAlert(`${err.response.data}`, 'error');
+        })
+        .finally(() => {
+          setFetching(false);
+        });
+    }; */
 
   const handleCopyLink = () => {
     fetch('https://api-ssl.bitly.com/v4/shorten', {
@@ -347,7 +332,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
                 }
                 color={`${checkoutLink ? 'success' : 'primary'}`}
                 fullwidth
-                onClick={handleSubmitStripe}
+                onClick={() => console.log('No hay implementacion')}
                 disabled={typeof stripeRequest?.id === 'string'}
               />
             ) : (
