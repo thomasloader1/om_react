@@ -6,7 +6,7 @@ import InputField from '../InputField';
 import { FormStep } from './MultiStep';
 import { motion } from 'framer-motion'
 import * as Yup from 'yup'
-import useRebill from '../Hooks/useRebill';
+import { mappingFields, getPlanPrice, URLS } from '../Hooks/useRebill'
 import { parsePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
@@ -20,7 +20,7 @@ const validationSchema = Yup.object().shape({
 
 const RebillCheckoutForm = () => {
     const { contractData, formikValues } = useContext(AppContext);
-    const { contact } = contractData
+    const { contact, sale } = contractData
     const [selectedCountry, setSelectedCountry] = useState('MX');
     const [phoneNumber, setPhoneNumber] = useState(null);
     const handlePhoneInputChange = (value) => {
@@ -64,7 +64,7 @@ const RebillCheckoutForm = () => {
         },
     });
 
-    const { initRebill } = useRebill(formik.values);
+
     const completedInputs = Object.values(formik.values).every(v => typeof v !== "undefined" && v != null && v !== '')
 
 
@@ -77,7 +77,107 @@ const RebillCheckoutForm = () => {
         }
     }, [completedInputs])
 
+    function initRebill(formsValues) {
+        console.log({ formsValues })
+        const { formikValues, ...formAttributes } = formsValues
 
+        const initialization = {
+            organization_id: '679d8e12-e0ad-4052-bc9e-eb78f956ce7e' /* your organization ID */,
+            api_key: 'bc7d4abf-3a94-4f53-b414-887356b51e0c' /* your API_KEY */,
+            api_url: 'https://api.rebill.to/v2' /* Rebill API target */,
+        };
+
+        const RebillSDKCheckout = new window.Rebill.PhantomSDK(initialization);
+
+        const customerRebill = mappingFields({ formAttributes, contact, formikValues });
+        console.log({ customerRebill })
+        //Seteo de customer
+        RebillSDKCheckout.setCustomer(customerRebill);
+
+        //Seteo de identidicacion del customer
+        RebillSDKCheckout.setCardHolder({
+            name: contact.Full_Name,
+            identification: {
+                type: 'DNI',
+                value: contact.DNI,
+            },
+        });
+
+        //Seteo de plan para cobrar
+        const { id, quantity } = getPlanPrice(formikValues, sale)
+        RebillSDKCheckout
+            .setTransaction({
+                prices: [
+                    {
+                        id,
+                        quantity,
+                    },
+                ],
+            }).then((price_setting) => console.log(price_setting));
+
+        //Seteo de callbacks en saco de que el pago este correcto o tengo algun fallo
+        const { UPDATE_CONTRACT } = URLS
+        RebillSDKCheckout.setCallbacks({
+            onSuccess: (response) => {
+                console.log(response)
+                const { invoice, faliedTransaction, pendingTransaction } = response
+                const { paidBags, buyer } = invoice
+                const { payment } = paidBags[0]
+                const { customer } = buyer
+
+                const postUpdateZohoStripe = {
+                    installments: formikValues.quotes && 1,
+                    email: customer.userEmail,
+                    amount: payment.amount,
+                    contractId: formikValues.contractId,
+                    subscriptionId: payment.id,
+                    installment_amount: payment.amount,
+                    address: data.address,
+                    dni: customer.personalIdNumber,
+                    phone: formAttributes.phone,
+                    fullname: customer.firstName + " " + customer.lastName,
+                    is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
+                }
+
+                axios.post(UPDATE_CONTRACT, postUpdateZohoStripe)
+                    .then((res) => {
+                        console.log({ res });
+                        fireToast('Contrato actualizado', 'success', 5000);
+                    })
+                    .catch((err) => {
+                        console.log({ err });
+                        fireToast('Contrato no actualizado', 'error', 5000);
+                    })
+                    .finally((res) => {
+                        console.log({ res });
+                    });
+
+            },
+            onError: (error) => {
+                console.error(error)
+            },
+        });
+
+        //Textos de validaciones con el elemento de la tarjeta
+        RebillSDKCheckout.setText({
+            card_number: 'Numero de tarjeta',
+            pay_button: 'Pagar',
+            error_messages: {
+                emptyCardNumber: 'Ingresa el numero de la tarjeta',
+                invalidCardNumber: 'El numero de la tarjeta es invalido',
+                emptyExpiryDate: 'Enter an expiry date',
+                monthOutOfRange: 'Expiry month must be between 01 and 12',
+                yearOutOfRange: 'Expiry year cannot be in the past',
+                dateOutOfRange: 'Expiry date cannot be in the past',
+                invalidExpiryDate: 'Expiry date is invalid',
+                emptyCVC: 'Enter a CVC',
+                invalidCVC: 'CVC is invalid',
+            },
+        });
+
+        //Aplicar configuracion al DOM
+        RebillSDKCheckout.setElements('rebill_elements');
+    }
     return (
         <>
             <FormStep stepNumber={5} stepName='Finaliza la compra'>
