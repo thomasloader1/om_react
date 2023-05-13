@@ -21,7 +21,8 @@ import MotionSpinner from '../Spinner/MotionSpinner';
 
 function PasarelaApp() {
 
-  const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } = useContext(AppContext);
+  const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber, clear } = useContext(AppContext);
+  console.log({ clear })
 
   const location = useLocation();
   const { id } = useParams();
