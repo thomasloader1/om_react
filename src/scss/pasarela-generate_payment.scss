@@ -1,9 +1,10 @@
-#grid-payment_stripe {
+#payment_rebill {
   display: grid;
   grid-template-areas: 'fullName fullName phone' 'address addres zip ' 'dni email email' 'card card card';
   gap: 1rem;
   align-items: center;
   width: 100%;
+
 
   .field:nth-child(1) {
     grid-area: fullName;
@@ -34,24 +35,29 @@
   }
 
   div#rebill_elements {
-    width: auto;
-    display: flex;
-    justify-content: center;
 
-    align-items: center;
 
-    iframe#rebill_elements {
-      height: 80px;
+    & iframe {
+      width: 100%;
+      height: 100px !important;
+      border: none;
 
-      & div.rebill__card_form {
-        max-width: unset !important;
-      }
     }
+  }
 
-
-
+  @media only screen and (max-width: 480px) {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'fullName'
+      'phone'
+      'address'
+      'zip'
+      'email'
+      'dni' 'card' !important;
+    overflow-y: auto;
   }
 }
+
 
 @media screen and (max-width: 766px) {
 
@@ -143,15 +149,14 @@
   }
 
   @media only screen and (max-width: 480px) {
-    #grid-payment_rebill {
+    #payment_rebill {
       grid-template-areas:
         'fullName'
         'phone'
         'address'
         'zip'
         'email'
-        'dni';
-      grid-template-columns: 1fr;
+        'dni' !important;
     }
   }
 }

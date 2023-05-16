@@ -21,8 +21,7 @@ import MotionSpinner from '../Spinner/MotionSpinner';
 
 function PasarelaApp() {
 
-  const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber, clear } = useContext(AppContext);
-  console.log({ clear })
+  const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } = useContext(AppContext);
 
   const location = useLocation();
   const { id } = useParams();
@@ -33,9 +32,9 @@ function PasarelaApp() {
   const pasarelaContainerRef = useRef();
   const isMobile = useMediaQSmall();
 
-  /*  const setHeightMobile = () => {
-     pasarelaContainerRef.current.style.height = `${window.innerHeight}px`;
-   }; */
+  const setHeightMobile = () => {
+    pasarelaContainerRef.current.style.height = `90vh`;
+  };
 
   const { fetching: stripeFetch, pk } = useStripeEnv(data?.sale?.Pais);
 
@@ -73,11 +72,11 @@ function PasarelaApp() {
   }, [stepNumber]);
 
   useEffect(() => {
-    //console.log({ isMobile, fetching });
-    if (isMobile && !loading) {
-      // setHeightMobile();
+    console.log({ isMobile, pasarelaContainerRef });
+    if (isMobile && pasarelaContainerRef.current) {
+      setHeightMobile();
     }
-  }, [isMobile, loading]);
+  }, [isMobile, pasarelaContainerRef.current]);
 
   return (
     <div ref={appRef}>

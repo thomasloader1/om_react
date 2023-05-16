@@ -11,8 +11,9 @@ import { parsePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import axios from 'axios';
 import { fireToast } from '../Hooks/useSwal';
-
 import { useParams } from 'react-router'
+import { fireModalAlert } from '../Hooks/useSwal';
+
 const validationSchema = Yup.object().shape({
     fullName: Yup.string().required('Campo requerido'),
     phone: Yup.string().required('Campo requerido'),
@@ -22,10 +23,11 @@ const validationSchema = Yup.object().shape({
 });
 
 const RebillCheckoutForm = () => {
-    const { contractData, formikValues, userInfo } = useContext(AppContext);
+    const { contractData, formikValues, userInfo, setRebillFetching, setOpenBlockLayer } = useContext(AppContext);
     const { contact, sale } = contractData
     const [selectedCountry, setSelectedCountry] = useState('MX');
     const [phoneNumber, setPhoneNumber] = useState(null);
+    const [showRebill, setShowRebill] = useState(false);
     const { id } = useParams();
 
     console.log({ contact, sale })
@@ -71,7 +73,7 @@ const RebillCheckoutForm = () => {
     });
 
 
-    const completedInputs = Object.values(formik.values).every(v => typeof v !== "undefined" && v != null && v !== '')
+    const completedInputs = Object.values(formik.values).every(v => typeof v !== "undefined" && v != null && v !== '' && v.length >= 4)
 
 
     useEffect(() => {
@@ -80,6 +82,8 @@ const RebillCheckoutForm = () => {
             const formAttributes = { ...formik.values, phoneNumber, formikValues }
             initRebill(formAttributes)
         }
+
+        return () => setShowRebill(false)
     }, [completedInputs])
 
     const handleGenerateLink = async (event) => {
@@ -100,10 +104,37 @@ const RebillCheckoutForm = () => {
             status: 'pending',
         }
 
-        const response = await axios.post("/api/rebill/generatePaymentLink", requestData);
+        try {
+            const response = await axios.post("/api/rebill/generatePaymentLink", requestData);
+
+        } catch (e) { }
+
         console.log({ response })
 
     }
+    const handlePayNow = (event) => {
+        setShowRebill(true)
+    }
+
+    const handleRequestGateway = (data, gateway) => {
+        const { UPDATE_CONTRACT, MP } = URLS
+
+        const URL = gateway.includes('Stripe') ? UPDATE_CONTRACT : MP
+
+        axios.post(URL, data)
+            .then((res) => {
+                console.log({ res });
+                fireToast('Contrato actualizado', 'success', 5000);
+            })
+            .catch((err) => {
+                console.log({ err });
+                fireToast('Contrato no actualizado', 'error', 5000);
+            })
+            .finally((res) => {
+                console.log({ res });
+            });
+    }
+
     function initRebill(formsValues) {
         console.log({ formsValues })
         const { formikValues, ...formAttributes } = formsValues
@@ -143,24 +174,32 @@ const RebillCheckoutForm = () => {
             }).then((price_setting) => console.log(price_setting));
 
         //Seteo de callbacks en saco de que el pago este correcto o tengo algun fallo
-        const { UPDATE_CONTRACT } = URLS
         RebillSDKCheckout.setCallbacks({
             onSuccess: (response) => {
-                console.log(response)
+
                 try {
+                    setRebillFetching({ loading: false, ...response })
+                    setOpenBlockLayer(true)
                     const { invoice, faliedTransaction, pendingTransaction } = response
+
+                    if (faliedTransaction != null) {
+                        const { errorMessage } = faliedTransaction.paidBags[0].payment
+                        throw new Error(`${errorMessage}`);
+                    }
+
                     const { paidBags, buyer } = invoice
-                    const { payment } = paidBags[0]
+                    const { payment, schedules } = paidBags[0]
+                    const [subscriptionId] = schedules
                     const { customer } = buyer
 
                     const dni = customer.personalIdNumber !== "" ? customer.personalIdNumber : formAttributes.dni
 
-                    const postUpdateZohoStripe = {
-                        installments: formikValues.quotes && 1,
+                    const postUpdateZoho = {
+                        installments: formikValues.quotes,
                         email: customer.userEmail,
-                        amount: payment.amount,
+                        amount: sale.Grand_Total,
                         contractId: formikValues.contractId,
-                        subscriptionId: payment.id,
+                        subscriptionId,
                         installment_amount: payment.amount,
                         address: formsValues.address,
                         dni,
@@ -168,23 +207,13 @@ const RebillCheckoutForm = () => {
                         fullname: customer.firstName + " " + customer.lastName,
                         is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
                     }
+                    const gateway = userInfo.stepTwo.value
+                    handleRequestGateway(postUpdateZoho, gateway)
+                    fireModalAlert("Pago Realizado", '', 'success')
 
-                    axios.post(UPDATE_CONTRACT, postUpdateZohoStripe)
-                        .then((res) => {
-                            console.log({ res });
-                            fireToast('Contrato actualizado', 'success', 5000);
-                        })
-                        .catch((err) => {
-                            console.log({ err });
-                            fireToast('Contrato no actualizado', 'error', 5000);
-                        })
-                        .finally((res) => {
-                            console.log({ res });
-                        });
                 } catch (error) {
-                    console.error({ error })
+                    fireModalAlert('Pago Fallido', error)
                 }
-
 
             },
             onError: (error) => {
@@ -231,77 +260,10 @@ const RebillCheckoutForm = () => {
         RebillSDKCheckout.setElements('rebill_elements');
     }
 
-
-    const handleSubmitMercadoPago = () => {
-        setFetching(true);
-        setOpenBlockLayer(true);
-
-        formRef.current.style.filter = 'blur(5px)';
-
-        const body = new FormData();
-        const type = formikValues.mod.toLowerCase().substring(0, 4);
-        const requestConfig = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-        };
-        const months = formikValues.quotes && formikValues.quotes > 0 ? formikValues.quotes : 0;
-        const allIsoCodes = getAllISOCodes();
-        const thisCountry = country ? country : appEnv?.country;
-        const clearedCountry = removeAccents(thisCountry);
-        const filterIso = allIsoCodes.filter((iso) => iso.countryName === clearedCountry);
-        //console.log({ allIsoCodes, country, clearedCountry, filterIso });
-        const [countryObject] = filterIso;
-        const { iso } = countryObject;
-
-        const condicionalCountry = iso === 'MX' ? 'mx_msk' : iso
-
-        body.append('months', months);
-        body.append('amount', `${formikValues.amount}`);
-        body.append('type', type);
-        body.append('so', formikValues.sale.SO_Number);
-        body.append('address', formik.values.address);
-        body.append('dni', formik.values.dni);
-        body.append('phone', formik.values.phone);
-        body.append('fullname', formik.values.fullName);
-        body.append('sale_id', formikValues.contractId);
-        body.append('mail', email);
-        body.append('country', condicionalCountry);
-
-        const { MP } = URLS;
-
-        axios
-            .post(MP, body, requestConfig)
-            .then((res) => {
-                if (res.data.status === 0) {
-                    formRef.current.style.filter = 'blur(0px)';
-                    formRef.current.style.position = 'relative';
-                    formRef.current.style.zIndex = '0';
-                    setOpenBlockLayer(false);
-                    fireAlert(res.data.error);
-                    return;
-                }
-
-                setCheckoutLink(res.data.url);
-            })
-            .catch((err) => {
-                formRef.current.style.filter = 'blur(0px)';
-                formRef.current.style.position = 'relative';
-                formRef.current.style.zIndex = '0';
-                setOpenBlockLayer(false);
-                fireAlert('ERROR');
-                console.error({ error: err.response.data });
-            })
-            .finally(() => {
-                setFetching(false);
-            });
-    };
     return (
         <>
             <FormStep stepNumber={5} stepName='Finaliza la compra'>
-
-                <div id="grid-payment_stripe">
-
+                <div id="payment_rebill">
                     <InputField
                         type="text"
                         id="fullName"
@@ -373,10 +335,12 @@ const RebillCheckoutForm = () => {
                         onBlur={formik.handleBlur}
                         error={formik.touched.email && formik.errors.email}
                     />
-                    {completedInputs && (<motion.div className='field mt-2'>
-                        <div id='rebill_elements'></div>
-                        <button className='button is-secondary' onClick={handleGenerateLink}>Generar Link</button>
-                    </motion.div>)}
+                    {completedInputs && (
+                        <motion.div className='field mt-2 is-flex is-flex-direction-row is-justify-content-center'>
+                            <div id='rebill_elements' style={showRebill ? { display: 'block', margin: '0 auto' } : { display: 'none' }}></div>
+                            <button className={`button is-success mr-2 ${showRebill && "is-hidden"}`} type='button' onClick={handlePayNow}>Pagar Aqui</button>
+                            <button className={`button is-secondary ml-2 ${showRebill && "is-hidden"}`} type='button' onClick={handleGenerateLink}>Generar Link</button>
+                        </motion.div>)}
 
                 </div>
 
