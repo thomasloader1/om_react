@@ -1,11 +1,10 @@
 /* eslint-disable no-undef */
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../Provider/StateProvider';
-import { useFormik } from 'formik';
+import { useFormikContext } from 'formik';
 import InputField from '../InputField';
 import { FormStep } from './MultiStep';
 import { motion } from 'framer-motion'
-import * as Yup from 'yup'
 import { mappingFields, getPlanPrice, URLS, REBILL_CONF } from '../Hooks/useRebill'
 import { parsePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -14,14 +13,6 @@ import { fireToast } from '../Hooks/useSwal';
 import { useParams } from 'react-router'
 import { fireModalAlert } from '../Hooks/useSwal';
 
-const validationSchema = Yup.object().shape({
-    fullName: Yup.string().required('Campo requerido'),
-    phone: Yup.string().required('Campo requerido'),
-    address: Yup.string().required('Campo requerido'),
-    dni: Yup.number().required('Campo requerido'),
-    email: Yup.string().email('Correo electrónico no válido').required('Campo requerido'),
-});
-
 const RebillCheckoutForm = () => {
     const { contractData, formikValues, userInfo, setRebillFetching, setOpenBlockLayer } = useContext(AppContext);
     const { contact, sale } = contractData
@@ -29,8 +20,8 @@ const RebillCheckoutForm = () => {
     const [phoneNumber, setPhoneNumber] = useState(null);
     const [showRebill, setShowRebill] = useState(false);
     const { id } = useParams();
-
-    console.log({ contact, sale })
+    const { values, handleChange, handleBlur, touched, errors, ...formik } = useFormikContext();
+    console.log({ contact, sale, values })
     const handlePhoneInputChange = (value) => {
         /* console.log(value, typeof value)
         if (typeof value !== 'undefined') {
@@ -52,35 +43,23 @@ const RebillCheckoutForm = () => {
                 }
             }
         } catch (error) {
-            console.log("Número de teléfono no válido");
+            console.log("Número de teléfono no válido", { error });
         }
     };
 
-    const formik = useFormik({
-        initialValues: {
-            fullName: contact.Full_Name || '',
-            phone: '',
-            address: '',
-            dni: contact.DNI || '',
-            email: contact.Email || '',
-            zip: '',
-        },
-        validationSchema: validationSchema,
-        onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
-            return false
-        },
-    });
 
-
-    const completedInputs = Object.values(formik.values).every(v => typeof v !== "undefined" && v != null && v !== '' && v.length >= 4)
+    const completedInputs = Object.values(values).every(v => typeof v !== "undefined" && v != null && v !== '')
 
 
     useEffect(() => {
-        console.log({ completedInputs }, formik.values)
+        console.log({ completedInputs }, values)
+
         if (completedInputs) {
-            const formAttributes = { ...formik.values, phoneNumber, formikValues }
+            formik.setFieldValue('cardHolder', true)
+            const formAttributes = { ...values, phoneNumber, formikValues }
             initRebill(formAttributes)
+        } else {
+            formik.setFieldValue('cardHolder', false)
         }
 
         return () => setShowRebill(false)
@@ -89,27 +68,30 @@ const RebillCheckoutForm = () => {
     const handleGenerateLink = async (event) => {
 
         const requestData = {
-            email: formik.values.email,
-            phone: formik.values.phone,
-            personalId: formik.values.dni,
-            address: formik.values.address,
-            zip: formik.values.zip,
-            fullName: formik.values.fullName,
+            email: values.email,
+            phone: values.phone,
+            personalId: values.dni,
+            address: values.address,
+            zip: values.zip,
+            fullName: values.fullName,
             gateway: userInfo.stepTwo.value,
             type: userInfo.stepThree.value,
             contract_entity_id: id,
             contract_so: sale.SO_Number,
             country: sale.Pais,
-            quotes: formikValues.quotes,
+            quotes: values.quotes,
             status: 'pending',
         }
 
         try {
-            const response = await axios.post("/api/rebill/generatePaymentLink", requestData);
+            const { data } = await axios.post("/api/rebill/generatePaymentLink", requestData);
+            setOpenBlockLayer(true)
+            setRebillFetching({ loading: false, ...data })
+
+            console.log({ data })
 
         } catch (e) { }
 
-        console.log({ response })
 
     }
     const handlePayNow = (event) => {
@@ -270,10 +252,10 @@ const RebillCheckoutForm = () => {
                         name="fullName"
                         label="Nombre del titular"
                         placeholder="Ingresar nombre del titular"
-                        value={formik.values.fullName}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.fullName && formik.errors.fullName}
+                        value={values.fullName}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.fullName && errors.fullName}
                     />
                     <InputField
                         type='phone'
@@ -281,10 +263,10 @@ const RebillCheckoutForm = () => {
                         name='phone'
                         label='Teléfono'
                         placeholder='Ingresar número de teléfono'
-                        value={formik.values.phone}
+                        value={values.phone}
                         onChange={handlePhoneInputChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.phone && formik.errors.phone}
+                        onBlur={handleBlur}
+                        error={touched.phone && errors.phone}
                         country={selectedCountry}
                         defaultCountry="MX"
                     />
@@ -295,10 +277,10 @@ const RebillCheckoutForm = () => {
                         name='address'
                         label='Dirección de facturación'
                         placeholder='Dirección completa'
-                        value={formik.values.address}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.address && formik.errors.address}
+                        value={values.address}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.address && errors.address}
                     />
 
                     <InputField
@@ -307,10 +289,10 @@ const RebillCheckoutForm = () => {
                         name='zip'
                         label='Codigo postal'
                         placeholder='Codigo postal'
-                        value={formik.values.zip}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.zip && formik.errors.zip}
+                        value={values.zip}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.zip && errors.zip}
                     />
 
                     <InputField
@@ -319,10 +301,10 @@ const RebillCheckoutForm = () => {
                         name='dni'
                         label='Número de identificación'
                         placeholder='Número de identificación'
-                        value={formik.values.dni}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.dni && formik.errors.dni}
+                        value={values.dni}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.dni && errors.dni}
                     />
                     <InputField
                         type='email'
@@ -330,10 +312,10 @@ const RebillCheckoutForm = () => {
                         name='email'
                         label='E-mail'
                         placeholder='Ingresar e-mail'
-                        value={formik.values.email}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.email && formik.errors.email}
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.email && errors.email}
                     />
                     {completedInputs && (
                         <motion.div className='field mt-2 is-flex is-flex-direction-row is-justify-content-center'>

@@ -5,6 +5,7 @@ import { AppContext } from '../PasarelaCobros/Provider/StateProvider'
 const BlockLayer = () => {
     const { openBlockLayer, rebillFetching } = useContext(AppContext)
     const { loading, ...rest } = rebillFetching
+    console.log({ openBlockLayer, rebillFetching })
     return (
         <>
             {openBlockLayer && (

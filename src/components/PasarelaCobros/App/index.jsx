@@ -49,7 +49,7 @@ function PasarelaApp() {
       .matches(/^[a-zA-Z]+\s+[a-zA-Z]+(?:\s+[a-zA-Z]+)?$/i, 'El campo debe contener solo letras'),
     phone: Yup.string()
       .required('❗ Ingresa un número de telefono')
-      .matches(/^[0-9]+$/i, 'El campo debe contener solo numeros'),
+      .matches(/^(\+?\d{2})?(\d{2})?(\d{4})(\d{4})$/i, 'El campo debe contener solo numeros'),
     address: Yup.string()
       .required('❗ Ingresa calle y número del titual de la tarjeta')
       .matches(/([A-Za-z0-9]+( [A-Za-z0-9]+)+)/i, 'El formato de la dirección es invalido'),
@@ -79,7 +79,7 @@ function PasarelaApp() {
   }, [isMobile, pasarelaContainerRef.current]);
 
   return (
-    <div ref={appRef}>
+    <main ref={appRef}>
       <Header />
       {stripeFetch ? (
         <MotionSpinner text='Recuperando datos del Contrato' />
@@ -165,7 +165,7 @@ function PasarelaApp() {
         </section>
         /* </Elements> */
       )}
-    </div>
+    </main>
 
   );
 }

@@ -54,26 +54,22 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
   const {
     formikValues,
     stripeRequest,
-    setStripeRequest,
     userInfo,
-    formRef,
     checkoutLink,
-    setCheckoutLink,
     setOptions,
     options: optionsGlobal,
-    appEnv,
     rebillFetching
   } = useContext(AppContext);
 
   const formik = useFormikContext();
   /*   const [paymentMethod, setPaymentMethod] = useState('');
     const [paymentError, setPaymentError] = useState(''); */
-  const { cardComplete, email } = formik.values;
+  const { cardHolder, email } = formik.values;
   const { country } = formikValues;
 
   const generateButton = userInfo.stepTwo.value.includes('Stripe')
-    ? formik.isValid && cardComplete
-    : formik.isValid && email;
+    ? formik.isValid && cardHolder
+    : formik.isValid && cardHolder;
 
   useEffect(() => {
     if (generateButton) {
@@ -88,95 +84,6 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     return () => null;
   }, [generateButton]);
 
-
-  const handleCopyLink = () => {
-    fetch('https://api-ssl.bitly.com/v4/shorten', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${REACT_APP_BITLY_ACCESS_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        long_url: checkoutLink,
-        domain: 'bit.ly',
-        group_guid: 'Bm82hIzUJIK',
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log({ data }))
-      .catch((err) => console.log({ err }));
-
-    navigator.clipboard.writeText(checkoutLink);
-    fireToast('¡Link copiado en portapapeles!', 'success');
-
-  };
-
-  const handleSubmitMercadoPago = () => {
-    setFetching(true);
-    setOpenBlockLayer(true);
-
-    formRef.current.style.filter = 'blur(5px)';
-    /* formRef.current.style.position = 'relative';
-    formRef.current.style.zIndex = '-1'; */
-
-    const body = new FormData();
-    const type = formikValues.mod.toLowerCase().substring(0, 4);
-    const requestConfig = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    };
-    const months = formikValues.quotes && formikValues.quotes > 0 ? formikValues.quotes : 0;
-    const allIsoCodes = getAllISOCodes();
-    const thisCountry = country ? country : appEnv?.country;
-    const clearedCountry = removeAccents(thisCountry);
-    const filterIso = allIsoCodes.filter((iso) => iso.countryName === clearedCountry);
-    //console.log({ allIsoCodes, country, clearedCountry, filterIso });
-    const [countryObject] = filterIso;
-    const { iso } = countryObject;
-
-    const condicionalCountry = iso === 'MX' ? 'mx_msk' : iso
-
-    body.append('months', months);
-    body.append('amount', `${formikValues.amount}`);
-    body.append('type', type);
-    body.append('so', formikValues.sale.SO_Number);
-    body.append('address', formik.values.address);
-    body.append('dni', formik.values.dni);
-    body.append('phone', formik.values.phone);
-    body.append('fullname', formik.values.fullName);
-    body.append('sale_id', formikValues.contractId);
-    body.append('mail', email);
-    body.append('country', condicionalCountry);
-
-    const { MP } = URLS;
-
-    axios
-      .post(MP, body, requestConfig)
-      .then((res) => {
-        if (res.data.status === 0) {
-          formRef.current.style.filter = 'blur(0px)';
-          formRef.current.style.position = 'relative';
-          formRef.current.style.zIndex = '0';
-          setOpenBlockLayer(false);
-          fireAlert(res.data.error);
-          return;
-        }
-
-        setCheckoutLink(res.data.url);
-      })
-      .catch((err) => {
-        formRef.current.style.filter = 'blur(0px)';
-        formRef.current.style.position = 'relative';
-        formRef.current.style.zIndex = '0';
-        setOpenBlockLayer(false);
-        fireAlert('ERROR');
-        console.error({ error: err.response.data });
-      })
-      .finally(() => {
-        setFetching(false);
-      });
-  };
 
   return (
     <div className={`is-4 column side pl-6`}>
@@ -195,7 +102,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
           />
         ))}
 
-        {generateButton && (
+        {/*  {generateButton && (
           <>
             {userInfo.stepTwo.value.includes('Stripe') ? (
               <Button
@@ -235,7 +142,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
                     ) : (
                       <span>{checkoutLink ? 'Link generado' : 'Generar link'}</span>
                     )}
-                    {/*<div className='tooltip'>{checkoutLink ? '' : 'Generar link'}</div>*/}
+                    {<div className='tooltip'>{checkoutLink ? '' : 'Generar link'}</div>}
                   </>
                 }
                 fullwidth
@@ -244,7 +151,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
               />
             )}
           </>
-        )}
+        )} */}
       </div>
       <motion.div id='background-side'></motion.div>
       {rebillFetching?.loading && /* (

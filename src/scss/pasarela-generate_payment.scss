@@ -53,7 +53,18 @@
       'address'
       'zip'
       'email'
-      'dni' 'card' !important;
+      'dni' 'card';
+    overflow-y: auto;
+  }
+
+  @media (min-width: 481px) and (max-width: 766px) {
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas:
+      'fullName fullName'
+      'phone phone'
+      'address zip'
+      'email email'
+      'dni dni' 'card card';
     overflow-y: auto;
   }
 }
