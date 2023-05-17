@@ -3,11 +3,13 @@ import { Container, Notification } from 'react-bulma-components';
 import { Route, Routes } from 'react-router';
 import PasarelaApp from '../PasarelaCobros/App';
 import VentaPresencialApp from '../VentaPresencial/App';
+import Checkout from '../PasarelaCobros/Checkout';
 
 function App() {
   return (
     <Routes>
       <Route path='/:id' element={<PasarelaApp />} />
+      <Route path='checkout/:so' element={<Checkout />} />
       <Route exact path='/vp/:id' element={<PasarelaApp />} />
       <Route path='/ventapresencial' element={<VentaPresencialApp />} />
       <Route

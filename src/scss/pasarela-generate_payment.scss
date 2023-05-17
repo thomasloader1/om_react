@@ -1,9 +1,10 @@
-#grid-payment_stripe {
+#payment_rebill {
   display: grid;
-  grid-template-areas: 'fullName fullName phone' 'address address dni' 'email email email' 'card card card' 'notify notify notify';
+  grid-template-areas: 'fullName fullName phone' 'address addres zip ' 'dni email email' 'card card card';
   gap: 1rem;
   align-items: center;
   width: 100%;
+
 
   .field:nth-child(1) {
     grid-area: fullName;
@@ -18,57 +19,56 @@
   }
 
   .field:nth-child(4) {
-    grid-area: dni;
+    grid-area: zip;
   }
 
   .field:nth-child(5) {
+    grid-area: dni;
+  }
+
+  .field:nth-child(6) {
     grid-area: email;
   }
 
-  .checkout_stripe {
+  .field:nth-child(7) {
     grid-area: card;
-
-    #card_element {
-      margin: 10px 0;
-      width: 100%;
-      background-color: hsl(0deg, 0%, 100%);
-      border-radius: 4px;
-      color: hsl(0deg, 0%, 21%);
-      border: 1px solid hsl(0deg, 0%, 86%);
-      padding: 10px;
-    }
-
-    iframe[name='__privateStripeFrame4086'] {
-      width: 100% !important;
-    }
-
-    button {
-      width: 100%;
-    }
-
-    .ElementsApp {
-      font-size: 1rem;
-    }
-
-    /* .cardInputsMobile {
-      display: grid;
-      grid-template-columns: 52px 1fr 1fr;
-      row-gap: 1rem;
-      column-gap: 0.25rem;
-      > .field {
-        grid-area: unset;
-      }
-      .field:first-child {
-        grid-column: span 3;
-      }
-    } */
   }
 
-  pre {
-    grid-area: console;
-    max-width: 300px;
+  div#rebill_elements {
+
+
+    & iframe {
+      width: 100%;
+      height: 100px !important;
+      border: none;
+
+    }
+  }
+
+  @media only screen and (max-width: 480px) {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'fullName'
+      'phone'
+      'address'
+      'zip'
+      'email'
+      'dni' 'card';
+    overflow-y: auto;
+  }
+
+  @media (min-width: 481px) and (max-width: 766px) {
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas:
+      'fullName fullName'
+      'phone phone'
+      'address zip'
+      'email email'
+      'dni dni' 'card card';
+    overflow-y: auto;
   }
 }
+
 
 @media screen and (max-width: 766px) {
 
@@ -145,6 +145,9 @@
     grid-area: email;
   }
 
+
+
+
   @media only screen and (max-width: 768px) {
     #grid-payment_rebill {
       grid-template-areas:
@@ -157,15 +160,14 @@
   }
 
   @media only screen and (max-width: 480px) {
-    #grid-payment_rebill {
+    #payment_rebill {
       grid-template-areas:
         'fullName'
         'phone'
         'address'
         'zip'
         'email'
-        'dni';
-      grid-template-columns: 1fr;
+        'dni' !important;
     }
   }
 }

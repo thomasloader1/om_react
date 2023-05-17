@@ -14,11 +14,10 @@ const useStripeEnv = (country) => {
 
   const stripeInit = (country) => {
     const isMX = country === 'México'
-    console.log({ country })
 
     if (NODE_ENV === 'development') {
       const publicTestKey = isMX ? REACT_APP_STRIPE_PK_TEST_MX : REACT_APP_STRIPE_PK_TEST_OM
-      console.log({ publicTestKey }, country, isMX);
+      //console.log({ publicTestKey, country, isMX });
 
       setPk(publicTestKey);
       setFetching(false)

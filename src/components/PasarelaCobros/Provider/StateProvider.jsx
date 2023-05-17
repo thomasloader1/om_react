@@ -29,6 +29,8 @@ function StateProvider({ children }) {
   const [checkoutLink, setCheckoutLink] = useState('');
   const [appEnv, setAppEnv] = useState(null);
   const [stepNumber, setStepNumber] = useState(0);
+  const [openBlockLayer, setOpenBlockLayer] = useState(false);
+  const [rebillFetching, setRebillFetching] = useState(null);
 
   const appRef = useRef(null);
   const formRef = useRef(null);
@@ -52,7 +54,9 @@ function StateProvider({ children }) {
         setAppEnv,
         stepNumber,
         setStepNumber,
-        contractData, setContractData
+        contractData, setContractData,
+        openBlockLayer, setOpenBlockLayer,
+        rebillFetching, setRebillFetching
       }}
     >
       {children}

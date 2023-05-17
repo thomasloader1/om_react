@@ -1,0 +1,71 @@
+main.grid-checkout {
+    display: grid;
+    grid-template-areas: "nav nav nav" "form form form";
+}
+
+header {
+    grid-area: nav;
+}
+
+section {
+    grid-area: form;
+    margin: 10px 0;
+}
+
+form#cardCheckout {
+
+    width: 100%;
+
+    &.card_checkout {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        gap: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        background-color: #fff;
+
+        margin: 0 auto;
+    }
+
+    .card_checkout__header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .card_checkout__title {
+        margin: 0;
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .card_checkout__body {
+        display: grid;
+        gap: 1rem;
+        grid-template-areas: "fullName fullName" "dni phone" "address zip";
+
+        .field:nth-child(1) {
+            grid-area: fullName;
+        }
+
+        .field:nth-child(2) {
+            grid-area: dni;
+        }
+
+        .field:nth-child(3) {
+            grid-area: address;
+        }
+
+        .field:nth-child(4) {
+            grid-area: zip;
+        }
+
+        .field:nth-child(5) {
+            grid-area: phone;
+        }
+    }
+}

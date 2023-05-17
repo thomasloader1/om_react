@@ -40,10 +40,17 @@ function ResumeTicket() {
     );
   }
 
+  const currencyOptions = {
+    style: 'currency',
+    currency: 'MXN',
+  };
+
   const { sale, contact, products } = contractData;
   const isTraditional = formikValues.mod.includes('Tradicional');
   const totalMonths = isTraditional ? 1 : formikValues.quotes;
-  const payPerMonth = isTraditional ? sale?.Grand_Total : sale?.Grand_Total / formikValues.quotes;
+  const payPerMonth = isTraditional ? sale?.Grand_Total : Math.round(sale?.Grand_Total / formikValues.quotes);
+  const formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(payPerMonth);
+
   return (
     <>
       {loading ? (
@@ -76,7 +83,7 @@ function ResumeTicket() {
             </div>
             <div id='montoTotalMes_resume' className='column is-one-third finalResume-item'>
               <label>monto a pagar POR MES</label>
-              <h4>{payPerMonth}</h4>
+              <h4>{formattedAmount}</h4>
             </div>
             <div id='montoTotalMes_resume' className='column is-one-third finalResume-item'>
               <label>Estado del contrato</label>
@@ -107,9 +114,8 @@ function ResumeTicket() {
           <Columns className='finalResume-confirmation'>
             <Columns.Column>
               <ButtonField
-                className={`grid-payment_method-item button ${
-                  'Datos correctos' === stepFour.value && 'active'
-                }`}
+                className={`grid-payment_method-item button ${'Datos correctos' === stepFour.value && 'active'
+                  }`}
                 showText={true}
                 id='checkContract'
                 name='checkContract'
@@ -143,9 +149,8 @@ function ResumeTicket() {
 
             <Columns.Column>
               <ButtonField
-                className={`grid-payment_method-item button ${
-                  'Datos erroneos' === stepFour.value && 'active'
-                }`}
+                className={`grid-payment_method-item button ${'Datos erroneos' === stepFour.value && 'active'
+                  }`}
                 showText={true}
                 id='checkContract'
                 name='checkContract'
