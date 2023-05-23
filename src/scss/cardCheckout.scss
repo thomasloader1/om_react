@@ -3,6 +3,12 @@ main.grid-checkout {
     grid-template-areas: "nav nav nav" "form form form";
 }
 
+section#grid-checkout_content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+}
+
 header {
     grid-area: nav;
 }

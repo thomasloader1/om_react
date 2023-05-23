@@ -55,7 +55,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
     formikValues,
     stripeRequest,
     userInfo,
-    checkoutLink,
+    openBlockLayer,
     setOptions,
     options: optionsGlobal,
     rebillFetching
@@ -154,7 +154,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
         )} */}
       </div>
       <motion.div id='background-side'></motion.div>
-      {rebillFetching?.loading && /* (
+      {openBlockLayer && /* (
         <>
           <motion.div
             style={{

@@ -90,7 +90,10 @@ const RebillCheckoutForm = () => {
 
             console.log({ data })
 
-        } catch (e) { }
+        } catch (e) {
+            fireModalAlert("Error al generar link", e);
+            console.log({ e })
+        }
 
 
     }
@@ -319,9 +322,9 @@ const RebillCheckoutForm = () => {
                     />
                     {completedInputs && (
                         <motion.div className='field mt-2 is-flex is-flex-direction-row is-justify-content-center'>
-                            <div id='rebill_elements' style={showRebill ? { display: 'block', margin: '0 auto' } : { display: 'none' }}></div>
-                            <button className={`button is-success mr-2 ${showRebill && "is-hidden"}`} type='button' onClick={handlePayNow}>Pagar Aqui</button>
-                            <button className={`button is-secondary ml-2 ${showRebill && "is-hidden"}`} type='button' onClick={handleGenerateLink}>Generar Link</button>
+                            <div id='rebill_elements' /* style={showRebill ? { display: 'block', margin: '0 auto' } : { display: 'none' }} */></div>
+                            {/* <button className={`button is-success mr-2 ${showRebill && "is-hidden"}`} type='button' onClick={handlePayNow}>Pagar Aqui</button>
+                            <button className={`button is-secondary ml-2 ${showRebill && "is-hidden"}`} type='button' onClick={handleGenerateLink}>Generar Link</button> */}
                         </motion.div>)}
 
                 </div>
