@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { useLocation, useParams } from 'react-router';
 import axios from 'axios';
-import { fireToast } from '../Hooks/useSwal';
+import { fireToast, fireAlert } from '../Hooks/useSwal';
 import { URLS, getPlanPrice, mappingCheckoutFields } from '../Hooks/useRebill';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
@@ -70,6 +70,7 @@ const Checkout = () => {
         };
 
         const RebillSDKCheckout = new window.Rebill.PhantomSDK(initialization);
+        console.log("Estamos con RebillSDKCheckout: ",RebillSDKCheckout);
         console.log({ paymentLinkCustomer })
         const customerRebill = mappingCheckoutFields({ paymentLinkCustomer, contact, checkout });
         console.log({ customerRebill })
@@ -81,7 +82,7 @@ const Checkout = () => {
             name: contact.Full_Name,
             identification: {
                 type: 'DNI',
-                value: contact.DNI,
+                value: paymentLinkCustomer.personalId,
             },
         });
 
@@ -99,15 +100,16 @@ const Checkout = () => {
             }).then((price_setting) => console.log(price_setting));
 
         //Seteo de callbacks en saco de que el pago este correcto o tengo algun fallo
-        const { UPDATE_CONTRACT } = URLS
-        RebillSDKCheckout.setCallbacks({
-            onSuccess: (response) => {
-                console.log(response)
-                try {
+        const { UPDATE_CONTRACT, MP } = URLS;
+        console.log({checkout,UPDATE_CONTRACT,MP});
+
+        const handleSuccessRebillSDKCheckout = (response) => {
+
                     const { invoice, faliedTransaction, pendingTransaction } = response
                     const { paidBags, buyer } = invoice
                     const { payment } = paidBags[0]
                     const { customer } = buyer
+                    console.log('response contacto 2:',{response2: customer})
 
                     const QUOTES = checkout.quotes ? Number(checkout.quotes) : 1
                     const postUpdateZohoStripe = {
@@ -118,13 +120,14 @@ const Checkout = () => {
                         subscriptionId: payment.id,
                         installment_amount: payment.amount,
                         address: paymentLinkCustomer.address,
-                        dni: customer.personalIdNumber,
+                        dni: paymentLinkCustomer.personalId,
                         phone: paymentLinkCustomer.phone,
                         fullname: customer.firstName + " " + customer.lastName,
                         is_suscri: checkout.type.includes('Tradicional'),
                     }
 
-                    axios.post(UPDATE_CONTRACT, postUpdateZohoStripe)
+                    const URL = checkout.type.includes('Stripe') ? UPDATE_CONTRACT : MP
+                    axios.post(URL, postUpdateZohoStripe)
                         .then((res) => {
                             console.log({ res });
                             fireToast('Contrato actualizado', 'success', 5000);
@@ -136,11 +139,15 @@ const Checkout = () => {
                         .finally((res) => {
                             console.log({ res });
                         });
+        };
+
+        RebillSDKCheckout.setCallbacks({
+            onSuccess: (response) => {
+                try {
+                    handleSuccessRebillSDKCheckout(response);
                 } catch (error) {
                     console.error({ error })
                 }
-
-
             },
             onError: (error) => {
                 console.error(error)

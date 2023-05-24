@@ -139,11 +139,11 @@ export const mappingCheckoutFields = ({ paymentLinkCustomer, contact, checkout }
         birthday: contact.Date_of_Birth,
         taxId: {
             type: 'CUIT',
-            value: '20' + contact.DNI + '9',
+            value: '20' + paymentLinkCustomer.personalId + '9',
         },
         personalId: {
             type: 'DNI',
-            value: contact.DNI,
+            value: paymentLinkCustomer.personalId,
         },
         address: {
             street: street.join(" "),
