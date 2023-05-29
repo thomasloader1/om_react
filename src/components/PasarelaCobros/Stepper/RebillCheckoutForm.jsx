@@ -94,8 +94,6 @@ const RebillCheckoutForm = () => {
             fireModalAlert("Error al generar link", e);
             console.log({ e })
         }
-
-
     }
     const handlePayNow = (event) => {
         setShowRebill(true)
@@ -105,7 +103,6 @@ const RebillCheckoutForm = () => {
         const { UPDATE_CONTRACT, MP } = URLS
 
         const URL = gateway.includes('Stripe') ? UPDATE_CONTRACT : MP
-
         axios.post(URL, data)
             .then((res) => {
                 console.log({ res });
