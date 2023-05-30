@@ -21,7 +21,7 @@ const RebillCheckoutForm = () => {
     const [showRebill, setShowRebill] = useState(false);
     const { id } = useParams();
     const { values, handleChange, handleBlur, touched, errors, ...formik } = useFormikContext();
-    console.log({ contact, sale, values })
+    console.log({ contact, sale, formikValues })
     const handlePhoneInputChange = (value) => {
         /* console.log(value, typeof value)
         if (typeof value !== 'undefined') {
@@ -47,9 +47,7 @@ const RebillCheckoutForm = () => {
         }
     };
 
-
     const completedInputs = Object.values(values).every(v => typeof v !== "undefined" && v != null && v !== '')
-
 
     useEffect(() => {
         console.log({ completedInputs }, values)
@@ -65,6 +63,50 @@ const RebillCheckoutForm = () => {
         return () => setShowRebill(false)
     }, [completedInputs])
 
+    const objectPostUpdateZoho = ({formikValues,customer,sale,payment,formsValues,subscriptionId,formAttributes,userInfo,dni}) => {
+        console.log('zohoupdate',{formikValues});
+        const {advanceSuscription} = formikValues;
+        
+        let postUpdateZoho; // Declarar la variable fuera del condicional
+        console.log("step",{valor:userInfo.stepThree.value});
+        if(!advanceSuscription.isAdvanceSuscription){
+            // console.log("no es anticipo");
+            postUpdateZoho = {
+                installments: formikValues.quotes,
+                email: customer.userEmail,
+                amount: sale.Grand_Total,
+                contractId: formikValues.contractId,
+                subscriptionId,
+                installment_amount: payment.amount,
+                address: formsValues.address,
+                dni,
+                phone: formAttributes.phone,
+                fullname: customer.firstName + " " + customer.lastName,
+                is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
+                is_advanceSuscription: userInfo.stepThree.value.includes('Suscripción con anticipo'),
+            }
+        }else{ 
+            // console.log("es anticipo");
+            postUpdateZoho = {
+                installments: formikValues.quotes,//5 quotesAdvance
+                email: customer.userEmail,
+                amount: sale.Grand_Total,
+                contractId: formikValues.contractId,
+                subscriptionId,
+                installment_amount: advanceSuscription.firstQuoteDiscount,//
+                payPerMonthAdvance: advanceSuscription.payPerMonthAdvance,
+                address: formsValues.address,
+                dni,
+                phone: formAttributes.phone,
+                fullname: customer.firstName + " " + customer.lastName,
+                is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
+                is_advanceSuscription: userInfo.stepThree.value.includes('Suscripción con anticipo'),
+            }
+            //no hace falta mandar el remainingAmountToPay,quotesAdvance
+        }
+        
+        return postUpdateZoho;
+    };
     const handleGenerateLink = async (event) => {
 
         const requestData = {
@@ -101,8 +143,9 @@ const RebillCheckoutForm = () => {
 
     const handleRequestGateway = (data, gateway) => {
         const { UPDATE_CONTRACT, MP } = URLS
-
         const URL = gateway.includes('Stripe') ? UPDATE_CONTRACT : MP
+        // console.log(URL)
+
         axios.post(URL, data)
             .then((res) => {
                 console.log({ res });
@@ -176,24 +219,30 @@ const RebillCheckoutForm = () => {
 
                     const dni = customer.personalIdNumber !== "" ? customer.personalIdNumber : formAttributes.dni
 
-                    const postUpdateZoho = {
-                        installments: formikValues.quotes,
-                        email: customer.userEmail,
-                        amount: sale.Grand_Total,
-                        contractId: formikValues.contractId,
-                        subscriptionId,
-                        installment_amount: payment.amount,
-                        address: formsValues.address,
-                        dni,
-                        phone: formAttributes.phone,
-                        fullname: customer.firstName + " " + customer.lastName,
-                        is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
-                    }
+                    const paramsFunction = {formikValues,customer,sale,payment,formsValues,subscriptionId,formAttributes,userInfo,dni}
+                   const postUpdateZoho = objectPostUpdateZoho(paramsFunction);
+                    console.log('zohoupdate2',{formikValues,postUpdateZoho});
+
+                    // const postUpdateZoho = {
+                    //     installments: formikValues.quotes,//5 quotesAdvance
+                    //     email: customer.userEmail,
+                    //     amount: sale.Grand_Total,
+                    //     contractId: formikValues.contractId,
+                    //     subscriptionId,
+                    //     installment_amount: payment.amount,//
+                    //     address: formsValues.address,
+                    //     dni,
+                    //     phone: formAttributes.phone,
+                    //     fullname: customer.firstName + " " + customer.lastName,
+                    //     is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
+                    // }
                     const gateway = userInfo.stepTwo.value
-                    handleRequestGateway(postUpdateZoho, gateway)
-                    fireModalAlert("Pago Realizado", '', 'success')
+                    handleRequestGateway(postUpdateZoho, gateway);
+
+                    fireModalAlert("Pago Realizado", '', 'success');
 
                 } catch (error) {
+                    console.log("error",error);
                     fireModalAlert('Pago Fallido', error)
                 }
 

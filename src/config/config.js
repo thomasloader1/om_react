@@ -180,6 +180,12 @@ export const paymentModeOptions = [
     value: 'Suscripción',
     classLabel: 'half',
   },
+  {
+    idElement: 'mod_advance_suscrip',
+    name: 'mod',
+    value: 'Suscripción con anticipo',
+    classLabel: 'half',
+  },
 ];
 
 export const clientForm = [
