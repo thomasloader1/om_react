@@ -24,6 +24,13 @@ const RebillCheckoutForm = () => {
   const { values, handleChange, handleBlur, touched, errors, ...formik } = useFormikContext();
   console.log({ contact, sale, values });
   const handlePhoneInputChange = (value) => {
+    /* console.log(value, typeof value)
+        if (typeof value !== 'undefined') {
+            const parsedPhoneNumber = parsePhoneNumber(value);
+            if (parsedPhoneNumber?.country) {
+                setSelectedCountry(parsedPhoneNumber.country);
+            }
+        } */
     try {
       const phoneNumber = parsePhoneNumber(value);
       if (phoneNumber) {
@@ -82,7 +89,10 @@ const RebillCheckoutForm = () => {
       setRebillFetching({ loading: false, ...data });
 
       console.log({ data });
-    } catch (e) {}
+    } catch (e) {
+      fireModalAlert('Error al generar link', e);
+      console.log({ e });
+    }
   };
   const handlePayNow = (event) => {
     setShowRebill(true);
@@ -92,7 +102,6 @@ const RebillCheckoutForm = () => {
     const { UPDATE_CONTRACT, MP } = URLS;
 
     const URL = gateway.includes('Stripe') ? UPDATE_CONTRACT : MP;
-
     axios
       .post(URL, data)
       .then((res) => {
@@ -181,6 +190,7 @@ const RebillCheckoutForm = () => {
             is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
           };
           const gateway = userInfo.stepTwo.value;
+          handleSuscriptionUpdate();
           handleRequestGateway(postUpdateZoho, gateway);
           fireModalAlert('Pago Realizado', '', 'success');
         } catch (error) {
@@ -333,5 +343,4 @@ const RebillCheckoutForm = () => {
     </>
   );
 };
-
 export default RebillCheckoutForm;
