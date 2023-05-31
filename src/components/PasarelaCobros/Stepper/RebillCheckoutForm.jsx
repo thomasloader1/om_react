@@ -149,13 +149,14 @@ const RebillCheckoutForm = () => {
     RebillSDKCheckout.setCallbacks({
       onSuccess: (response) => {
         try {
-          setRebillFetching({ loading: false, ...response });
-          setOpenBlockLayer(true);
           const { invoice, faliedTransaction, pendingTransaction } = response;
 
           if (faliedTransaction != null) {
             const { errorMessage } = faliedTransaction.paidBags[0].payment;
             throw new Error(`${errorMessage}`);
+          } else {
+            setRebillFetching({ loading: false, ...response });
+            setOpenBlockLayer(true);
           }
 
           const { paidBags, buyer } = invoice;
@@ -332,3 +333,5 @@ const RebillCheckoutForm = () => {
     </>
   );
 };
+
+export default RebillCheckoutForm;
