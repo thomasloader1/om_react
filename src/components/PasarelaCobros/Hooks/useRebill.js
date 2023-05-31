@@ -126,16 +126,16 @@ export const mappingFields = ({ formAttributes, contact, formikValues }) => {
   };
 };
 
-export const mappingCheckoutFields = ({ customer, contact, checkout }) => {
-  const [number] = customer.address.split(' ').filter((s) => !isNaN(s) && s);
-  const [...street] = customer.address.split(' ').filter((s) => isNaN(s) && s);
-  const { countryCallingCode, nationalNumber } = parsePhoneNumber(customer.phone);
+export const mappingCheckoutFields = ({ paymentLinkCustomer, contact, checkout }) => {
+  const [number] = paymentLinkCustomer.address.split(' ').filter((s) => !isNaN(s) && s);
+  const [...street] = paymentLinkCustomer.address.split(' ').filter((s) => isNaN(s) && s);
+  const { countryCallingCode, nationalNumber } = parsePhoneNumber(paymentLinkCustomer.phone);
 
-  console.log({ countryCallingCode, nationalNumber });
+  //console.log({ countryCallingCode, nationalNumber })
   return {
     firstName: contact.First_Name,
     lastName: contact.Last_Name,
-    email: customer.email,
+    email: paymentLinkCustomer.email,
     phone: {
       countryCode: countryCallingCode,
       areaCode: '11',
@@ -144,21 +144,21 @@ export const mappingCheckoutFields = ({ customer, contact, checkout }) => {
     birthday: contact.Date_of_Birth,
     taxId: {
       type: 'CUIT',
-      value: '20' + contact.DNI + '9',
+      value: '20' + paymentLinkCustomer.personalId + '9',
     },
     personalId: {
       type: 'DNI',
-      value: contact.DNI,
+      value: paymentLinkCustomer.personalId,
     },
     address: {
       street: street.join(' '),
       number: number,
       floor: '0',
       apt: '0',
-      city: formikValues.country,
-      state: formikValues.country,
-      zipCode: customer.zip,
-      country: formikValues.country,
+      city: checkout.country,
+      state: checkout.country,
+      zipCode: paymentLinkCustomer.zip,
+      country: checkout.country,
       description: '-',
     },
   };

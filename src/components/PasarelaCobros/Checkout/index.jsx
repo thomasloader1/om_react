@@ -1,82 +1,67 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { useLocation, useParams } from 'react-router';
 import axios from 'axios';
-import { fireToast } from '../Hooks/useSwal';
+import { fireToast, fireAlert } from '../Hooks/useSwal';
 import { URLS, getPlanPrice, mappingCheckoutFields } from '../Hooks/useRebill';
-import { parsePhoneNumber } from "react-phone-number-input";
-import { AppContext } from '../Provider/StateProvider';
 import { useContractZoho } from '../Hooks/useContractZoho';
-import { useFormik } from 'formik';
-import * as Yup from 'yup'
+import MotionSpinner from '../Spinner/MotionSpinner';
+import mpImg from '../../../img/pasarelaCobros/metPago/mp.svg'
+import stripeImg from '../../../img/pasarelaCobros/metPago/stripe.svg'
 const { logo } = IMAGES
 
 const Checkout = () => {
-    const { contractData, userInfo } = useContext(AppContext);
     const [checkoutPayment, setCheckoutPayment] = useState(null)
+    const [products, setProducts] = useState(null)
     const [customer, setCustomer] = useState(null)
-    const { contact, sale } = contractData;
+    const [sale, setSale] = useState(null)
+    const [contact, setContact] = useState(null)
+    const [ticketData, setTicketData] = useState({})
+
     const { so } = useParams();
     const { pathname } = useLocation();
-    //const [loading, setLoading] = useState(false);
+
     const needRunEffect = !pathname.includes('vp');
+    const { loading, data: contractData } = useContractZoho(so, needRunEffect);
 
-    const { loading, data } = useContractZoho(so, needRunEffect);
-    const handleSubmit = () => {
-
-    }
-
-    const validationSchema = Yup.object().shape({
-        fullName: Yup.string().required('Campo requerido'),
-        phone: Yup.string().required('Campo requerido'),
-        address: Yup.string().required('Campo requerido'),
-        dni: Yup.number().required('Campo requerido'),
-        email: Yup.string().email('Correo electrónico no válido').required('Campo requerido'),
-    });
+    const currencyOptions = {
+        style: 'currency',
+        currency: 'MXN',
+    };
 
 
-    const formik = useFormik({
-        initialValues: {
-            fullName: contact?.Full_Name || '',
-            phone: '',
-            address: '',
-            dni: contact?.DNI || '',
-            email: contact?.Email || '',
-            zip: '',
-        },
-        validationSchema: validationSchema,
-        onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
-            return false
-        },
-    });
-
-    const [fullName, setFullName] = useState(formik.values.fullName);
-    const [dni, setDni] = useState(formik.values.dni);
-    const [address, setAddress] = useState(formik.values.address);
-    const [zipCode, setZipCode] = useState(formik.values.zip);
-    const [phoneNumber, setPhoneNumber] = useState(formik.values.phoneNumber);
-
+    const isTraditional = checkoutPayment?.type?.includes('Tradicional');
+    const totalMonths = isTraditional ? 1 : Number(checkoutPayment?.quotes);
+    const payPerMonth = isTraditional ? sale?.Grand_Total : Math.round(sale?.Grand_Total / totalMonths);
+    const formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(payPerMonth);
+    const isStripe = checkoutPayment?.gateway?.includes('Stripe')
     useEffect(() => {
 
-        if (loading) {
+        if (!loading) {
             async function fetchPaymentLink() {
                 const { data } = await axios.get(`/api/rebill/getPaymentLink/${so}`);
-                initRebill(data)
                 setCheckoutPayment(data.checkout)
                 setCustomer(data.customer)
-                //   console.log({ response })
+                setSale(contractData.sale)
+                setContact(contractData.contact)
+                setProducts(contractData.products)
+                const mergedData = { paymentLinkData: { ...data }, ZohoData: { ...contractData } }
+                setTicketData(mergedData)
+
+                initRebill(mergedData)
             }
             fetchPaymentLink()
         }
-        console.log(contractData)
-    }, [loading])
+        console.log({ checkoutPayment, sale, contact, customer })
+
+    }, [contractData])
 
 
 
     function initRebill(paymentLink) {
-        console.log({ paymentLink })
-        const { checkout, customer } = paymentLink
+        const { paymentLinkData, ZohoData } = paymentLink
+        const { checkout, customer: paymentLinkCustomer } = paymentLinkData;
+        const { contact, sale } = ZohoData
 
         const initialization = {
             organization_id: '679d8e12-e0ad-4052-bc9e-eb78f956ce7e' /* your organization ID */,
@@ -85,8 +70,9 @@ const Checkout = () => {
         };
 
         const RebillSDKCheckout = new window.Rebill.PhantomSDK(initialization);
-
-        const customerRebill = mappingCheckoutFields({ customer, contact, checkout });
+        console.log("Estamos con RebillSDKCheckout: ",RebillSDKCheckout);
+        console.log({ paymentLinkCustomer })
+        const customerRebill = mappingCheckoutFields({ paymentLinkCustomer, contact, checkout });
         console.log({ customerRebill })
         //Seteo de customer
         RebillSDKCheckout.setCustomer(customerRebill);
@@ -94,14 +80,15 @@ const Checkout = () => {
         //Seteo de identidicacion del customer
         RebillSDKCheckout.setCardHolder({
             name: contact.Full_Name,
-            /*  identification: {
-                 type: 'DNI',
-                 value: contact.DNI,
-             }, */
+            identification: {
+                type: 'DNI',
+                value: paymentLinkCustomer.personalId,
+            },
         });
 
         //Seteo de plan para cobrar
-        const { id, quantity } = getPlanPrice(formikValues, sale)
+        const formValues = { payment_method: checkout.gateway, quotes: checkout.quotes }
+        const { id, quantity } = getPlanPrice(formValues, sale)
         RebillSDKCheckout
             .setTransaction({
                 prices: [
@@ -113,31 +100,34 @@ const Checkout = () => {
             }).then((price_setting) => console.log(price_setting));
 
         //Seteo de callbacks en saco de que el pago este correcto o tengo algun fallo
-        const { UPDATE_CONTRACT } = URLS
-        RebillSDKCheckout.setCallbacks({
-            onSuccess: (response) => {
-                console.log(response)
-                try {
+        const { UPDATE_CONTRACT, MP } = URLS;
+        console.log({checkout,UPDATE_CONTRACT,MP});
+
+        const handleSuccessRebillSDKCheckout = (response) => {
+
                     const { invoice, faliedTransaction, pendingTransaction } = response
                     const { paidBags, buyer } = invoice
                     const { payment } = paidBags[0]
                     const { customer } = buyer
+                    console.log('response contacto 2:',{response2: customer})
 
+                    const QUOTES = checkout.quotes ? Number(checkout.quotes) : 1
                     const postUpdateZohoStripe = {
-                        installments: formikValues.quotes && 1,
+                        installments: QUOTES,
                         email: customer.userEmail,
                         amount: payment.amount,
-                        contractId: formikValues.contractId,
+                        contractId: checkout.contract_entity_id,
                         subscriptionId: payment.id,
                         installment_amount: payment.amount,
-                        address: formsValues.address,
-                        dni: customer.personalIdNumber,
-                        phone: formAttributes.phone,
+                        address: paymentLinkCustomer.address,
+                        dni: paymentLinkCustomer.personalId,
+                        phone: paymentLinkCustomer.phone,
                         fullname: customer.firstName + " " + customer.lastName,
-                        is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
+                        is_suscri: checkout.type.includes('Tradicional'),
                     }
 
-                    axios.post(UPDATE_CONTRACT, postUpdateZohoStripe)
+                    const URL = checkout.type.includes('Stripe') ? UPDATE_CONTRACT : MP
+                    axios.post(URL, postUpdateZohoStripe)
                         .then((res) => {
                             console.log({ res });
                             fireToast('Contrato actualizado', 'success', 5000);
@@ -149,11 +139,15 @@ const Checkout = () => {
                         .finally((res) => {
                             console.log({ res });
                         });
+        };
+
+        RebillSDKCheckout.setCallbacks({
+            onSuccess: (response) => {
+                try {
+                    handleSuccessRebillSDKCheckout(response);
                 } catch (error) {
                     console.error({ error })
                 }
-
-
             },
             onError: (error) => {
                 console.error(error)
@@ -200,99 +194,52 @@ const Checkout = () => {
     }
 
     return (
-        <main className='grid-checkout container'>
-            <header className={`is-max-widescreen py-5`}>
-                <nav class="navbar" role="navigation" aria-label="main navigation">
-                    <div class="navbar-brand">
-                        <a class="navbar-item" href="https://bulma.io">
-                            <img src={logo} alt="MSK Logo" width="130" height="80" />
-                        </a>
+        <>
+            {loading ? <MotionSpinner /> : <main className='grid-checkout container'>
+                <header className={`is-max-widescreen py-5`}>
+                    <nav className="navbar is-justify-content-space-between" role="navigation" aria-label="main navigation">
+                        <div className="navbar-brand">
+                            <a className="navbar-item">
+                                <img src={logo} alt="MSK Logo" width="130" height="80" />
+                            </a>
+                        </div>
+                        <div className="nav-item">
+                            <p className='my-auto ml-auto pr-4'>Pagos procesados con <img src={isStripe ? stripeImg : mpImg} alt="" className='is-block mt-2 mx-auto' /></p>
+                        </div>
+                    </nav>
+                </header>
+                <section className="container">
+                    <div className="columns">
+                        <div className="column">
+                            <div className="card my-4">
+                                <div className="card-content has-text-centered">
+                                    <h1 className="title is-1  has-text-weight-bold">{checkoutPayment?.type}</h1>
+                                    <p>{totalMonths} pagos de:</p>
+                                    <h3 className='title is-3'>{formattedAmount}</h3>
+                                </div>
+                                <hr className='is-divider' />
+                                <div className="card-content">
+                                    <h3 className='is-4 has-text-weight-bold'>Detalle de la suscripcion</h3>
+                                    <ul>
+                                        {products?.map(p => <li key={p.id}>x{p.quantity} {p.name} {p.price}</li>)}
+                                    </ul>
 
-                    </div>
-                </nav>
-            </header>
-            <section >
-
-                <form id="cardCheckout" className="card_checkout" onSubmit={handleSubmit}>
-
-                    <div className="card_checkout__body">
-                        <div className="field">
-                            <label htmlFor="fullName" className="label">Nombre completo:</label>
-                            <div className="control">
-                                <input
-                                    id="fullName"
-                                    type="text"
-                                    className="input"
-                                    value={fullName}
-                                    onChange={(event) => setFullName(event.target.value)}
-                                />
+                                </div>
                             </div>
                         </div>
-
-                        <div className="field">
-                            <label htmlFor="dni" className="label">DNI:</label>
-                            <div className="control">
-                                <input
-                                    id="dni"
-                                    type="text"
-                                    className="input"
-                                    value={dni}
-                                    onChange={(event) => setDni(event.target.value)}
-                                />
+                        <div class="column">
+                            <div class="mx-auto p-4 is-fullheight">
+                                <div id="rebill_elements" class="mt-5 is-flex is-justify-content-center is-align-items-center"></div>
                             </div>
-                        </div>
-
-                        <div className="field">
-                            <label htmlFor="address" className="label">Dirección:</label>
-                            <div className="control">
-                                <input
-                                    id="address"
-                                    type="text"
-                                    className="input"
-                                    value={address}
-                                    onChange={(event) => setAddress(event.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="field">
-                            <label htmlFor="zipCode" className="label">Código postal:</label>
-                            <div className="control">
-                                <input
-                                    id="zipCode"
-                                    type="text"
-                                    className="input"
-                                    value={zipCode}
-                                    onChange={(event) => setZipCode(event.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="field">
-                            <label htmlFor="phoneNumber" className="label">Número de teléfono:</label>
-                            <div className="control">
-                                <input
-                                    id="phoneNumber"
-                                    type="text"
-                                    className="input"
-                                    value={phoneNumber}
-                                    onChange={(event) => setPhoneNumber(event.target.value)}
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="card_checkout__footer">
-                        <div className='field mt-2'>
-                            <div id='rebill_elements'></div>
                         </div>
 
                     </div>
-                </form>
+                    {/* <pre>{JSON.stringify(ticketData, null, 2)}</pre> */}
+                </section>
 
+            </main>}
+        </>
 
-            </section>
-        </main>
     )
 }
 

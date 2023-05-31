@@ -1,10 +1,32 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { AppContext } from '../PasarelaCobros/Provider/StateProvider'
+import { MdContentCopy } from 'react-icons/md'
+
+const { NODE_ENV, REACT_APP_URL_PRD, REACT_APP_URL_LOCAL } = process.env
+
+const URL = NODE_ENV === 'production' ? REACT_APP_URL_PRD : REACT_APP_URL_LOCAL
 
 const BlockLayer = () => {
     const { openBlockLayer, rebillFetching } = useContext(AppContext)
+    const [cardTitle, setCardTitle] = useState('');
     const { loading, ...rest } = rebillFetching
+
+    useEffect(() => {
+        const title = rebillFetching.type === 'paymentLink' ? 'Link Generado' : 'Pago Realizado';
+        setCardTitle(title)
+    }, [rebillFetching.type])
+
+    const handleCopyLink = (text) => {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+            })
+            .catch((error) => {
+                console.log('Error al copiar al portapapeles:', error);
+            });
+    };
+
+
     console.log({ openBlockLayer, rebillFetching })
     return (
         <>
@@ -32,14 +54,28 @@ const BlockLayer = () => {
                             transition={{ ease: 'easeOut', duration: 0.5 }}
                         >
                             <motion.h2 className='title is-2 has-text-success my-5'>
-                                Pago realizado!
+                                {cardTitle}
                             </motion.h2>
-                            <a
+                            {rebillFetching.type === "paymentLink" ? (<div className='is-flex is-fullwidth'>
+                                <button
+                                    className='button is-primary has-text-weight-bold'
+                                    onClick={() => handleCopyLink(`${URL}/#/checkout/${rest.payment.contract_entity_id}`)}
+                                >
+                                    Copiar Link <MdContentCopy className='ml-2' />
+                                </button>
+                                <a
+                                    href='https://crm.zoho.com/crm/org631172874/tab/SalesOrders'
+                                    className='button is-primary is-outlined has-text-weight-bold'
+                                >
+                                    Generar nuevo pago
+                                </a>
+                            </div>) : (<a
                                 href='https://crm.zoho.com/crm/org631172874/tab/SalesOrders'
                                 className='button is-success'
                             >
                                 Cobrar otro contrato
-                            </a>
+                            </a>)}
+
                         </motion.div>
                     )}
                 </>

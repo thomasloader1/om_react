@@ -332,5 +332,3 @@ const RebillCheckoutForm = () => {
     </>
   );
 };
-
-export default RebillCheckoutForm;
