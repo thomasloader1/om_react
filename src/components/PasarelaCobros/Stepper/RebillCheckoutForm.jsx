@@ -63,13 +63,13 @@ const RebillCheckoutForm = () => {
         return () => setShowRebill(false)
     }, [completedInputs])
 
-    const objectPostUpdateZoho = ({formikValues,customer,sale,payment,formsValues,subscriptionId,formAttributes,userInfo,dni}) => {
-        console.log('zohoupdate',{formikValues});
-        const {advanceSuscription} = formikValues;
-        
+    const objectPostUpdateZoho = ({ formikValues, customer, sale, payment, formsValues, subscriptionId, formAttributes, userInfo, dni }) => {
+        console.log('zohoupdate', { formikValues });
+        const { advanceSuscription } = formikValues;
+
         let postUpdateZoho; // Declarar la variable fuera del condicional
-        console.log("step",{valor:userInfo.stepThree.value});
-        if(!advanceSuscription.isAdvanceSuscription){
+        console.log("step", { valor: userInfo.stepThree.value });
+        if (!advanceSuscription.isAdvanceSuscription) {
             // console.log("no es anticipo");
             postUpdateZoho = {
                 installments: formikValues.quotes,
@@ -85,7 +85,7 @@ const RebillCheckoutForm = () => {
                 is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
                 is_advanceSuscription: userInfo.stepThree.value.includes('Suscripción con anticipo'),
             }
-        }else{ 
+        } else {
             // console.log("es anticipo");
             postUpdateZoho = {
                 installments: formikValues.quotes,//5 quotesAdvance
@@ -104,7 +104,7 @@ const RebillCheckoutForm = () => {
             }
             //no hace falta mandar el remainingAmountToPay,quotesAdvance
         }
-        
+
         return postUpdateZoho;
     };
     const handleGenerateLink = async (event) => {
@@ -137,6 +137,11 @@ const RebillCheckoutForm = () => {
             console.log({ e })
         }
     }
+
+    const handleUpdateSuscriptionRebill = (subscriptionId) => {
+
+    }
+
     const handlePayNow = (event) => {
         setShowRebill(true)
     }
@@ -219,9 +224,9 @@ const RebillCheckoutForm = () => {
 
                     const dni = customer.personalIdNumber !== "" ? customer.personalIdNumber : formAttributes.dni
 
-                    const paramsFunction = {formikValues,customer,sale,payment,formsValues,subscriptionId,formAttributes,userInfo,dni}
-                   const postUpdateZoho = objectPostUpdateZoho(paramsFunction);
-                    console.log('zohoupdate2',{formikValues,postUpdateZoho});
+                    const paramsFunction = { formikValues, customer, sale, payment, formsValues, subscriptionId, formAttributes, userInfo, dni }
+                    const postUpdateZoho = objectPostUpdateZoho(paramsFunction);
+                    console.log('zohoupdate2', { formikValues, postUpdateZoho });
 
                     // const postUpdateZoho = {
                     //     installments: formikValues.quotes,//5 quotesAdvance
@@ -242,7 +247,7 @@ const RebillCheckoutForm = () => {
                     fireModalAlert("Pago Realizado", '', 'success');
 
                 } catch (error) {
-                    console.log("error",error);
+                    console.log("error", error);
                     fireModalAlert('Pago Fallido', error)
                 }
 
