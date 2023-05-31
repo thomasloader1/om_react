@@ -53,26 +53,24 @@ function ResumeTicket() {
   const payPerMonth = isTraditional ? sale?.Grand_Total : Math.round(sale?.Grand_Total / formikValues.quotes);
   const formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(payPerMonth);
 
-  const firstQuoteDiscount = Math.round((sale?.Grand_Total / formikValues.quotes)/ 2);
+  const firstQuoteDiscount = Math.round((sale?.Grand_Total / formikValues.quotes) / 2);
   const remainingAmountToPay = Math.round(sale?.Grand_Total - firstQuoteDiscount);
-  
+
   const newQuotes = (formikValues.quotes - 1);
   const payPerMonthAdvance = Math.round(remainingAmountToPay / newQuotes);
- 
+
   console.log('Datos del contrato: ', {
-    advance:{
+    advance: {
       isAdvanceSuscription,
       remainingAmountToPay,
       firstQuoteDiscount,
       payPerMonthAdvance,
       quotesAdvance: (formikValues.quotes - 1)
     },
-    MONTO_A_PAGAR_POR_MES:formattedAmount,
+    MONTO_A_PAGAR_POR_MES: formattedAmount,
     MONTO_TOTAL_DEL_CONTRATO: sale.Grand_Total,
   });
 
-  // MONTO_A_PAGAR_POR_MES
-  // MONTO_TOTAL_DEL_CONTRATO
 
   return (
     <>
@@ -107,15 +105,15 @@ function ResumeTicket() {
             </div>
 
             {isAdvanceSuscription && (
-            <div id='montoAnticipo_resume' className='column is-one-third finalResume-item'>
-              <label>{ isAdvanceSuscription? "Monto a pagar de anticipo" : "monto a pagar POR MES" }</label>
-              <h4>{ firstQuoteDiscount }</h4>
-            </div>
+              <div id='montoAnticipo_resume' className='column is-one-third finalResume-item'>
+                <label>{isAdvanceSuscription ? "Monto a pagar de anticipo" : "monto a pagar POR MES"}</label>
+                <h4>{firstQuoteDiscount}</h4>
+              </div>
             )}
-            
+
             <div id='montoCuotaMes_resume' className='column is-one-third finalResume-item'>
               <label>Monto a pagar por mes</label>
-              <h4>{ isAdvanceSuscription ? payPerMonthAdvance : payPerMonth }</h4>
+              <h4>{isAdvanceSuscription ? payPerMonthAdvance : payPerMonth}</h4>
             </div>
 
             <div id='monto_resume' className='column is-one-third finalResume-item'>
@@ -177,12 +175,12 @@ function ResumeTicket() {
                     contact,
                     products,
                     advanceSuscription: {
-                        isAdvanceSuscription,
-                        remainingAmountToPay,
-                        firstQuoteDiscount,
-                        payPerMonthAdvance,
-                        quotesAdvance: (formikValues.quotes - 1)
-                      }
+                      isAdvanceSuscription,
+                      remainingAmountToPay,
+                      firstQuoteDiscount,
+                      payPerMonthAdvance,
+                      quotesAdvance: (formikValues.quotes - 1)
+                    }
                   });
                 }}
               />
