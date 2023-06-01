@@ -138,10 +138,6 @@ const RebillCheckoutForm = () => {
         }
     }
 
-    const handleUpdateSuscriptionRebill = (subscriptionId) => {
-
-    }
-
     const handlePayNow = (event) => {
         setShowRebill(true)
     }
@@ -211,6 +207,7 @@ const RebillCheckoutForm = () => {
                     setRebillFetching({ loading: false, ...response })
                     setOpenBlockLayer(true)
                     const { invoice, faliedTransaction, pendingTransaction } = response
+                    console.log("Response Pagar aqui: ", response);
 
                     if (faliedTransaction != null) {
                         const { errorMessage } = faliedTransaction.paidBags[0].payment
@@ -226,6 +223,7 @@ const RebillCheckoutForm = () => {
 
                     const paramsFunction = { formikValues, customer, sale, payment, formsValues, subscriptionId, formAttributes, userInfo, dni }
                     const postUpdateZoho = objectPostUpdateZoho(paramsFunction);
+                    
                     console.log('zohoupdate2', { formikValues, postUpdateZoho });
 
                     // const postUpdateZoho = {
