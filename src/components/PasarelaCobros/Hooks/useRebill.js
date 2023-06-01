@@ -50,36 +50,34 @@ export const REBILL_CONF = {
 };
 
 export const getPlanPrice = (formikValues, sale) => {
-  const gateway = formikValues.payment_method;
+  const { payment_method, advanceSuscription } = formikValues;
+  const gateway = payment_method;
   const isStripe = gateway.includes('Stripe');
   const quotes = Number(formikValues.quotes);
-
-  console.log(Number(Math.round(sale.Grand_Total / formikValues.quotes)), {
-    quotes,
-    total: sale.Grand_Total,
-    formikValues,
-  });
+  const priceQuantity = advanceSuscription.isAdvanceSuscription
+    ? advanceSuscription.payPerMonthAdvance
+    : Number(Math.round(sale.Grand_Total / quotes));
 
   switch (quotes) {
     case 3:
       return {
         id: isStripe ? REACT_APP_REBILL_STRIPE_3 : REACT_APP_REBILL_MP_TEST_3,
-        quantity: Number(Math.round(sale.Grand_Total / quotes)),
+        quantity: priceQuantity,
       };
     case 6:
       return {
         id: isStripe ? REACT_APP_REBILL_STRIPE_6 : REACT_APP_REBILL_MP_TEST_6,
-        quantity: Number(Math.round(sale.Grand_Total / quotes)),
+        quantity: priceQuantity,
       };
     case 9:
       return {
         id: isStripe ? REACT_APP_REBILL_STRIPE_9 : REACT_APP_REBILL_MP_TEST_9,
-        quantity: Number(Math.round(sale.Grand_Total / quotes)),
+        quantity: priceQuantity,
       };
     case 12:
       return {
         id: isStripe ? REACT_APP_REBILL_STRIPE_12 : REACT_APP_REBILL_MP_TEST_12,
-        quantity: Number(Math.round(sale.Grand_Total / quotes)),
+        quantity: priceQuantity,
       };
     default:
       return {

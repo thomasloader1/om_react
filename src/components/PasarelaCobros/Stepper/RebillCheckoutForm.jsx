@@ -22,7 +22,7 @@ const RebillCheckoutForm = () => {
   const [showRebill, setShowRebill] = useState(false);
   const { id } = useParams();
   const { values, handleChange, handleBlur, touched, errors, ...formik } = useFormikContext();
-  console.log({ contact, sale, values });
+
   const handlePhoneInputChange = (value) => {
     /* console.log(value, typeof value)
         if (typeof value !== 'undefined') {
@@ -96,6 +96,64 @@ const RebillCheckoutForm = () => {
   };
   const handlePayNow = (event) => {
     setShowRebill(true);
+  };
+  const objectPostUpdateZoho = ({
+    formikValues,
+    customer,
+    sale,
+    payment,
+    formsValues,
+    subscriptionId,
+    formAttributes,
+    userInfo,
+    dni,
+  }) => {
+    console.log('zohoupdate', { formikValues });
+    const { advanceSuscription } = formikValues;
+    let postUpdateZoho; // Declarar la variable fuera del condicional
+    console.log('step', { valor: userInfo.stepThree.value });
+    if (!advanceSuscription.isAdvanceSuscription) {
+      // console.log("no es anticipo");
+      postUpdateZoho = {
+        installments: formikValues.quotes,
+        email: customer.userEmail,
+        amount: sale.Grand_Total,
+        contractId: formikValues.contractId,
+        subscriptionId,
+        installment_amount: payment.amount,
+        address: formsValues.address,
+        dni,
+        phone: formAttributes.phone,
+        fullname: customer.firstName + ' ' + customer.lastName,
+        is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
+        is_advanceSuscription: userInfo.stepThree.value.includes('Suscripción con anticipo'),
+      };
+    } else {
+      // console.log("es anticipo");
+      postUpdateZoho = {
+        installments: formikValues.quotes, //5 quotesAdvance
+        email: customer.userEmail,
+        amount: sale.Grand_Total,
+        contractId: formikValues.contractId,
+        subscriptionId,
+        installment_amount: advanceSuscription.firstQuoteDiscount, //
+        payPerMonthAdvance: advanceSuscription.payPerMonthAdvance,
+        address: formsValues.address,
+        dni,
+        phone: formAttributes.phone,
+        fullname: customer.firstName + ' ' + customer.lastName,
+        is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
+        is_advanceSuscription: userInfo.stepThree.value.includes('Suscripción con anticipo'),
+      };
+      //no hace falta mandar el remainingAmountToPay,quotesAdvance
+    }
+    return postUpdateZoho;
+  };
+  const handleSuscriptionUpdate = async (subscriptionId, advancedSuscription) => {
+    const URL = `https://api.rebill.to/v2/subscriptions/${subscriptionId}`;
+    const { remainingAmountToPay } = advancedSuscription;
+    const response = await axios.put(URL, { amount: remainingAmountToPay });
+    console.log({ response });
   };
 
   const handleRequestGateway = (data, gateway) => {
@@ -175,22 +233,20 @@ const RebillCheckoutForm = () => {
 
           const dni =
             customer.personalIdNumber !== '' ? customer.personalIdNumber : formAttributes.dni;
-
-          const postUpdateZoho = {
-            installments: formikValues.quotes,
-            email: customer.userEmail,
-            amount: sale.Grand_Total,
-            contractId: formikValues.contractId,
+          const paramsFunction = {
+            formikValues,
+            customer,
+            sale,
+            payment,
+            formsValues,
             subscriptionId,
-            installment_amount: payment.amount,
-            address: formsValues.address,
+            formAttributes,
+            userInfo,
             dni,
-            phone: formAttributes.phone,
-            fullname: customer.firstName + ' ' + customer.lastName,
-            is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
           };
+          const postUpdateZoho = objectPostUpdateZoho(paramsFunction);
           const gateway = userInfo.stepTwo.value;
-          handleSuscriptionUpdate();
+          handleSuscriptionUpdate(subscriptionId, formikValues.advanceSuscription);
           handleRequestGateway(postUpdateZoho, gateway);
           fireModalAlert('Pago Realizado', '', 'success');
         } catch (error) {
