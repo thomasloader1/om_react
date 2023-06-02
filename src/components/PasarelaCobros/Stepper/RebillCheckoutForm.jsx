@@ -151,8 +151,12 @@ const RebillCheckoutForm = () => {
   };
   const handleSuscriptionUpdate = async (subscriptionId, advancedSuscription) => {
     const URL = `https://api.rebill.to/v2/subscriptions/${subscriptionId}`;
+    const headers = {
+      Authorization: `Bearer ${REBILL_CONF.TOKEN}`,
+      'Content-Type': 'application/json'
+    };
     const { remainingAmountToPay } = advancedSuscription;
-    const response = await axios.put(URL, { amount: remainingAmountToPay });
+    const response = await axios.put(URL, { amount: remainingAmountToPay.toString() }, { headers });
     console.log({ response });
   };
 

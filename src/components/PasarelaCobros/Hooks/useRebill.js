@@ -27,6 +27,7 @@ const {
   REACT_APP_REBILL_ORG_ID,
   REACT_APP_REBILL_API_KEY,
   REACT_APP_REBILL_API_URL,
+  REACT_APP_REBILL_TOKEN
 } = process.env;
 
 const itsProduction = NODE_ENV === 'production';
@@ -47,6 +48,7 @@ export const REBILL_CONF = {
   ORG_ID: REACT_APP_REBILL_ORG_ID,
   API_KEY: REACT_APP_REBILL_API_KEY,
   URL: REACT_APP_REBILL_API_URL,
+  TOKEN: REACT_APP_REBILL_TOKEN
 };
 
 export const getPlanPrice = (formikValues, sale) => {
@@ -57,7 +59,7 @@ export const getPlanPrice = (formikValues, sale) => {
   const quotes = Number(formikValues.quotes);
   
   const priceQuantity = advanceSuscription.isAdvanceSuscription
-    ? advanceSuscription.payPerMonthAdvance
+    ? advanceSuscription.firstQuoteDiscount
     : Number(Math.round(sale.Grand_Total / quotes));
 
   console.log("getPlanPrice", priceQuantity);
