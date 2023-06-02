@@ -17,6 +17,7 @@ const Checkout = () => {
     const [sale, setSale] = useState(null)
     const [contact, setContact] = useState(null)
     const [ticketData, setTicketData] = useState({})
+    const [advancePayment, setAdvancePayment] = useState({});
 
     const { so } = useParams();
     const { pathname } = useLocation();
@@ -28,7 +29,8 @@ const Checkout = () => {
         style: 'currency',
         currency: 'MXN',
     };
-    const objectPostUpdateZoho = ({ isAdvanceSuscription,advanceSuscription,QUOTES,customer,payment, paymentLinkCustomer,checkout }) => {
+
+    const objectPostUpdateZoho = ({ isAdvanceSuscription, advanceSuscription, QUOTES, customer, payment, paymentLinkCustomer, checkout, sale }) => {
         // console.log('zohoupdate', {isAdvanceSuscription,advanceSuscription,QUOTES,customer,payment, paymentLinkCustomer,checkout});
 
         let postUpdateZoho; // Declarar la variable fuera del condicional
@@ -71,30 +73,55 @@ const Checkout = () => {
 
         return postUpdateZoho;
     };
-    const valuesAdvanceSuscription = ({total,quotes}) => {
 
+    const valuesAdvanceSuscription = ({ total, checkoutPayment }) => {
+        const { quotes, type } = checkoutPayment;
+
+        const isAdvanceSuscription = type.includes('Suscripción con anticipo');
         const quoteForMonth = Math.round(total / quotes);
-        const remainingQuotes = quotes === 1 ? 1 : quotes-1;
-        
+        const remainingQuotes = quotes === 1 ? 1 : quotes - 1;
+
         const firstQuoteDiscount = Math.round(quoteForMonth / 2);
         const remainingAmountToPay = total - firstQuoteDiscount;
         const payPerMonthAdvance = Math.round(remainingAmountToPay / remainingQuotes);
 
         return {
-            quoteForMonth,remainingQuotes,firstQuoteDiscount,remainingAmountToPay,payPerMonthAdvance 
+            quoteForMonth,
+            remainingQuotes,
+            firstQuoteDiscount,
+            remainingAmountToPay,
+            payPerMonthAdvance,
+            isAdvanceSuscription
         }
     };
 
-    const isAdvanceSuscription = checkoutPayment?.type.includes('Suscripción con anticipo');
-    const isTraditional = checkoutPayment?.type?.includes('Tradicional');
-    
-    const advanceSuscription = valuesAdvanceSuscription({total: sale?.Grand_Total,quotes: checkoutPayment?.quotes});
-    // console.log("datos de suscription con anticipo", advanceSuscription);
+    const handleCheckoutData = (checkoutPayment, advanceSuscription) => {
 
-    const totalMonths = isTraditional ? 1 : Number(checkoutPayment?.quotes);
-    const payPerMonth = isTraditional ?
-        sale?.Grand_Total : Math.round(sale?.Grand_Total / totalMonths);
-    const formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(payPerMonth);
+        let auxResume = {
+            totalMonths: 0,
+            payPerMonth: 0,
+            formattedAmount: 0,
+            isTraditional: false
+        };
+
+        if (advanceSuscription.isAdvanceSuscription) {
+            const isTraditional = false;
+            auxResume.totalMonths = Number(checkoutPayment?.quotes);
+            auxResume.payPerMonth = advanceSuscription.firstQuoteDiscount;
+            auxResume.formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(auxResume.payPerMonth);
+        } else {
+            const isTraditional = checkoutPayment?.type?.includes('Tradicional');
+
+            auxResume.totalMonths = isTraditional ? 1 : Number(checkoutPayment?.quotes);
+            auxResume.payPerMonth = isTraditional ? sale?.Grand_Total : Math.round(sale?.Grand_Total / auxResume.totalMonths);
+            auxResume.formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(auxResume.payPerMonth);
+        }
+        
+        return auxResume;
+    };
+
+    //const advanceSuscription = valuesAdvanceSuscription({ total: sale?.Grand_Total, checkoutPayment });
+    const { totalMonths, payPerMonth, formattedAmount, isTraditional } = handleCheckoutData(checkoutPayment, advancePayment);
 
     const isStripe = checkoutPayment?.gateway?.includes('Stripe')
     useEffect(() => {
@@ -103,27 +130,34 @@ const Checkout = () => {
             async function fetchPaymentLink() {
                 const { data } = await axios.get(`/api/rebill/getPaymentLink/${so}`);
                 // console.log("useEffect-> rebill get paymentlink", { data, contractData });
-                setCheckoutPayment(data.checkout)
-                setCustomer(data.customer)
-                setSale(contractData.sale)
-                setContact(contractData.contact)
-                setProducts(contractData.products)
-                const mergedData = { paymentLinkData: { ...data }, ZohoData: { ...contractData } }
-                setTicketData(mergedData)
+                setCheckoutPayment(data.checkout);
+                setCustomer(data.customer);
+                setSale(contractData.sale);
+                setContact(contractData.contact);
+                setProducts(contractData.products);
+                
+                const advanceSuscription = valuesAdvanceSuscription({ total: contractData.sale?.Grand_Total, checkoutPayment: data.checkout });
+                console.log("advanceSuscriptionData",advanceSuscription);
+                setAdvancePayment(advanceSuscription);
+                
+                const mergedData = { paymentLinkData: { ...data }, ZohoData: { ...contractData }, advanceSuscription ,isAdvanceSuscription: data.checkout.type.includes('Suscripción con anticipo') };
+                setTicketData(mergedData);
 
-                initRebill(mergedData,isAdvanceSuscription)
+                initRebill(mergedData);
             }
-            fetchPaymentLink()
+            fetchPaymentLink();
         }
         // console.log({ checkoutPayment, sale, contact, customer })
 
     }, [contractData])
 
     function initRebill(paymentLink) {
-        const { paymentLinkData, ZohoData } = paymentLink;
+        const { paymentLinkData, ZohoData, advanceSuscription } = paymentLink;
         const { checkout, customer: paymentLinkCustomer } = paymentLinkData;
         const { contact, sale } = ZohoData
-        console.log("Aca te dice si es anticipo: ", checkoutPayment?.type.includes('Suscripción con anticipo'));
+        // console.log("checkout: ", checkout);
+        //const advanceSuscription = valuesAdvanceSuscription({total: sale?.Grand_Total,quotes: checkout?.quotes});
+
         const initialization = {
             organization_id: '679d8e12-e0ad-4052-bc9e-eb78f956ce7e' /* your organization ID */,
             api_key: 'bc7d4abf-3a94-4f53-b414-887356b51e0c' /* your API_KEY */,
@@ -148,26 +182,30 @@ const Checkout = () => {
         });
 
         //Seteo de plan para cobrar
-        const formValues = { payment_method: checkout.gateway, advanceSuscription: {}, quotes: checkout.quotes }
-        const { id, quantity } = getPlanPrice(formValues, sale)
+        const formValues = { payment_method: checkout.gateway, advanceSuscription, quotes: checkout.quotes }
+        console.log("datos: ", {
+            estadoSucription: advanceSuscription,
+            bandera: paymentLink
+        });
+        const { id, quantity } = getPlanPrice(formValues, sale,)
         RebillSDKCheckout.setTransaction({
-                prices: [
-                    {
-                        id,
-                        quantity,
-                    },
-                ],
-            }).then((price_setting) => console.log(price_setting));
+            prices: [
+                {
+                    id,
+                    quantity,
+                },
+            ],
+        }).then((price_setting) => console.log(price_setting));
 
-            //Seteo de callbacks en saco de que el pago este correcto o tengo algun fallo
-            const { UPDATE_CONTRACT, MP } = URLS;
-            // console.log({checkout,UPDATE_CONTRACT,MP});
+        //Seteo de callbacks en saco de que el pago este correcto o tengo algun fallo
+        const { UPDATE_CONTRACT, MP } = URLS;
+        // console.log({checkout,UPDATE_CONTRACT,MP});
 
-        const handleSuccessRebillSDKCheckout = (response, isAdvanceSuscription) => {
-            console.log("Response Generar Link: ", response);
+        const handleSuccessRebillSDKCheckout = (response) => {
+            // console.log("Response Generar Link: ", response);
 
             const { invoice, faliedTransaction, pendingTransaction } = response
-             
+
             if (faliedTransaction != null) {
                 const { errorMessage } = faliedTransaction.paidBags[0].payment;
                 throw new Error(`${errorMessage}`);
@@ -175,33 +213,19 @@ const Checkout = () => {
                 // setRebillFetching({ loading: false, ...response });
                 // setOpenBlockLayer(true);
             }
-            
+
             const { paidBags, buyer } = invoice
             const { payment } = paidBags[0]
             const { customer } = buyer
             // console.log('response contacto 2:',{ response2: customer });
 
             const QUOTES = checkout.quotes ? Number(checkout.quotes) : 1
-            console.log("sale: ", sale);
-            const advanceSuscription = valuesAdvanceSuscription({total: sale?.Grand_Total,quotes: checkoutPayment?.quotes});
-            const postUpdateZohoStripe = objectPostUpdateZoho({isAdvanceSuscription,advanceSuscription,QUOTES,customer,payment, paymentLinkCustomer,checkout });
-
-            // const postUpdateZohoStripe = {
-            //     installments: QUOTES,
-            //     email: customer.userEmail,
-            //     amount: payment.amount,
-            //     contractId: checkout.contract_entity_id,
-            //     subscriptionId: payment.id,
-            //     installment_amount: payment.amount,
-            //     address: paymentLinkCustomer.address,
-            //     dni: paymentLinkCustomer.personalId,
-            //     phone: paymentLinkCustomer.phone,
-            //     fullname: customer.firstName + " " + customer.lastName,
-            //     is_suscri: checkout.type.includes('Tradicional'),
-            // }
+            console.log("sale: ", {sale, quotes: checkoutPayment?.quotes});
+            const advanceSuscription = valuesAdvanceSuscription({ total: sale?.Grand_Total, quotes: checkoutPayment?.quotes });
+            const postUpdateZohoStripe = objectPostUpdateZoho({ isAdvanceSuscription: false, advanceSuscription, QUOTES, customer, payment, paymentLinkCustomer, checkout, sale });
 
             const URL = checkout.type.includes('Stripe') ? UPDATE_CONTRACT : MP
-            
+
             console.log(`${URL}`, postUpdateZohoStripe)
             axios.post(URL, postUpdateZohoStripe).then((res) => {
                 console.log({ res });
@@ -286,12 +310,15 @@ const Checkout = () => {
                             <div className="card my-4">
                                 <div className="card-content has-text-centered">
                                     <h1 className="title is-1  has-text-weight-bold">{checkoutPayment?.type}</h1>
-                                    <p>{isAdvanceSuscription? 1 : totalMonths} pagos de:</p>
-                                    <h3 className='title is-3'>{ isAdvanceSuscription? advanceSuscription.firstQuoteDiscount : formattedAmount}</h3>
+                                    <p>{totalMonths} pagos de:</p>
+                                    <h3 className='title is-3'>{formattedAmount}</h3>
+
                                     {checkoutPayment?.type === "Suscripción con anticipo" && (
                                         <div>
-                                            <p>{advanceSuscription.remainingQuotes} pagos restantes de:</p>
-                                            <h3 className='title is-3'> {advanceSuscription.payPerMonthAdvance}</h3>
+                                            <p>{1} pago de:</p>
+                                            <h3 className='title is-3'>{formattedAmount}</h3>
+                                            <p>{advancePayment.remainingQuotes} pagos restantes de:</p>
+                                            <h3 className='title is-3'> {advancePayment.payPerMonthAdvance}</h3>
                                         </div>
                                     )}
                                 </div>
