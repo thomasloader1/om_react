@@ -12,9 +12,11 @@ export const handleSuscriptionUpdate = async (subscriptionId, advancedSuscriptio
   };
 
   try {
+
+
     const response = await axios.put(URL, { amount: remainingAmountToPay }, { headers });
 
-    console.log({ response });
+    console.log("rebill.js: " , { response });
   } catch (e) {
     console.error({ e });
   }
