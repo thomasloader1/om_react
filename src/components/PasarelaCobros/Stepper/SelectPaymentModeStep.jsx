@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useFormikContext } from 'formik';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
 import InputField from '../InputField';
 import { AppContext } from '../Provider/StateProvider';
@@ -14,7 +14,8 @@ function SelectPaymentModeStep() {
   const { id } = useParams();
   const location = useLocation();
   const formik = useFormikContext();
-  const contractIdValue = formik.values.contractId;
+  const [contractId] = useState(formik.values.contractId)
+  //const contractIdValue = formik.values.contractId;
 
   useEffect(() => {
     if (!location.pathname.includes('vp')) {
@@ -67,7 +68,7 @@ function SelectPaymentModeStep() {
             placeholder='2000339000004553081'
             id='contractId'
             name='contractId'
-            value={contractIdValue}
+            value={contractId}
             readOnly
           />
 

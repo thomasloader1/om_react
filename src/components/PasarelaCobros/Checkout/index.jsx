@@ -70,7 +70,7 @@ const Checkout = () => {
         };
 
         const RebillSDKCheckout = new window.Rebill.PhantomSDK(initialization);
-        console.log("Estamos con RebillSDKCheckout: ",RebillSDKCheckout);
+        console.log("Estamos con RebillSDKCheckout: ", RebillSDKCheckout);
         console.log({ paymentLinkCustomer })
         const customerRebill = mappingCheckoutFields({ paymentLinkCustomer, contact, checkout });
         console.log({ customerRebill })
@@ -86,8 +86,12 @@ const Checkout = () => {
             },
         });
 
+        const advancedSuscription = {
+
+        }
+
         //Seteo de plan para cobrar
-        const formValues = { payment_method: checkout.gateway, quotes: checkout.quotes }
+        const formValues = { payment_method: checkout.gateway, advancedSuscription, quotes: checkout.quotes }
         const { id, quantity } = getPlanPrice(formValues, sale)
         RebillSDKCheckout
             .setTransaction({
@@ -101,44 +105,44 @@ const Checkout = () => {
 
         //Seteo de callbacks en saco de que el pago este correcto o tengo algun fallo
         const { UPDATE_CONTRACT, MP } = URLS;
-        console.log({checkout,UPDATE_CONTRACT,MP});
+        console.log({ checkout, UPDATE_CONTRACT, MP });
 
         const handleSuccessRebillSDKCheckout = (response) => {
 
-                    const { invoice, faliedTransaction, pendingTransaction } = response
-                    const { paidBags, buyer } = invoice
-                    const { payment } = paidBags[0]
-                    const { customer } = buyer
-                    console.log('response contacto 2:',{response2: customer})
+            const { invoice, faliedTransaction, pendingTransaction } = response
+            const { paidBags, buyer } = invoice
+            const { payment } = paidBags[0]
+            const { customer } = buyer
+            console.log('response contacto 2:', { response2: customer })
 
-                    const QUOTES = checkout.quotes ? Number(checkout.quotes) : 1
-                    const postUpdateZohoStripe = {
-                        installments: QUOTES,
-                        email: customer.userEmail,
-                        amount: payment.amount,
-                        contractId: checkout.contract_entity_id,
-                        subscriptionId: payment.id,
-                        installment_amount: payment.amount,
-                        address: paymentLinkCustomer.address,
-                        dni: paymentLinkCustomer.personalId,
-                        phone: paymentLinkCustomer.phone,
-                        fullname: customer.firstName + " " + customer.lastName,
-                        is_suscri: checkout.type.includes('Tradicional'),
-                    }
+            const QUOTES = checkout.quotes ? Number(checkout.quotes) : 1
+            const postUpdateZohoStripe = {
+                installments: QUOTES,
+                email: customer.userEmail,
+                amount: payment.amount,
+                contractId: checkout.contract_entity_id,
+                subscriptionId: payment.id,
+                installment_amount: payment.amount,
+                address: paymentLinkCustomer.address,
+                dni: paymentLinkCustomer.personalId,
+                phone: paymentLinkCustomer.phone,
+                fullname: customer.firstName + " " + customer.lastName,
+                is_suscri: checkout.type.includes('Tradicional'),
+            }
 
-                    const URL = checkout.type.includes('Stripe') ? UPDATE_CONTRACT : MP
-                    axios.post(URL, postUpdateZohoStripe)
-                        .then((res) => {
-                            console.log({ res });
-                            fireToast('Contrato actualizado', 'success', 5000);
-                        })
-                        .catch((err) => {
-                            console.log({ err });
-                            fireToast('Contrato no actualizado', 'error', 5000);
-                        })
-                        .finally((res) => {
-                            console.log({ res });
-                        });
+            const URL = checkout.type.includes('Stripe') ? UPDATE_CONTRACT : MP
+            axios.post(URL, postUpdateZohoStripe)
+                .then((res) => {
+                    console.log({ res });
+                    fireToast('Contrato actualizado', 'success', 5000);
+                })
+                .catch((err) => {
+                    console.log({ err });
+                    fireToast('Contrato no actualizado', 'error', 5000);
+                })
+                .finally((res) => {
+                    console.log({ res });
+                });
         };
 
         RebillSDKCheckout.setCallbacks({

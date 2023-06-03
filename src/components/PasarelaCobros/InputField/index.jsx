@@ -11,7 +11,7 @@ const InputField = ({ label, ...props }) => {
   /> : <input className={meta.error ? 'input is-danger' : 'input'} {...field} {...props} />
 
   return (
-    <div className='field'>
+    <div id={props.id} className='field'>
       <label htmlFor={props.id} className='label'>
         {label}
       </label>

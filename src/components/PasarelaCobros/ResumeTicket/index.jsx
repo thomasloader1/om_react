@@ -19,7 +19,6 @@ function ResumeTicket() {
     setUserInfo,
     appRef,
     contractData,
-    appEnv,
   } = useContext(AppContext);
   const location = useLocation();
   const needRunEffect = location.pathname.includes('vp');
@@ -59,7 +58,7 @@ function ResumeTicket() {
   const newQuotes = (formikValues.quotes - 1);
   const payPerMonthAdvance = Math.round(remainingAmountToPay / newQuotes);
 
-  console.log('Datos del contrato: ', {
+  /* console.log('Datos del contrato: ', {
     advance: {
       isAdvanceSuscription,
       remainingAmountToPay,
@@ -69,7 +68,7 @@ function ResumeTicket() {
     },
     MONTO_A_PAGAR_POR_MES: formattedAmount,
     MONTO_TOTAL_DEL_CONTRATO: sale.Grand_Total,
-  });
+  }); */
 
 
   return (

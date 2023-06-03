@@ -28,10 +28,10 @@
 
 .grid-med_mod_payment-mp {
   display: grid;
-  grid-template-areas: 'mod mod' 'search search' 'quotes quotes' 'notification notification' 'controls controls';
+  grid-template-areas: 'mod mod mod' 'search search search' 'quotes quotes quotes' 'notification notification notification' 'controls controls controls';
   column-gap: 1rem;
 
-  .field:nth-child(3) {
+  #contractId.field {
     grid-area: search;
     margin-bottom: 1.5rem;
     grid-column: 1/-1;
@@ -48,22 +48,27 @@
     width: 100%;
     height: 100%;
     margin: 10px auto;
+
     select {
       width: 100%;
     }
+
     &::after {
       margin-top: 0;
     }
   }
+
   .select.is-danger {
     grid-area: quotes;
     width: 100%;
     height: 100%;
     margin: 10px auto;
+
     select {
       width: 100%;
     }
   }
+
   .grid-payment_method-item {
     height: unset;
 
@@ -80,7 +85,9 @@
     }
   }
 }
+
 @media screen and (max-width: 766px) {
+
   .grid-med_mod_payment,
   .grid-med_mod_payment-mp {
     grid-template-areas: none;
@@ -91,6 +98,7 @@
       margin-bottom: 0;
     }
   }
+
   .grid-med_mod_payment-mp .select.is-link {
     grid-area: unset;
     margin: 0;
