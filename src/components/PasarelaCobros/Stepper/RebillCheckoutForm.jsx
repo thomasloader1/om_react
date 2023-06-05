@@ -221,6 +221,7 @@ const RebillCheckoutForm = () => {
       onSuccess: (response) => {
         try {
           const { invoice, faliedTransaction, pendingTransaction } = response;
+          console.log("Response Pagar aqui: ", response);
 
           if (faliedTransaction != null) {
             const { errorMessage } = faliedTransaction.paidBags[0].payment;
@@ -235,30 +236,26 @@ const RebillCheckoutForm = () => {
           const [subscriptionId] = schedules;
           const { customer } = buyer;
 
-          const dni =
-            customer.personalIdNumber !== '' ? customer.personalIdNumber : formAttributes.dni;
-          const paramsFunction = {
-            formikValues,
-            customer,
-            sale,
-            payment,
-            formsValues,
-            subscriptionId,
-            formAttributes,
-            userInfo,
-            dni,
-          };
+          const dni = customer.personalIdNumber !== "" ? customer.personalIdNumber : formAttributes.dni
+
+          const paramsFunction = { formikValues, customer, sale, payment, formsValues, subscriptionId, formAttributes, userInfo, dni }
           const postUpdateZoho = objectPostUpdateZoho(paramsFunction);
-          const gateway = userInfo.stepTwo.value;
-          handleSuscriptionUpdate(subscriptionId, formikValues.advanceSuscription);
+
+          console.log('zohoupdate2', { formikValues, postUpdateZoho });
+
+          const gateway = userInfo.stepTwo.value
           handleRequestGateway(postUpdateZoho, gateway);
-          fireModalAlert('Pago Realizado', '', 'success');
+
+          fireModalAlert("Pago Realizado", '', 'success');
+
         } catch (error) {
-          fireModalAlert('Pago Fallido', error);
+          console.log("error", error);
+          fireModalAlert('Pago Fallido', error)
         }
+
       },
       onError: (error) => {
-        console.error(error);
+        console.error(error)
       },
     });
 

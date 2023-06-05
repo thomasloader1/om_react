@@ -70,7 +70,6 @@ function ResumeTicket() {
     MONTO_TOTAL_DEL_CONTRATO: sale.Grand_Total,
   }); */
 
-
   return (
     <>
       {loading ? (

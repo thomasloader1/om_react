@@ -53,14 +53,16 @@ export const REBILL_CONF = {
 
 export const getPlanPrice = (formikValues, sale) => {
   const { payment_method, advanceSuscription } = formikValues;
+  console.log("getPlanPrice", formikValues);
   const gateway = payment_method;
   const isStripe = gateway.includes('Stripe');
   const quotes = Number(formikValues.quotes);
+  
   const priceQuantity = advanceSuscription.isAdvanceSuscription
     ? advanceSuscription.firstQuoteDiscount
     : Number(Math.round(sale.Grand_Total / quotes));
 
-  //console.log({ priceQuantity, advanceSuscription })
+  console.log("getPlanPrice", priceQuantity);
 
   switch (quotes) {
     case 3:
