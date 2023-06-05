@@ -35,7 +35,7 @@ const Checkout = () => {
 
         let postUpdateZoho; // Declarar la variable fuera del condicional
         // console.log("step", { valor: userInfo.stepThree.value });
-        if (isAdvanceSuscription) {
+        if (!isAdvanceSuscription) {
             // console.log("no es anticipo");
             postUpdateZoho = {
                 installments: QUOTES,
@@ -48,7 +48,7 @@ const Checkout = () => {
                 dni: paymentLinkCustomer.personalId,
                 phone: paymentLinkCustomer.phone,
                 fullname: customer.firstName + " " + customer.lastName,
-                is_suscri: checkout.type.includes('Tradicional'),
+                is_suscri: !checkout.type.includes('Tradicional'),
                 is_advanceSuscription: checkout.type.includes('Suscripción con anticipo'),
             }
         } else {
@@ -65,7 +65,7 @@ const Checkout = () => {
                 dni: paymentLinkCustomer.personalId,
                 phone: paymentLinkCustomer.phone,
                 fullname: customer.firstName + " " + customer.lastName,
-                is_suscri: checkout.type.includes('Tradicional'),
+                is_suscri: !checkout.type.includes('Tradicional'),
                 is_advanceSuscription: checkout.type.includes('Suscripción con anticipo'),//
             }
             //no hace falta mandar el remainingAmountToPay,quotesAdvance
@@ -127,7 +127,7 @@ const Checkout = () => {
         if (!loading) {
             async function fetchPaymentLink() {
                 const { data } = await axios.get(`/api/rebill/getPaymentLink/${so}`);
-                // console.log("useEffect-> rebill get paymentlink", { data, contractData });
+                console.log("useEffect-> rebill get paymentlink", { data, contractData });
                 setCheckoutPayment(data.checkout);
                 setCustomer(data.customer);
                 setSale(contractData.sale);
@@ -214,15 +214,18 @@ const Checkout = () => {
             const { customer } = buyer
 
             const QUOTES = checkout.quotes ? Number(checkout.quotes) : 1
-            console.log("sale: ", { sale, quotes: checkoutPayment?.quotes });
-            const advanceSuscription = valuesAdvanceSuscription({ total: sale?.Grand_Total, quotes: checkoutPayment?.quotes });
-            const postUpdateZohoStripe = objectPostUpdateZoho({ isAdvanceSuscription: false, advanceSuscription, QUOTES, customer, payment, paymentLinkCustomer, checkout, sale });
 
-            const URL = checkout.type.includes('Stripe') ? UPDATE_CONTRACT : MP
+            // const advanceSuscription = valuesAdvanceSuscription({ total: sale?.Grand_Total, quotes: checkoutPayment?.quotes });
+            const isAdvanceSuscription = checkout.type.includes('Suscripción con anticipo')
+            const dataForZoho = { isAdvanceSuscription, advanceSuscription: null, QUOTES, customer, payment, paymentLinkCustomer, checkout, sale }
 
-            console.log(`${URL}`, postUpdateZohoStripe)
+            const postUpdateZoho = objectPostUpdateZoho(dataForZoho);
 
-            axios.post(URL, postUpdateZohoStripe).then((res) => {
+            const URL = checkout.gateway.includes('Stripe') ? UPDATE_CONTRACT : MP
+
+            console.log(`${URL}`, postUpdateZoho)
+
+            axios.post(URL, postUpdateZoho).then((res) => {
                 console.log({ res });
                 fireToast('Contrato actualizado', 'success', 5000);
             }).catch((err) => {
