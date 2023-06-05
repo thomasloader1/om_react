@@ -44,7 +44,7 @@ export const useContractZoho = (contractId, runEffect = true) => {
       } finally {
       }
     };
-    console.log({ runEffect })
+    //console.log({ runEffect })
     if (runEffect) {
       fetchData();
     } else {

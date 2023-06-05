@@ -12,6 +12,7 @@ import axios from 'axios';
 import { fireToast } from '../Hooks/useSwal';
 import { useParams } from 'react-router';
 import { fireModalAlert } from '../Hooks/useSwal';
+import { handleSuscriptionUpdate } from '../../../logic/rebill'
 
 const RebillCheckoutForm = () => {
   const { contractData, formikValues, userInfo, setRebillFetching, setOpenBlockLayer } =
@@ -149,16 +150,7 @@ const RebillCheckoutForm = () => {
     }
     return postUpdateZoho;
   };
-  const handleSuscriptionUpdate = async (subscriptionId, advancedSuscription) => {
-    const URL = `https://api.rebill.to/v2/subscriptions/${subscriptionId}`;
-    const headers = {
-      Authorization: `Bearer ${REBILL_CONF.TOKEN}`,
-      'Content-Type': 'application/json'
-    };
-    const { remainingAmountToPay } = advancedSuscription;
-    const response = await axios.put(URL, { amount: remainingAmountToPay.toString() }, { headers });
-    console.log({ response });
-  };
+
 
   const handleRequestGateway = (data, gateway) => {
     const { UPDATE_CONTRACT, MP } = URLS;
@@ -244,6 +236,11 @@ const RebillCheckoutForm = () => {
           console.log('zohoupdate2', { formikValues, postUpdateZoho });
 
           const gateway = userInfo.stepTwo.value
+
+          if (formikValues.advanceSuscription.isAdvanceSuscription) {
+            handleSuscriptionUpdate(postUpdateZoho.subscriptionId, formikValues.advanceSuscription)
+          }
+
           handleRequestGateway(postUpdateZoho, gateway);
 
           fireModalAlert("Pago Realizado", '', 'success');

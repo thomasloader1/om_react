@@ -29,7 +29,7 @@ function PasarelaApp() {
 
   const { loading, data } = useContractZoho(id, needRunEffect);
 
-  const pasarelaContainerRef = useRef();
+  const pasarelaContainerRef = useRef(null);
   const isMobile = useMediaQSmall();
 
   const setHeightMobile = () => {
