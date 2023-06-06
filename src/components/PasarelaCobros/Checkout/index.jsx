@@ -189,7 +189,7 @@ const Checkout = () => {
         }).then((price_setting) => console.log(price_setting));
 
         //Seteo de callbacks en saco de que el pago este correcto o tengo algun fallo
-        const { UPDATE_CONTRACT, MP } = URLS;
+        const { UPDATE_CONTRACT, MP, SET_CONTRACT_STATUS } = URLS;
         // console.log({checkout,UPDATE_CONTRACT,MP});
 
 
@@ -206,7 +206,6 @@ const Checkout = () => {
             if (pendingTransaction !== null) {
                 console.log({ pendingTransaction })
                 throw new Error(`Pending`);
-
             }
 
             const { paidBags, buyer } = invoice
@@ -223,11 +222,21 @@ const Checkout = () => {
 
             const URL = checkout.gateway.includes('Stripe') ? UPDATE_CONTRACT : MP
 
-            console.log(`${URL}`, postUpdateZoho)
+            console.log(`${SET_CONTRACT_STATUS}`, postUpdateZoho);
+            const postSetContractStatus = {status: 123 , id: 123};
+            // axios.post(SET_CONTRACT_STATUS, ).then((res) => {
+            //     console.log({ res });
+            //     console.log('Actualizacion del estado de pago en apipayments', 'success', 5000);
+            // }).catch((err) => {
+            //     console.log("Actualizacion del estado de pago en apipayments", { err });
+            //     console.log('Contrato no actualizado', 'error', 5000);
+            // });
 
+            console.log(`${URL}`, postUpdateZoho)
             axios.post(URL, postUpdateZoho).then((res) => {
                 console.log({ res });
                 fireToast('Contrato actualizado', 'success', 5000);
+
             }).catch((err) => {
                 console.log({ err });
                 fireToast('Contrato no actualizado', 'error', 5000);
