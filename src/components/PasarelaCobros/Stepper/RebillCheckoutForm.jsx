@@ -267,7 +267,7 @@ const RebillCheckoutForm = () => {
           
           handleSetContractStatus(payment,formikValues.contractId);
           
-          // handleRequestGateway(postUpdateZoho, gateway);
+          handleRequestGateway(postUpdateZoho, gateway);
 
           //Esto es para stripe, nose si funciona en mp
           fireModalAlert("Pago Realizado", '', 'success');
