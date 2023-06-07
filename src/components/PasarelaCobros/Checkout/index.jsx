@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { useLocation, useParams } from 'react-router';
 import axios from 'axios';
-import { fireToast, fireAlert } from '../Hooks/useSwal';
+import { fireToast, fireAlert, fireModalAlert} from '../Hooks/useSwal';
 import { URLS, getPlanPrice, mappingCheckoutFields } from '../Hooks/useRebill';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
 import mpImg from '../../../img/pasarelaCobros/metPago/mp.svg'
 import stripeImg from '../../../img/pasarelaCobros/metPago/stripe.svg'
+import { handleSetContractStatus } from '../../../logic/rebill'
+
 const { logo } = IMAGES
 
 const Checkout = () => {
@@ -35,7 +37,8 @@ const Checkout = () => {
 
         let postUpdateZoho; // Declarar la variable fuera del condicional
         // console.log("step", { valor: userInfo.stepThree.value });
-        if (!isAdvanceSuscription) {
+        console.log("objectPostUpdateZoho: ", isAdvanceSuscription);
+        if (isAdvanceSuscription) {
             // console.log("no es anticipo");
             postUpdateZoho = {
                 installments: QUOTES,
@@ -201,7 +204,7 @@ const Checkout = () => {
             if (failedTransaction != null) {
                 const {payment} = failedTransaction.paidBags[0];
                 const { errorMessage } = payment;
-                // handleSetContractStatus(payment, formikValues.contractId);
+                handleSetContractStatus(payment, checkout.contract_entity_id);
                 throw new Error(`${errorMessage}`);
             }
 
@@ -227,11 +230,18 @@ const Checkout = () => {
             console.log(`${URL}`, postUpdateZoho)
             axios.post(URL, postUpdateZoho).then((res) => {
                 console.log({ res });
+
+                handleSetContractStatus(payment, checkout.contract_entity_id);
+                console.log("Pago Realizado");
+                fireModalAlert("Pago Realizado", '', 'success');
                 fireToast('Contrato actualizado', 'success', 5000);
 
             }).catch((err) => {
                 console.log({ err });
+                console.log("Pago Fallido");
+                fireModalAlert('Pago Fallido', err);
                 fireToast('Contrato no actualizado', 'error', 5000);
+
             })
         };
 

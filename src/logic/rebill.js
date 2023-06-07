@@ -23,7 +23,7 @@ export const handleSuscriptionUpdate = async (subscriptionId, advancedSuscriptio
 export const handleSetContractStatus = (payment,contractId) => {
     const { SET_CONTRACT_STATUS } = URLS;
     const {status} = payment;
-    // console.log(`${SET_CONTRACT_STATUS}`, {statusPay: status ,contractId});
+    console.log(`${SET_CONTRACT_STATUS}`, {statusPay: status ,contractId});
     const postSetContractStatus = {
       status: status === 'SUCCEEDED'? "Contrato Efectivo": 
               status === 'FAILED'? "Pago Rechazado": 

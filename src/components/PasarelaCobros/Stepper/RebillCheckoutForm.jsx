@@ -13,7 +13,7 @@ import { fireToast } from '../Hooks/useSwal';
 import { useParams } from 'react-router';
 import { fireModalAlert } from '../Hooks/useSwal';
 import { handleSuscriptionUpdate } from '../../../logic/rebill';
-import { handleSetContractStatus } from '../../../logic/rebill'
+import { handleSetContractStatus } from '../../../logic/rebill';
 
 
 const RebillCheckoutForm = () => {
