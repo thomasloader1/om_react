@@ -12,7 +12,9 @@ import axios from 'axios';
 import { fireToast } from '../Hooks/useSwal';
 import { useParams } from 'react-router';
 import { fireModalAlert } from '../Hooks/useSwal';
-import { handleSuscriptionUpdate } from '../../../logic/rebill'
+import { handleSuscriptionUpdate } from '../../../logic/rebill';
+import { handleSetContractStatus } from '../../../logic/rebill'
+
 
 const RebillCheckoutForm = () => {
   const { contractData, formikValues, userInfo, setRebillFetching, setOpenBlockLayer } =
@@ -151,29 +153,9 @@ const RebillCheckoutForm = () => {
     return postUpdateZoho;
   };
 
-  const handleSetContractStatus = (payment,contractId) => {
-    const { SET_CONTRACT_STATUS } = URLS;
-    const {status} = payment;
-    console.log(`${SET_CONTRACT_STATUS}`, {statusPay: status ,contractId});
-    const postSetContractStatus = {
-      status: status === 'SUCCEEDED'? "Contrato Efectivo": 
-              status === 'FAILED'? "Pago Rechazado": 
-              "Contrato Pendiente",
-          // status === 'REJECTED' || status === 'DENIED'? "Contrato Rechazado": "",
-      contractId
-    };
-    axios.post(SET_CONTRACT_STATUS, postSetContractStatus).then((res) => {
-        console.log({ res });
-        console.log('Actualizacion del estado de pago en apipayments', 'success', 5000);
-    }).catch((err) => {
-        console.log("Actualizacion del estado de pago en apipayments", { err });
-        console.log('Contrato no actualizado', 'error', 5000);
-    });
-  };
-
   const handleRequestGateway = (data, gateway) => {
     const { UPDATE_CONTRACT, MP } = URLS;
-    console.log('handleRequestGateway', {UPDATE_CONTRACT, MP, SET_CONTRACT_STATUS})
+    console.log('handleRequestGateway', {UPDATE_CONTRACT, MP })
     const URL = gateway.includes('Stripe') ? UPDATE_CONTRACT : MP;
     axios
       .post(URL, data)

@@ -189,17 +189,19 @@ const Checkout = () => {
         }).then((price_setting) => console.log(price_setting));
 
         //Seteo de callbacks en saco de que el pago este correcto o tengo algun fallo
-        const { UPDATE_CONTRACT, MP, SET_CONTRACT_STATUS } = URLS;
+        const { UPDATE_CONTRACT, MP } = URLS;
         // console.log({checkout,UPDATE_CONTRACT,MP});
 
 
         const handleSuccessRebillSDKCheckout = (response) => {
             // console.log("Response Generar Link: ", response);
 
-            const { invoice, faliedTransaction, pendingTransaction } = response
+            const { invoice, failedTransaction, pendingTransaction } = response
 
-            if (faliedTransaction != null) {
-                const { errorMessage } = faliedTransaction.paidBags[0].payment;
+            if (failedTransaction != null) {
+                const {payment} = failedTransaction.paidBags[0];
+                const { errorMessage } = payment;
+                // handleSetContractStatus(payment, formikValues.contractId);
                 throw new Error(`${errorMessage}`);
             }
 
@@ -221,16 +223,6 @@ const Checkout = () => {
             const postUpdateZoho = objectPostUpdateZoho(dataForZoho);
 
             const URL = checkout.gateway.includes('Stripe') ? UPDATE_CONTRACT : MP
-
-            console.log(`${SET_CONTRACT_STATUS}`, postUpdateZoho);
-            const postSetContractStatus = {status: 123 , id: 123};
-            // axios.post(SET_CONTRACT_STATUS, ).then((res) => {
-            //     console.log({ res });
-            //     console.log('Actualizacion del estado de pago en apipayments', 'success', 5000);
-            // }).catch((err) => {
-            //     console.log("Actualizacion del estado de pago en apipayments", { err });
-            //     console.log('Contrato no actualizado', 'error', 5000);
-            // });
 
             console.log(`${URL}`, postUpdateZoho)
             axios.post(URL, postUpdateZoho).then((res) => {
@@ -315,6 +307,7 @@ const Checkout = () => {
                         <div className="column">
                             <div className="card my-4">
                                 <div className="card-content has-text-centered">
+                                    
                                     <h1 className="title is-1  has-text-weight-bold">{checkoutPayment?.type}</h1>
                                     <p>{totalMonths} pagos de:</p>
                                     <h3 className='title is-3'>{formattedAmount}</h3>
@@ -327,6 +320,7 @@ const Checkout = () => {
                                             <h3 className='title is-3'> {advancePayment.payPerMonthAdvance}</h3>
                                         </div>
                                     )}
+
                                 </div>
                                 <hr className='is-divider' />
                                 <div className="card-content">
@@ -334,7 +328,6 @@ const Checkout = () => {
                                     <ul>
                                         {products?.map(p => <li key={p.id}>x{p.quantity} {p.name} {p.price}</li>)}
                                     </ul>
-
                                 </div>
                             </div>
                         </div>
