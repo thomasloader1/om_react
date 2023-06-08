@@ -182,8 +182,8 @@ export const mappingCheckoutFields = ({ paymentLinkCustomer, contact, checkout }
   contact.Last_Name
   */
   return {
-    firstName: 'CONT',
-    lastName: 'CONT',
+    firstName: contact.First_Name,
+    lastName: contact.Last_Name,
     email: paymentLinkCustomer.email,
     phone: {
       countryCode: countryCallingCode,
