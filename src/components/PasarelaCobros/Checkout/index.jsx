@@ -138,11 +138,10 @@ const Checkout = () => {
                 setContact(contractData.contact);
                 setProducts(contractData.products);
 
-                const advanceSuscription = valuesAdvanceSuscription({ total: contractData.sale?.Grand_Total, checkoutPayment: data.checkout });
-                console.log("advanceSuscriptionData", advanceSuscription);
-                setAdvancePayment(advanceSuscription);
+                /* console.log("advanceSuscriptionData", advanceSuscription);
+                setAdvancePayment(advanceSuscription); */
 
-                const mergedData = { paymentLinkData: { ...data }, ZohoData: { ...contractData }, advanceSuscription, isAdvanceSuscription: data.checkout.type.includes('Suscripción con anticipo') };
+                const mergedData = { paymentLinkData: { ...data }, ZohoData: { ...contractData }, isAdvanceSuscription: data.checkout.type.includes('Suscripción con anticipo') };
                 setTicketData(mergedData);
 
                 initRebill(mergedData);
@@ -225,11 +224,13 @@ const Checkout = () => {
 
             // const advanceSuscription = valuesAdvanceSuscription({ total: sale?.Grand_Total, quotes: checkoutPayment?.quotes });
             const isAdvanceSuscription = checkout.type.includes('Suscripción con anticipo')
-            const dataForZoho = { isAdvanceSuscription, advanceSuscription: null, QUOTES, customer, payment, paymentLinkCustomer, checkout, sale }
+            const advanceSuscription = valuesAdvanceSuscription({ total: contractData.sale?.Grand_Total, checkoutPayment: checkout });
+
+            const dataForZoho = { isAdvanceSuscription, advanceSuscription, QUOTES, customer, payment, paymentLinkCustomer, checkout, sale }
 
             const postUpdateZoho = objectPostUpdateZoho(dataForZoho);
 
-            if (advancePayment.isAdvanceSuscription) {
+            if (advanceSuscription.isAdvanceSuscription) {
                 handleSuscriptionUpdate(postUpdateZoho.subscriptionId, { advanceSuscription: advancePayment })
             }
 
