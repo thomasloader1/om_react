@@ -32,7 +32,7 @@ const Checkout = () => {
         currency: 'MXN',
     };
 
-    const objectPostUpdateZoho = ({ isAdvanceSuscription, advanceSuscription, QUOTES, customer, payment, paymentLinkCustomer, checkout, sale }) => {
+    const objectPostUpdateZoho = ({ isAdvanceSuscription, advanceSuscription, QUOTES, customer, payment, paymentLinkCustomer, checkout, sale, subscriptionId }) => {
         // console.log('zohoupdate', {isAdvanceSuscription,advanceSuscription,QUOTES,customer,payment, paymentLinkCustomer,checkout});
 
         let postUpdateZoho; // Declarar la variable fuera del condicional
@@ -45,7 +45,7 @@ const Checkout = () => {
                 email: customer.userEmail,
                 amount: payment.amount,
                 contractId: checkout.contract_entity_id,
-                subscriptionId: payment.id,
+                subscriptionId,
                 installment_amount: payment.amount,
                 address: paymentLinkCustomer.address,
                 dni: paymentLinkCustomer.personalId,
@@ -61,7 +61,7 @@ const Checkout = () => {
                 email: customer.userEmail,
                 amount: sale.Grand_Total,
                 contractId: checkout.contract_entity_id,
-                subscriptionId: payment.id,
+                subscriptionId,
                 installment_amount: advanceSuscription.firstQuoteDiscount,//
                 payPerMonthAdvance: advanceSuscription.payPerMonthAdvance,//
                 address: paymentLinkCustomer.address,
@@ -218,22 +218,23 @@ const Checkout = () => {
             }
 
             const { paidBags, buyer } = invoice
-            const { payment } = paidBags[0]
+            const { payment, schedules } = paidBags[0]
             const { customer } = buyer
-
+            const [subscriptionId] = schedules;
+            console.log("subscriptionId: ",subscriptionId);
             const QUOTES = checkout.quotes ? Number(checkout.quotes) : 1
 
             // const advanceSuscription = valuesAdvanceSuscription({ total: sale?.Grand_Total, quotes: checkoutPayment?.quotes });
             const isAdvanceSuscription = checkout.type.includes('Suscripción con anticipo')
             const advanceSuscription = valuesAdvanceSuscription({ total: contractData.sale?.Grand_Total, checkoutPayment: checkout });
 
-            const dataForZoho = { isAdvanceSuscription, advanceSuscription, QUOTES, customer, payment, paymentLinkCustomer, checkout, sale }
+            const dataForZoho = { isAdvanceSuscription, advanceSuscription, QUOTES, customer, payment, paymentLinkCustomer, checkout, sale, subscriptionId }
 
             const postUpdateZoho = objectPostUpdateZoho(dataForZoho);
             
-            console.log("postUpdateZoho sd asd asd asd ",postUpdateZoho);
+            console.log("advanceSuscription",advanceSuscription);
             if (advanceSuscription.isAdvanceSuscription) {
-                handleSuscriptionUpdate(postUpdateZoho.subscriptionId, { advanceSuscription: advancePayment })
+                handleSuscriptionUpdate(postUpdateZoho.subscriptionId, advanceSuscription)
             }
 
             const URL = checkout.gateway.includes('Stripe') ? UPDATE_CONTRACT : MP
