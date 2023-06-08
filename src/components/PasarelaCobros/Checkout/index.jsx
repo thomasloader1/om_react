@@ -225,11 +225,14 @@ const Checkout = () => {
 
             // const advanceSuscription = valuesAdvanceSuscription({ total: sale?.Grand_Total, quotes: checkoutPayment?.quotes });
             const isAdvanceSuscription = checkout.type.includes('Suscripción con anticipo')
-            const dataForZoho = { isAdvanceSuscription, advanceSuscription: null, QUOTES, customer, payment, paymentLinkCustomer, checkout, sale }
+            const advanceSuscription = valuesAdvanceSuscription({ total: contractData.sale?.Grand_Total, checkoutPayment: checkout });
+
+            const dataForZoho = { isAdvanceSuscription, advanceSuscription, QUOTES, customer, payment, paymentLinkCustomer, checkout, sale }
 
             const postUpdateZoho = objectPostUpdateZoho(dataForZoho);
-            console.log("checkoutasd asd asd asd ",checkout);
-            if (advancePayment.isAdvanceSuscription) {
+            
+            console.log("postUpdateZoho sd asd asd asd ",postUpdateZoho);
+            if (advanceSuscription.isAdvanceSuscription) {
                 handleSuscriptionUpdate(postUpdateZoho.subscriptionId, { advanceSuscription: advancePayment })
             }
 
