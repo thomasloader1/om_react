@@ -19,6 +19,8 @@ import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
 /* import { loadStripe } from '@stripe/stripe-js'; */
 
+console.log(process.env)
+
 function PasarelaApp() {
 
   const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } = useContext(AppContext);

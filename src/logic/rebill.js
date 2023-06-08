@@ -20,22 +20,21 @@ export const handleSuscriptionUpdate = async (subscriptionId, advancedSuscriptio
   }
 };
 
-export const handleSetContractStatus = (payment,contractId) => {
-    const { SET_CONTRACT_STATUS } = URLS;
-    const {status} = payment;
-    console.log(`${SET_CONTRACT_STATUS}`, {statusPay: status ,contractId});
-    const postSetContractStatus = {
-      status: status === 'SUCCEEDED'? "Contrato Efectivo": 
-              status === 'FAILED'? "Pago Rechazado": 
-              "Contrato Pendiente",
-          // status === 'REJECTED' || status === 'DENIED'? "Contrato Rechazado": "",
-      contractId
-    };
-    axios.post(SET_CONTRACT_STATUS, postSetContractStatus).then((res) => {
-        console.log({ res });
-        console.log('Actualizacion del estado de pago en apipayments', 'success', 5000);
-    }).catch((err) => {
-        console.log("Actualizacion del estado de pago en apipayments", { err });
-        console.log('Contrato no actualizado', 'error', 5000);
-    });
+export const handleSetContractStatus = (payment, contractId) => {
+  const { SET_CONTRACT_STATUS } = URLS;
+  const { status } = payment;
+  //console.log(`${SET_CONTRACT_STATUS}`, {statusPay: status ,contractId});
+  const postSetContractStatus = {
+    status: status === 'SUCCEEDED' ? "Contrato Efectivo" :
+      status === 'FAILED' ? "Pago Rechazado" :
+        "Contrato Pendiente",
+    // status === 'REJECTED' || status === 'DENIED'? "Contrato Rechazado": "",
+    contractId
   };
+
+  axios.post(SET_CONTRACT_STATUS, postSetContractStatus).then((res) => {
+    console.log({ updateContractStatus: res });
+  }).catch((err) => {
+    console.log({ updateContractStatus: err });
+  });
+};

@@ -184,8 +184,7 @@ export const paymentModeOptions = [
     idElement: 'mod_advance_suscrip',
     name: 'mod',
     value: 'Suscripción con anticipo',
-    classLabel: 'half',
-    disabled: true
+    classLabel: 'half'
   },
 ];
 

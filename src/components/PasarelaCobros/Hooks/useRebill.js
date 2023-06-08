@@ -10,26 +10,39 @@ const {
   REACT_APP_OCEANO_UPDATECONTRACT_MP,
   REACT_APP_OCEANO_UPDATECONTRACT_ST,
   REACT_APP_OCEANO_UPDATECONTRACT_ST_LOCAL,
+  REACT_APP_OCEANO_GENERATELINK,
+  REACT_APP_OCEANO_GENERATELINK_LOCAL,
+  REACT_APP_OCEANO_GETPAYMENTLINK,
+  REACT_APP_OCEANO_GETPAYMENTLINK_LOCAL,
   REACT_APP_OCEANO_URL,
-  REACT_APP_REBILL_STRIPE_1,
-  REACT_APP_REBILL_STRIPE_3,
-  REACT_APP_REBILL_STRIPE_6,
-  REACT_APP_REBILL_STRIPE_9,
-  REACT_APP_REBILL_STRIPE_12,
-  REACT_APP_REBILL_MP_1,
-  REACT_APP_REBILL_MP_3,
-  REACT_APP_REBILL_MP_6,
-  REACT_APP_REBILL_MP_9,
-  REACT_APP_REBILL_MP_12,
+  REACT_APP_REBILL_STRIPE_TEST_1,
+  REACT_APP_REBILL_STRIPE_TEST_3,
+  REACT_APP_REBILL_STRIPE_TEST_6,
+  REACT_APP_REBILL_STRIPE_TEST_9,
+  REACT_APP_REBILL_STRIPE_TEST_12,
+  REACT_APP_REBILL_STRIPE_PRD_1,
+  REACT_APP_REBILL_STRIPE_PRD_3,
+  REACT_APP_REBILL_STRIPE_PRD_6,
+  REACT_APP_REBILL_STRIPE_PRD_9,
+  REACT_APP_REBILL_STRIPE_PRD_12,
+  REACT_APP_REBILL_MP_PRD_1,
+  REACT_APP_REBILL_MP_PRD_3,
+  REACT_APP_REBILL_MP_PRD_6,
+  REACT_APP_REBILL_MP_PRD_9,
+  REACT_APP_REBILL_MP_PRD_12,
   REACT_APP_REBILL_MP_TEST_1,
   REACT_APP_REBILL_MP_TEST_3,
   REACT_APP_REBILL_MP_TEST_6,
   REACT_APP_REBILL_MP_TEST_9,
   REACT_APP_REBILL_MP_TEST_12,
-  REACT_APP_REBILL_ORG_ID,
-  REACT_APP_REBILL_API_KEY,
-  REACT_APP_REBILL_API_URL,
-  REACT_APP_REBILL_TOKEN
+  REACT_APP_REBILL_TEST_ORG_ID,
+  REACT_APP_REBILL_TEST_API_KEY,
+  REACT_APP_REBILL_TEST_API_URL,
+  REACT_APP_REBILL_TEST_TOKEN,
+  REACT_APP_REBILL_PRD_ORG_ID,
+  REACT_APP_REBILL_PRD_API_KEY,
+  REACT_APP_REBILL_PRD_API_URL,
+  REACT_APP_REBILL_PRD_TOKEN,
 } = process.env;
 
 const itsProduction = NODE_ENV === 'production';
@@ -45,16 +58,39 @@ export const URLS = {
     ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_UPDATECONTRACT_ST}`
     : REACT_APP_OCEANO_UPDATECONTRACT_ST_LOCAL,
   SET_CONTRACT_STATUS: itsProduction
-    ?`${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_SETCONTRACTSTATUS}`
-    : REACT_APP_OCEANO_SETCONTRACTSTATUS_LOCAL
+    ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_SETCONTRACTSTATUS}`
+    : REACT_APP_OCEANO_SETCONTRACTSTATUS_LOCAL,
+  GENERATE_LINK: itsProduction
+    ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GENERATELINK}`
+    : REACT_APP_OCEANO_GENERATELINK_LOCAL,
+  GET_PAYMENT_LINK: itsProduction
+    ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GETPAYMENTLINK}`
+    : REACT_APP_OCEANO_GETPAYMENTLINK_LOCAL,
 };
 
 export const REBILL_CONF = {
-  ORG_ID: REACT_APP_REBILL_ORG_ID,
-  API_KEY: REACT_APP_REBILL_API_KEY,
-  URL: REACT_APP_REBILL_API_URL,
-  TOKEN: REACT_APP_REBILL_TOKEN
+  ORG_ID: itsProduction ? REACT_APP_REBILL_PRD_ORG_ID : REACT_APP_REBILL_TEST_ORG_ID,
+  API_KEY: itsProduction ? REACT_APP_REBILL_PRD_API_KEY : REACT_APP_REBILL_TEST_API_KEY,
+  URL: itsProduction ? REACT_APP_REBILL_PRD_API_URL : REACT_APP_REBILL_TEST_API_URL,
+  TOKEN: itsProduction ? REACT_APP_REBILL_PRD_TOKEN : REACT_APP_REBILL_TEST_TOKEN
 };
+
+const PRICES = {
+  STRIPE: {
+    1: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_1 : REACT_APP_REBILL_STRIPE_TEST_1,
+    3: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_3 : REACT_APP_REBILL_STRIPE_TEST_3,
+    6: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_6 : REACT_APP_REBILL_STRIPE_TEST_6,
+    9: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_9 : REACT_APP_REBILL_STRIPE_TEST_9,
+    12: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_12 : REACT_APP_REBILL_STRIPE_TEST_12,
+  },
+  MP: {
+    1: itsProduction ? REACT_APP_REBILL_MP_PRD_1 : REACT_APP_REBILL_MP_TEST_1,
+    3: itsProduction ? REACT_APP_REBILL_MP_PRD_3 : REACT_APP_REBILL_MP_TEST_3,
+    6: itsProduction ? REACT_APP_REBILL_MP_PRD_6 : REACT_APP_REBILL_MP_TEST_6,
+    9: itsProduction ? REACT_APP_REBILL_MP_PRD_9 : REACT_APP_REBILL_MP_TEST_9,
+    12: itsProduction ? REACT_APP_REBILL_MP_PRD_12 : REACT_APP_REBILL_MP_TEST_12,
+  }
+}
 
 export const getPlanPrice = (formikValues, sale) => {
   const { payment_method, advanceSuscription } = formikValues;
@@ -72,27 +108,27 @@ export const getPlanPrice = (formikValues, sale) => {
   switch (quotes) {
     case 3:
       return {
-        id: isStripe ? REACT_APP_REBILL_STRIPE_3 : REACT_APP_REBILL_MP_TEST_3,
+        id: isStripe ? PRICES.STRIPE['3'] : PRICES.MP['3'],
         quantity: priceQuantity,
       };
     case 6:
       return {
-        id: isStripe ? REACT_APP_REBILL_STRIPE_6 : REACT_APP_REBILL_MP_TEST_6,
+        id: isStripe ? PRICES.STRIPE['6'] : PRICES.MP['6'],
         quantity: priceQuantity,
       };
     case 9:
       return {
-        id: isStripe ? REACT_APP_REBILL_STRIPE_9 : REACT_APP_REBILL_MP_TEST_9,
+        id: isStripe ? PRICES.STRIPE['9'] : PRICES.MP['9'],
         quantity: priceQuantity,
       };
     case 12:
       return {
-        id: isStripe ? REACT_APP_REBILL_STRIPE_12 : REACT_APP_REBILL_MP_TEST_12,
+        id: isStripe ? PRICES.STRIPE['12'] : PRICES.MP['12'],
         quantity: priceQuantity,
       };
     default:
       return {
-        id: isStripe ? REACT_APP_REBILL_STRIPE_1 : REACT_APP_REBILL_MP_TEST_1,
+        id: isStripe ? PRICES.STRIPE['1'] : PRICES.MP['1'],
         quantity: sale.Grand_Total,
       };
   }
@@ -130,7 +166,7 @@ export const mappingFields = ({ formAttributes, contact, formikValues }) => {
       state: formikValues.country,
       zipCode: formAttributes.zip,
       country: formikValues.country,
-      description: '-',
+      description: 'Pago en la plataforma de SPP MSK',
     },
   };
 };
@@ -141,9 +177,13 @@ export const mappingCheckoutFields = ({ paymentLinkCustomer, contact, checkout }
   const { countryCallingCode, nationalNumber } = parsePhoneNumber(paymentLinkCustomer.phone);
 
   //console.log({ countryCallingCode, nationalNumber })
+  /*
+  contact.First_Name 
+  contact.Last_Name
+  */
   return {
-    firstName: contact.First_Name,
-    lastName: contact.Last_Name,
+    firstName: 'CONT',
+    lastName: 'CONT',
     email: paymentLinkCustomer.email,
     phone: {
       countryCode: countryCallingCode,
@@ -168,7 +208,7 @@ export const mappingCheckoutFields = ({ paymentLinkCustomer, contact, checkout }
       state: checkout.country,
       zipCode: paymentLinkCustomer.zip,
       country: checkout.country,
-      description: '-',
+      description: 'Pago en la plataforma de CHECKOUT LINK SPP MSK ',
     },
   };
 };

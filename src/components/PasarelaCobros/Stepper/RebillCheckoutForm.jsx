@@ -70,6 +70,7 @@ const RebillCheckoutForm = () => {
   }, [completedInputs]);
 
   const handleGenerateLink = async (event) => {
+    const { GENERATE_LINK } = URLS;
     const requestData = {
       email: values.email,
       phone: values.phone,
@@ -87,7 +88,7 @@ const RebillCheckoutForm = () => {
     };
 
     try {
-      const { data } = await axios.post('/api/rebill/generatePaymentLink', requestData);
+      const { data } = await axios.post(GENERATE_LINK, requestData);
       setOpenBlockLayer(true);
       setRebillFetching({ loading: false, ...data });
 
@@ -155,7 +156,7 @@ const RebillCheckoutForm = () => {
 
   const handleRequestGateway = (data, gateway) => {
     const { UPDATE_CONTRACT, MP } = URLS;
-    console.log('handleRequestGateway', {UPDATE_CONTRACT, MP })
+    console.log('handleRequestGateway', { UPDATE_CONTRACT, MP })
     const URL = gateway.includes('Stripe') ? UPDATE_CONTRACT : MP;
     axios
       .post(URL, data)
@@ -200,7 +201,7 @@ const RebillCheckoutForm = () => {
 
     //Seteo de plan para cobrar
     const { id, quantity } = getPlanPrice(formikValues, sale);
-    console.log("setTransaction: ",{id,quantity})
+    console.log("setTransaction: ", { id, quantity })
     RebillSDKCheckout.setTransaction({
       prices: [
         {
@@ -218,19 +219,18 @@ const RebillCheckoutForm = () => {
           console.log("Response Pagar aqui: ", response);
 
           if (failedTransaction != null) {
-            const {payment} = failedTransaction.paidBags[0]
+            const { payment } = failedTransaction.paidBags[0]
             const { errorMessage } = payment;
-            handleSetContractStatus(payment, formikValues.contractId);
-            // todo: actualizar el contrado de crm a rechazado.
-            //mensje de error de mp: cc_rejected_other_reason.
-            console.log("Pago Fallido", {message: errorMessage});
+            console.log("Pago Fallido", { message: errorMessage });
             throw new Error(`${errorMessage}`);
-          } else {
-            setRebillFetching({ loading: false, ...response });
-            setOpenBlockLayer(true);
           }
 
-          const { paidBags, buyer } = invoice ;
+          if (pendingTransaction !== null) {
+            console.log({ pendingTransaction })
+            throw new Error(`El pago quedo en un estado pendiente`);
+          }
+
+          const { paidBags, buyer } = invoice;
           const { payment, schedules } = paidBags[0];
           const [subscriptionId] = schedules;
           const { customer } = buyer;
@@ -247,9 +247,9 @@ const RebillCheckoutForm = () => {
           if (formikValues.advanceSuscription.isAdvanceSuscription) {
             handleSuscriptionUpdate(postUpdateZoho.subscriptionId, formikValues.advanceSuscription)
           }
-          
-          handleSetContractStatus(payment,formikValues.contractId);
-          
+
+          handleSetContractStatus(payment, formikValues.contractId);
+
           handleRequestGateway(postUpdateZoho, gateway);
 
           //Esto es para stripe, nose si funciona en mp

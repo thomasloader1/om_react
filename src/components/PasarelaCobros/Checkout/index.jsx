@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { useLocation, useParams } from 'react-router';
 import axios from 'axios';
-import { fireToast, fireAlert, fireModalAlert} from '../Hooks/useSwal';
-import { URLS, getPlanPrice, mappingCheckoutFields } from '../Hooks/useRebill';
+import { fireToast, fireAlert, fireModalAlert } from '../Hooks/useSwal';
+import { REBILL_CONF, URLS, getPlanPrice, mappingCheckoutFields } from '../Hooks/useRebill';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
 import mpImg from '../../../img/pasarelaCobros/metPago/mp.svg'
 import stripeImg from '../../../img/pasarelaCobros/metPago/stripe.svg'
-import { handleSetContractStatus } from '../../../logic/rebill'
+import { handleSetContractStatus, handleSuscriptionUpdate } from '../../../logic/rebill'
 
 const { logo } = IMAGES
 
@@ -129,8 +129,9 @@ const Checkout = () => {
 
         if (!loading) {
             async function fetchPaymentLink() {
-                const { data } = await axios.get(`/api/rebill/getPaymentLink/${so}`);
-                console.log("useEffect-> rebill get paymentlink", { data, contractData });
+                const { GET_PAYMENT_LINK } = URLS
+                const { data } = await axios.get(`${GET_PAYMENT_LINK}/${so}`);
+                //console.log("useEffect-> rebill get paymentlink", { data, contractData });
                 setCheckoutPayment(data.checkout);
                 setCustomer(data.customer);
                 setSale(contractData.sale);
@@ -158,15 +159,15 @@ const Checkout = () => {
         const { contact, sale } = ZohoData
         console.log("Aca te dice si es anticipo: ", checkoutPayment?.type.includes('Suscripción con anticipo'));
         const initialization = {
-            organization_id: '679d8e12-e0ad-4052-bc9e-eb78f956ce7e' /* your organization ID */,
-            api_key: 'bc7d4abf-3a94-4f53-b414-887356b51e0c' /* your API_KEY */,
-            api_url: 'https://api.rebill.to/v2' /* Rebill API target */,
+            organization_id: REBILL_CONF.ORG_ID,
+            api_key: REBILL_CONF.API_KEY,
+            api_url: REBILL_CONF.URL,
         };
 
         const RebillSDKCheckout = new window.Rebill.PhantomSDK(initialization);
 
         const customerRebill = mappingCheckoutFields({ paymentLinkCustomer, contact, checkout });
-
+        console.log({ customerRebill })
         //Seteo de customer
         RebillSDKCheckout.setCustomer(customerRebill);
 
@@ -181,6 +182,7 @@ const Checkout = () => {
 
         //Seteo de plan para cobrar
         const formValues = { payment_method: checkout.gateway, advanceSuscription, quotes: checkout.quotes }
+
         const { id, quantity } = getPlanPrice(formValues, sale)
         RebillSDKCheckout.setTransaction({
             prices: [
@@ -202,7 +204,7 @@ const Checkout = () => {
             const { invoice, failedTransaction, pendingTransaction } = response
 
             if (failedTransaction != null) {
-                const {payment} = failedTransaction.paidBags[0];
+                const { payment } = failedTransaction.paidBags[0];
                 const { errorMessage } = payment;
                 handleSetContractStatus(payment, checkout.contract_entity_id);
                 throw new Error(`${errorMessage}`);
@@ -210,7 +212,9 @@ const Checkout = () => {
 
             if (pendingTransaction !== null) {
                 console.log({ pendingTransaction })
-                throw new Error(`Pending`);
+                const { payment } = pendingTransaction.paidBags[0];
+                handleSetContractStatus(payment, checkout.contract_entity_id);
+                throw new Error(`El pago quedo en un estado pendiente`);
             }
 
             const { paidBags, buyer } = invoice
@@ -224,6 +228,10 @@ const Checkout = () => {
             const dataForZoho = { isAdvanceSuscription, advanceSuscription: null, QUOTES, customer, payment, paymentLinkCustomer, checkout, sale }
 
             const postUpdateZoho = objectPostUpdateZoho(dataForZoho);
+
+            if (advancePayment.isAdvanceSuscription) {
+                handleSuscriptionUpdate(postUpdateZoho.subscriptionId, { advanceSuscription: advancePayment })
+            }
 
             const URL = checkout.gateway.includes('Stripe') ? UPDATE_CONTRACT : MP
 
@@ -297,6 +305,7 @@ const Checkout = () => {
         RebillSDKCheckout.setElements('rebill_elements');
     }
 
+
     return (
         <>
             {loading ? <MotionSpinner /> : <main className='grid-checkout container'>
@@ -317,17 +326,20 @@ const Checkout = () => {
                         <div className="column">
                             <div className="card my-4">
                                 <div className="card-content has-text-centered">
-                                    
-                                    <h1 className="title is-1  has-text-weight-bold">{checkoutPayment?.type}</h1>
-                                    <p>{totalMonths} pagos de:</p>
-                                    <h3 className='title is-3'>{formattedAmount}</h3>
 
-                                    {checkoutPayment?.type === "Suscripción con anticipo" && (
+                                    <h1 className="title is-1  has-text-weight-bold">{checkoutPayment?.type}</h1>
+
+                                    {checkoutPayment?.type === "Suscripción con anticipo" ? (
                                         <div>
                                             <p>{1} pago de:</p>
                                             <h3 className='title is-3'>{formattedAmount}</h3>
                                             <p>{advancePayment.remainingQuotes} pagos restantes de:</p>
                                             <h3 className='title is-3'> {advancePayment.payPerMonthAdvance}</h3>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <p>{totalMonths} pagos de:</p>
+                                            <h3 className='title is-3'>{formattedAmount}</h3>
                                         </div>
                                     )}
 
