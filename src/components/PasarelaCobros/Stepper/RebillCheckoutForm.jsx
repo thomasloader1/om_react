@@ -200,6 +200,7 @@ const RebillCheckoutForm = () => {
 
     //Seteo de plan para cobrar
     const { id, quantity } = getPlanPrice(formikValues, sale);
+    console.log("setTransaction: ",{id,quantity})
     RebillSDKCheckout.setTransaction({
       prices: [
         {

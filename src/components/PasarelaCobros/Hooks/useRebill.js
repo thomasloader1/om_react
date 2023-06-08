@@ -62,12 +62,12 @@ export const getPlanPrice = (formikValues, sale) => {
   const gateway = payment_method;
   const isStripe = gateway.includes('Stripe');
   const quotes = Number(formikValues.quotes);
-  
+
   const priceQuantity = advanceSuscription.isAdvanceSuscription
     ? advanceSuscription.firstQuoteDiscount
     : Number(Math.round(sale.Grand_Total / quotes));
 
-  console.log("getPlanPrice", priceQuantity);
+  console.log("getPlanPrice, priceQuantity:", priceQuantity);
 
   switch (quotes) {
     case 3:
