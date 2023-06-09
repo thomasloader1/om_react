@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 import { useFormikContext } from 'formik';
 import InputField from '../InputField';
@@ -51,26 +51,19 @@ const RebillCheckoutForm = () => {
     }
   };
 
-  const completedInputs = Object.values(values).every(
-    (v) => typeof v !== 'undefined' && v != null && v !== ''
-  );
+
+  const completedInputs = useMemo(() => Object.values(values).every((v) => typeof v !== 'undefined' && v != null && v !== ''), [values.email, values.dni])
 
   useEffect(() => {
-    console.log({ completedInputs }, values);
-
-    if (completedInputs) {
-      formik.setFieldValue('cardHolder', true);
-      const formAttributes = { ...values, phoneNumber, formikValues };
-      initRebill(formAttributes);
-    } else {
-      formik.setFieldValue('cardHolder', false);
-    }
 
     return () => {
-      console.log("clean")
+      console.log("clean");
       setShowRebill(false);
-    }
+      formik.setFieldValue('cardHolder', false);
+
+    };
   }, [completedInputs]);
+
 
   const handleGenerateLink = async (event) => {
     const { GENERATE_LINK } = URLS;
@@ -103,6 +96,11 @@ const RebillCheckoutForm = () => {
   };
   const handlePayNow = (event) => {
     setShowRebill(true);
+
+    formik.setFieldValue('cardHolder', true);
+    const formAttributes = { ...values, phoneNumber, formikValues };
+    initRebill(formAttributes);
+
   };
   const objectPostUpdateZoho = ({
     formikValues,
@@ -227,7 +225,10 @@ const RebillCheckoutForm = () => {
 
           if (pendingTransaction !== null) {
             console.log({ pendingTransaction })
-            throw new Error(`El pago quedo en un estado pendiente`);
+
+            fireModalAlert("Pago pendiente", 'El pago se esta aun procesando, aguarde a la notificacion de email', 'warning');
+
+            return
           }
 
           const { paidBags, buyer } = invoice;
@@ -385,7 +386,7 @@ const RebillCheckoutForm = () => {
             onBlur={handleBlur}
             error={touched.email && errors.email}
           />
-          {(completedInputs && !errors) && (
+          {(completedInputs) && (
             <motion.div className='field mt-2 is-flex is-flex-direction-row is-justify-content-center'>
               <div
                 id='rebill_elements'
@@ -395,6 +396,7 @@ const RebillCheckoutForm = () => {
                 className={`button is-success mr-2 ${showRebill && 'is-hidden'}`}
                 type='button'
                 onClick={handlePayNow}
+                disabled={!completedInputs}
               >
                 Pagar Aqui
               </button>
@@ -402,6 +404,7 @@ const RebillCheckoutForm = () => {
                 className={`button is-secondary ml-2 ${showRebill && 'is-hidden'}`}
                 type='button'
                 onClick={handleGenerateLink}
+                disabled={!completedInputs}
               >
                 Generar Link
               </button>
