@@ -4,12 +4,14 @@ import { Route, Routes } from 'react-router';
 import PasarelaApp from '../PasarelaCobros/App';
 import VentaPresencialApp from '../VentaPresencial/App';
 import Checkout from '../PasarelaCobros/Checkout';
+import Status from '../PasarelaCobros/Status';
 
 function App() {
   return (
     <Routes>
       <Route path='/:id' element={<PasarelaApp />} />
       <Route path='checkout/:so' element={<Checkout />} />
+      <Route path='status/:payment_id' element={<Status />} />
       <Route exact path='/vp/:id' element={<PasarelaApp />} />
       <Route path='/ventapresencial' element={<VentaPresencialApp />} />
       <Route

@@ -9,11 +9,10 @@ import { mappingFields, getPlanPrice, URLS, REBILL_CONF } from '../Hooks/useRebi
 import { parsePhoneNumber } from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import axios from 'axios';
-import { fireToast } from '../Hooks/useSwal';
-import { useParams } from 'react-router';
+import { fireModalAlertRedirect, fireToast } from '../Hooks/useSwal';
+import { useNavigate, useParams } from 'react-router';
 import { fireModalAlert } from '../Hooks/useSwal';
-import { handleSuscriptionUpdate } from '../../../logic/rebill';
-import { handleSetContractStatus } from '../../../logic/rebill';
+import { handlePendingPayment, handleSuscriptionUpdate } from '../../../logic/rebill';
 
 
 const RebillCheckoutForm = () => {
@@ -24,6 +23,7 @@ const RebillCheckoutForm = () => {
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [showRebill, setShowRebill] = useState(false);
   const { id } = useParams();
+  const navigate = useNavigate();
   const { values, handleChange, handleBlur, touched, errors, ...formik } = useFormikContext();
 
   const handlePhoneInputChange = (value) => {
@@ -63,6 +63,7 @@ const RebillCheckoutForm = () => {
 
     };
   }, [completedInputs]);
+
 
 
   const handleGenerateLink = async (event) => {
@@ -207,65 +208,65 @@ const RebillCheckoutForm = () => {
           quantity,
         },
       ],
-    }).then((price_setting) => //console.log(price_setting));
+    }).then((price_setting) => console.log(price_setting));
 
-      //Seteo de callbacks en saco de que el pago este correcto o tengo algun fallo
-      RebillSDKCheckout.setCallbacks({
-        onSuccess: (response) => {
-          try {
-            const { invoice, failedTransaction, pendingTransaction } = response;
-            //console.log("Response Pagar aqui: ", response);
+    //Seteo de callbacks en saco de que el pago este correcto o tengo algun fallo
+    RebillSDKCheckout.setCallbacks({
+      onSuccess: (response) => {
+        try {
+          const { invoice, failedTransaction, pendingTransaction } = response;
+          //console.log("Response Pagar aqui: ", response);
 
-            if (failedTransaction != null) {
-              const { payment } = failedTransaction.paidBags[0]
-              const { errorMessage } = payment;
-              //console.log("Pago Fallido", { message: errorMessage });
-              throw new Error(`${errorMessage}`);
-            }
-
-            if (pendingTransaction !== null) {
-              //console.log({ pendingTransaction })
-
-              fireModalAlert("Pago pendiente", 'El pago se esta aun procesando, aguarde a la notificacion de email', 'warning');
-
-              return
-            }
-
-            const { paidBags, buyer } = invoice;
-            const { payment, schedules } = paidBags[0];
-            const [subscriptionId] = schedules;
-            const { customer } = buyer;
-
-            const dni = customer.personalIdNumber !== "" ? customer.personalIdNumber : formAttributes.dni
-
-            const paramsFunction = { formikValues, customer, sale, payment, formsValues, subscriptionId, formAttributes, userInfo, dni }
-            const postUpdateZoho = objectPostUpdateZoho(paramsFunction);
-
-            //console.log('zohoupdate2', { formikValues, postUpdateZoho });
-
-            const gateway = userInfo.stepTwo.value
-
-            if (formikValues.advanceSuscription.isAdvanceSuscription) {
-              handleSuscriptionUpdate(postUpdateZoho.subscriptionId, formikValues.advanceSuscription)
-            }
-
-            //handleSetContractStatus(payment, formikValues.contractId);
-
-            handleRequestGateway(postUpdateZoho, gateway);
-
-            //Esto es para stripe, nose si funciona en mp
-            fireModalAlert("Pago Realizado", '', 'success');
-
-          } catch (error) {
-            //console.log("error", error);
-            fireModalAlert('Pago Fallido', error)
+          if (failedTransaction != null) {
+            const { payment } = failedTransaction.paidBags[0]
+            const { errorMessage } = payment;
+            //console.log("Pago Fallido", { message: errorMessage });
+            throw new Error(`${errorMessage}`);
           }
 
-        },
-        onError: (error) => {
-          console.error(error)
-        },
-      });
+          if (pendingTransaction !== null) {
+            //console.log({ pendingTransaction })
+            const { payment } = pendingTransaction.paidBags[0]
+
+            fireModalAlertRedirect("Pago pendiente", 'El pago se esta aun procesando, aguarde a la notificacion de email', payment);
+            return
+          }
+
+          const { paidBags, buyer } = invoice;
+          const { payment, schedules } = paidBags[0];
+          const [subscriptionId] = schedules;
+          const { customer } = buyer;
+
+          const dni = customer.personalIdNumber !== "" ? customer.personalIdNumber : formAttributes.dni
+
+          const paramsFunction = { formikValues, customer, sale, payment, formsValues, subscriptionId, formAttributes, userInfo, dni }
+          const postUpdateZoho = objectPostUpdateZoho(paramsFunction);
+
+          //console.log('zohoupdate2', { formikValues, postUpdateZoho });
+
+          const gateway = userInfo.stepTwo.value
+
+          if (formikValues.advanceSuscription.isAdvanceSuscription) {
+            handleSuscriptionUpdate(postUpdateZoho.subscriptionId, formikValues.advanceSuscription)
+          }
+
+          //handleSetContractStatus(payment, formikValues.contractId);
+
+          handleRequestGateway(postUpdateZoho, gateway);
+
+          //Esto es para stripe, nose si funciona en mp
+          fireModalAlert("Pago Realizado", '', 'success');
+
+        } catch (error) {
+          //console.log("error", error);
+          fireModalAlert('Pago Fallido', error)
+        }
+
+      },
+      onError: (error) => {
+        console.error(error)
+      },
+    });
 
     //Seteo metadata de la suscripcio
     RebillSDKCheckout.setMetadata({

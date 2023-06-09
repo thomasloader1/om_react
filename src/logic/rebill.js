@@ -4,7 +4,7 @@ import { URLS } from '../components/PasarelaCobros/Hooks/useRebill';
 
 export const handleSuscriptionUpdate = async (subscriptionId, advancedSuscription) => {
   const URL = `https://api.rebill.to/v2/subscriptions/${subscriptionId}`;
-  console.log("handleSuscriptionUpdate", {subscriptionId,advancedSuscription});
+  console.log("handleSuscriptionUpdate", { subscriptionId, advancedSuscription });
   const { payPerMonthAdvance } = advancedSuscription;
   const headers = {
     Authorization: `Bearer ${REBILL_CONF.TOKEN}`,
@@ -19,6 +19,22 @@ export const handleSuscriptionUpdate = async (subscriptionId, advancedSuscriptio
     console.error({ e });
   }
 };
+
+export const handlePendingPayment = async (paymentId) => {
+  const URL = `https://api.rebill.to/v2/payments/${paymentId}`;
+  const headers = {
+    Authorization: `Bearer ${REBILL_CONF.TOKEN}`,
+    accept: 'application/json',
+    'content-type': 'application/json',
+  };
+
+  try {
+    const response = await axios.get(URL, { headers });
+    console.log("handlePendingPayment: ", { response });
+  } catch (e) {
+    console.error({ e });
+  }
+}
 
 export const handleSetContractStatus = (payment, contractId) => {
   const { SET_CONTRACT_STATUS } = URLS;

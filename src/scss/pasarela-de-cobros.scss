@@ -8,6 +8,7 @@
 @use 'pasarela-generate_payment.scss';
 @use 'phoneInputReact.scss';
 @use 'cardCheckout.scss';
+@use 'pasarela-status.scss';
 
 // Fix bug grilla con input radio
 .radio+.radio,

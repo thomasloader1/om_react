@@ -1,0 +1,26 @@
+#root {
+    // background-color: #F0DBF1;
+    height: 100vh;
+}
+
+.grid-status {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 130px 1fr;
+
+
+    header {
+        grid-row: 1 / 2;
+        grid-column: 1 / 2;
+
+        nav {
+
+            background: transparent !important;
+        }
+    }
+
+    section {
+        grid-row: 2 / 3;
+        grid-column: 1 / 2;
+    }
+}

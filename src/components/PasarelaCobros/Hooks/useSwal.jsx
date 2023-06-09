@@ -49,3 +49,23 @@ export function fireModalAlert(title, html = "", icon = 'error') {
 
   });
 }
+
+export async function fireModalAlertRedirect(title, html = "", payment) {
+  const toast = withReactContent(Swal);
+
+  const result = await toast.fire({
+    title: <p>{title}</p>,
+    toast: false,
+    html,
+    icon: 'warning',
+    position: 'center-center',
+    showConfirmButton: true,
+
+  });
+
+  if (result.isConfirmed) {
+    window.location.href = `/status/${payment.id}`
+  } else {
+    window.location.href = `/status/${payment.id}`
+  }
+}
