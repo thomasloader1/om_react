@@ -139,9 +139,12 @@ export const mappingFields = ({ formAttributes, contact, formikValues }) => {
   const { phoneNumber } = formAttributes;
   const { countryCallingCode, nationalNumber } = phoneNumber;
 
+  /* contact.First_Name
+contact.Last_Name */
+
   return {
-    firstName: contact.First_Name,
-    lastName: contact.Last_Name,
+    firstName: 'CONT',
+    lastName: 'CONT',
     email: formAttributes.email,
     phone: {
       countryCode: countryCallingCode,

@@ -52,7 +52,7 @@ const RebillCheckoutForm = () => {
   };
 
   const completedInputs = Object.values(values).every(
-    (v) => typeof v !== 'undefined' && v != null && v !== '',
+    (v) => typeof v !== 'undefined' && v != null && v !== ''
   );
 
   useEffect(() => {
@@ -66,7 +66,10 @@ const RebillCheckoutForm = () => {
       formik.setFieldValue('cardHolder', false);
     }
 
-    return () => setShowRebill(false);
+    return () => {
+      console.log("clean")
+      setShowRebill(false);
+    }
   }, [completedInputs]);
 
   const handleGenerateLink = async (event) => {
@@ -112,10 +115,8 @@ const RebillCheckoutForm = () => {
     userInfo,
     dni,
   }) => {
-    console.log('zohoupdate', { formikValues });
     const { advanceSuscription } = formikValues;
     let postUpdateZoho; // Declarar la variable fuera del condicional
-    console.log('step', { valor: userInfo.stepThree.value });
     if (!advanceSuscription.isAdvanceSuscription) {
       // console.log("no es anticipo");
       postUpdateZoho = {
@@ -186,7 +187,7 @@ const RebillCheckoutForm = () => {
     const RebillSDKCheckout = new window.Rebill.PhantomSDK(initialization);
 
     const customerRebill = mappingFields({ formAttributes, contact, formikValues });
-    console.log({ customerRebill });
+    //console.log({ customerRebill });
     //Seteo de customer
     RebillSDKCheckout.setCustomer(customerRebill);
 
@@ -201,7 +202,6 @@ const RebillCheckoutForm = () => {
 
     //Seteo de plan para cobrar
     const { id, quantity } = getPlanPrice(formikValues, sale);
-    console.log("setTransaction: ", { id, quantity })
     RebillSDKCheckout.setTransaction({
       prices: [
         {
@@ -248,7 +248,7 @@ const RebillCheckoutForm = () => {
             handleSuscriptionUpdate(postUpdateZoho.subscriptionId, formikValues.advanceSuscription)
           }
 
-          handleSetContractStatus(payment, formikValues.contractId);
+          //handleSetContractStatus(payment, formikValues.contractId);
 
           handleRequestGateway(postUpdateZoho, gateway);
 
@@ -264,6 +264,11 @@ const RebillCheckoutForm = () => {
       onError: (error) => {
         console.error(error)
       },
+    });
+
+    //Seteo metadata de la suscripcio
+    RebillSDKCheckout.setMetadata({
+      so_number: "x" + sale.SO_Number
     });
 
     //Textos de validaciones con el elemento de la tarjeta
@@ -380,7 +385,7 @@ const RebillCheckoutForm = () => {
             onBlur={handleBlur}
             error={touched.email && errors.email}
           />
-          {completedInputs && (
+          {(completedInputs && !errors) && (
             <motion.div className='field mt-2 is-flex is-flex-direction-row is-justify-content-center'>
               <div
                 id='rebill_elements'
