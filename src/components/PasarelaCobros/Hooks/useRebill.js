@@ -143,8 +143,8 @@ export const mappingFields = ({ formAttributes, contact, formikValues }) => {
 contact.Last_Name */
 
   return {
-    firstName: 'CONT',
-    lastName: 'CONT',
+    firstName: contact.First_Name,
+    lastName: contact.Last_Name,
     email: formAttributes.email,
     phone: {
       countryCode: countryCallingCode,
