@@ -269,6 +269,12 @@ const Checkout = () => {
                 console.error(error)
             },
         });
+        
+        console.log("sale sadasd : ",sale);
+        //Seteo metadata de la suscripcio
+        RebillSDKCheckout.setMetadata({
+         so_number: "x" + sale.SO_Number
+        });
 
         //Textos de validaciones con el elemento de la tarjeta
         RebillSDKCheckout.setText({
