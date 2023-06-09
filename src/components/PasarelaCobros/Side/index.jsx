@@ -123,7 +123,7 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
                 }
                 color={`${checkoutLink ? 'success' : 'primary'}`}
                 fullwidth
-                onClick={() => console.log('No hay implementacion')}
+                onClick={() => //console.log('No hay implementacion')}
                 disabled={typeof stripeRequest?.id === 'string'}
               />
             ) : (

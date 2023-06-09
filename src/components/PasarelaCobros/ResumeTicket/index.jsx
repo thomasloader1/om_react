@@ -58,7 +58,7 @@ function ResumeTicket() {
   const newQuotes = (formikValues.quotes - 1);
   const payPerMonthAdvance = Math.round(remainingAmountToPay / newQuotes);
 
-  /* console.log('Datos del contrato: ', {
+  /* //console.log('Datos del contrato: ', {
     advance: {
       isAdvanceSuscription,
       remainingAmountToPay,
@@ -151,7 +151,7 @@ function ResumeTicket() {
                 name='checkContract'
                 value='Datos correctos'
                 onClick={() => {
-                  // // console.log(userInfo)
+                  // // //console.log(userInfo)
                   const { sideItemOptions } = options;
 
                   sideItemOptions[3].value = 'Datos correctos';

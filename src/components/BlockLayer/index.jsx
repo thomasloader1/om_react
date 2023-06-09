@@ -22,12 +22,12 @@ const BlockLayer = () => {
             .then(() => {
             })
             .catch((error) => {
-                console.log('Error al copiar al portapapeles:', error);
+                //console.log('Error al copiar al portapapeles:', error);
             });
     };
 
 
-    console.log({ openBlockLayer, rebillFetching })
+    //console.log({ openBlockLayer, rebillFetching })
     return (
         <>
             {openBlockLayer && (

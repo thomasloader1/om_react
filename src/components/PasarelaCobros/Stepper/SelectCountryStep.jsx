@@ -15,7 +15,7 @@ function SelectCountryStep() {
 
   useEffect(() => {
     if (appEnv != null && typeof appEnv?.country !== 'undefined') {
-      console.log('SelectCountry', { appEnv });
+      //console.log('SelectCountry', { appEnv });
       setFieldValue('country', appEnv.country);
       const [countrySelected] = countryOptions.filter((option) => option.value === appEnv.country);
 

@@ -19,7 +19,7 @@ import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
 /* import { loadStripe } from '@stripe/stripe-js'; */
 
-console.log(process.env)
+//console.log(process.env)
 
 function PasarelaApp() {
 
@@ -74,7 +74,7 @@ function PasarelaApp() {
   }, [stepNumber]);
 
   useEffect(() => {
-    console.log({ isMobile, pasarelaContainerRef });
+    //console.log({ isMobile, pasarelaContainerRef });
     if (isMobile && pasarelaContainerRef.current) {
       setHeightMobile();
     }

@@ -24,7 +24,7 @@ const MultiStep = ({ children, initialValues, className, onSubmit, stepStateNumb
     options.sideItemOptions[indexOfNextStep].status = 'current';
     setOptions({ ...options });
     setStepNumber(stepNumber + 1);
-    /*  // console.log('next', {
+    /*  // //console.log('next', {
       stepNumber,
       stepNumberGlobal,
       formikValues,
@@ -39,7 +39,7 @@ const MultiStep = ({ children, initialValues, className, onSubmit, stepStateNumb
     setOptions({ ...options });
     setStepNumber(stepNumber - 1);
 
-    /* // console.log('previous', {
+    /* // //console.log('previous', {
       stepNumber,
       stepNumberGlobal,
       formikValues,
@@ -60,7 +60,7 @@ const MultiStep = ({ children, initialValues, className, onSubmit, stepStateNumb
     }
   };
 
-  //// console.log({ step });
+  //// //console.log({ step });
 
   return (
     <SwitchTransition>

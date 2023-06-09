@@ -15,8 +15,8 @@ import { delegateManager } from '../Helpers/delegateManager';
 import { getCurrentStep } from '../Hooks/useCurrentStep';
 
 
-function RadioButton({...props }) {
-//  // console.log({props})
+function RadioButton({ ...props }) {
+  //  // //console.log({props})
   const [field, meta] = useField(props)
 
   const {
@@ -37,7 +37,7 @@ function RadioButton({...props }) {
   const [btnType] = useState(typeBtn);
   const [classes, setClasses] = useState(className);
 
-  const {options, setOptions, userInfo, setUserInfo, formikValues, setFormikValues} = useContext(AppContext);
+  const { options, setOptions, userInfo, setUserInfo, formikValues, setFormikValues } = useContext(AppContext);
   const { sideItemOptions } = options
 
   const buttonStatus = {
@@ -49,7 +49,7 @@ function RadioButton({...props }) {
       active: 'grid-payment_method-item tall is-link is-light is-outlined',
       default: 'grid-payment_method-item tall'
     },
-    mod_med_payment:{
+    mod_med_payment: {
       active: 'is-link is-light is-outlined',
       default: ''
     }
@@ -60,9 +60,9 @@ function RadioButton({...props }) {
 
   const handleClick = () => {
     const currentStepObject = getCurrentStep(sideItemOptions)
-    
-    console.group('Radio Handle',{ currentStepObject, formRadioRef, formikValue, idElement, options, props });
-      delegateManager(currentStepObject, formRadioRef, idElement, options, formikHook, userInfo, setUserInfo);
+
+    console.group('Radio Handle', { currentStepObject, formRadioRef, formikValue, idElement, options, props });
+    delegateManager(currentStepObject, formRadioRef, idElement, options, formikHook, userInfo, setUserInfo);
     console.groupEnd();
 
     const { values } = formikHook
@@ -78,30 +78,30 @@ function RadioButton({...props }) {
   useEffect(() => {
     setClasses(buttonStatus[btnType][btnStatus]);
   }, [btnStatus, formRadioRef]);
-  console.warn(`Radio ${name}`,{props})
+  console.warn(`Radio ${name}`, { props })
   return (
-    
-        <button 
-          ref={formRadioRef} 
-          id={props.idElement}
-          name={name}
-          type='button' 
-          value={value} 
-          className={`button ${classes ?? className}`} 
-          disabled={disabled}
-          onClick={(e)=>{
-            //// console.log(props)
-            const field = props.name
-            props.formikHook.setFieldValue(field, value)
-            props.formikHook.setSubmitting(true)
-            handleClick()
-          }} 
-          {...field}
-          {...props}
-          >
-        {imageIcon}
-        <p>{labelOfRadio}</p>
-        </button>
+
+    <button
+      ref={formRadioRef}
+      id={props.idElement}
+      name={name}
+      type='button'
+      value={value}
+      className={`button ${classes ?? className}`}
+      disabled={disabled}
+      onClick={(e) => {
+        //// //console.log(props)
+        const field = props.name
+        props.formikHook.setFieldValue(field, value)
+        props.formikHook.setSubmitting(true)
+        handleClick()
+      }}
+      {...field}
+      {...props}
+    >
+      {imageIcon}
+      <p>{labelOfRadio}</p>
+    </button>
 
   );
 }

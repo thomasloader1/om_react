@@ -35,7 +35,7 @@ export function SelectCountryStep({ countryOptions, currentStep, setCurrentStep 
       country: Yup.string().required('Selecciona un pais'),
     }),
     onSubmit: (values) => {
-      // console.log('formik values', values);
+      // //console.log('formik values', values);
     },
   });
 
@@ -73,14 +73,14 @@ export function SelectPaymentMethodStep({ paymentOptions, userFlow, currentStep,
       payment_method: Yup.string().required('Selecciona un método'),
     }),
     onSubmit: (values) => {
-      // console.log('formik values', values);
+      // //console.log('formik values', values);
     },
     onChange: (values) => {
-      // console.log('Change', values);
+      // //console.log('Change', values);
     },
   });
 
-  // console.log({ formValid: formik.isValid });
+  // //console.log({ formValid: formik.isValid });
 
   return (
     <form
@@ -132,12 +132,12 @@ export function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
     initialValues: initialValuesNormal,
     validationSchema: Yup.object(validationSchemaNormal),
     onSubmit: (values) => {
-      // console.log('formik values', { values });
+      // //console.log('formik values', { values });
       /*  const [currentStepObject] = state.sideItemOptions.filter( options => options.status === 'current');
        delegateManager(currentStepObject,values) */
     },
     onChange: (values) => {
-      // console.log('Change', { values });
+      // //console.log('Change', { values });
       /* const [currentStepObject] = state.sideItemOptions.filter( options => options.status === 'current');
       delegateManager(currentStepObject,values) */
     },
@@ -155,18 +155,18 @@ export function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
     initialValues: initialValuesSpecial,
     validationSchema: Yup.object(validationSchemaSpecial),
     onSubmit: (values) => {
-      // console.log('formik values', { values });
+      // //console.log('formik values', { values });
       const [currentStepObject] = state.sideItemOptions.filter(
         (options) => options.status === 'current',
       );
       const contract = getContractCRM();
-      // console.log({contract})
+      // //console.log({contract})
       // delegateManager(currentStepObject, values);
     },
   });
 
   if (state.userFlow.stepTwo.value === 'Mercado Pago') {
-    // console.log('formikSpecial', { formikSpecialValues:formikSpecial.values })
+    // //console.log('formikSpecial', { formikSpecialValues:formikSpecial.values })
 
     return (
       <form
@@ -235,7 +235,7 @@ export function SelectPaymentModeStep({ currentStep, setCurrentStep }) {
       onSubmit={formik.handleSubmit}
     >
       {state.paymentMethodOptions.map(({ ...props }) => {
-        // console.log({ isValidForm: formik.isValid });
+        // //console.log({ isValidForm: formik.isValid });
         return (
           <RadioButton
             {...props}
@@ -311,7 +311,7 @@ export function FormClientDataStep({ currentStep, setCurrentStep }) {
       tipoSuscripcion: Yup.string().required('Campo requerido'),
     }),
     onSubmit: (values) => {
-      // console.log(values);
+      // //console.log(values);
       state.sideItemOptions[3].value = JSON.stringify({ ...values });
       state.userFlow[3].value = JSON.stringify({ ...values });
       delegateManager(currentStepObject, values, state);
@@ -319,7 +319,7 @@ export function FormClientDataStep({ currentStep, setCurrentStep }) {
     onChange: (values) => {
       delegateManager(currentStepObject, values, state);
 
-      // console.log({ state, formik });
+      // //console.log({ state, formik });
     },
   });
   return (
@@ -397,7 +397,7 @@ function CheckoutForm() {
     // setLoading(true);
 
     if (!error) {
-      // // console.log(paymentMethod)
+      // // //console.log(paymentMethod)
       const { id } = paymentMethod;
 
       try {
@@ -407,11 +407,11 @@ function CheckoutForm() {
           amount: 1000,
         });
 
-        // console.log(data);
+        // //console.log(data);
 
         // eslint-disable-next-line no-shadow
       } catch (error) {
-        // console.log(error);
+        // //console.log(error);
       }
       // setLoading(false);
 
@@ -453,14 +453,14 @@ export function FormCardPayStep({ currentStep, setCurrentStep }) {
   //     numeroTarjeta: Yup.number().typeError('Numero de tarjeta debe ser un numero').positive('No se permite valores negativos').min(16, 'Ingrese un numero valido').required('Campo requerido'),
   //   }),
   //   onSubmit: (values) => {
-  //     // console.log(values);
+  //     // //console.log(values);
   //     state.sideItemOptions[3].value = JSON.stringify({ ...values })
   //     state.userFlow[3].value = JSON.stringify({ ...values })
   //     delegateManager(currentStepObject, values, state)
   //   },
   //   onChange: (values) => {
   //     delegateManager(currentStepObject, values, state)
-  //     // console.log({ state, formik })
+  //     // //console.log({ state, formik })
   //   }
   // });
 
@@ -469,7 +469,7 @@ export function FormCardPayStep({ currentStep, setCurrentStep }) {
       autoComplete='off'
       style={{ width: '80%', margin: '0 auto' }}
       className='grid-client_form'
-      // onSubmit={formik.handleSubmit}
+    // onSubmit={formik.handleSubmit}
     >
       {/* <Elements stripe={stripePromise}>
             <div className='container p-6'>
@@ -509,7 +509,7 @@ export function FormCardPayStep({ currentStep, setCurrentStep }) {
         state={state}
         sideItemOptions={sideItemOptions}
         validStep='true'
-        // validStep={formik.isValid}
+      // validStep={formik.isValid}
       />
     </Form>
   );

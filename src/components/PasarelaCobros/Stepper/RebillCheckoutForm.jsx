@@ -27,7 +27,7 @@ const RebillCheckoutForm = () => {
   const { values, handleChange, handleBlur, touched, errors, ...formik } = useFormikContext();
 
   const handlePhoneInputChange = (value) => {
-    /* console.log(value, typeof value)
+    /* //console.log(value, typeof value)
         if (typeof value !== 'undefined') {
             const parsedPhoneNumber = parsePhoneNumber(value);
             if (parsedPhoneNumber?.country) {
@@ -47,7 +47,7 @@ const RebillCheckoutForm = () => {
         }
       }
     } catch (error) {
-      console.log('Número de teléfono no válido', { error });
+      //console.log('Número de teléfono no válido', { error });
     }
   };
 
@@ -57,7 +57,7 @@ const RebillCheckoutForm = () => {
   useEffect(() => {
 
     return () => {
-      console.log("clean");
+      //console.log("clean");
       setShowRebill(false);
       formik.setFieldValue('cardHolder', false);
 
@@ -88,10 +88,10 @@ const RebillCheckoutForm = () => {
       setOpenBlockLayer(true);
       setRebillFetching({ loading: false, ...data });
 
-      console.log({ data });
+      //console.log({ data });
     } catch (e) {
       fireModalAlert('Error al generar link', e);
-      console.log({ e });
+      //console.log({ e });
     }
   };
   const handlePayNow = (event) => {
@@ -116,7 +116,7 @@ const RebillCheckoutForm = () => {
     const { advanceSuscription } = formikValues;
     let postUpdateZoho; // Declarar la variable fuera del condicional
     if (!advanceSuscription.isAdvanceSuscription) {
-      // console.log("no es anticipo");
+      // //console.log("no es anticipo");
       postUpdateZoho = {
         installments: formikValues.quotes,
         email: customer.userEmail,
@@ -132,7 +132,7 @@ const RebillCheckoutForm = () => {
         is_advanceSuscription: userInfo.stepThree.value.includes('Suscripción con anticipo'),
       };
     } else {
-      // console.log("es anticipo");
+      // //console.log("es anticipo");
       postUpdateZoho = {
         installments: formikValues.quotes, //5 quotesAdvance
         email: customer.userEmail,
@@ -155,25 +155,25 @@ const RebillCheckoutForm = () => {
 
   const handleRequestGateway = (data, gateway) => {
     const { UPDATE_CONTRACT, MP } = URLS;
-    console.log('handleRequestGateway', { UPDATE_CONTRACT, MP })
+    //console.log('handleRequestGateway', { UPDATE_CONTRACT, MP })
     const URL = gateway.includes('Stripe') ? UPDATE_CONTRACT : MP;
     axios
       .post(URL, data)
       .then((res) => {
-        console.log({ res });
+        //console.log({ res });
         fireToast('Contrato actualizado', 'success', 5000);
       })
       .catch((err) => {
-        console.log({ err });
+        //console.log({ err });
         fireToast('Contrato no actualizado', 'error', 5000);
       })
       .finally((res) => {
-        console.log({ res });
+        //console.log({ res });
       });
   };
 
   function initRebill(formsValues) {
-    console.log({ formsValues });
+    //console.log({ formsValues });
     const { formikValues, ...formAttributes } = formsValues;
 
     const initialization = {
@@ -185,7 +185,7 @@ const RebillCheckoutForm = () => {
     const RebillSDKCheckout = new window.Rebill.PhantomSDK(initialization);
 
     const customerRebill = mappingFields({ formAttributes, contact, formikValues });
-    //console.log({ customerRebill });
+    ////console.log({ customerRebill });
     //Seteo de customer
     RebillSDKCheckout.setCustomer(customerRebill);
 
@@ -207,65 +207,65 @@ const RebillCheckoutForm = () => {
           quantity,
         },
       ],
-    }).then((price_setting) => console.log(price_setting));
+    }).then((price_setting) => //console.log(price_setting));
 
-    //Seteo de callbacks en saco de que el pago este correcto o tengo algun fallo
-    RebillSDKCheckout.setCallbacks({
-      onSuccess: (response) => {
-        try {
-          const { invoice, failedTransaction, pendingTransaction } = response;
-          console.log("Response Pagar aqui: ", response);
+      //Seteo de callbacks en saco de que el pago este correcto o tengo algun fallo
+      RebillSDKCheckout.setCallbacks({
+        onSuccess: (response) => {
+          try {
+            const { invoice, failedTransaction, pendingTransaction } = response;
+            //console.log("Response Pagar aqui: ", response);
 
-          if (failedTransaction != null) {
-            const { payment } = failedTransaction.paidBags[0]
-            const { errorMessage } = payment;
-            console.log("Pago Fallido", { message: errorMessage });
-            throw new Error(`${errorMessage}`);
+            if (failedTransaction != null) {
+              const { payment } = failedTransaction.paidBags[0]
+              const { errorMessage } = payment;
+              //console.log("Pago Fallido", { message: errorMessage });
+              throw new Error(`${errorMessage}`);
+            }
+
+            if (pendingTransaction !== null) {
+              //console.log({ pendingTransaction })
+
+              fireModalAlert("Pago pendiente", 'El pago se esta aun procesando, aguarde a la notificacion de email', 'warning');
+
+              return
+            }
+
+            const { paidBags, buyer } = invoice;
+            const { payment, schedules } = paidBags[0];
+            const [subscriptionId] = schedules;
+            const { customer } = buyer;
+
+            const dni = customer.personalIdNumber !== "" ? customer.personalIdNumber : formAttributes.dni
+
+            const paramsFunction = { formikValues, customer, sale, payment, formsValues, subscriptionId, formAttributes, userInfo, dni }
+            const postUpdateZoho = objectPostUpdateZoho(paramsFunction);
+
+            //console.log('zohoupdate2', { formikValues, postUpdateZoho });
+
+            const gateway = userInfo.stepTwo.value
+
+            if (formikValues.advanceSuscription.isAdvanceSuscription) {
+              handleSuscriptionUpdate(postUpdateZoho.subscriptionId, formikValues.advanceSuscription)
+            }
+
+            //handleSetContractStatus(payment, formikValues.contractId);
+
+            handleRequestGateway(postUpdateZoho, gateway);
+
+            //Esto es para stripe, nose si funciona en mp
+            fireModalAlert("Pago Realizado", '', 'success');
+
+          } catch (error) {
+            //console.log("error", error);
+            fireModalAlert('Pago Fallido', error)
           }
 
-          if (pendingTransaction !== null) {
-            console.log({ pendingTransaction })
-
-            fireModalAlert("Pago pendiente", 'El pago se esta aun procesando, aguarde a la notificacion de email', 'warning');
-
-            return
-          }
-
-          const { paidBags, buyer } = invoice;
-          const { payment, schedules } = paidBags[0];
-          const [subscriptionId] = schedules;
-          const { customer } = buyer;
-
-          const dni = customer.personalIdNumber !== "" ? customer.personalIdNumber : formAttributes.dni
-
-          const paramsFunction = { formikValues, customer, sale, payment, formsValues, subscriptionId, formAttributes, userInfo, dni }
-          const postUpdateZoho = objectPostUpdateZoho(paramsFunction);
-
-          console.log('zohoupdate2', { formikValues, postUpdateZoho });
-
-          const gateway = userInfo.stepTwo.value
-
-          if (formikValues.advanceSuscription.isAdvanceSuscription) {
-            handleSuscriptionUpdate(postUpdateZoho.subscriptionId, formikValues.advanceSuscription)
-          }
-
-          //handleSetContractStatus(payment, formikValues.contractId);
-
-          handleRequestGateway(postUpdateZoho, gateway);
-
-          //Esto es para stripe, nose si funciona en mp
-          fireModalAlert("Pago Realizado", '', 'success');
-
-        } catch (error) {
-          console.log("error", error);
-          fireModalAlert('Pago Fallido', error)
-        }
-
-      },
-      onError: (error) => {
-        console.error(error)
-      },
-    });
+        },
+        onError: (error) => {
+          console.error(error)
+        },
+      });
 
     //Seteo metadata de la suscripcio
     RebillSDKCheckout.setMetadata({

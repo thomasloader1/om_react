@@ -48,7 +48,7 @@ const FormNavigation = (props) => {
       card: elements.getElement(CardElement),
     });
 
-    // console.log({ error, paymentMethod })
+    // //console.log({ error, paymentMethod })
 
     const postStripe = {
       currency,
@@ -65,7 +65,7 @@ const FormNavigation = (props) => {
 
     const laravelResponse = await axios.post(URL, postStripe);
     setStripeRequest(laravelResponse.data);
-    // console.log({ laravelResponse })
+    // //console.log({ laravelResponse })
     setOpenModal('card');
     setFetching(false);
   }; */

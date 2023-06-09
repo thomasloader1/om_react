@@ -7,7 +7,7 @@ import { useParams } from 'react-router';
 
 
 function ResumeTicketCheckout({ data }) {
-    console.log({ data })
+    //console.log({ data })
     const { ZohoData, paymentLinkData } = data
     const { contact, sale } = ZohoData
     const { customer, checkout } = paymentLinkData
@@ -31,18 +31,18 @@ function ResumeTicketCheckout({ data }) {
         style: 'currency',
         currency: 'MXN',
     };
-    
+
     const isAdvanceSuscription = checkout.type.includes('Suscripción con anticipo');
     const isTraditional = checkout.type.includes('Tradicional');
-    
+
     const totalMonths = isTraditional ?
-                             1 : Number(checkout.quotes);
+        1 : Number(checkout.quotes);
     const payPerMonth = isTraditional ?
-                             sale?.Grand_Total : Math.round(sale?.Grand_Total / checkout.quotes);
-    
+        sale?.Grand_Total : Math.round(sale?.Grand_Total / checkout.quotes);
+
     const formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(payPerMonth);
     const formattedTotalAmount = new Intl.NumberFormat('MX', currencyOptions).format(sale.Grand_Total);
-    
+
     return (
         <>
 
@@ -63,7 +63,7 @@ function ResumeTicketCheckout({ data }) {
                         <label>Número de contrato</label>
                         <h4>{sale.SO_Number}</h4>
                     </div>
-                    
+
                     <div id='montoTotalContrato_resume' className='column finalResume-item'>
                         <label>MONTO TOTAL DEL CONTRATO</label>
                         <h4>{formattedTotalAmount}</h4>
@@ -73,7 +73,7 @@ function ResumeTicketCheckout({ data }) {
                         <h4>{totalMonths}</h4>
                     </div>
                     <div id='montoTotalMes_resume' className='column is-one-third finalResume-item'>
-                        <label>{isAdvanceSuscription ? "monto a pagar por anticipo": "monto a pagar POR MES"}</label>
+                        <label>{isAdvanceSuscription ? "monto a pagar por anticipo" : "monto a pagar POR MES"}</label>
                         <h4>{formattedAmount}</h4>
                     </div>
                     <div id='montoTotalMes_resume' className='column is-one-third finalResume-item'>
