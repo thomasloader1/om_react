@@ -131,7 +131,6 @@ const Checkout = () => {
             async function fetchPaymentLink() {
                 const { GET_PAYMENT_LINK } = URLS
                 const { data } = await axios.get(`${GET_PAYMENT_LINK}/${so}`);
-                //console.log("useEffect-> rebill get paymentlink", { data, contractData });
                 setCheckoutPayment(data.checkout);
                 setCustomer(data.customer);
                 setSale(contractData.sale);
@@ -144,8 +143,9 @@ const Checkout = () => {
 
                 const mergedData = { paymentLinkData: { ...data }, ZohoData: { ...contractData }, advanceSuscription, isAdvanceSuscription: data.checkout.type.includes('Suscripción con anticipo') };
                 setTicketData(mergedData);
-
-                initRebill(mergedData);
+                const regex = /(Rechazado|pending)/i;
+                if(data.checkout.status.match(regex))
+                    initRebill(mergedData);
             }
             fetchPaymentLink();
         }
@@ -309,6 +309,7 @@ const Checkout = () => {
         RebillSDKCheckout.setElements('rebill_elements');
     }
 
+    console.log(checkoutPayment)
 
     return (
         <>
@@ -359,10 +360,16 @@ const Checkout = () => {
                         </div>
                         <div class="column">
                             <div class="mx-auto p-4 is-fullheight">
+                            {(checkoutPayment?.status === "Contrato Pendiente" || checkoutPayment?.status === "Contrato Efectivo")  ? 
+                            (
+                                <div class="mt-5 is-flex is-justify-content-center is-align-items-center">
+                                    El estado de su pago es: {checkoutPayment?.status}
+                                </div>
+                            ) : (
                                 <div id="rebill_elements" class="mt-5 is-flex is-justify-content-center is-align-items-center"></div>
+                            )}
                             </div>
                         </div>
-
                     </div>
                     {/* <pre>{JSON.stringify(ticketData, null, 2)}</pre> */}
                 </section>
