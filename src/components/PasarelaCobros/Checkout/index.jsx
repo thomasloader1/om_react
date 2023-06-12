@@ -331,13 +331,10 @@ const Checkout = () => {
             {loading ? <MotionSpinner /> : <main className='grid-checkout container'>
                 <header className={`is-max-widescreen py-5`}>
                     <nav className="navbar is-justify-content-space-between" role="navigation" aria-label="main navigation">
-                        <div className="navbar-brand">
-                            <a className="navbar-item">
+                        <div className="navbar-brand msk-logo">
+                            <a className="navbar-item ">
                                 <img src={logo} alt="MSK Logo" width="130" height="80" />
                             </a>
-                        </div>
-                        <div className="nav-item">
-                            <p className='my-auto ml-auto pr-4'>Pagos procesados con <img src={isStripe ? stripeImg : mpImg} alt="" className='is-block mt-2 mx-auto' /></p>
                         </div>
                     </nav>
                 </header>
@@ -345,12 +342,14 @@ const Checkout = () => {
                     <div className="columns">
                         <div className="column">
                             <div className="card my-4">
-                                <div className="card-content has-text-centered">
+                                <div className="card-content has-text invoice-text">
 
-                                    <h1 className="title is-1  has-text-weight-bold">{checkoutPayment?.type}</h1>
+                                    <h1 className="title is-1 has-text-weight-bold title-type">{checkoutPayment?.type === "Suscripción con anticipo" ? "Inscripción con anticipo" : checkoutPayment?.type}</h1>
 
                                     {checkoutPayment?.type === "Suscripción con anticipo" ? (
                                         <div>
+                                            <div>Realiza el primer pago y, en los meses siguientes, completarás los pagos restantes.</div>
+
                                             <p>{1} pago de:</p>
                                             <h3 className='title is-3'>{formattedAmount}</h3>
                                             <p>{advancePayment.remainingQuotes} pagos restantes de:</p>
@@ -366,8 +365,8 @@ const Checkout = () => {
                                 </div>
                                 <hr className='is-divider' />
                                 <div className="card-content">
-                                    <h3 className='is-4 has-text-weight-bold'>Detalle de la suscripcion</h3>
-                                    <ul>
+                                    <h3 className='is-4 '>Detalle de la suscripcion</h3>
+                                    <ul className="item-deail-text">
                                         {products?.map(p => <li key={p.id}>x{p.quantity} {p.name} {p.price}</li>)}
                                     </ul>
                                 </div>
@@ -378,11 +377,14 @@ const Checkout = () => {
                                 {(checkoutPayment?.status === "Contrato Pendiente" || checkoutPayment?.status === "Contrato Efectivo") ?
                                     (
                                         <div class="mt-5 is-flex is-justify-content-center is-align-items-center">
-                                            El estado de su pago es: {checkoutPayment?.status}
+                                            El estado de su pago es: <span className='price-one'>{checkoutPayment?.status}</span>
                                         </div>
                                     ) : (
                                         <div id="rebill_elements" class="mt-5 is-flex is-justify-content-center is-align-items-center"></div>
                                     )}
+                            </div>
+                             <div className="nav-item">
+                                <p className='my-auto ml-auto pr-4'>Pagos procesados con <img src={isStripe ? stripeImg : mpImg} alt="" className='is-block mt-2 mx-auto' /></p>
                             </div>
                         </div>
                     </div>
