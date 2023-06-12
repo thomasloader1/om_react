@@ -13,6 +13,34 @@ function SelectCountryStep() {
   const { stepOne } = userInfo;
   const { setFieldValue } = useFormikContext();
 
+  const handleClick = (buttonFieldProps) => {
+    const { value, idElement } = buttonFieldProps
+
+    if (contractData?.sale?.Pais !== value) {
+      fireModalAlert(
+        'País Inválido',
+        `El país del Contrato es <b>${contractData?.sale?.Pais}</b>, si esto no debería ser así cambia el país desde el CRM y vuelva a cargar la página`,
+      );
+      return
+    }
+
+    const { sideItemOptions } = options;
+    const { stepOne } = userInfo;
+
+    sideItemOptions[0].value = value;
+    stepOne.isoRef = idElement;
+    stepOne.value = value;
+
+    setOptions({
+      ...options,
+      sideItemOptions: [...sideItemOptions],
+    });
+
+    setUserInfo({
+      ...userInfo,
+    });
+  }
+
   useEffect(() => {
     if (appEnv != null && typeof appEnv?.country !== 'undefined') {
       //console.log('SelectCountry', { appEnv });
@@ -49,30 +77,7 @@ function SelectCountryStep() {
             name='country'
             key={props.idElement}
             disabled={!active}
-            onClick={() => {
-              if (contractData?.sale?.Pais === props.value) {
-                const { sideItemOptions } = options;
-                const { stepOne } = userInfo;
-
-                sideItemOptions[0].value = props.value;
-                stepOne.isoRef = props.idElement;
-                stepOne.value = props.value;
-
-                setOptions({
-                  ...options,
-                  sideItemOptions: [...sideItemOptions],
-                });
-
-                setUserInfo({
-                  ...userInfo,
-                });
-              } else {
-                fireModalAlert(
-                  'País Inválido',
-                  `El país del Contrato es <b>${contractData?.sale?.Pais}</b>, si esto no debería ser así cambia el país desde el CRM y vuelva a cargar la página`,
-                );
-              }
-            }}
+            onClick={() => { handleClick(props) }}
           />
         ))}
       </div>

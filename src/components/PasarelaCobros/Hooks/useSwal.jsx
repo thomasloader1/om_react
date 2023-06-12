@@ -60,12 +60,13 @@ export async function fireModalAlertRedirect(title, html = "", payment) {
     icon: 'warning',
     position: 'center-center',
     showConfirmButton: true,
+    confirmButtonText: 'Ver el estado del pago'
 
   });
 
   if (result.isConfirmed) {
-    window.location.href = `/status/${payment.id}`
+    window.location.href = `#/status/${payment.id}`
   } else {
-    window.location.href = `/status/${payment.id}`
+    window.location.href = `#/status/${payment.id}`
   }
 }

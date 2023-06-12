@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { AppContext } from '../PasarelaCobros/Provider/StateProvider'
 import { MdContentCopy } from 'react-icons/md'
+import { fireToast } from '../PasarelaCobros/Hooks/useSwal'
 
 const { NODE_ENV, REACT_APP_URL_PRD, REACT_APP_URL_LOCAL } = process.env
 
@@ -17,12 +18,16 @@ const BlockLayer = () => {
         setCardTitle(title)
     }, [rebillFetching.type])
 
-    const handleCopyLink = (text) => {
-        navigator.clipboard.writeText(text)
+    const handleCopyLink = () => {
+        const link = `${URL}/#/checkout/${rest.payment.contract_entity_id}`
+
+        navigator.clipboard.writeText(link)
             .then(() => {
+                fireToast("Copiado al portapapeles", 'success')
             })
             .catch((error) => {
-                //console.log('Error al copiar al portapapeles:', error);
+                console.log('Error al copiar al portapapeles:', error);
+                fireToast("No se pudo copiar al portapapeles", 'error')
             });
     };
 
@@ -59,7 +64,7 @@ const BlockLayer = () => {
                             {rebillFetching.type === "paymentLink" ? (<div className='is-flex is-fullwidth'>
                                 <button
                                     className='button is-primary has-text-weight-bold'
-                                    onClick={() => handleCopyLink(`${URL}/#/checkout/${rest.payment.contract_entity_id}`)}
+                                    onClick={() => handleCopyLink()}
                                 >
                                     Copiar Link <MdContentCopy className='ml-2' />
                                 </button>

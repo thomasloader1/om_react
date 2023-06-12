@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { useLocation, useParams } from 'react-router';
 import axios from 'axios';
-import { fireToast, fireAlert, fireModalAlert } from '../Hooks/useSwal';
+import { fireToast, fireAlert, fireModalAlert, fireModalAlertRedirect } from '../Hooks/useSwal';
 import { REBILL_CONF, URLS, getPlanPrice, mappingCheckoutFields } from '../Hooks/useRebill';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
@@ -102,27 +102,32 @@ const Checkout = () => {
 
         const auxResume = {
             totalMonths: 0,
+            firstPay: 0,
             payPerMonth: 0,
-            formattedAmount: 0,
+            formattedFirstPay: 0,
+            formattedPayPerMonth: 0,
             isTraditional: checkoutPayment?.type?.includes('Tradicional')
         };
 
+        console.log({ advanceSuscription, checkoutPayment })
         if (advanceSuscription.isAdvanceSuscription) {
 
             auxResume.totalMonths = Number(checkoutPayment?.quotes);
-            auxResume.payPerMonth = advanceSuscription.firstQuoteDiscount;
-            auxResume.formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(auxResume.payPerMonth);
+            auxResume.firstPay = advanceSuscription.firstQuoteDiscount;
+            auxResume.payPerMonth = advanceSuscription.payPerMonthAdvance;
+            auxResume.formattedFirstPay = new Intl.NumberFormat('MX', currencyOptions).format(auxResume.firstPay);
+            auxResume.formattedPayPerMonth = new Intl.NumberFormat('MX', currencyOptions).format(auxResume.payPerMonth);
         } else {
             auxResume.totalMonths = auxResume.isTraditional ? 1 : Number(checkoutPayment?.quotes);
-            auxResume.payPerMonth = auxResume.isTraditional ? sale?.Grand_Total : Math.round(sale?.Grand_Total / auxResume.totalMonths);
-            auxResume.formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(auxResume.payPerMonth);
+            auxResume.firstPay = auxResume.isTraditional ? sale?.Grand_Total : Math.round(sale?.Grand_Total / auxResume.totalMonths);
+            auxResume.formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(auxResume.firstPay);
         }
 
         return auxResume;
     };
 
     //const advanceSuscription = valuesAdvanceSuscription({ total: sale?.Grand_Total, checkoutPayment });
-    const { totalMonths, payPerMonth, formattedAmount, isTraditional } = handleCheckoutData(checkoutPayment, advancePayment);
+    const { totalMonths, formattedFirstPay, formattedPayPerMonth } = handleCheckoutData(checkoutPayment, advancePayment);
 
     const isStripe = checkoutPayment?.gateway?.includes('Stripe')
     useEffect(() => {
@@ -157,7 +162,7 @@ const Checkout = () => {
         const { paymentLinkData, ZohoData, advanceSuscription } = paymentLink;
         const { checkout, customer: paymentLinkCustomer } = paymentLinkData;
         const { contact, sale } = ZohoData
-        //console.log("Aca te dice si es anticipo: ", checkoutPayment?.type.includes('Suscripción con anticipo'));
+
         const initialization = {
             organization_id: REBILL_CONF.ORG_ID,
             api_key: REBILL_CONF.API_KEY,
@@ -211,19 +216,17 @@ const Checkout = () => {
             }
 
             if (pendingTransaction !== null) {
-                //console.log({ pendingTransaction })
-                /* const { payment } = pendingTransaction.paidBags[0]
+                const { payment } = pendingTransaction.paidBags[0]
                 const { customer } = pendingTransaction.buyer
-                const dni = customer.personalIdNumber !== "" ? customer.personalIdNumber : formAttributes.dni
+                const dni = customer.personalIdNumber !== "" ? customer.personalIdNumber : contact.DNI
 
-                const paymentData = { formikValues, customer, sale, payment, formsValues, formAttributes, userInfo, dni }
+                const paymentData = { checkout, customer, sale, payment, dni }
 
-                axios.post(URLS.PENDING_PAYMENT, { ...payment, type: userInfo.stepThree.value, contract_id: formikValues.contractId, paymentData: JSON.stringify(paymentData) }).then(res => console.log({ res })).catch(err => console.log({ err }));
+                axios.post(URLS.PENDING_PAYMENT, { ...payment, type: checkout.type, contract_id: so, paymentData: JSON.stringify(paymentData) }).then(res => console.log({ res })).catch(err => console.log({ err }));
+                handleSetContractStatus(payment, checkout.contract_entity_id);
 
                 fireModalAlertRedirect("Pago pendiente", 'El pago se esta aun procesando, aguarde a la notificacion de email', payment);
-                return */
-                handleSetContractStatus(payment, checkout.contract_entity_id);
-                throw new Error(`El pago quedo en un estado pendiente`);
+                return
             }
 
             const { paidBags, buyer } = invoice
@@ -233,7 +236,6 @@ const Checkout = () => {
             //console.log("subscriptionId: ",subscriptionId);
             const QUOTES = checkout.quotes ? Number(checkout.quotes) : 1
 
-            // const advanceSuscription = valuesAdvanceSuscription({ total: sale?.Grand_Total, quotes: checkoutPayment?.quotes });
             const isAdvanceSuscription = checkout.type.includes('Suscripción con anticipo')
             const advanceSuscription = valuesAdvanceSuscription({ total: contractData.sale?.Grand_Total, checkoutPayment: checkout });
 
@@ -279,7 +281,6 @@ const Checkout = () => {
             },
         });
 
-        console.log("sale sadasd : ", sale);
         //Seteo metadata de la suscripcio
         RebillSDKCheckout.setMetadata({
             so_number: "x" + sale.SO_Number
@@ -306,17 +307,25 @@ const Checkout = () => {
             fieldWrapper: {
                 base: {
                     maxWidth: 'auto',
-                    height: 'auto'
+                    height: 'auto',
+
                 },
                 errored: {}
             },
             inputWrapper: {
                 base: {
-                    maxWidth: 'auto'
+                    maxWidth: 'auto',
+                    fontFamily: '"Inter"'
                 }
             },
             errorText: {
-                base: {}
+                base: {
+                }
+            },
+            button: {
+                backgroundColor: "#E5E7EB;",
+                borderRadius: "4px",
+                color: "#374161",
             }
         });
 
@@ -330,11 +339,11 @@ const Checkout = () => {
         <>
             {loading ? <MotionSpinner /> : <main className='grid-checkout container'>
                 <header className={`is-max-widescreen py-5`}>
-                    <nav className="navbar is-justify-content-space-between" role="navigation" aria-label="main navigation">
+                    <nav className="navbar is-justify-content-center" role="navigation" aria-label="main navigation">
                         <div className="navbar-brand msk-logo">
-                            <a className="navbar-item ">
-                                <img src={logo} alt="MSK Logo" width="130" height="80" />
-                            </a>
+
+                            <img src={logo} alt="MSK Logo" width="130" height="130" />
+
                         </div>
                     </nav>
                 </header>
@@ -342,38 +351,41 @@ const Checkout = () => {
                     <div className="columns">
                         <div className="column">
                             <div className="card my-4">
-                                <div className="card-content has-text invoice-text">
+                                <div id='card' className="card-content has-text invoice-text">
 
-                                    <h1 className="title is-1 has-text-weight-bold title-type">{checkoutPayment?.type === "Suscripción con anticipo" ? "Inscripción con anticipo" : checkoutPayment?.type}</h1>
+                                    <h1 className="title is-1 title-type">{checkoutPayment?.type === "Suscripción con anticipo" ? "Inscripción con anticipo" : checkoutPayment?.type}</h1>
 
                                     {checkoutPayment?.type === "Suscripción con anticipo" ? (
                                         <div>
-                                            <div>Realiza el primer pago y, en los meses siguientes, completarás los pagos restantes.</div>
+                                            <p className='mb-4'>Realiza el primer pago y, en los meses siguientes, completarás los pagos restantes.</p>
 
-                                            <p>{1} pago de:</p>
-                                            <h3 className='title is-3'>{formattedAmount}</h3>
-                                            <p>{advancePayment.remainingQuotes} pagos restantes de:</p>
-                                            <h3 className='title is-3'> {advancePayment.payPerMonthAdvance}</h3>
+                                            <p className='item-deail-text mb-2'>{1} pago de:</p>
+                                            <h3 className='title is-3 item-deail-text has-text-weight-bold'>{formattedFirstPay}</h3>
+                                            <p className='invoice-text '>{advancePayment.remainingQuotes} pagos restantes de <span className='item-deail-text has-text-weight-bold'>{formattedPayPerMonth}</span></p>
                                         </div>
                                     ) : (
                                         <div>
                                             <p>{totalMonths} pagos de:</p>
-                                            <h3 className='title is-3'>{formattedAmount}</h3>
+                                            <h3 className='title is-3'>{formattedFirstPay}</h3>
                                         </div>
                                     )}
 
                                 </div>
-                                <hr className='is-divider' />
-                                <div className="card-content">
-                                    <h3 className='is-4 '>Detalle de la suscripcion</h3>
-                                    <ul className="item-deail-text">
-                                        {products?.map(p => <li key={p.id}>x{p.quantity} {p.name} {p.price}</li>)}
-                                    </ul>
+                                <hr className='is-divider-dashed' />
+                                <div className="card-content invoice-text">
+                                    <div className="is-flex is-justify-content-space-between mb-2">
+                                        <h4 className='is-4'>Detalle de la suscripcion</h4>
+                                        <h4 className='is-4'>Total</h4>
+                                    </div>
+                                    <div className="item-deail-text">
+                                        {products?.map(p => <div key={p.id} className='is-flex is-justify-content-space-between'>
+                                            <span>x{p.quantity} {p.name}</span>  <p className='has-text-weight-bold'>{new Intl.NumberFormat('MX', currencyOptions).format(p.price)}</p></div>)}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="column">
-                            <div class="mx-auto p-4 is-fullheight">
+                            <div class="mx-auto is-fullheight">
                                 {(checkoutPayment?.status === "Contrato Pendiente" || checkoutPayment?.status === "Contrato Efectivo") ?
                                     (
                                         <div class="mt-5 is-flex is-justify-content-center is-align-items-center">
@@ -383,9 +395,13 @@ const Checkout = () => {
                                         <div id="rebill_elements" class="mt-5 is-flex is-justify-content-center is-align-items-center"></div>
                                     )}
                             </div>
-                             <div className="nav-item">
-                                <p className='my-auto ml-auto pr-4'>Pagos procesados con <img src={isStripe ? stripeImg : mpImg} alt="" className='is-block mt-2 mx-auto' /></p>
+
+                            <div className='is-flex is-justify-content-center is-align-items-center invoice-text'>
+                                <span >Pagos procesados con</span>
+                                <img src={isStripe ? stripeImg : mpImg} alt="Gateway" className='ml-2' />
                             </div>
+
+
                         </div>
                     </div>
                     {/* <pre>{JSON.stringify(ticketData, null, 2)}</pre> */}

@@ -22,15 +22,12 @@ import MotionSpinner from '../Spinner/MotionSpinner';
 //console.log(process.env)
 
 function PasarelaApp() {
-
   const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } = useContext(AppContext);
-
   const location = useLocation();
   const { id } = useParams();
   const needRunEffect = !location.pathname.includes('vp');
 
-  const { loading, data } = useContractZoho(id, needRunEffect);
-
+  const { loading, data, error } = useContractZoho(id, needRunEffect);
   const pasarelaContainerRef = useRef(null);
   const isMobile = useMediaQSmall();
 
@@ -38,9 +35,7 @@ function PasarelaApp() {
     pasarelaContainerRef.current.style.height = `90vh`;
   };
 
-  const { fetching: stripeFetch, pk } = useStripeEnv(data?.sale?.Pais);
-
-
+  // const { fetching: stripeFetch, pk } = useStripeEnv(data?.sale?.Pais);
   //const stripePromise = loadStripe(pk)
 
   const { progressId, getProgress } = useProgress();
@@ -51,7 +46,7 @@ function PasarelaApp() {
       .matches(/^[a-zA-Z]+\s+[a-zA-Z]+(?:\s+[a-zA-Z]+)?$/i, 'El campo debe contener solo letras'),
     phone: Yup.string()
       .required('❗ Ingresa un número de telefono')
-      .matches(/^(\+?\d{2})?(\d{2})?(\d{4})(\d{4})$/i, 'El campo debe contener solo numeros'),
+      .matches(/^\+?\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,9}$/, 'El campo debe contener solo numeros'),
     address: Yup.string()
       .required('❗ Ingresa calle y número del titual de la tarjeta')
       .matches(/([A-Za-z0-9]+( [A-Za-z0-9]+)+)/i, 'El formato de la dirección es invalido'),
@@ -59,18 +54,21 @@ function PasarelaApp() {
       .required('❗ Ingresa el número de tu documento de identidad')
       .matches(/^[0-9]+$/i, 'El campo debe contener solo numeros'),
     email: Yup.string().email('❗ Ingresa un email valido').required('❗ El email es requerido'),
+    zip: Yup.string().required('❗ El zip es requerido'),
   });
 
   useEffect(() => {
     if (location.pathname.includes('vp')) {
       getProgress();
     }
+
+    return () => console.log('Clean')
   }, [progressId]);
 
   useEffect(() => {
     setStepNumber(stepNumber);
 
-    return () => null;
+    return () => console.log('Clean App!');
   }, [stepNumber]);
 
   useEffect(() => {
@@ -78,12 +76,15 @@ function PasarelaApp() {
     if (isMobile && pasarelaContainerRef.current) {
       setHeightMobile();
     }
+    return () => console.log('Another Clean')
+
   }, [isMobile, pasarelaContainerRef.current]);
 
+  console.log(error)
   return (
     <main ref={appRef}>
       <Header />
-      {stripeFetch ? (
+      {(loading) ? (
         <MotionSpinner text='Recuperando datos del Contrato' />
       ) : (
         /*  <Elements stripe={stripePromise}> */

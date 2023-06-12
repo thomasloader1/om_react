@@ -20,46 +20,40 @@ const RebillCheckoutForm = () => {
     useContext(AppContext);
   const { contact, sale } = contractData;
   const [selectedCountry, setSelectedCountry] = useState('MX');
-  const [phoneNumber, setPhoneNumber] = useState(null);
   const [showRebill, setShowRebill] = useState(false);
   const { id } = useParams();
+  const [phoneNumber, setPhoneNumber] = useState(null)
+  const [generateLink, setGenerateLink] = useState(false)
 
-  const { values, handleChange, handleBlur, touched, errors, ...formik } = useFormikContext();
+  const { values, handleChange, handleBlur, setFieldValue, touched, errors } = useFormikContext();
 
   const handlePhoneInputChange = (value) => {
-    /* //console.log(value, typeof value)
-        if (typeof value !== 'undefined') {
-            const parsedPhoneNumber = parsePhoneNumber(value);
-            if (parsedPhoneNumber?.country) {
-                setSelectedCountry(parsedPhoneNumber.country);
-            }
-        } */
-    try {
-      const phoneNumber = parsePhoneNumber(value);
-      if (phoneNumber) {
-        setPhoneNumber(phoneNumber);
-        const { country } = phoneNumber;
-        const findCountry = country;
-        formik.setFieldValue('phone', value);
+    setFieldValue('phone', value)
+    const numberText = value ? value : '';
+    const fullPhoneNumber = parsePhoneNumber(numberText);
+    //console.log(value, fullPhoneNumber)
 
-        if (findCountry) {
-          setSelectedCountry(findCountry);
-        }
+    if (fullPhoneNumber) {
+      const { country } = fullPhoneNumber;
+      const findCountry = country;
+      setPhoneNumber(fullPhoneNumber);
+      if (findCountry) {
+        setSelectedCountry(findCountry);
       }
-    } catch (error) {
-      //console.log('Número de teléfono no válido', { error });
     }
+
   };
 
 
-  const completedInputs = useMemo(() => Object.values(values).every((v) => typeof v !== 'undefined' && v != null && v !== ''), [values.email, values.dni])
-
+  const hasErrorInputs = useMemo(() => Object.values(errors).every((v) => typeof v !== 'undefined' && v != null && !!!v), [errors])
+  const completedInputs = useMemo(() => Object.values(values).every((v) => typeof v !== 'undefined' && v != null && v !== ''), [values])
+  //console.log({ hasErrorInputs, completedInputs, values })
   useEffect(() => {
 
     return () => {
       //console.log("clean");
       setShowRebill(false);
-      formik.setFieldValue('cardHolder', false);
+      setFieldValue('cardHolder', false);
 
     };
   }, [completedInputs]);
@@ -67,6 +61,7 @@ const RebillCheckoutForm = () => {
 
 
   const handleGenerateLink = async (event) => {
+    setGenerateLink(true)
     const { GENERATE_LINK } = URLS;
     const requestData = {
       email: values.email,
@@ -90,6 +85,7 @@ const RebillCheckoutForm = () => {
       setRebillFetching({ loading: false, ...data });
 
       //console.log({ data });
+      setGenerateLink(false)
     } catch (e) {
       fireModalAlert('Error al generar link', e);
       //console.log({ e });
@@ -98,7 +94,7 @@ const RebillCheckoutForm = () => {
   const handlePayNow = (event) => {
     setShowRebill(true);
 
-    formik.setFieldValue('cardHolder', true);
+    setFieldValue('cardHolder', true);
     const formAttributes = { ...values, phoneNumber, formikValues };
     initRebill(formAttributes);
 
@@ -184,6 +180,7 @@ const RebillCheckoutForm = () => {
     };
 
     const RebillSDKCheckout = new window.Rebill.PhantomSDK(initialization);
+    console.log(RebillSDKCheckout, window.Rebill)
 
     const customerRebill = mappingFields({ formAttributes, contact, formikValues });
     ////console.log({ customerRebill });
@@ -393,28 +390,28 @@ const RebillCheckoutForm = () => {
             onBlur={handleBlur}
             error={touched.email && errors.email}
           />
-          {(completedInputs) && (
+          {(completedInputs && hasErrorInputs) && (
             <motion.div className='field mt-2 is-flex is-flex-direction-row is-justify-content-center'>
               <div
                 id='rebill_elements'
                 style={showRebill ? { display: 'block', margin: '0 auto' } : { display: 'none' }}
               ></div>
               <button
-                className={`button is-success mr-2 ${showRebill && 'is-hidden'}`}
+                className={`button is-success  mr-2 ${showRebill && 'is-hidden'}`}
                 type='button'
                 onClick={handlePayNow}
-                disabled={!completedInputs}
+                disabled={!hasErrorInputs}
               >
                 Pagar Aqui
               </button>
-              {/* <button
-                className={`button is-secondary ml-2 ${showRebill && 'is-hidden'}`}
+              <button
+                className={`button is-info ml-2 ${generateLink && 'is-loading'} ${showRebill && 'is-hidden'}`}
                 type='button'
                 onClick={handleGenerateLink}
-                disabled={!completedInputs}
+                disabled={!hasErrorInputs}
               >
                 Generar Link
-              </button> */}
+              </button>
             </motion.div>
           )}
         </div>

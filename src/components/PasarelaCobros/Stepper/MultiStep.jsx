@@ -60,8 +60,6 @@ const MultiStep = ({ children, initialValues, className, onSubmit, stepStateNumb
     }
   };
 
-  //// //console.log({ step });
-
   return (
     <SwitchTransition>
       <CSSTransition
