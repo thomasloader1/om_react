@@ -212,7 +212,16 @@ const Checkout = () => {
 
             if (pendingTransaction !== null) {
                 //console.log({ pendingTransaction })
-                const { payment } = pendingTransaction.paidBags[0];
+                /* const { payment } = pendingTransaction.paidBags[0]
+                const { customer } = pendingTransaction.buyer
+                const dni = customer.personalIdNumber !== "" ? customer.personalIdNumber : formAttributes.dni
+
+                const paymentData = { formikValues, customer, sale, payment, formsValues, formAttributes, userInfo, dni }
+
+                axios.post(URLS.PENDING_PAYMENT, { ...payment, type: userInfo.stepThree.value, contract_id: formikValues.contractId, paymentData: JSON.stringify(paymentData) }).then(res => console.log({ res })).catch(err => console.log({ err }));
+
+                fireModalAlertRedirect("Pago pendiente", 'El pago se esta aun procesando, aguarde a la notificacion de email', payment);
+                return */
                 handleSetContractStatus(payment, checkout.contract_entity_id);
                 throw new Error(`El pago quedo en un estado pendiente`);
             }
@@ -269,11 +278,11 @@ const Checkout = () => {
                 console.error(error)
             },
         });
-        
-        console.log("sale sadasd : ",sale);
+
+        console.log("sale sadasd : ", sale);
         //Seteo metadata de la suscripcio
         RebillSDKCheckout.setMetadata({
-         so_number: "x" + sale.SO_Number
+            so_number: "x" + sale.SO_Number
         });
 
         //Textos de validaciones con el elemento de la tarjeta
