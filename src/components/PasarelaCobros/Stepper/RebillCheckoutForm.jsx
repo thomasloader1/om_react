@@ -10,9 +10,9 @@ import { parsePhoneNumber } from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import axios from 'axios';
 import { fireModalAlertRedirect, fireToast } from '../Hooks/useSwal';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { fireModalAlert } from '../Hooks/useSwal';
-import { handlePendingPayment, handleSuscriptionUpdate } from '../../../logic/rebill';
+import { handleSuscriptionUpdate } from '../../../logic/rebill';
 
 
 const RebillCheckoutForm = () => {
@@ -23,7 +23,7 @@ const RebillCheckoutForm = () => {
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [showRebill, setShowRebill] = useState(false);
   const { id } = useParams();
-  const navigate = useNavigate();
+
   const { values, handleChange, handleBlur, touched, errors, ...formik } = useFormikContext();
 
   const handlePhoneInputChange = (value) => {
@@ -215,7 +215,7 @@ const RebillCheckoutForm = () => {
       onSuccess: (response) => {
         try {
           const { invoice, failedTransaction, pendingTransaction } = response;
-          //console.log("Response Pagar aqui: ", response);
+          console.log("Response Pagar aqui: ", response);
 
           if (failedTransaction != null) {
             const { payment } = failedTransaction.paidBags[0]
@@ -227,6 +227,12 @@ const RebillCheckoutForm = () => {
           if (pendingTransaction !== null) {
             //console.log({ pendingTransaction })
             const { payment } = pendingTransaction.paidBags[0]
+            const { customer } = pendingTransaction.buyer
+            const dni = customer.personalIdNumber !== "" ? customer.personalIdNumber : formAttributes.dni
+
+            const paymentData = { formikValues, customer, sale, payment, formsValues, formAttributes, userInfo, dni }
+
+            axios.post(URLS.PENDING_PAYMENT, { ...payment, type: userInfo.stepThree.value, contract_id: formikValues.contractId, paymentData: JSON.stringify(paymentData) }).then(res => console.log({ res })).catch(err => console.log({ err }));
 
             fireModalAlertRedirect("Pago pendiente", 'El pago se esta aun procesando, aguarde a la notificacion de email', payment);
             return
@@ -401,14 +407,14 @@ const RebillCheckoutForm = () => {
               >
                 Pagar Aqui
               </button>
-              <button
+              {/* <button
                 className={`button is-secondary ml-2 ${showRebill && 'is-hidden'}`}
                 type='button'
                 onClick={handleGenerateLink}
                 disabled={!completedInputs}
               >
                 Generar Link
-              </button>
+              </button> */}
             </motion.div>
           )}
         </div>

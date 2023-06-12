@@ -14,6 +14,8 @@ const {
   REACT_APP_OCEANO_GENERATELINK_LOCAL,
   REACT_APP_OCEANO_GETPAYMENTLINK,
   REACT_APP_OCEANO_GETPAYMENTLINK_LOCAL,
+  REACT_APP_OCEANO_PAYMENT_PENDING,
+  REACT_APP_OCEANO_PAYMENT_PENDING_LOCAL,
   REACT_APP_OCEANO_URL,
   REACT_APP_REBILL_STRIPE_TEST_1,
   REACT_APP_REBILL_STRIPE_TEST_3,
@@ -66,6 +68,9 @@ export const URLS = {
   GET_PAYMENT_LINK: itsProduction
     ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_GETPAYMENTLINK}`
     : REACT_APP_OCEANO_GETPAYMENTLINK_LOCAL,
+  PENDING_PAYMENT: itsProduction
+    ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_PAYMENT_PENDING}`
+    : REACT_APP_OCEANO_PAYMENT_PENDING_LOCAL,
 };
 
 export const REBILL_CONF = {
@@ -134,6 +139,7 @@ export const getPlanPrice = (formikValues, sale) => {
   }
 };
 export const mappingFields = ({ formAttributes, contact, formikValues }) => {
+  console.log({ formAttributes, contact, formikValues })
   const [number] = formAttributes.address.split(' ').filter((s) => !isNaN(s) && s);
   const [...street] = formAttributes.address.split(' ').filter((s) => isNaN(s) && s);
   const { phoneNumber } = formAttributes;
