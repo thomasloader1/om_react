@@ -212,7 +212,8 @@ const Checkout = () => {
                 const { payment } = failedTransaction.paidBags[0];
                 const { errorMessage } = payment;
                 handleSetContractStatus(payment, checkout.contract_entity_id);
-                throw new Error(`${errorMessage}`);
+                fireModalAlert("Error de pago", errorMessage, 'error')
+                return
             }
 
             if (pendingTransaction !== null) {
@@ -270,11 +271,7 @@ const Checkout = () => {
 
         RebillSDKCheckout.setCallbacks({
             onSuccess: (response) => {
-                try {
-                    handleSuccessRebillSDKCheckout(response);
-                } catch (error) {
-                    console.error({ error })
-                }
+                handleSuccessRebillSDKCheckout(response);
             },
             onError: (error) => {
                 console.error(error)
@@ -361,7 +358,7 @@ const Checkout = () => {
 
                                             <p className='item-deail-text mb-2'>{1} pago de:</p>
                                             <h3 className='title is-3 item-deail-text has-text-weight-bold'>{formattedFirstPay}</h3>
-                                            <p className='invoice-text '>{advancePayment.remainingQuotes} pagos restantes de <span className='item-deail-text has-text-weight-bold'>{formattedPayPerMonth}</span></p>
+                                            <p className='invoice-text'>{advancePayment.remainingQuotes} pagos restantes de <span className='has-text-weight-bold'>{formattedPayPerMonth}</span></p>
                                         </div>
                                     ) : (
                                         <div>
@@ -374,21 +371,27 @@ const Checkout = () => {
                                 <hr className='is-divider-dashed' />
                                 <div className="card-content invoice-text">
                                     <div className="is-flex is-justify-content-space-between mb-2">
-                                        <h4 className='is-4'>Detalle de la suscripcion</h4>
-                                        <h4 className='is-4'>Total</h4>
+                                        <div>
+                                            <h4 className='is-4 invoice-text'>Detalle de la suscripcion</h4>
+                                            {products?.map(p => <span key={p.id} className='item-deail-text'>x{p.quantity} {p.name}</span>)}
+                                        </div>
+                                        <div>
+                                            <h4 className='is-4 invoice-text'>Total</h4>
+                                            {products?.map(p => <p key={p.id} className='has-text-weight-bold item-deail-text'>{new Intl.NumberFormat('MX', currencyOptions).format(p.price)}</p>)}
+                                        </div>
+
                                     </div>
                                     <div className="item-deail-text">
-                                        {products?.map(p => <div key={p.id} className='is-flex is-justify-content-space-between'>
-                                            <span>x{p.quantity} {p.name}</span>  <p className='has-text-weight-bold'>{new Intl.NumberFormat('MX', currencyOptions).format(p.price)}</p></div>)}
+
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="column">
-                            <div class="mx-auto is-fullheight">
+                        <div className="column">
+                            <div className="mx-auto is-fullheight">
                                 {(checkoutPayment?.status === "Contrato Pendiente" || checkoutPayment?.status === "Contrato Efectivo") ?
                                     (
-                                        <div class="mt-5 is-flex is-justify-content-center is-align-items-center">
+                                        <div className="mt-5 is-flex is-justify-content-center is-align-items-center">
                                             El estado de su pago es: <span className='price-one'>{checkoutPayment?.status}</span>
                                         </div>
                                     ) : (
