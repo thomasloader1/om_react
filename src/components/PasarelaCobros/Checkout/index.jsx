@@ -9,6 +9,8 @@ import MotionSpinner from '../Spinner/MotionSpinner';
 import mpImg from '../../../img/pasarelaCobros/metPago/mp.svg'
 import stripeImg from '../../../img/pasarelaCobros/metPago/stripe.svg'
 import { handleSetContractStatus, handleSuscriptionUpdate } from '../../../logic/rebill'
+import { mdiCheckboxMultipleMarkedCircleOutline } from '@mdi/js';
+import InvoiceDetail from './InvoiceDetail';
 
 const { logo } = IMAGES
 
@@ -120,14 +122,17 @@ const Checkout = () => {
         } else {
             auxResume.totalMonths = auxResume.isTraditional ? 1 : Number(checkoutPayment?.quotes);
             auxResume.firstPay = auxResume.isTraditional ? sale?.Grand_Total : Math.round(sale?.Grand_Total / auxResume.totalMonths);
-            auxResume.formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(auxResume.firstPay);
+            auxResume.formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(Math.round(auxResume.firstPay));
+            
+            auxResume.formattedFirstPay =  new Intl.NumberFormat('MX', currencyOptions).format(Math.round(auxResume.firstPay));
+            auxResume.formattedPayPerMonth = new Intl.NumberFormat('MX', currencyOptions).format(Math.round(auxResume.firstPay));
         }
 
         return auxResume;
     };
 
     //const advanceSuscription = valuesAdvanceSuscription({ total: sale?.Grand_Total, checkoutPayment });
-    const { totalMonths, formattedFirstPay, formattedPayPerMonth } = handleCheckoutData(checkoutPayment, advancePayment);
+    const { totalMonths, formattedFirstPay, formattedPayPerMonth, formattedAmount} = handleCheckoutData(checkoutPayment, advancePayment);
 
     const isStripe = checkoutPayment?.gateway?.includes('Stripe')
     useEffect(() => {
@@ -331,6 +336,8 @@ const Checkout = () => {
     }
 
     //console.log(checkoutPayment)
+    
+    const invoiceDetail = {advancePayment, formattedFirstPay, formattedPayPerMonth,checkoutPayment}; 
 
     return (
         <>
@@ -350,20 +357,20 @@ const Checkout = () => {
                             <div className="card my-4">
                                 <div id='card' className="card-content has-text invoice-text">
 
-                                    <h1 className="title is-1 title-type">{checkoutPayment?.type === "Suscripción con anticipo" ? "Inscripción con anticipo" : checkoutPayment?.type}</h1>
+                                    <h1 className="title is-1 title-type">{
+                                    checkoutPayment?.type === "Suscripción con anticipo" ? "Inscripción con anticipo" 
+                                    : checkoutPayment?.type === "Suscripción" ? "Finaliza tu inscripción" 
+                                    : checkoutPayment?.type === "Tradicional" ? "Inscripción": checkoutPayment?.type}</h1>
 
-                                    {checkoutPayment?.type === "Suscripción con anticipo" ? (
-                                        <div>
-                                            <p className='mb-4'>Realiza el primer pago y, en los meses siguientes, completarás los pagos restantes.</p>
-
-                                            <p className='item-deail-text mb-2'>{1} pago de:</p>
-                                            <h3 className='title is-3 item-deail-text has-text-weight-bold'>{formattedFirstPay}</h3>
-                                            <p className='invoice-text'>{advancePayment.remainingQuotes} pagos restantes de <span className='has-text-weight-bold'>{formattedPayPerMonth}</span></p>
-                                        </div>
+                                    {checkoutPayment?.type.includes("Suscripción")? (
+                                        <InvoiceDetail 
+                                        invoiceDetail={invoiceDetail}
+                                        
+                                        />
                                     ) : (
                                         <div>
-                                            <p>{totalMonths} pagos de:</p>
-                                            <h3 className='title is-3'>{formattedFirstPay}</h3>
+                                            <p>{totalMonths} { checkoutPayment?.type === "Tradicional" ? "pago unico de": "pagos de" }</p>
+                                            <h3 className='title is-3'>{  checkoutPayment?.type === "Suscripción con anticipo" ? formattedFirstPay : formattedAmount}</h3>
                                         </div>
                                     )}
 
@@ -372,12 +379,12 @@ const Checkout = () => {
                                 <div className="card-content invoice-text">
                                     <div className="is-flex is-justify-content-space-between mb-2">
                                         <div>
-                                            <h4 className='is-4 invoice-text'>Detalle de la suscripcion</h4>
+                                            <h4 className='is-4 invoice-text'>Detalle de tu inscripci&oacute;n</h4>
                                             {products?.map(p => <span key={p.id} className='item-deail-text'>x{p.quantity} {p.name}</span>)}
                                         </div>
                                         <div>
                                             <h4 className='is-4 invoice-text'>Total</h4>
-                                            {products?.map(p => <p key={p.id} className='has-text-weight-bold item-deail-text'>{new Intl.NumberFormat('MX', currencyOptions).format(p.price)}</p>)}
+                                            {products?.map(p => <p key={p.id} className='has-text-weight-bold item-deail-text'>{new Intl.NumberFormat('MX', currencyOptions).format(Math.round(p.price))}</p>)}
                                         </div>
 
                                     </div>

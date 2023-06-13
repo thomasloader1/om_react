@@ -134,7 +134,7 @@ export const getPlanPrice = (formikValues, sale) => {
     default:
       return {
         id: isStripe ? PRICES.STRIPE['1'] : PRICES.MP['1'],
-        quantity: sale.Grand_Total,
+        quantity: priceQuantity,
       };
   }
 };

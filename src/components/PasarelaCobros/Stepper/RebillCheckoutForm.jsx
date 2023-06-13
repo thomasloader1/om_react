@@ -58,8 +58,6 @@ const RebillCheckoutForm = () => {
     };
   }, [completedInputs]);
 
-
-
   const handleGenerateLink = async (event) => {
     setGenerateLink(true)
     const { GENERATE_LINK } = URLS;
@@ -75,7 +73,7 @@ const RebillCheckoutForm = () => {
       contract_entity_id: id,
       contract_so: sale.SO_Number,
       country: sale.Pais,
-      quotes: values.quotes,
+      quotes: values.quotes !== undefined ? values.quotes : 1,
       status: 'pending',
     };
 
