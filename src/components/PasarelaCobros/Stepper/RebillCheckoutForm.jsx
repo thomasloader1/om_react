@@ -180,7 +180,6 @@ const RebillCheckoutForm = () => {
     };
 
     const RebillSDKCheckout = new window.Rebill.PhantomSDK(initialization);
-    console.log(RebillSDKCheckout, window.Rebill)
 
     const customerRebill = mappingFields({ formAttributes, contact, formikValues });
     ////console.log({ customerRebill });
@@ -192,7 +191,7 @@ const RebillCheckoutForm = () => {
       name: contact.Full_Name,
       identification: {
         type: 'DNI',
-        value: contact.DNI,
+        value: `${contact.DNI}`,
       },
     });
 

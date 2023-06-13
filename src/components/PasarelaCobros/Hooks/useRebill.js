@@ -164,7 +164,7 @@ contact.Last_Name */
     },
     personalId: {
       type: 'DNI',
-      value: contact.DNI,
+      value: `${contact.DNI}`,
     },
     address: {
       street: street.join(' '),
