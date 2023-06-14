@@ -150,16 +150,17 @@ const Checkout = () => {
     return auxResume;
   };
 
-  //const advanceSuscription = valuesAdvanceSuscription({ total: sale?.Grand_Total, checkoutPayment });
   const { totalMonths, formattedFirstPay, formattedPayPerMonth, formattedAmount } =
     handleCheckoutData(checkoutPayment, advancePayment);
 
   const isStripe = checkoutPayment?.gateway?.includes('Stripe');
+
   useEffect(() => {
     if (!loading) {
       async function fetchPaymentLink() {
         const { GET_PAYMENT_LINK } = URLS;
         const { data } = await axios.get(`${GET_PAYMENT_LINK}/${so}`);
+
         setCheckoutPayment(data.checkout);
         setCustomer(data.customer);
         setSale(contractData.sale);
@@ -170,7 +171,7 @@ const Checkout = () => {
           total: contractData.sale?.Grand_Total,
           checkoutPayment: data.checkout,
         });
-        //console.log("advanceSuscriptionData", advanceSuscription);
+
         setAdvancePayment(advanceSuscription);
 
         const mergedData = {
@@ -179,13 +180,14 @@ const Checkout = () => {
           advanceSuscription,
           isAdvanceSuscription: data.checkout.type.includes('Suscripción con anticipo'),
         };
+
         setTicketData(mergedData);
+
         const regex = /(Rechazado|pending)/i;
         if (data.checkout.status.match(regex)) initRebill(mergedData);
       }
       fetchPaymentLink();
     }
-    // //console.log({ checkoutPayment, sale, contact, customer })
   }, [contractData]);
 
   function initRebill(paymentLink) {
@@ -474,14 +476,14 @@ const Checkout = () => {
     RebillSDKCheckout.setElements('rebill_elements');
   }
 
-  //console.log(checkoutPayment)
-
   const invoiceDetail = {
     advancePayment,
     formattedFirstPay,
     formattedPayPerMonth,
     checkoutPayment,
   };
+
+  const totalPrice = products?.reduce((total, p) => total + Math.round(p.price * p.quantity), 0);
 
   return (
     <>
@@ -508,11 +510,7 @@ const Checkout = () => {
                     <h1 className='title is-1 title-type'>
                       {checkoutPayment?.type === 'Suscripción con anticipo'
                         ? 'Inscripción con anticipo'
-                        : checkoutPayment?.type === 'Suscripción'
-                        ? 'Finaliza tu inscripción'
-                        : checkoutPayment?.type === 'Tradicional'
-                        ? 'Inscripción'
-                        : checkoutPayment?.type}
+                        : 'Finaliza tu inscripción'}
                     </h1>
 
                     {checkoutPayment?.type.includes('Suscripción') ? (
@@ -532,35 +530,34 @@ const Checkout = () => {
                     )}
                   </div>
                   <hr className='is-divider-dashed' />
-                  <div className='card-content invoice-text'>
-                    <div className='is-flex is-justify-content-space-between mb-2'>
-                      <div>
-                        <h4 className='is-4 invoice-text'>Detalle de tu inscripci&oacute;n</h4>
-                        {products?.map((p) => (
-                          <span key={p.id} className='item-deail-text'>
-                            x{p.quantity} {p.name}
-                          </span>
-                        ))}
+                  <div className='px-5 py-2 invoice-text'>
+                    <h4 className='is-4 invoice-text mb-2'>Detalle de tu inscripci&oacute;n</h4>
+
+                    {products?.map((p) => (
+                      <div key={p.id} className='is-flex is-justify-content-space-between mb-2'>
+                        <span className='item-deail-text'>
+                          x{p.quantity} {p.name}
+                        </span>
+                        <span className='has-text-weight-bold item-deail-text'>
+                          {new Intl.NumberFormat('MX', currencyOptions).format(Math.round(p.price))}
+                        </span>
                       </div>
-                      <div>
-                        <h4 className='is-4 invoice-text'>Total</h4>
-                        {products?.map((p) => (
-                          <p key={p.id} className='has-text-weight-bold item-deail-text'>
-                            {new Intl.NumberFormat('MX', currencyOptions).format(
-                              Math.round(p.price),
-                            )}
-                          </p>
-                        ))}
-                      </div>
-                    </div>
-                    <div className='item-deail-text'></div>
+                    ))}
+                  </div>
+                  <hr className='is-divider-dashed' />
+
+                  <div className='px-5 py-2 invoice-text is-flex is-justify-content-end'>
+                    <h4 className='is-4 invoice-text mb-2 mr-2'>Total</h4>
+                    <span className='has-text-weight-bold item-deail-text'>
+                      {new Intl.NumberFormat('MX', currencyOptions).format(totalPrice)}
+                    </span>
                   </div>
                 </div>
               </div>
               <div className='column'>
                 <div className='mx-auto is-fullheight'>
-                  {checkoutPayment?.status === 'Contrato Pendiente' ||
-                  checkoutPayment?.status === 'Contrato Efectivo' ? (
+                  {checkoutPayment?.status.includes('Pendiente') ||
+                  checkoutPayment?.status.includes('Efectivo') ? (
                     <div className='mt-5 is-flex is-justify-content-center is-align-items-center'>
                       El estado de su pago es:{' '}
                       <span className='price-one'>{checkoutPayment?.status}</span>
@@ -568,7 +565,10 @@ const Checkout = () => {
                   ) : (
                     <div
                       id='rebill_elements'
-                      class='mt-5 is-flex is-justify-content-center is-align-items-center'
+                      className={`mt-5 is-flex is-justify-content-center is-align-items-center ${
+                        checkoutPayment?.status.includes('Pendiente') ||
+                        (checkoutPayment?.status.includes('Efectivo') && 'is-hidden')
+                      }`}
                     ></div>
                   )}
                 </div>
@@ -579,7 +579,6 @@ const Checkout = () => {
                 </div>
               </div>
             </div>
-            {/* <pre>{JSON.stringify(ticketData, null, 2)}</pre> */}
           </section>
         </main>
       )}
