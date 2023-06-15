@@ -13,7 +13,7 @@ import { fireModalAlertRedirect, fireToast } from '../Hooks/useSwal';
 import { useParams } from 'react-router';
 import { fireModalAlert } from '../Hooks/useSwal';
 import { handleSuscriptionUpdate } from '../../../logic/rebill';
-
+import { makePostUpdateZoho } from '../../../logic/zoho';
 
 const RebillCheckoutForm = () => {
   const { contractData, formikValues, userInfo, setRebillFetching, setOpenBlockLayer } =
@@ -22,13 +22,13 @@ const RebillCheckoutForm = () => {
   const [selectedCountry, setSelectedCountry] = useState('MX');
   const [showRebill, setShowRebill] = useState(false);
   const { id } = useParams();
-  const [phoneNumber, setPhoneNumber] = useState(null)
-  const [generateLink, setGenerateLink] = useState(false)
+  const [phoneNumber, setPhoneNumber] = useState(null);
+  const [generateLink, setGenerateLink] = useState(false);
 
   const { values, handleChange, handleBlur, setFieldValue, touched, errors } = useFormikContext();
 
   const handlePhoneInputChange = (value) => {
-    setFieldValue('phone', value)
+    setFieldValue('phone', value);
     const numberText = value ? value : '';
     const fullPhoneNumber = parsePhoneNumber(numberText);
     //console.log(value, fullPhoneNumber)
@@ -41,25 +41,27 @@ const RebillCheckoutForm = () => {
         setSelectedCountry(findCountry);
       }
     }
-
   };
 
-
-  const hasErrorInputs = useMemo(() => Object.values(errors).every((v) => typeof v !== 'undefined' && v != null && !!!v), [errors])
-  const completedInputs = useMemo(() => Object.values(values).every((v) => typeof v !== 'undefined' && v != null && v !== ''), [values])
+  const hasErrorInputs = useMemo(
+    () => Object.values(errors).every((v) => typeof v !== 'undefined' && v != null && !!!v),
+    [errors],
+  );
+  const completedInputs = useMemo(
+    () => Object.values(values).every((v) => typeof v !== 'undefined' && v != null && v !== ''),
+    [values],
+  );
   //console.log({ hasErrorInputs, completedInputs, values })
   useEffect(() => {
-
     return () => {
       //console.log("clean");
       setShowRebill(false);
       setFieldValue('cardHolder', false);
-
     };
   }, [completedInputs]);
 
   const handleGenerateLink = async (event) => {
-    setGenerateLink(true)
+    setGenerateLink(true);
     const { GENERATE_LINK } = URLS;
     const requestData = {
       email: values.email,
@@ -83,7 +85,7 @@ const RebillCheckoutForm = () => {
       setRebillFetching({ loading: false, ...data });
 
       //console.log({ data });
-      setGenerateLink(false)
+      setGenerateLink(false);
     } catch (e) {
       fireModalAlert('Error al generar link', e);
       //console.log({ e });
@@ -95,57 +97,6 @@ const RebillCheckoutForm = () => {
     setFieldValue('cardHolder', true);
     const formAttributes = { ...values, phoneNumber, formikValues };
     initRebill(formAttributes);
-
-  };
-  const objectPostUpdateZoho = ({
-    formikValues,
-    customer,
-    sale,
-    payment,
-    formsValues,
-    subscriptionId,
-    formAttributes,
-    userInfo,
-    dni,
-  }) => {
-    const { advanceSuscription } = formikValues;
-    let postUpdateZoho; // Declarar la variable fuera del condicional
-    if (!advanceSuscription.isAdvanceSuscription) {
-      // //console.log("no es anticipo");
-      postUpdateZoho = {
-        installments: formikValues.quotes,
-        email: customer.userEmail,
-        amount: sale.Grand_Total,
-        contractId: formikValues.contractId,
-        subscriptionId,
-        installment_amount: payment.amount,
-        address: formsValues.address,
-        dni,
-        phone: formAttributes.phone,
-        fullname: customer.firstName + ' ' + customer.lastName,
-        is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
-        is_advanceSuscription: userInfo.stepThree.value.includes('Suscripción con anticipo'),
-      };
-    } else {
-      // //console.log("es anticipo");
-      postUpdateZoho = {
-        installments: formikValues.quotes, //5 quotesAdvance
-        email: customer.userEmail,
-        amount: sale.Grand_Total,
-        contractId: formikValues.contractId,
-        subscriptionId,
-        installment_amount: advanceSuscription.firstQuoteDiscount, //
-        payPerMonthAdvance: advanceSuscription.payPerMonthAdvance,
-        address: formsValues.address,
-        dni,
-        phone: formAttributes.phone,
-        fullname: customer.firstName + ' ' + customer.lastName,
-        is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
-        is_advanceSuscription: userInfo.stepThree.value.includes('Suscripción con anticipo'),
-      };
-      //no hace falta mandar el remainingAmountToPay,quotesAdvance
-    }
-    return postUpdateZoho;
   };
 
   const handleRequestGateway = (data, gateway) => {
@@ -168,7 +119,7 @@ const RebillCheckoutForm = () => {
   };
 
   function initRebill(formsValues) {
-    //console.log({ formsValues });
+    console.log({ formsValues });
     const { formikValues, ...formAttributes } = formsValues;
 
     const initialization = {
@@ -209,10 +160,10 @@ const RebillCheckoutForm = () => {
       onSuccess: (response) => {
         try {
           const { invoice, failedTransaction, pendingTransaction } = response;
-          console.log("Response Pagar aqui: ", response);
+          console.log('Response Pagar aqui: ', response);
 
           if (failedTransaction != null) {
-            const { payment } = failedTransaction.paidBags[0]
+            const { payment } = failedTransaction.paidBags[0];
             const { errorMessage } = payment;
             //console.log("Pago Fallido", { message: errorMessage });
             throw new Error(`${errorMessage}`);
@@ -220,16 +171,38 @@ const RebillCheckoutForm = () => {
 
           if (pendingTransaction !== null) {
             //console.log({ pendingTransaction })
-            const { payment } = pendingTransaction.paidBags[0]
-            const { customer } = pendingTransaction.buyer
-            const dni = customer.personalIdNumber !== "" ? customer.personalIdNumber : formAttributes.dni
+            const { payment } = pendingTransaction.paidBags[0];
+            const { customer } = pendingTransaction.buyer;
+            const dni =
+              customer.personalIdNumber !== '' ? customer.personalIdNumber : formAttributes.dni;
 
-            const paymentData = { formikValues, customer, sale, payment, formsValues, formAttributes, userInfo, dni }
+            const paymentData = {
+              formikValues,
+              customer,
+              sale,
+              payment,
+              formsValues,
+              formAttributes,
+              userInfo,
+              dni,
+            };
 
-            axios.post(URLS.PENDING_PAYMENT, { ...payment, type: userInfo.stepThree.value, contract_id: formikValues.contractId, paymentData: JSON.stringify(paymentData) }).then(res => console.log({ res })).catch(err => console.log({ err }));
+            axios
+              .post(URLS.PENDING_PAYMENT, {
+                ...payment,
+                type: userInfo.stepThree.value,
+                contract_id: formikValues.contractId,
+                paymentData: JSON.stringify(paymentData),
+              })
+              .then((res) => console.log({ res }))
+              .catch((err) => console.log({ err }));
 
-            fireModalAlertRedirect("Pago pendiente", 'El pago se esta aun procesando, aguarde a la notificacion de email', payment);
-            return
+            fireModalAlertRedirect(
+              'Pago pendiente',
+              'El pago se esta aun procesando, aguarde a la notificacion de email',
+              payment,
+            );
+            return;
           }
 
           const { paidBags, buyer } = invoice;
@@ -237,40 +210,46 @@ const RebillCheckoutForm = () => {
           const [subscriptionId] = schedules;
           const { customer } = buyer;
 
-          const dni = customer.personalIdNumber !== "" ? customer.personalIdNumber : formAttributes.dni
+          const dni =
+            customer.personalIdNumber !== '' ? customer.personalIdNumber : formAttributes.dni;
 
-          const paramsFunction = { formikValues, customer, sale, payment, formsValues, subscriptionId, formAttributes, userInfo, dni }
-          const postUpdateZoho = objectPostUpdateZoho(paramsFunction);
+          const paramsFunction = {
+            formikValues,
+            customer,
+            sale,
+            payment,
+            formsValues,
+            subscriptionId,
+            formAttributes,
+            userInfo,
+            dni,
+          };
 
-          //console.log('zohoupdate2', { formikValues, postUpdateZoho });
+          const postUpdateZoho = makePostUpdateZoho(paramsFunction);
 
-          const gateway = userInfo.stepTwo.value
+          const gateway = userInfo.stepTwo.value;
 
           if (formikValues.advanceSuscription.isAdvanceSuscription) {
-            handleSuscriptionUpdate(postUpdateZoho.subscriptionId, formikValues.advanceSuscription)
+            handleSuscriptionUpdate(postUpdateZoho.subscriptionId, formikValues.advanceSuscription);
           }
-
-          //handleSetContractStatus(payment, formikValues.contractId);
 
           handleRequestGateway(postUpdateZoho, gateway);
 
           //Esto es para stripe, nose si funciona en mp
-          fireModalAlert("Pago Realizado", '', 'success');
-
+          fireModalAlert('Pago Realizado', '', 'success');
         } catch (error) {
           //console.log("error", error);
-          fireModalAlert('Pago Fallido', error)
+          fireModalAlert('Pago Fallido', error);
         }
-
       },
       onError: (error) => {
-        console.error(error)
+        console.error(error);
       },
     });
 
     //Seteo metadata de la suscripcio
     RebillSDKCheckout.setMetadata({
-      so_number: "x" + sale.SO_Number
+      so_number: 'x' + sale.SO_Number,
     });
 
     //Textos de validaciones con el elemento de la tarjeta
@@ -313,107 +292,107 @@ const RebillCheckoutForm = () => {
   }
 
   return (
-    <>
-      <FormStep stepNumber={5} stepName='Finaliza la compra'>
-        <div id='payment_rebill'>
-          <InputField
-            type='text'
-            id='fullName'
-            name='fullName'
-            label='Nombre del titular'
-            placeholder='Ingresar nombre del titular'
-            value={values.fullName}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={touched.fullName && errors.fullName}
-          />
-          <InputField
-            type='phone'
-            id='phone'
-            name='phone'
-            label='Teléfono'
-            placeholder='Ingresar número de teléfono'
-            value={values.phone}
-            onChange={handlePhoneInputChange}
-            onBlur={handleBlur}
-            error={touched.phone && errors.phone}
-            country={selectedCountry}
-            defaultCountry='MX'
-          />
+    <FormStep stepNumber={5} stepName='Finaliza la compra'>
+      <div id='payment_rebill'>
+        <InputField
+          type='text'
+          id='fullName'
+          name='fullName'
+          label='Nombre del titular'
+          placeholder='Ingresar nombre del titular'
+          value={values.fullName}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={touched.fullName && errors.fullName}
+        />
+        <InputField
+          type='phone'
+          id='phone'
+          name='phone'
+          label='Teléfono'
+          placeholder='Ingresar número de teléfono'
+          value={values.phone}
+          onChange={handlePhoneInputChange}
+          onBlur={handleBlur}
+          error={touched.phone && errors.phone}
+          country={selectedCountry}
+          defaultCountry='MX'
+        />
 
-          <InputField
-            type='address'
-            id='address'
-            name='address'
-            label='Dirección de facturación'
-            placeholder='Dirección completa'
-            value={values.address}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={touched.address && errors.address}
-          />
+        <InputField
+          type='address'
+          id='address'
+          name='address'
+          label='Dirección de facturación'
+          placeholder='Dirección completa'
+          value={values.address}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={touched.address && errors.address}
+        />
 
-          <InputField
-            type='text'
-            id='zip'
-            name='zip'
-            label='Codigo postal'
-            placeholder='Codigo postal'
-            value={values.zip}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={touched.zip && errors.zip}
-          />
+        <InputField
+          type='text'
+          id='zip'
+          name='zip'
+          label='Codigo postal'
+          placeholder='Codigo postal'
+          value={values.zip}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={touched.zip && errors.zip}
+        />
 
-          <InputField
-            type='number'
-            id='dni'
-            name='dni'
-            label='Número de identificación'
-            placeholder='Número de identificación'
-            value={values.dni}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={touched.dni && errors.dni}
-          />
-          <InputField
-            type='email'
-            id='email'
-            name='email'
-            label='E-mail'
-            placeholder='Ingresar e-mail'
-            value={values.email}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={touched.email && errors.email}
-          />
-          {(completedInputs && hasErrorInputs) && (
-            <motion.div className='field mt-2 is-flex is-flex-direction-row is-justify-content-center'>
-              <div
-                id='rebill_elements'
-                style={showRebill ? { display: 'block', margin: '0 auto' } : { display: 'none' }}
-              ></div>
-              <button
-                className={`button is-success  mr-2 ${showRebill && 'is-hidden'}`}
-                type='button'
-                onClick={handlePayNow}
-                disabled={!hasErrorInputs}
-              >
-                Pagar Aqui
-              </button>
-              <button
-                className={`button is-info ml-2 ${generateLink && 'is-loading'} ${showRebill && 'is-hidden'}`}
-                type='button'
-                onClick={handleGenerateLink}
-                disabled={!hasErrorInputs}
-              >
-                Generar Link
-              </button>
-            </motion.div>
-          )}
-        </div>
-      </FormStep>
-    </>
+        <InputField
+          type='number'
+          id='dni'
+          name='dni'
+          label='Número de identificación'
+          placeholder='Número de identificación'
+          value={values.dni}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={touched.dni && errors.dni}
+        />
+        <InputField
+          type='email'
+          id='email'
+          name='email'
+          label='E-mail'
+          placeholder='Ingresar e-mail'
+          value={values.email}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={touched.email && errors.email}
+        />
+        {completedInputs && hasErrorInputs && (
+          <motion.div className='field mt-2 is-flex is-flex-direction-row is-justify-content-center'>
+            <div
+              id='rebill_elements'
+              style={showRebill ? { display: 'block', margin: '0 auto' } : { display: 'none' }}
+            ></div>
+            <button
+              className={`button is-success  mr-2 ${showRebill && 'is-hidden'}`}
+              type='button'
+              onClick={handlePayNow}
+              disabled={!hasErrorInputs}
+            >
+              Pagar Aqui
+            </button>
+            <button
+              className={`button is-info ml-2 ${generateLink && 'is-loading'} ${
+                showRebill && 'is-hidden'
+              }`}
+              type='button'
+              onClick={handleGenerateLink}
+              disabled={!hasErrorInputs}
+            >
+              Generar Link
+            </button>
+          </motion.div>
+        )}
+      </div>
+    </FormStep>
   );
 };
 export default RebillCheckoutForm;

@@ -77,7 +77,7 @@ export const REBILL_CONF = {
   ORG_ID: itsProduction ? REACT_APP_REBILL_PRD_ORG_ID : REACT_APP_REBILL_TEST_ORG_ID,
   API_KEY: itsProduction ? REACT_APP_REBILL_PRD_API_KEY : REACT_APP_REBILL_TEST_API_KEY,
   URL: itsProduction ? REACT_APP_REBILL_PRD_API_URL : REACT_APP_REBILL_TEST_API_URL,
-  TOKEN: itsProduction ? REACT_APP_REBILL_PRD_TOKEN : REACT_APP_REBILL_TEST_TOKEN
+  TOKEN: itsProduction ? REACT_APP_REBILL_PRD_TOKEN : REACT_APP_REBILL_TEST_TOKEN,
 };
 
 const PRICES = {
@@ -94,21 +94,21 @@ const PRICES = {
     6: itsProduction ? REACT_APP_REBILL_MP_PRD_6 : REACT_APP_REBILL_MP_TEST_6,
     9: itsProduction ? REACT_APP_REBILL_MP_PRD_9 : REACT_APP_REBILL_MP_TEST_9,
     12: itsProduction ? REACT_APP_REBILL_MP_PRD_12 : REACT_APP_REBILL_MP_TEST_12,
-  }
-}
+  },
+};
 
 export const getPlanPrice = (formikValues, sale) => {
   const { payment_method, advanceSuscription } = formikValues;
-  console.log("getPlanPrice", formikValues);
+  console.log('getPlanPrice', formikValues);
   const gateway = payment_method;
   const isStripe = gateway.includes('Stripe');
   const quotes = Number(formikValues.quotes);
 
   const priceQuantity = advanceSuscription.isAdvanceSuscription
     ? advanceSuscription.firstQuoteDiscount
-    : Number(Math.round(sale.Grand_Total / quotes));
+    : Number(Math.floor(sale.Grand_Total / quotes));
 
-  console.log("getPlanPrice, priceQuantity:", priceQuantity);
+  console.log('getPlanPrice, priceQuantity:', priceQuantity);
 
   switch (quotes) {
     case 3:
@@ -139,7 +139,7 @@ export const getPlanPrice = (formikValues, sale) => {
   }
 };
 export const mappingFields = ({ formAttributes, contact, formikValues }) => {
-  console.log({ formAttributes, contact, formikValues })
+  console.log({ formAttributes, contact, formikValues });
   const [number] = formAttributes.address.split(' ').filter((s) => !isNaN(s) && s);
   const [...street] = formAttributes.address.split(' ').filter((s) => isNaN(s) && s);
   const { phoneNumber } = formAttributes;
