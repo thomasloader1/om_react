@@ -3,7 +3,7 @@ import IMAGES from '../../../img/pasarelaCobros/share';
 import { useLocation, useParams } from 'react-router';
 import axios from 'axios';
 import { fireToast, fireAlert, fireModalAlert, fireModalAlertRedirect } from '../Hooks/useSwal';
-import { REBILL_CONF, URLS, getPlanPrice, mappingCheckoutFields } from '../Hooks/useRebill';
+import { REBILL_CONF, URLS, getPlanPrice, getPlanPriceCheckout, mappingCheckoutFields } from '../Hooks/useRebill';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
 import mpImg from '../../../img/pasarelaCobros/metPago/mp.svg';
@@ -22,6 +22,8 @@ const Checkout = () => {
   const [contact, setContact] = useState(null);
   const [ticketData, setTicketData] = useState({});
   const [advancePayment, setAdvancePayment] = useState({});
+  const [paymentAction, setPaymentAction] = useState(false)
+  const [fetchContent, setFetchContent] = useState(true)
 
   const { so } = useParams();
   const { pathname } = useLocation();
@@ -34,110 +36,166 @@ const Checkout = () => {
     currency: 'MXN',
   };
 
+  const formatPrice = (iso, currencyOptions, price) => new Intl.NumberFormat(iso, currencyOptions).format(Math.floor(price));
+
   const valuesAdvanceSuscription = ({ total, checkoutPayment }) => {
+    console.group('valuesAdvanceSuscription')
+    console.log({ total })
+    console.groupEnd()
     const { quotes, type } = checkoutPayment;
 
     const isAdvanceSuscription = type.includes('Suscripción con anticipo');
-    const quoteForMonth = Math.floor(total / quotes);
-    const remainingQuotes = quotes === 1 ? 1 : quotes - 1;
+    const isSuscription = type.includes('Suscripción') && !type.includes('anticipo');
+    const isTraditional = type.includes('Tradicional');
 
-    const firstQuoteDiscount = Math.floor(quoteForMonth / 2);
-    const remainingAmountToPay = total - firstQuoteDiscount;
-    const payPerMonthAdvance = Math.floor(remainingAmountToPay / remainingQuotes);
-    const adjustmentPayment =
-      total - (payPerMonthAdvance * remainingAmountToPay + firstQuoteDiscount);
-
-    return {
-      quoteForMonth,
-      remainingQuotes,
-      firstQuoteDiscount,
-      remainingAmountToPay,
-      payPerMonthAdvance,
+    const detailValues = {
       isAdvanceSuscription,
-      adjustmentPayment,
-    };
+      isSuscription,
+      isTraditional,
+      info: {}
+    }
+
+    if (isAdvanceSuscription) {
+      const quoteForMonth = Math.floor(total / quotes);
+      const remainingQuotes = quotes === 1 ? 1 : quotes - 1;
+
+      const firstQuoteDiscount = Math.floor(quoteForMonth / 2);
+      const remainingAmountToPay = total - firstQuoteDiscount;
+      const payPerMonthAdvance = Math.floor(remainingAmountToPay / remainingQuotes);
+      const adjustmentPayment =
+        parseFloat((((payPerMonthAdvance * remainingQuotes) + firstQuoteDiscount) - total).toFixed(2));
+
+      detailValues.info = {
+        remainingQuotes,
+        firstQuoteDiscount,
+        remainingAmountToPay,
+        payPerMonthAdvance,
+        adjustmentPayment,
+      };
+    } else if (isSuscription) {
+      const quoteForMonth = Math.floor(total / quotes);
+      const remainingQuotes = quotes === 1 ? 1 : quotes - 1;
+      const payPerMonthAdvance = quoteForMonth;
+      const adjustmentPayment =
+        parseFloat(((payPerMonthAdvance * quotes) - total).toFixed(2));
+
+      detailValues.info = {
+        quoteForMonth,
+        remainingQuotes,
+        payPerMonthAdvance,
+        adjustmentPayment,
+      };
+    } else {
+      const quoteForMonth = Math.floor(total / 1);
+
+      const payPerMonthAdvance = quoteForMonth;
+      const adjustmentPayment = parseFloat((payPerMonthAdvance - total).toFixed(2));
+
+      detailValues.info = {
+        quoteForMonth,
+        payPerMonthAdvance,
+        adjustmentPayment,
+      };
+    }
+
+
+    return detailValues;
   };
 
   const handleCheckoutData = (checkoutPayment, advanceSuscription) => {
+    const { isAdvanceSuscription, isSuscription, isTraditional, info } = advanceSuscription
+
     const auxResume = {
       totalMonths: 0,
       firstPay: 0,
       payPerMonth: 0,
       formattedFirstPay: 0,
       formattedPayPerMonth: 0,
-      isTraditional: checkoutPayment?.type?.includes('Tradicional'),
+      isTraditional,
+      isAdvanceSuscription,
+      isSuscription
     };
 
-    console.log({ advanceSuscription, checkoutPayment });
-    if (advanceSuscription.isAdvanceSuscription) {
-      auxResume.totalMonths = Number(checkoutPayment?.quotes);
-      auxResume.firstPay = advanceSuscription.firstQuoteDiscount;
-      auxResume.payPerMonth = advanceSuscription.payPerMonthAdvance;
-      auxResume.formattedFirstPay = new Intl.NumberFormat('MX', currencyOptions).format(
-        auxResume.firstPay,
-      );
-      auxResume.formattedPayPerMonth = new Intl.NumberFormat('MX', currencyOptions).format(
-        auxResume.payPerMonth,
-      );
-    } else {
-      auxResume.totalMonths = auxResume.isTraditional ? 1 : Number(checkoutPayment?.quotes);
-      auxResume.firstPay = auxResume.isTraditional
-        ? sale?.Grand_Total
-        : Math.floor(sale?.Grand_Total / auxResume.totalMonths);
-      auxResume.formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(
-        Math.floor(auxResume.firstPay),
-      );
+    console.group("handleCheckoutData")
+    console.log({ advanceSuscription, checkoutPayment, auxResume });
+    console.groupEnd()
 
-      auxResume.formattedFirstPay = new Intl.NumberFormat('MX', currencyOptions).format(
-        Math.floor(auxResume.firstPay),
-      );
-      auxResume.formattedPayPerMonth = new Intl.NumberFormat('MX', currencyOptions).format(
-        Math.floor(auxResume.firstPay),
-      );
+
+    if (auxResume.isAdvanceSuscription) {
+      auxResume.totalMonths = Number(checkoutPayment?.quotes);
+      auxResume.firstPay = info.firstQuoteDiscount;
+      auxResume.payPerMonth = info.payPerMonthAdvance;
+
+      auxResume.formattedFirstPay = formatPrice('MX', currencyOptions, auxResume.firstPay);
+      auxResume.formattedPayPerMonth = formatPrice('MX', currencyOptions, auxResume.payPerMonth);
+
+    } else if (auxResume.isSuscription) {
+      auxResume.totalMonths = Number(checkoutPayment?.quotes);
+      auxResume.firstPay = Math.floor(sale?.Grand_Total / auxResume.totalMonths);
+
+      auxResume.formattedAmount = formatPrice('MX', currencyOptions, auxResume.firstPay);
+      auxResume.formattedFirstPay = formatPrice('MX', currencyOptions, auxResume.firstPay)
+      auxResume.formattedPayPerMonth = formatPrice('MX', currencyOptions, auxResume.firstPay)
+
+    } else {
+      auxResume.totalMonths = 1;
+      auxResume.firstPay = sale?.Grand_Total;
+
+      auxResume.formattedAmount = formatPrice('MX', currencyOptions, auxResume.firstPay)
+      auxResume.formattedFirstPay = formatPrice('MX', currencyOptions, auxResume.firstPay)
+      auxResume.formattedPayPerMonth = formatPrice('MX', currencyOptions, auxResume.firstPay)
     }
 
     return auxResume;
   };
 
-  const { totalMonths, formattedFirstPay, formattedPayPerMonth, formattedAmount } =
-    handleCheckoutData(checkoutPayment, advancePayment);
+  const { totalMonths, formattedFirstPay, formattedPayPerMonth, formattedAmount } = handleCheckoutData(checkoutPayment, advancePayment);
 
   const isStripe = checkoutPayment?.gateway?.includes('Stripe');
 
   useEffect(() => {
-    if (!loading) {
-      async function fetchPaymentLink() {
-        const { GET_PAYMENT_LINK } = URLS;
-        const { data } = await axios.get(`${GET_PAYMENT_LINK}/${so}`);
-
-        setCheckoutPayment(data.checkout);
-        setCustomer(data.customer);
-        setSale(contractData.sale);
-        setContact(contractData.contact);
-        setProducts(contractData.products);
-
-        const advanceSuscription = valuesAdvanceSuscription({
-          total: contractData.sale?.Grand_Total,
-          checkoutPayment: data.checkout,
-        });
-
-        setAdvancePayment(advanceSuscription);
-
-        const mergedData = {
-          paymentLinkData: { ...data },
-          ZohoData: { ...contractData },
-          advanceSuscription,
-          isAdvanceSuscription: data.checkout.type.includes('Suscripción con anticipo'),
-        };
-
-        setTicketData(mergedData);
-
-        const regex = /(Rechazado|pending)/i;
-        if (data.checkout.status.match(regex)) initRebill(mergedData);
-      }
+    if (!loading && !paymentAction) {
       fetchPaymentLink();
     }
-  }, [contractData]);
+
+    if (paymentAction) {
+      fetchPaymentLink();
+    }
+
+    async function fetchPaymentLink() {
+      const { GET_PAYMENT_LINK } = URLS;
+      const { data } = await axios.get(`${GET_PAYMENT_LINK}/${so}`);
+
+      setCheckoutPayment(data.checkout);
+      setCustomer(data.customer);
+      setSale(contractData.sale);
+      setContact(contractData.contact);
+      setProducts(contractData.products);
+
+      const inscription = valuesAdvanceSuscription({
+        total: contractData.sale?.Grand_Total,
+        checkoutPayment: data.checkout,
+      });
+
+      setAdvancePayment(inscription);
+
+      const mergedData = {
+        paymentLinkData: { ...data },
+        ZohoData: { ...contractData },
+        advanceSuscription: inscription,
+      };
+
+      setTicketData(mergedData);
+      setFetchContent(false)
+
+      const regex = /(Rechazado|pending)/i;
+
+      if (data.checkout.status.match(regex)) {
+        initRebill(mergedData)
+      };
+    }
+
+  }, [contractData, paymentAction]);
 
   function initRebill(paymentLink) {
     const { paymentLinkData, ZohoData, advanceSuscription } = paymentLink;
@@ -173,7 +231,7 @@ const Checkout = () => {
       quotes: checkout.quotes,
     };
 
-    const { id, quantity } = getPlanPrice(formValues, sale);
+    const { id, quantity } = getPlanPriceCheckout(formValues, sale);
     RebillSDKCheckout.setTransaction({
       prices: [
         {
@@ -181,7 +239,7 @@ const Checkout = () => {
           quantity,
         },
       ],
-    }).then((price_setting) => console.log(price_setting));
+    }).then((price_setting) => console.log({ price_setting }));
 
     //Seteo de callbacks en saco de que el pago este correcto o tengo algun fallo
     const { UPDATE_CONTRACT, MP } = URLS;
@@ -269,10 +327,13 @@ const Checkout = () => {
             handleSetContractStatus(payment, checkout.contract_entity_id);
             //console.log("Pago Realizado");
             fireToast('Inscripción actualizada', 'success', 5000);
+            setTimeout(() => {
+              window.location.reload(true);
+            }, 3000)
           })
           .catch((err) => {
             console.log({ err });
-            fireToast('Inscripción no actualizado', 'error', 5000);
+            fireToast('Inscripción no actualizada', 'error', 5000);
           });
       },
       onError: (error) => {
@@ -329,6 +390,7 @@ const Checkout = () => {
 
     //Aplicar configuracion al DOM
     RebillSDKCheckout.setElements('rebill_elements');
+
   }
 
   const invoiceDetail = {
@@ -342,7 +404,7 @@ const Checkout = () => {
 
   return (
     <>
-      {loading ? (
+      {(loading) ? (
         <MotionSpinner />
       ) : (
         <main className='grid-checkout container'>
@@ -412,7 +474,7 @@ const Checkout = () => {
               <div className='column'>
                 <div className='mx-auto is-fullheight'>
                   {checkoutPayment?.status.includes('Pendiente') ||
-                  checkoutPayment?.status.includes('Efectivo') ? (
+                    checkoutPayment?.status.includes('Efectivo') ? (
                     <div className='mt-5 is-flex is-justify-content-center is-align-items-center'>
                       El estado de su pago es:{' '}
                       <span className='price-one'>{checkoutPayment?.status}</span>
@@ -420,10 +482,9 @@ const Checkout = () => {
                   ) : (
                     <div
                       id='rebill_elements'
-                      className={`mt-5 is-flex is-justify-content-center is-align-items-center ${
-                        checkoutPayment?.status.includes('Pendiente') ||
+                      className={`mt-5 is-flex is-justify-content-center is-align-items-center ${checkoutPayment?.status.includes('Pendiente') ||
                         (checkoutPayment?.status.includes('Efectivo') && 'is-hidden')
-                      }`}
+                        }`}
                     ></div>
                   )}
                 </div>

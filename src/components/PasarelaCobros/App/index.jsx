@@ -27,7 +27,7 @@ function PasarelaApp() {
   const { id } = useParams();
   const needRunEffect = !location.pathname.includes('vp');
 
-  const { loading, data, error } = useContractZoho(id, needRunEffect);
+  const { loading } = useContractZoho(id, needRunEffect);
   const pasarelaContainerRef = useRef(null);
   const isMobile = useMediaQSmall();
 
@@ -80,7 +80,6 @@ function PasarelaApp() {
 
   }, [isMobile, pasarelaContainerRef.current]);
 
-  console.log(error)
   return (
     <main ref={appRef}>
       <Header />

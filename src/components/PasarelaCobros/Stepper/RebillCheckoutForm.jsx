@@ -99,23 +99,28 @@ const RebillCheckoutForm = () => {
     initRebill(formAttributes);
   };
 
-  const handleRequestGateway = (data, gateway) => {
+  const handleRequestGateway = async (data, gateway) => {
     const { UPDATE_CONTRACT, MP } = URLS;
-    //console.log('handleRequestGateway', { UPDATE_CONTRACT, MP })
+
+    console.group('handleRequestGateway')
+    console.log({ data })
+    console.groupEnd()
+
     const URL = gateway.includes('Stripe') ? UPDATE_CONTRACT : MP;
-    axios
-      .post(URL, data)
-      .then((res) => {
-        //console.log({ res });
-        fireToast('Contrato actualizado', 'success', 5000);
-      })
-      .catch((err) => {
-        //console.log({ err });
-        fireToast('Contrato no actualizado', 'error', 5000);
-      })
-      .finally((res) => {
-        //console.log({ res });
-      });
+    try {
+      const res = await axios.post(URL, data)
+
+      if (res.data.result === 'error')
+        throw new Error(`Error al actualizar el contrato`)
+
+      fireToast('Contrato actualizado', 'success', 5000);
+
+    } catch (e) {
+      console.log(e)
+      fireToast('Contrato no actualizado', 'error', 5000);
+
+    }
+
   };
 
   function initRebill(formsValues) {
@@ -160,7 +165,7 @@ const RebillCheckoutForm = () => {
       onSuccess: (response) => {
         try {
           const { invoice, failedTransaction, pendingTransaction } = response;
-          console.log('Response Pagar aqui: ', response);
+          //console.log('Response Pagar aqui: ', response);
 
           if (failedTransaction != null) {
             const { payment } = failedTransaction.paidBags[0];
@@ -237,6 +242,10 @@ const RebillCheckoutForm = () => {
 
           //Esto es para stripe, nose si funciona en mp
           fireModalAlert('Pago Realizado', '', 'success');
+          setOpenBlockLayer(true);
+          setRebillFetching({
+            type: 'payment success'
+          })
         } catch (error) {
           //console.log("error", error);
           fireModalAlert('Pago Fallido', error);
@@ -244,6 +253,7 @@ const RebillCheckoutForm = () => {
       },
       onError: (error) => {
         console.error(error);
+        fireModalAlert('Pago Fallido', error);
       },
     });
 
@@ -380,9 +390,8 @@ const RebillCheckoutForm = () => {
               Pagar Aqui
             </button>
             <button
-              className={`button is-info ml-2 ${generateLink && 'is-loading'} ${
-                showRebill && 'is-hidden'
-              }`}
+              className={`button is-info ml-2 ${generateLink && 'is-loading'} ${showRebill && 'is-hidden'
+                }`}
               type='button'
               onClick={handleGenerateLink}
               disabled={!hasErrorInputs}

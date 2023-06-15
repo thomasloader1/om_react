@@ -138,6 +138,51 @@ export const getPlanPrice = (formikValues, sale) => {
       };
   }
 };
+
+export const getPlanPriceCheckout = (formikValues, sale) => {
+  const { payment_method, advanceSuscription } = formikValues;;
+  const gateway = payment_method;
+  const isStripe = gateway.includes('Stripe');
+  const quotes = Number(formikValues.quotes);
+
+  const priceQuantity = advanceSuscription.isAdvanceSuscription
+    ? advanceSuscription.info.firstQuoteDiscount
+    : Number(Math.floor(sale.Grand_Total / quotes));
+
+  console.group('getPlanPriceCheckout')
+  console.log({ formikValues });
+  console.log({ priceQuantity });
+  console.groupEnd()
+
+  switch (quotes) {
+    case 3:
+      return {
+        id: isStripe ? PRICES.STRIPE['3'] : PRICES.MP['3'],
+        quantity: priceQuantity,
+      };
+    case 6:
+      return {
+        id: isStripe ? PRICES.STRIPE['6'] : PRICES.MP['6'],
+        quantity: priceQuantity,
+      };
+    case 9:
+      return {
+        id: isStripe ? PRICES.STRIPE['9'] : PRICES.MP['9'],
+        quantity: priceQuantity,
+      };
+    case 12:
+      return {
+        id: isStripe ? PRICES.STRIPE['12'] : PRICES.MP['12'],
+        quantity: priceQuantity,
+      };
+    default:
+      return {
+        id: isStripe ? PRICES.STRIPE['1'] : PRICES.MP['1'],
+        quantity: priceQuantity,
+      };
+  }
+};
+
 export const mappingFields = ({ formAttributes, contact, formikValues }) => {
   console.log({ formAttributes, contact, formikValues });
   const [number] = formAttributes.address.split(' ').filter((s) => !isNaN(s) && s);
