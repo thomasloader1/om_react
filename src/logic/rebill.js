@@ -20,6 +20,24 @@ export const handleSuscriptionUpdate = async (subscriptionId, advancedSuscriptio
   }
 };
 
+export const handleSuscriptionUpdateCheckout = async (subscriptionId, advancedSuscription) => {
+  const URL = `https://api.rebill.to/v2/subscriptions/${subscriptionId}`;
+  console.log("handleSuscriptionUpdate", { subscriptionId, advancedSuscription });
+  const { info } = advancedSuscription;
+  const headers = {
+    Authorization: `Bearer ${REBILL_CONF.TOKEN}`,
+    accept: 'application/json',
+    'content-type': 'application/json',
+  };
+
+  try {
+    const response = await axios.put(URL, { quantity: info.payPerMonthAdvance }, { headers });
+    console.log("rebill.js: ", { response });
+  } catch (e) {
+    console.error({ e });
+  }
+};
+
 export const handlePendingPayment = async (paymentId) => {
   const URL = `https://api.rebill.to/v2/payments/${paymentId}`;
   const headers = {

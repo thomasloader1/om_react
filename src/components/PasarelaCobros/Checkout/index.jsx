@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { useLocation, useParams } from 'react-router';
 import axios from 'axios';
-import { fireToast, fireAlert, fireModalAlert, fireModalAlertRedirect } from '../Hooks/useSwal';
-import { REBILL_CONF, URLS, getPlanPrice, getPlanPriceCheckout, mappingCheckoutFields } from '../Hooks/useRebill';
+import { fireToast, fireModalAlert, fireModalAlertRedirect } from '../Hooks/useSwal';
+import { REBILL_CONF, URLS, getPlanPriceCheckout, mappingCheckoutFields } from '../Hooks/useRebill';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
 import mpImg from '../../../img/pasarelaCobros/metPago/mp.svg';
 import stripeImg from '../../../img/pasarelaCobros/metPago/stripe.svg';
-import { handleSetContractStatus, handleSuscriptionUpdate } from '../../../logic/rebill';
+import { handleSetContractStatus, handleSuscriptionUpdateCheckout } from '../../../logic/rebill';
 import InvoiceDetail from './InvoiceDetail';
 import { makePostUpdateZohoCheckout } from '../../../logic/zoho';
 
@@ -314,7 +314,7 @@ const Checkout = () => {
 
         //console.log("advanceSuscription",advanceSuscription);
         if (advanceSuscription.isAdvanceSuscription) {
-          handleSuscriptionUpdate(postUpdateZoho.subscriptionId, advanceSuscription);
+          handleSuscriptionUpdateCheckout(postUpdateZoho.subscriptionId, advanceSuscription);
         }
 
         const URL = checkout.gateway.includes('Stripe') ? UPDATE_CONTRACT : MP;
