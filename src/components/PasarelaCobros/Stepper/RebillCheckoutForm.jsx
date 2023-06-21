@@ -12,7 +12,7 @@ import axios from 'axios';
 import { fireModalAlertRedirect, fireToast } from '../Hooks/useSwal';
 import { useParams } from 'react-router';
 import { fireModalAlert } from '../Hooks/useSwal';
-import { handleSuscriptionUpdate } from '../../../logic/rebill';
+import { getDocumentType, handleSuscriptionUpdate } from '../../../logic/rebill';
 import { makePostUpdateZoho } from '../../../logic/zoho';
 
 const RebillCheckoutForm = () => {
@@ -102,25 +102,21 @@ const RebillCheckoutForm = () => {
   const handleRequestGateway = async (data, gateway) => {
     const { UPDATE_CONTRACT, MP } = URLS;
 
-    console.group('handleRequestGateway')
-    console.log({ data })
-    console.groupEnd()
+    console.group('handleRequestGateway');
+    console.log({ data });
+    console.groupEnd();
 
     const URL = gateway.includes('Stripe') ? UPDATE_CONTRACT : MP;
     try {
-      const res = await axios.post(URL, data)
+      const res = await axios.post(URL, data);
 
-      if (res.data.result === 'error')
-        throw new Error(`Error al actualizar el contrato`)
+      if (res.data.result === 'error') throw new Error(`Error al actualizar el contrato`);
 
       fireToast('Contrato actualizado', 'success', 5000);
-
     } catch (e) {
-      console.log(e)
+      console.log(e);
       fireToast('Contrato no actualizado', 'error', 5000);
-
     }
-
   };
 
   function initRebill(formsValues) {
@@ -136,21 +132,23 @@ const RebillCheckoutForm = () => {
     const RebillSDKCheckout = new window.Rebill.PhantomSDK(initialization);
 
     const customerRebill = mappingFields({ formAttributes, contact, formikValues });
-    ////console.log({ customerRebill });
+
     //Seteo de customer
     RebillSDKCheckout.setCustomer(customerRebill);
 
+    const { type } = getDocumentType(formsValues.country);
     //Seteo de identidicacion del customer
     RebillSDKCheckout.setCardHolder({
       name: contact.Full_Name,
       identification: {
-        type: 'DNI',
+        type,
         value: `${contact.DNI}`,
       },
     });
 
     //Seteo de plan para cobrar
     const { id, quantity } = getPlanPrice(formikValues, sale);
+    console.log({ id, quantity });
     RebillSDKCheckout.setTransaction({
       prices: [
         {
@@ -244,8 +242,8 @@ const RebillCheckoutForm = () => {
           fireModalAlert('Pago Realizado', '', 'success');
           setOpenBlockLayer(true);
           setRebillFetching({
-            type: 'payment success'
-          })
+            type: 'payment success',
+          });
         } catch (error) {
           //console.log("error", error);
           fireModalAlert('Pago Fallido', error);
@@ -390,8 +388,9 @@ const RebillCheckoutForm = () => {
               Pagar Aqui
             </button>
             <button
-              className={`button is-info ml-2 ${generateLink && 'is-loading'} ${showRebill && 'is-hidden'
-                }`}
+              className={`button is-info ml-2 ${generateLink && 'is-loading'} ${
+                showRebill && 'is-hidden'
+              }`}
               type='button'
               onClick={handleGenerateLink}
               disabled={!hasErrorInputs}

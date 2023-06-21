@@ -1,4 +1,5 @@
 import { parsePhoneNumber } from 'react-phone-number-input';
+import { getDocumentType, getIsoCode } from '../../../logic/rebill';
 
 const {
   NODE_ENV,
@@ -22,11 +23,19 @@ const {
   REACT_APP_REBILL_STRIPE_TEST_6,
   REACT_APP_REBILL_STRIPE_TEST_9,
   REACT_APP_REBILL_STRIPE_TEST_12,
+  REACT_APP_REBILL_STRIPE_CL_TEST_1,
+  REACT_APP_REBILL_STRIPE_CL_TEST_3,
+  REACT_APP_REBILL_STRIPE_CL_TEST_6,
+  REACT_APP_REBILL_STRIPE_CL_TEST_8,
   REACT_APP_REBILL_STRIPE_PRD_1,
   REACT_APP_REBILL_STRIPE_PRD_3,
   REACT_APP_REBILL_STRIPE_PRD_6,
   REACT_APP_REBILL_STRIPE_PRD_9,
   REACT_APP_REBILL_STRIPE_PRD_12,
+  REACT_APP_REBILL_STRIPE_CL_PRD_1,
+  REACT_APP_REBILL_STRIPE_CL_PRD_3,
+  REACT_APP_REBILL_STRIPE_CL_PRD_6,
+  REACT_APP_REBILL_STRIPE_CL_PRD_8,
   REACT_APP_REBILL_MP_PRD_1,
   REACT_APP_REBILL_MP_PRD_3,
   REACT_APP_REBILL_MP_PRD_6,
@@ -37,6 +46,14 @@ const {
   REACT_APP_REBILL_MP_TEST_6,
   REACT_APP_REBILL_MP_TEST_9,
   REACT_APP_REBILL_MP_TEST_12,
+  REACT_APP_REBILL_MP_CL_PRD_1,
+  REACT_APP_REBILL_MP_CL_PRD_3,
+  REACT_APP_REBILL_MP_CL_PRD_6,
+  REACT_APP_REBILL_MP_CL_PRD_8,
+  REACT_APP_REBILL_MP_CL_TEST_1,
+  REACT_APP_REBILL_MP_CL_TEST_3,
+  REACT_APP_REBILL_MP_CL_TEST_6,
+  REACT_APP_REBILL_MP_CL_TEST_8,
   REACT_APP_REBILL_TEST_ORG_ID,
   REACT_APP_REBILL_TEST_API_KEY,
   REACT_APP_REBILL_TEST_API_URL,
@@ -82,24 +99,40 @@ export const REBILL_CONF = {
 
 const PRICES = {
   STRIPE: {
-    1: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_1 : REACT_APP_REBILL_STRIPE_TEST_1,
-    3: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_3 : REACT_APP_REBILL_STRIPE_TEST_3,
-    6: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_6 : REACT_APP_REBILL_STRIPE_TEST_6,
-    9: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_9 : REACT_APP_REBILL_STRIPE_TEST_9,
-    12: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_12 : REACT_APP_REBILL_STRIPE_TEST_12,
+    MX: {
+      1: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_1 : REACT_APP_REBILL_STRIPE_TEST_1,
+      3: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_3 : REACT_APP_REBILL_STRIPE_TEST_3,
+      6: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_6 : REACT_APP_REBILL_STRIPE_TEST_6,
+      9: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_9 : REACT_APP_REBILL_STRIPE_TEST_9,
+      12: itsProduction ? REACT_APP_REBILL_STRIPE_PRD_12 : REACT_APP_REBILL_STRIPE_TEST_12,
+    },
+    CL: {
+      1: itsProduction ? REACT_APP_REBILL_STRIPE_CL_PRD_1 : REACT_APP_REBILL_STRIPE_CL_TEST_1,
+      3: itsProduction ? REACT_APP_REBILL_STRIPE_CL_PRD_3 : REACT_APP_REBILL_STRIPE_CL_TEST_3,
+      6: itsProduction ? REACT_APP_REBILL_STRIPE_CL_PRD_6 : REACT_APP_REBILL_STRIPE_CL_TEST_6,
+      8: itsProduction ? REACT_APP_REBILL_STRIPE_CL_PRD_8 : REACT_APP_REBILL_STRIPE_CL_TEST_8,
+    },
   },
   MP: {
-    1: itsProduction ? REACT_APP_REBILL_MP_PRD_1 : REACT_APP_REBILL_MP_TEST_1,
-    3: itsProduction ? REACT_APP_REBILL_MP_PRD_3 : REACT_APP_REBILL_MP_TEST_3,
-    6: itsProduction ? REACT_APP_REBILL_MP_PRD_6 : REACT_APP_REBILL_MP_TEST_6,
-    9: itsProduction ? REACT_APP_REBILL_MP_PRD_9 : REACT_APP_REBILL_MP_TEST_9,
-    12: itsProduction ? REACT_APP_REBILL_MP_PRD_12 : REACT_APP_REBILL_MP_TEST_12,
+    MX: {
+      1: itsProduction ? REACT_APP_REBILL_MP_PRD_1 : REACT_APP_REBILL_MP_TEST_1,
+      3: itsProduction ? REACT_APP_REBILL_MP_PRD_3 : REACT_APP_REBILL_MP_TEST_3,
+      6: itsProduction ? REACT_APP_REBILL_MP_PRD_6 : REACT_APP_REBILL_MP_TEST_6,
+      9: itsProduction ? REACT_APP_REBILL_MP_PRD_9 : REACT_APP_REBILL_MP_TEST_9,
+      12: itsProduction ? REACT_APP_REBILL_MP_PRD_12 : REACT_APP_REBILL_MP_TEST_12,
+    },
+    CL: {
+      1: itsProduction ? REACT_APP_REBILL_MP_CL_PRD_1 : REACT_APP_REBILL_MP_CL_TEST_1,
+      3: itsProduction ? REACT_APP_REBILL_MP_CL_PRD_3 : REACT_APP_REBILL_MP_CL_TEST_3,
+      6: itsProduction ? REACT_APP_REBILL_MP_CL_PRD_6 : REACT_APP_REBILL_MP_CL_TEST_6,
+      8: itsProduction ? REACT_APP_REBILL_MP_CL_PRD_8 : REACT_APP_REBILL_MP_CL_TEST_8,
+    },
   },
 };
 
 export const getPlanPrice = (formikValues, sale) => {
   const { payment_method, advanceSuscription } = formikValues;
-  console.log('getPlanPrice', formikValues);
+  const countryPayment = getIsoCode(formikValues.country);
   const gateway = payment_method;
   const isStripe = gateway.includes('Stripe');
   const quotes = Number(formikValues.quotes);
@@ -108,39 +141,19 @@ export const getPlanPrice = (formikValues, sale) => {
     ? advanceSuscription.firstQuoteDiscount
     : Number(Math.floor(sale.Grand_Total / quotes));
 
-  console.log('getPlanPrice, priceQuantity:', priceQuantity);
+  console.log('getPlanPrice', formikValues, { countryPayment, priceQuantity });
 
-  switch (quotes) {
-    case 3:
-      return {
-        id: isStripe ? PRICES.STRIPE['3'] : PRICES.MP['3'],
-        quantity: priceQuantity,
-      };
-    case 6:
-      return {
-        id: isStripe ? PRICES.STRIPE['6'] : PRICES.MP['6'],
-        quantity: priceQuantity,
-      };
-    case 9:
-      return {
-        id: isStripe ? PRICES.STRIPE['9'] : PRICES.MP['9'],
-        quantity: priceQuantity,
-      };
-    case 12:
-      return {
-        id: isStripe ? PRICES.STRIPE['12'] : PRICES.MP['12'],
-        quantity: priceQuantity,
-      };
-    default:
-      return {
-        id: isStripe ? PRICES.STRIPE['1'] : PRICES.MP['1'],
-        quantity: priceQuantity,
-      };
-  }
+  return {
+    id: isStripe ? PRICES.STRIPE[countryPayment][quotes] : PRICES.MP[countryPayment][quotes],
+    quantity: priceQuantity,
+  };
 };
 
 export const getPlanPriceCheckout = (formikValues, sale) => {
-  const { payment_method, advanceSuscription } = formikValues;;
+  const { payment_method, advanceSuscription } = formikValues;
+  console.log({ formikValues });
+  const countryPayment = getIsoCode(formikValues.country);
+
   const gateway = payment_method;
   const isStripe = gateway.includes('Stripe');
   const quotes = Number(formikValues.quotes);
@@ -149,38 +162,15 @@ export const getPlanPriceCheckout = (formikValues, sale) => {
     ? advanceSuscription.info.firstQuoteDiscount
     : Number(Math.floor(sale.Grand_Total / quotes));
 
-  console.group('getPlanPriceCheckout')
+  console.group('getPlanPriceCheckout');
   console.log({ formikValues });
   console.log({ priceQuantity });
-  console.groupEnd()
+  console.groupEnd();
 
-  switch (quotes) {
-    case 3:
-      return {
-        id: isStripe ? PRICES.STRIPE['3'] : PRICES.MP['3'],
-        quantity: priceQuantity,
-      };
-    case 6:
-      return {
-        id: isStripe ? PRICES.STRIPE['6'] : PRICES.MP['6'],
-        quantity: priceQuantity,
-      };
-    case 9:
-      return {
-        id: isStripe ? PRICES.STRIPE['9'] : PRICES.MP['9'],
-        quantity: priceQuantity,
-      };
-    case 12:
-      return {
-        id: isStripe ? PRICES.STRIPE['12'] : PRICES.MP['12'],
-        quantity: priceQuantity,
-      };
-    default:
-      return {
-        id: isStripe ? PRICES.STRIPE['1'] : PRICES.MP['1'],
-        quantity: priceQuantity,
-      };
-  }
+  return {
+    id: isStripe ? PRICES.STRIPE[countryPayment][quotes] : PRICES.MP[countryPayment][quotes],
+    quantity: priceQuantity,
+  };
 };
 
 export const mappingFields = ({ formAttributes, contact, formikValues }) => {
@@ -189,9 +179,7 @@ export const mappingFields = ({ formAttributes, contact, formikValues }) => {
   const [...street] = formAttributes.address.split(' ').filter((s) => isNaN(s) && s);
   const { phoneNumber } = formAttributes;
   const { countryCallingCode, nationalNumber } = phoneNumber;
-
-  /* contact.First_Name
-contact.Last_Name */
+  const { type } = getDocumentType(formAttributes.country);
 
   return {
     firstName: contact.First_Name,
@@ -208,7 +196,7 @@ contact.Last_Name */
       value: '20' + contact.DNI + '9',
     },
     personalId: {
-      type: 'DNI',
+      type,
       value: `${contact.DNI}`,
     },
     address: {

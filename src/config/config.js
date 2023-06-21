@@ -15,7 +15,7 @@ export const countryOptions = [
     idElement: 'pais_chi_input',
     img: 'chiFlag',
     value: 'Chile',
-    active: false,
+    active: true,
   },
   {
     idElement: 'pais_col_input',
@@ -148,7 +148,7 @@ export const paymentOptions = [
     className: 'button grid-payment_method-item tall',
     idInputElement: '',
     value: 'WebpayCL',
-    allowedCountries: ['chi'],
+    allowedCountries: [],
     disabledCountries: [],
   },
 ];
@@ -184,7 +184,7 @@ export const paymentModeOptions = [
     idElement: 'mod_advance_suscrip',
     name: 'mod',
     value: 'Suscripción con anticipo',
-    classLabel: 'half'
+    classLabel: 'half',
   },
 ];
 

@@ -8,7 +8,12 @@ import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
 import mpImg from '../../../img/pasarelaCobros/metPago/mp.svg';
 import stripeImg from '../../../img/pasarelaCobros/metPago/stripe.svg';
-import { handleSetContractStatus, handleSuscriptionUpdateCheckout } from '../../../logic/rebill';
+import {
+  getCurrency,
+  getDocumentType,
+  handleSetContractStatus,
+  handleSuscriptionUpdateCheckout,
+} from '../../../logic/rebill';
 import InvoiceDetail from './InvoiceDetail';
 import { makePostUpdateZohoCheckout } from '../../../logic/zoho';
 
@@ -22,8 +27,12 @@ const Checkout = () => {
   const [contact, setContact] = useState(null);
   const [ticketData, setTicketData] = useState({});
   const [advancePayment, setAdvancePayment] = useState({});
-  const [paymentAction, setPaymentAction] = useState(false)
-  const [fetchContent, setFetchContent] = useState(true)
+  const [paymentAction, setPaymentAction] = useState(false);
+  const [fetchContent, setFetchContent] = useState(true);
+  const [currencyOptions, setCurrencyOptions] = useState({
+    style: 'currency',
+    currency: 'MXN',
+  });
 
   const { so } = useParams();
   const { pathname } = useLocation();
@@ -31,17 +40,13 @@ const Checkout = () => {
   const needRunEffect = !pathname.includes('vp');
   const { loading, data: contractData } = useContractZoho(so, needRunEffect);
 
-  const currencyOptions = {
-    style: 'currency',
-    currency: 'MXN',
-  };
-
-  const formatPrice = (iso, currencyOptions, price) => new Intl.NumberFormat(iso, currencyOptions).format(Math.floor(price));
+  const formatPrice = (iso, currencyOptions, price) =>
+    new Intl.NumberFormat(iso, currencyOptions).format(Math.floor(price));
 
   const valuesAdvanceSuscription = ({ total, checkoutPayment }) => {
-    console.group('valuesAdvanceSuscription')
-    console.log({ total })
-    console.groupEnd()
+    console.group('valuesAdvanceSuscription');
+    console.log({ total });
+    console.groupEnd();
     const { quotes, type } = checkoutPayment;
 
     const isAdvanceSuscription = type.includes('Suscripción con anticipo');
@@ -52,8 +57,8 @@ const Checkout = () => {
       isAdvanceSuscription,
       isSuscription,
       isTraditional,
-      info: {}
-    }
+      info: {},
+    };
 
     if (isAdvanceSuscription) {
       const quoteForMonth = Math.floor(total / quotes);
@@ -62,8 +67,9 @@ const Checkout = () => {
       const firstQuoteDiscount = Math.floor(quoteForMonth / 2);
       const remainingAmountToPay = total - firstQuoteDiscount;
       const payPerMonthAdvance = Math.floor(remainingAmountToPay / remainingQuotes);
-      const adjustmentPayment =
-        parseFloat((((payPerMonthAdvance * remainingQuotes) + firstQuoteDiscount) - total).toFixed(2));
+      const adjustmentPayment = parseFloat(
+        (payPerMonthAdvance * remainingQuotes + firstQuoteDiscount - total).toFixed(2),
+      );
 
       detailValues.info = {
         remainingQuotes,
@@ -76,8 +82,7 @@ const Checkout = () => {
       const quoteForMonth = Math.floor(total / quotes);
       const remainingQuotes = quotes === 1 ? 1 : quotes - 1;
       const payPerMonthAdvance = quoteForMonth;
-      const adjustmentPayment =
-        parseFloat(((payPerMonthAdvance * quotes) - total).toFixed(2));
+      const adjustmentPayment = parseFloat((payPerMonthAdvance * quotes - total).toFixed(2));
 
       detailValues.info = {
         quoteForMonth,
@@ -98,12 +103,11 @@ const Checkout = () => {
       };
     }
 
-
     return detailValues;
   };
 
   const handleCheckoutData = (checkoutPayment, advanceSuscription) => {
-    const { isAdvanceSuscription, isSuscription, isTraditional, info } = advanceSuscription
+    const { isAdvanceSuscription, isSuscription, isTraditional, info } = advanceSuscription;
 
     const auxResume = {
       totalMonths: 0,
@@ -113,13 +117,12 @@ const Checkout = () => {
       formattedPayPerMonth: 0,
       isTraditional,
       isAdvanceSuscription,
-      isSuscription
+      isSuscription,
     };
 
-    console.group("handleCheckoutData")
+    console.group('handleCheckoutData');
     console.log({ advanceSuscription, checkoutPayment, auxResume });
-    console.groupEnd()
-
+    console.groupEnd();
 
     if (auxResume.isAdvanceSuscription) {
       auxResume.totalMonths = Number(checkoutPayment?.quotes);
@@ -128,28 +131,27 @@ const Checkout = () => {
 
       auxResume.formattedFirstPay = formatPrice('MX', currencyOptions, auxResume.firstPay);
       auxResume.formattedPayPerMonth = formatPrice('MX', currencyOptions, auxResume.payPerMonth);
-
     } else if (auxResume.isSuscription) {
       auxResume.totalMonths = Number(checkoutPayment?.quotes);
       auxResume.firstPay = Math.floor(sale?.Grand_Total / auxResume.totalMonths);
 
       auxResume.formattedAmount = formatPrice('MX', currencyOptions, auxResume.firstPay);
-      auxResume.formattedFirstPay = formatPrice('MX', currencyOptions, auxResume.firstPay)
-      auxResume.formattedPayPerMonth = formatPrice('MX', currencyOptions, auxResume.firstPay)
-
+      auxResume.formattedFirstPay = formatPrice('MX', currencyOptions, auxResume.firstPay);
+      auxResume.formattedPayPerMonth = formatPrice('MX', currencyOptions, auxResume.firstPay);
     } else {
       auxResume.totalMonths = 1;
       auxResume.firstPay = sale?.Grand_Total;
 
-      auxResume.formattedAmount = formatPrice('MX', currencyOptions, auxResume.firstPay)
-      auxResume.formattedFirstPay = formatPrice('MX', currencyOptions, auxResume.firstPay)
-      auxResume.formattedPayPerMonth = formatPrice('MX', currencyOptions, auxResume.firstPay)
+      auxResume.formattedAmount = formatPrice('MX', currencyOptions, auxResume.firstPay);
+      auxResume.formattedFirstPay = formatPrice('MX', currencyOptions, auxResume.firstPay);
+      auxResume.formattedPayPerMonth = formatPrice('MX', currencyOptions, auxResume.firstPay);
     }
 
     return auxResume;
   };
 
-  const { totalMonths, formattedFirstPay, formattedPayPerMonth, formattedAmount } = handleCheckoutData(checkoutPayment, advancePayment);
+  const { totalMonths, formattedFirstPay, formattedPayPerMonth, formattedAmount } =
+    handleCheckoutData(checkoutPayment, advancePayment);
 
   const isStripe = checkoutPayment?.gateway?.includes('Stripe');
 
@@ -185,16 +187,18 @@ const Checkout = () => {
         advanceSuscription: inscription,
       };
 
+      const { currency } = getCurrency(data.checkout.country);
+      setCurrencyOptions((prevState) => ({ ...prevState, currency }));
+
       setTicketData(mergedData);
-      setFetchContent(false)
+      setFetchContent(false);
 
       const regex = /(Rechazado|pending)/i;
 
       if (data.checkout.status.match(regex)) {
-        initRebill(mergedData)
-      };
+        initRebill(mergedData);
+      }
     }
-
   }, [contractData, paymentAction]);
 
   function initRebill(paymentLink) {
@@ -214,12 +218,13 @@ const Checkout = () => {
     //console.log({ customerRebill })
     //Seteo de customer
     RebillSDKCheckout.setCustomer(customerRebill);
+    const { type } = getDocumentType(checkout.country);
 
     //Seteo de identidicacion del customer
     RebillSDKCheckout.setCardHolder({
       name: contact.Full_Name,
       identification: {
-        type: 'DNI',
+        type,
         value: paymentLinkCustomer.personalId,
       },
     });
@@ -229,6 +234,7 @@ const Checkout = () => {
       payment_method: checkout.gateway,
       advanceSuscription,
       quotes: checkout.quotes,
+      country: checkout.country,
     };
 
     const { id, quantity } = getPlanPriceCheckout(formValues, sale);
@@ -329,7 +335,7 @@ const Checkout = () => {
             fireToast('Inscripción actualizada', 'success', 5000);
             setTimeout(() => {
               window.location.reload(true);
-            }, 3000)
+            }, 3000);
           })
           .catch((err) => {
             console.log({ err });
@@ -390,7 +396,6 @@ const Checkout = () => {
 
     //Aplicar configuracion al DOM
     RebillSDKCheckout.setElements('rebill_elements');
-
   }
 
   const invoiceDetail = {
@@ -404,7 +409,7 @@ const Checkout = () => {
 
   return (
     <>
-      {(loading) ? (
+      {loading ? (
         <MotionSpinner />
       ) : (
         <main className='grid-checkout container'>
@@ -474,7 +479,7 @@ const Checkout = () => {
               <div className='column'>
                 <div className='mx-auto is-fullheight'>
                   {checkoutPayment?.status.includes('Pendiente') ||
-                    checkoutPayment?.status.includes('Efectivo') ? (
+                  checkoutPayment?.status.includes('Efectivo') ? (
                     <div className='mt-5 is-flex is-justify-content-center is-align-items-center'>
                       El estado de su pago es:{' '}
                       <span className='price-one'>{checkoutPayment?.status}</span>
@@ -482,9 +487,10 @@ const Checkout = () => {
                   ) : (
                     <div
                       id='rebill_elements'
-                      className={`mt-5 is-flex is-justify-content-center is-align-items-center ${checkoutPayment?.status.includes('Pendiente') ||
+                      className={`mt-5 is-flex is-justify-content-center is-align-items-center ${
+                        checkoutPayment?.status.includes('Pendiente') ||
                         (checkoutPayment?.status.includes('Efectivo') && 'is-hidden')
-                        }`}
+                      }`}
                     ></div>
                   )}
                 </div>
