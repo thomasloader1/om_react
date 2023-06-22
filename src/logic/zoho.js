@@ -9,6 +9,7 @@ export const makePostUpdateZohoCheckout = ({
   sale,
   subscriptionId,
 }) => {
+  console.group('makePostUpdateZohoCheckout');
   console.log({
     isAdvanceSuscription,
     advanceSuscription,
@@ -19,26 +20,31 @@ export const makePostUpdateZohoCheckout = ({
     checkout,
     sale,
     subscriptionId,
-  })
+  });
+  console.groupEnd();
+
   if (isAdvanceSuscription) {
     return {
       installments: QUOTES,
       email: customer.userEmail,
-      amount: payment.amount,
+      amount: sale.Grand_Total,
       contractId: checkout.contract_entity_id,
       subscriptionId,
-      installment_amount: payment.amount,
+      installment_amount: advanceSuscription.info.firstQuoteDiscount, //
+      payPerMonthAdvance: advanceSuscription.info.payPerMonthAdvance, //
       address: paymentLinkCustomer.address,
       dni: paymentLinkCustomer.personalId,
       phone: paymentLinkCustomer.phone,
       fullname: customer.firstName + ' ' + customer.lastName,
       is_suscri: !checkout.type.includes('Tradicional'),
       is_advanceSuscription: checkout.type.includes('Suscripción con anticipo'),
-      adjustment: advanceSuscription.info.adjustmentPayment
+      adjustment: advanceSuscription.info.adjustmentPayment,
     };
   }
 
-  const adjustmentPayment = parseFloat((Number(payment.amount) * QUOTES) - sale.Grand_Total).toFixed(2)
+  const adjustmentPayment = parseFloat(Number(payment.amount) * QUOTES - sale.Grand_Total).toFixed(
+    2,
+  );
 
   return {
     installments: QUOTES,
@@ -46,15 +52,14 @@ export const makePostUpdateZohoCheckout = ({
     amount: sale.Grand_Total,
     contractId: checkout.contract_entity_id,
     subscriptionId,
-    installment_amount: advanceSuscription.firstQuoteDiscount, //
-    payPerMonthAdvance: advanceSuscription.payPerMonthAdvance, //
+    installment_amount: payment.amount,
     address: paymentLinkCustomer.address,
     dni: paymentLinkCustomer.personalId,
     phone: paymentLinkCustomer.phone,
     fullname: customer.firstName + ' ' + customer.lastName,
     is_suscri: !checkout.type.includes('Tradicional'),
     is_advanceSuscription: checkout.type.includes('Suscripción con anticipo'),
-    adjustment: parseFloat(adjustmentPayment)
+    adjustment: parseFloat(adjustmentPayment),
   };
 };
 
@@ -75,7 +80,9 @@ export const makePostUpdateZoho = ({
     /*  console.group('makePostUpdateZoho')
      console.log({ advanceSuscription })
      console.groupEnd() */
-    const adjustmentPayment = parseFloat((Number(payment.amount) * formikValues.quotes) - sale.Grand_Total).toFixed(2)
+    const adjustmentPayment = parseFloat(
+      Number(payment.amount) * formikValues.quotes - sale.Grand_Total,
+    ).toFixed(2);
 
     return {
       email: customer.userEmail,
@@ -90,12 +97,15 @@ export const makePostUpdateZoho = ({
       fullname: customer.firstName + ' ' + customer.lastName,
       is_suscri: userInfo.stepThree.value.includes('Suscripción'),
       is_advanceSuscription: userInfo.stepThree.value.includes('Suscripción con anticipo'),
-      adjustment: parseFloat(adjustmentPayment)
-
+      adjustment: parseFloat(adjustmentPayment),
     };
   }
 
-  const adjustmentPayment = parseFloat(((advanceSuscription.payPerMonthAdvance * (formikValues.quotes - 1)) + advanceSuscription.firstQuoteDiscount) - sale.Grand_Total).toFixed(2)
+  const adjustmentPayment = parseFloat(
+    advanceSuscription.payPerMonthAdvance * (formikValues.quotes - 1) +
+      advanceSuscription.firstQuoteDiscount -
+      sale.Grand_Total,
+  ).toFixed(2);
 
   return {
     installments: formikValues.quotes,
@@ -111,6 +121,6 @@ export const makePostUpdateZoho = ({
     fullname: customer.firstName + ' ' + customer.lastName,
     is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
     is_advanceSuscription: userInfo.stepThree.value.includes('Suscripción con anticipo'),
-    adjustment: parseFloat(adjustmentPayment)
+    adjustment: parseFloat(adjustmentPayment),
   };
 };
