@@ -193,11 +193,11 @@ export const mappingFields = ({ formAttributes, contact, formikValues }) => {
     birthday: contact.Date_of_Birth,
     taxId: {
       type: 'CUIT',
-      value: '20' + contact.DNI + '9',
+      value: '20' + formAttributes.dni.replace("-", "") + '9',
     },
     personalId: {
       type,
-      value: `${contact.DNI}`,
+      value: `${formAttributes.dni.replace("-", "")}`,
     },
     address: {
       street: street.join(' '),

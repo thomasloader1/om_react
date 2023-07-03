@@ -142,7 +142,7 @@ const RebillCheckoutForm = () => {
       name: contact.Full_Name,
       identification: {
         type,
-        value: `${contact.DNI}`,
+        value: `${formsValues.dni.replace("-", '')}`,
       },
     });
 
@@ -352,7 +352,7 @@ const RebillCheckoutForm = () => {
         />
 
         <InputField
-          type='number'
+          type='text'
           id='dni'
           name='dni'
           label='Número de identificación'
@@ -388,9 +388,8 @@ const RebillCheckoutForm = () => {
               Pagar Aqui
             </button>
             <button
-              className={`button is-info ml-2 ${generateLink && 'is-loading'} ${
-                showRebill && 'is-hidden'
-              }`}
+              className={`button is-info ml-2 ${generateLink && 'is-loading'} ${showRebill && 'is-hidden'
+                }`}
               type='button'
               onClick={handleGenerateLink}
               disabled={!hasErrorInputs}
