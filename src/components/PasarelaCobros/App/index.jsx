@@ -55,7 +55,11 @@ function PasarelaApp() {
       .matches(/([A-Za-z0-9]+( [A-Za-z0-9]+)+)/i, 'El formato de la dirección es invalido'),
     dni: Yup.string()
       .required('❗ Ingresa el número de tu documento de identidad')
-      .matches(/^[0-9]+$/i, 'El campo debe contener solo numeros'),
+      .when('country', {
+        is: 'Chile',
+        then: Yup.string().matches(/^(0|[1-9]\d{0,7})[-]?([\dA-Za-z])$/, 'El formato del RUT es incorrecto'),
+        otherwise: Yup.string().matches(/^[0-9]+$/i, 'El campo debe contener solo números')
+      }),
     email: Yup.string().email('❗ Ingresa un email valido').required('❗ El email es requerido'),
   });
 

@@ -15,7 +15,7 @@ export const countryOptions = [
     idElement: 'pais_chi_input',
     img: 'chiFlag',
     value: 'Chile',
-    active: false,
+    active: true,
   },
   {
     idElement: 'pais_col_input',
