@@ -2,6 +2,8 @@ import { parsePhoneNumber } from 'react-phone-number-input';
 
 const {
   NODE_ENV,
+  REACT_APP_OCEANO_SETCONTRACTSTATUS,
+  REACT_APP_OCEANO_SETCONTRACTSTATUS_LOCAL,
   REACT_APP_OCEANO_STRIPESUBSCRIPTION,
   REACT_APP_OCEANO_STRIPESUBSCRIPTION_LOCAL,
   REACT_APP_OCEANO_UPDATECONTRACT_MP_LOCAL,
@@ -42,6 +44,9 @@ export const URLS = {
   UPDATE_CONTRACT: itsProduction
     ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_UPDATECONTRACT_ST}`
     : REACT_APP_OCEANO_UPDATECONTRACT_ST_LOCAL,
+  SET_CONTRACT_STATUS: itsProduction
+    ?`${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_SETCONTRACTSTATUS}`
+    : REACT_APP_OCEANO_SETCONTRACTSTATUS_LOCAL
 };
 
 export const REBILL_CONF = {
@@ -57,12 +62,12 @@ export const getPlanPrice = (formikValues, sale) => {
   const gateway = payment_method;
   const isStripe = gateway.includes('Stripe');
   const quotes = Number(formikValues.quotes);
-  
+
   const priceQuantity = advanceSuscription.isAdvanceSuscription
     ? advanceSuscription.firstQuoteDiscount
     : Number(Math.round(sale.Grand_Total / quotes));
 
-  console.log("getPlanPrice", priceQuantity);
+  console.log("getPlanPrice, priceQuantity:", priceQuantity);
 
   switch (quotes) {
     case 3:

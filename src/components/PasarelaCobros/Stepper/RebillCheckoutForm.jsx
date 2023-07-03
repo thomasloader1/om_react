@@ -12,6 +12,9 @@ import axios from 'axios';
 import { fireToast } from '../Hooks/useSwal';
 import { useParams } from 'react-router';
 import { fireModalAlert } from '../Hooks/useSwal';
+import { handleSuscriptionUpdate } from '../../../logic/rebill';
+import { handleSetContractStatus } from '../../../logic/rebill';
+
 
 const RebillCheckoutForm = () => {
   const { contractData, formikValues, userInfo, setRebillFetching, setOpenBlockLayer } =
@@ -149,20 +152,10 @@ const RebillCheckoutForm = () => {
     }
     return postUpdateZoho;
   };
-  const handleSuscriptionUpdate = async (subscriptionId, advancedSuscription) => {
-    const URL = `https://api.rebill.to/v2/subscriptions/${subscriptionId}`;
-    const headers = {
-      Authorization: `Bearer ${REBILL_CONF.TOKEN}`,
-      'Content-Type': 'application/json'
-    };
-    const { remainingAmountToPay } = advancedSuscription;
-    const response = await axios.put(URL, { amount: remainingAmountToPay.toString() }, { headers });
-    console.log({ response });
-  };
 
   const handleRequestGateway = (data, gateway) => {
     const { UPDATE_CONTRACT, MP } = URLS;
-
+    console.log('handleRequestGateway', {UPDATE_CONTRACT, MP })
     const URL = gateway.includes('Stripe') ? UPDATE_CONTRACT : MP;
     axios
       .post(URL, data)
@@ -207,6 +200,7 @@ const RebillCheckoutForm = () => {
 
     //Seteo de plan para cobrar
     const { id, quantity } = getPlanPrice(formikValues, sale);
+    console.log("setTransaction: ",{id,quantity})
     RebillSDKCheckout.setTransaction({
       prices: [
         {
@@ -220,18 +214,23 @@ const RebillCheckoutForm = () => {
     RebillSDKCheckout.setCallbacks({
       onSuccess: (response) => {
         try {
-          const { invoice, faliedTransaction, pendingTransaction } = response;
+          const { invoice, failedTransaction, pendingTransaction } = response;
           console.log("Response Pagar aqui: ", response);
 
-          if (faliedTransaction != null) {
-            const { errorMessage } = faliedTransaction.paidBags[0].payment;
+          if (failedTransaction != null) {
+            const {payment} = failedTransaction.paidBags[0]
+            const { errorMessage } = payment;
+            handleSetContractStatus(payment, formikValues.contractId);
+            // todo: actualizar el contrado de crm a rechazado.
+            //mensje de error de mp: cc_rejected_other_reason.
+            console.log("Pago Fallido", {message: errorMessage});
             throw new Error(`${errorMessage}`);
           } else {
             setRebillFetching({ loading: false, ...response });
             setOpenBlockLayer(true);
           }
 
-          const { paidBags, buyer } = invoice;
+          const { paidBags, buyer } = invoice ;
           const { payment, schedules } = paidBags[0];
           const [subscriptionId] = schedules;
           const { customer } = buyer;
@@ -244,8 +243,16 @@ const RebillCheckoutForm = () => {
           console.log('zohoupdate2', { formikValues, postUpdateZoho });
 
           const gateway = userInfo.stepTwo.value
+
+          if (formikValues.advanceSuscription.isAdvanceSuscription) {
+            handleSuscriptionUpdate(postUpdateZoho.subscriptionId, formikValues.advanceSuscription)
+          }
+          
+          handleSetContractStatus(payment,formikValues.contractId);
+          
           handleRequestGateway(postUpdateZoho, gateway);
 
+          //Esto es para stripe, nose si funciona en mp
           fireModalAlert("Pago Realizado", '', 'success');
 
         } catch (error) {

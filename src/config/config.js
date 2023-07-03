@@ -185,6 +185,7 @@ export const paymentModeOptions = [
     name: 'mod',
     value: 'Suscripción con anticipo',
     classLabel: 'half',
+    disabled: true
   },
 ];
 
