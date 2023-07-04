@@ -63,8 +63,8 @@ export const handleSetContractStatus = (payment, contractId) => {
       status === 'SUCCEEDED'
         ? 'Contrato Efectivo'
         : status === 'FAILED'
-        ? 'Pago Rechazado'
-        : 'Contrato Pendiente',
+          ? 'Pago Rechazado'
+          : 'Contrato Pendiente',
     // status === 'REJECTED' || status === 'DENIED'? "Contrato Rechazado": "",
     contractId,
   };

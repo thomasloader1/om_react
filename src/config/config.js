@@ -104,7 +104,7 @@ export const paymentOptions = [
     className: 'button grid-payment_method-item tall',
     value: 'Mercado Pago',
     allowedCountries: ['arg', 'mex', 'chi', 'col', 'per', 'uru'],
-    disabledCountries: [],
+    disabledCountries: ['chi'],
   },
   {
     img: 'st',

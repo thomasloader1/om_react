@@ -217,6 +217,7 @@ export const mappingCheckoutFields = ({ paymentLinkCustomer, contact, checkout }
   const [number] = paymentLinkCustomer.address.split(' ').filter((s) => !isNaN(s) && s);
   const [...street] = paymentLinkCustomer.address.split(' ').filter((s) => isNaN(s) && s);
   const { countryCallingCode, nationalNumber } = parsePhoneNumber(paymentLinkCustomer.phone);
+  const { type } = getDocumentType(checkout.country);
 
   //console.log({ countryCallingCode, nationalNumber })
   /*
@@ -238,7 +239,7 @@ export const mappingCheckoutFields = ({ paymentLinkCustomer, contact, checkout }
       value: '20' + paymentLinkCustomer.personalId + '9',
     },
     personalId: {
-      type: 'DNI',
+      type,
       value: paymentLinkCustomer.personalId,
     },
     address: {
