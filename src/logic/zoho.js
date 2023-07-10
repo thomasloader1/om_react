@@ -39,6 +39,7 @@ export const makePostUpdateZohoCheckout = ({
       is_suscri: !checkout.type.includes('Tradicional'),
       is_advanceSuscription: checkout.type.includes('Suscripción con anticipo'),
       adjustment: advanceSuscription.info.adjustmentPayment,
+      country: checkout.country
     };
   }
 
@@ -60,6 +61,8 @@ export const makePostUpdateZohoCheckout = ({
     is_suscri: !checkout.type.includes('Tradicional'),
     is_advanceSuscription: checkout.type.includes('Suscripción con anticipo'),
     adjustment: parseFloat(adjustmentPayment),
+    country: checkout.country
+
   };
 };
 
@@ -98,13 +101,14 @@ export const makePostUpdateZoho = ({
       is_suscri: userInfo.stepThree.value.includes('Suscripción'),
       is_advanceSuscription: userInfo.stepThree.value.includes('Suscripción con anticipo'),
       adjustment: parseFloat(adjustmentPayment),
+      country: formsValues.country
     };
   }
 
   const adjustmentPayment = parseFloat(
     advanceSuscription.payPerMonthAdvance * (formikValues.quotes - 1) +
-      advanceSuscription.firstQuoteDiscount -
-      sale.Grand_Total,
+    advanceSuscription.firstQuoteDiscount -
+    sale.Grand_Total,
   ).toFixed(2);
 
   return {
@@ -122,5 +126,6 @@ export const makePostUpdateZoho = ({
     is_suscri: !userInfo.stepThree.value.includes('Tradicional'),
     is_advanceSuscription: userInfo.stepThree.value.includes('Suscripción con anticipo'),
     adjustment: parseFloat(adjustmentPayment),
+    country: formsValues.country
   };
 };
