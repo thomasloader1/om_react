@@ -47,7 +47,7 @@ function PasarelaApp() {
     phone: Yup.string()
       .required('❗ Ingresa un número de telefono')
       .matches(/^\+?\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,9}$/, 'El campo debe contener solo numeros'),
-    address: Yup.string()
+    address: Yup.string().max(50, "La direccion no puede superar los 50 caracteres")
       .required('❗ Ingresa calle y número del titual de la tarjeta')
       .matches(/([A-Za-z0-9]+( [A-Za-z0-9]+)+)/i, 'El formato de la dirección es invalido'),
     dni: Yup.string()
