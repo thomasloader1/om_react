@@ -31,10 +31,43 @@ export const useYupValidation = () => {
         '❗ Seleccione un método de contacto valido',
         (value) => value !== '0'
       ),
+    source_lead: Yup.string()
+      .required('❗ La fuente de lead es requerido')
+      .test(
+        'is-not-zero',
+        '❗ Seleccione una fuente de lead valida',
+        (value) => value !== '0'
+      ),
   });
 
+  /* .test('rut-validation', 'El formato del documento es incorrecto', function (value) {
+        const pais = this.resolve(Yup.ref('country'));
+        if (pais === 'Chile') {
+          return /^([0-9]\d{7,8})-([A-Za-z]|\d{1})$/.test(value);
+        } else {
+          return /^[0-9]+$/.test(value);
+        }
+      }), */
+
   const contactStepValidation = Yup.object({
-    dni: Yup.number().required('❗ El Numero de Identificacion es requerido'),
+    dni: Yup.number().when('country', (country, schema) => {
+      if (country.trim() === 'Argentina') {
+        return schema.required('❗ El Numero de Identificacion es requerido (DNI)');
+      }
+      return schema;
+    }),
+    rut: Yup.string().when('country', (country, schema) => {
+      if (country.trim() === 'Chile') {
+        return schema.matches(/^[0-9]+-[0-9kK]{1}$/, "El RUT no es válido").required('❗ El Numero de Identificacion es requerido (RUT)');
+      }
+      return schema;
+    }),
+    rfc: Yup.string().when('country', (country, schema) => {
+      if (country.trim() === 'México') {
+        return schema.matches(/^[A-ZÑ&]{3,4}(\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[A1-9\d][A\d]$/, "El RFC no es válido").required('❗ El Numero de Identificacion es requerido (RFC)');
+      }
+      return schema;
+    }),
     sex: Yup.string().required('❗ El sexo es requerido'),
     date_of_birth: Yup.string().required(
       '❗ La fecha de nacimiento es requerida'
@@ -46,15 +79,12 @@ export const useYupValidation = () => {
       '❗ La provincia o estado son requeridos'
     ),
     country: Yup.string().required('❗ El país es requerido'),
-    // postal_code: Yup.number('❗ El campo debe contener solo numeros').required(
-    //   '❗ El código postal es requerido'
-    // ),
     postal_code: Yup.string().when('country', (country, schema) => {
       if (country.trim() !== 'Chile')
         return schema.required('❗ El código postal es requerido');
       return schema;
     }),
-    street: Yup.string().required('❗ La dirección es requerida'),
+    street: Yup.string().max(50, "❗El domicilio solo puede contener 50 caracteres").required('❗ La dirección es requerida'),
     locality: Yup.string().required('❗ La Ciudad o Comuna es requerida'),
   });
 

@@ -33,6 +33,7 @@ function StateProvider({ children }) {
     useApi(apiSpecialities);
   const { fetching: fetchMethods, data: methods } = useApi(apiMethods);
   const [products, setProducts] = useState([]);
+  const [sourceLead, setSourceLead] = useState([{ id: 1, name: "Congresos" }, { id: 2, name: "Hospitales / Clínicas" }, { id: 3, name: "Visita personal" }, { id: 4, name: "Otros" }]);
 
   const [options, setOptions] = useState({
     countryOptions,
@@ -99,7 +100,8 @@ function StateProvider({ children }) {
         toggleSelectCourses,
         expandSelectedCourses,
         toggleSelectedCourses,
-        user, setUser
+        user, setUser,
+        sourceLead, setSourceLead
       }}
     >
       {children}

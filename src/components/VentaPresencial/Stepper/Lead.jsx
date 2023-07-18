@@ -8,7 +8,7 @@ import { FormStep } from './MultiStep';
 import withSpinner from '../Hoc/withSpinner';
 
 const LeadStep = () => {
-  const { professions, specialties, methods, appEnv } = useContext(AppContext);
+  const { professions, specialties, methods, sourceLead, appEnv } = useContext(AppContext);
   const { setFieldValue, setFieldTouched } = useFormikContext();
 
   useEffect(() => {
@@ -88,6 +88,14 @@ const LeadStep = () => {
             label="Método de contacto"
             id="method_contact"
             name="method_contact"
+          />
+
+          <Select
+            options={sourceLead}
+            placeholderText="Seleccionar fuente del lead"
+            label="Fuente de Lead"
+            id="source_lead"
+            name="source_lead"
           />
         </div>
       </FormStep>

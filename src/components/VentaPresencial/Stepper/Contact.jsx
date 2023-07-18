@@ -38,13 +38,23 @@ const ContactStep = () => {
     <>
       <FormStep stepNumber={3} stepName="Convertir a contacto">
         <div id="medModPago_grid" className="grid-conversion_contact">
-          <InputField
-            label="Numero de Identificacion"
-            type="text"
-            placeholder="Ingresar Numero de Identificacion"
-            id="dni"
-            name="dni"
-          />
+          {appEnv.country === 'Chile' ? (
+            <InputField
+              label="Numero de Identificacion"
+              type="text"
+              placeholder="Ingresar Numero de Identificacion"
+              id="rut"
+              name="rut"
+            />
+          ) : (
+            <InputField
+              label="Numero de Identificacion"
+              type="text"
+              placeholder="Ingresar Numero de Identificacion"
+              id="dni"
+              name="dni"
+            />
+          )}
           <Select
             label="Sexo"
             options={[
@@ -87,13 +97,6 @@ const ContactStep = () => {
               name="postal_code"
             />
           )}
-          {/* <InputField
-            label="Código postal"
-            type="text"
-            placeholder="Ingresar código postal"
-            id="postal_code"
-            name="postal_code"
-          /> */}
           <InputField
             label="Dirección"
             type="text"

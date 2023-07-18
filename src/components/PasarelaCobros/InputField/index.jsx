@@ -15,7 +15,7 @@ const InputField = ({ label, ...props }) => {
   const [defaultCountry] = useState(iso);
 
   return (
-    <div className="field">
+    <div data-input-name={props.id} className="field">
       <label htmlFor={props.id} className="label">
         {label}
       </label>

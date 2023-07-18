@@ -1,6 +1,10 @@
 .grid-conversion_contact {
   display: grid;
-  grid-template-areas: 'dni sex date_of_birth' 'country province_state postal_code' 'street street locality' ' registration_number area_of_work training_interest';
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  grid-template-areas: 'dni sex date_of_birth'
+    'country province_state locality'
+    'street street postal_code'
+    'registration_number area_of_work training_interest';
   column-gap: 1rem;
 
   .block.field_info {
@@ -10,58 +14,53 @@
   }
 
   .field {
-    &:nth-child(1) {
+
+    $inputs: 'sex',
+    'date_of_birth',
+    'country',
+    'province_state',
+    'postal_code',
+    'street',
+    'locality',
+    'registration_number',
+    'area_of_work',
+    'training_interest';
+
+    @each $input in $inputs {
+      &[data-input-name='#{$input}'] {
+        grid-area: #{$input};
+      }
+    }
+
+    &[data-input-name='rut'],
+    &[data-input-name='dni'],
+    &[data-input-name='rfc'] {
       grid-area: dni;
-    }
-    &:nth-child(2) {
-      grid-area: sex;
-    }
-    &:nth-child(3) {
-      grid-area: date_of_birth;
-    }
-    &:nth-child(4) {
-      grid-area: country;
-    }
-    &:nth-child(5) {
-      grid-area: province_state;
-    }
-    &:nth-child(6) {
-      grid-area: postal_code;
-    }
-    &:nth-child(7) {
-      grid-area: street;
-    }
-    &:nth-child(8) {
-      grid-area: locality;
-    }
-    &:nth-child(9) {
-      grid-area: registration_number;
-    }
-    &:nth-child(10) {
-      grid-area: area_of_work;
-    }
-    &:nth-child(11) {
-      grid-area: training_interest;
     }
 
     .control {
       &.select {
         width: 100%;
+
         select {
           width: 100%;
+
           &.is-danger {
             border-color: red;
           }
         }
+
         &::after {
           z-index: 1;
         }
       }
+
       .allow-dropdown.intl-tel-input {
         width: 100%;
       }
     }
   }
+
   .grid-payment_method-item {
     height: unset;
 
@@ -72,12 +71,14 @@
     }
   }
 }
+
 @media screen and (max-width: 766px) {
   .grid-conversion_contact {
     grid-template-areas: unset;
     grid-template-columns: 1fr;
     gap: 0.75rem;
-    & > .field {
+
+    &>.field {
       &:nth-child(n) {
         grid-area: unset;
       }

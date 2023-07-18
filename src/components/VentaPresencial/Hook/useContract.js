@@ -44,6 +44,8 @@ export const useContract = () => {
         ...progress,
         products,
       }));
+
+
     } catch (e) {
       console.log({ e });
       const { message } = e.response.data;

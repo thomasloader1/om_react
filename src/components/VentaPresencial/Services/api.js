@@ -67,7 +67,7 @@ class ApiService {
       const { data } = await axios.post(
         URL,
         body,
-        this.axiosConfig
+        { headers: { Authorization: `Bearer ${this.token}` } }
       );
 
       return data
