@@ -1,9 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  MdOutlineEditNote,
-  MdDeleteOutline,
-} from 'react-icons/md';
+import { MdOutlineEditNote, MdDeleteOutline } from 'react-icons/md';
 import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { Box } from 'react-bulma-components';
 
@@ -18,11 +15,12 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
   useEffect(() => {
     if (selectedCourses.length > 0) {
       if (appEnv.products != null && typeof appEnv.products !== 'undefined') {
-        console.log({ selectedCourses })
-        const totalAmout = selectedCourses.filter(Boolean).reduce(
-          (acc, current) => acc + Number(current.price),
-          0
-        );
+        console.log({ selectedCourses });
+
+        const totalAmout = selectedCourses
+          .filter(Boolean)
+          .reduce((acc, current) => acc + Number(current.price), 0);
+
         setTotalPrice(totalAmout);
       } else {
         setTotalPrice(0);
@@ -30,13 +28,12 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
     }
   }, [selectedCourses]);
 
-  // console.log({ selectedCourses })
-
   return (
     <>
       <div
-        className={`side-item courses ${selectionCourses ? 'selection' : ''
-          }  ${className}`}
+        className={`side-item courses ${
+          selectionCourses ? 'selection' : ''
+        }  ${className}`}
       >
         <span className="side-item-info">
           <div className="numstep">{currentStep}</div>
@@ -61,15 +58,15 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
         </button>
       </div>
       <div
-        className={`side-item-courses ${isMobile &&
+        className={`side-item-courses ${
+          isMobile &&
           (expandSelectedCourses && selectedCourses.length > 0
             ? 'is-flex'
             : 'hidden')
-          } `}
+        } `}
       >
         <ul className="side-item-courses-list">
           {selectedCourses.filter(Boolean).map((course) =>
-
             isMobile ? (
               <Box
                 className={`course `}
@@ -83,10 +80,13 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
                 </div>
 
                 <div className="course-price">
-                  <h3>${course.price.toLocaleString('es',
-                    {
-                      useGrouping: true, minimumIntegerDigits: 1
-                    })}</h3>
+                  <h3>
+                    $
+                    {course.price.toLocaleString('es', {
+                      useGrouping: true,
+                      minimumIntegerDigits: 1,
+                    })}
+                  </h3>
                   <MdDeleteOutline
                     className="is-size-3 delete-selection"
                     onClick={() => onDelete(course.product_code)}
@@ -99,10 +99,10 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
                 className="side-item-courses-selected is-justify-content-space-between"
               >
                 <span id={course.product_code} style={{ display: 'none' }}>
-                  {course.price.toLocaleString('es',
-                    {
-                      useGrouping: true, minimumIntegerDigits: 1
-                    })}
+                  {course.price.toLocaleString('es', {
+                    useGrouping: true,
+                    minimumIntegerDigits: 1,
+                  })}
                 </span>
                 <h4>{course.title}</h4>
                 <button
@@ -115,15 +115,17 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
                 </button>
               </li>
             )
-
           )}
         </ul>
         <div className="side-item-courses-total">
           <span>COSTO TOTAL</span>
-          <h3>${totalPrice.toLocaleString('es',
-            {
-              useGrouping: true, minimumIntegerDigits: 1
-            })}</h3>
+          <h3>
+            $
+            {totalPrice.toLocaleString('es', {
+              useGrouping: true,
+              minimumIntegerDigits: 1,
+            })}
+          </h3>
         </div>
       </div>
     </>

@@ -15,8 +15,8 @@ export const useAppEnv = () => {
   //console.log("useAppEnv()",{stepNumberGlobal})
 
   const setValues = ({ step_number, ...values }) => {
-    console.group("Ejecucion de setValues en useAppEnv")
-    console.log({ values })
+    // console.group("Ejecucion de setValues en useAppEnv")
+    // console.log({ values })
     setFormikValues((prevState) => ({
       ...prevState,
       ...values,
@@ -69,16 +69,20 @@ export const useAppEnv = () => {
           option.status = 'current';
         }
 
-        console.log({ products, selectedCourses })
+        // console.log({ products, selectedCourses })
         if (
           products !== null &&
           typeof products !== 'undefined' &&
           option.step === 4
         ) {
           setSelectedCourses(products);
-          option.status = 'completed'
-        } else if (products == null &&
-          typeof products === 'undefined' && sameStep && option.step === 4) {
+          option.status = 'completed';
+        } else if (
+          products == null &&
+          typeof products === 'undefined' &&
+          sameStep &&
+          option.step === 4
+        ) {
           option.status = 'current';
         }
 
@@ -91,7 +95,8 @@ export const useAppEnv = () => {
             contract !== null && typeof contract !== 'undefined'
               ? 'completed'
               : 'current';
-          option.value = typeof contract === 'undefined' ? 'Sin completar' : 'Completado';
+          option.value =
+            typeof contract === 'undefined' ? 'Sin completar' : 'Completado';
 
           //option.value = formIncomplete ? 'Sin completar' : 'Completado';
         } else if (sameStep && option.step === 5) {
@@ -106,7 +111,7 @@ export const useAppEnv = () => {
     setOptions({ ...options });
     const stepIndex = step_number - 1;
     setStepNumberGlobal(stepIndex);
-    console.groupEnd()
+    // console.groupEnd()
   };
   return {
     setFormikValues,

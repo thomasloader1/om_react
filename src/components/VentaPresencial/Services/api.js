@@ -7,7 +7,6 @@ const apiProgressURL = isProduction
   : '/api/progress';
 
 class ApiService {
-
   constructor() {
     this.baseUrl = apiProgressURL;
     this.token = localStorage.getItem('tokenLogin');
@@ -46,8 +45,7 @@ class ApiService {
   }
 
   async getApiResource(URL) {
-    return axios.get(URL, this.axiosConfig)
-
+    return axios.get(URL, this.axiosConfig);
   }
 
   async createProgress(user_id) {
@@ -63,19 +61,16 @@ class ApiService {
   }
 
   async createContractCRM(URL, body) {
+    console.log(this.token);
     try {
-      const { data } = await axios.post(
-        URL,
-        body,
-        { headers: { Authorization: `Bearer ${this.token}` } }
-      );
+      const { data } = await axios.post(URL, body, {
+        headers: { Authorization: `Bearer ${this.token}` },
+      });
 
-      return data
-
+      return data;
     } catch (e) {
-      return e
+      return e;
     }
-
   }
 }
 

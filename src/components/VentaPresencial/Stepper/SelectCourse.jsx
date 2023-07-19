@@ -53,78 +53,16 @@ const SelectCourseStep = () => {
       (product) => product.product_code === courseId
     );
 
-    const { product_code, price, title, gift } = courseSelected;
-
-    const courseIndex = selectedCourses.findIndex(
-      (course) => course.product_code === courseId
-    );
-
-
-    if (courseIndex !== -1) {
-      setSelectedCourses((prevState) => {
-        const newState = [...prevState];
-        newState.splice(courseIndex, 1).filter(Boolean);
-        console.log({ newState })
-
-        setAppEnv((prevState) => ({
-          ...prevState,
-          products: [...newState],
-        }));
-
-        formik.values.products = newState;
-
-        return newState;
-      });
-    } else {
-      setSelectedCourses((prevState) => {
-        const newState = [
-          ...prevState,
-          { product_code, price, title, quantity: 1, discount: 0, gift },
-        ];
-        console.log({ newState })
-
-        setAppEnv((prevState) => ({
-          ...prevState,
-          products: [...newState],
-        }));
-
-        formik.values.products = newState;
-
-        return newState;
-      });
-    }
-
-    // console.log({ courseIndex, courseId, FormikValues: formik.values, selectedCourses })
-
-
-    setAppEnv((prevState) => ({
-      ...prevState,
-    }));
-
-  };
-
-  const handleSelectCourseGift = (courseId) => {
-    const [courseSelected] = products.filter(
-      (product) => product.product_code === courseId
-    );
-
     const { product_code, price, title } = courseSelected;
 
     const courseIndex = selectedCourses.findIndex(
       (course) => course.product_code === courseId
     );
 
-
     if (courseIndex !== -1) {
       setSelectedCourses((prevState) => {
         const newState = [...prevState];
-        newState.map(producto => {
-          if (producto.id === courseId) {
-            return { ...producto, price: 0, gift: !producto.gift };
-          }
-          return producto;
-        });
-        console.log({ newState })
+        newState.splice(courseIndex, 1).filter(Boolean);
 
         setAppEnv((prevState) => ({
           ...prevState,
@@ -141,7 +79,6 @@ const SelectCourseStep = () => {
           ...prevState,
           { product_code, price, title, quantity: 1, discount: 0 },
         ];
-        console.log({ newState })
 
         setAppEnv((prevState) => ({
           ...prevState,
@@ -156,11 +93,45 @@ const SelectCourseStep = () => {
 
     // console.log({ courseIndex, courseId, FormikValues: formik.values, selectedCourses })
 
-
     setAppEnv((prevState) => ({
       ...prevState,
     }));
+  };
 
+  const handleSelectCourseGift = (courseId) => {
+    const [courseSelected] = products.filter(
+      (product) => product.product_code === courseId
+    );
+
+    const courseIndex = selectedCourses.findIndex(
+      (course) => course.product_code === courseId
+    );
+
+    console.log({
+      courseSelected,
+      selectedCourse: selectedCourses[courseIndex],
+    });
+    const { price } = courseSelected;
+
+    selectedCourses[courseIndex].gift = !selectedCourses[courseIndex].gift;
+    selectedCourses[courseIndex].price = selectedCourses[courseIndex].gift
+      ? 0
+      : price;
+
+    console.log({ selectedCourses });
+
+    setSelectedCourses((prevState) => {
+      const newState = [...prevState];
+
+      setAppEnv((prevState) => ({
+        ...prevState,
+        products: [...newState],
+      }));
+
+      formik.values.products = newState;
+
+      return newState;
+    });
   };
 
   const productsWithPrice = products.filter((product) => product.price !== 0);
@@ -168,10 +139,9 @@ const SelectCourseStep = () => {
   const filteredProducts = productsWithPrice.filter((product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  const elementsToShow = filteredProducts.filter(Boolean).slice(
-    currentPage * elementsPerPage,
-    (currentPage + 1) * elementsPerPage
-  );
+  const elementsToShow = filteredProducts
+    .filter(Boolean)
+    .slice(currentPage * elementsPerPage, (currentPage + 1) * elementsPerPage);
 
   const previousLabel = isMobile ? (
     <button className="button is-primary is-inverted is-small">
@@ -192,7 +162,7 @@ const SelectCourseStep = () => {
   useEffect(() => {
     if (appEnv.products != null && typeof appEnv.products !== 'undefined') {
       setSelectedCourses(appEnv.products);
-      formik.setFieldValue("products", appEnv.products)
+      formik.setFieldValue('products', appEnv.products);
     }
 
     return () => null;
@@ -257,13 +227,20 @@ const SelectCourseStep = () => {
               }}
             >
               {elementsToShow.map((product) => {
-                const isChecked = selectedCourses.filter(Boolean).some((course) => {
-                  return product.product_code === Number(course.product_code);
-                });
+                const isChecked = selectedCourses
+                  .filter(Boolean)
+                  .some((course) => {
+                    return product.product_code === Number(course.product_code);
+                  });
 
-                const isGift = selectedCourses.filter(Boolean).some((course) => {
-                  return product.product_code === Number(course.product_code) && Boolean(product?.gift);
-                });
+                const isGift = selectedCourses
+                  .filter(Boolean)
+                  .some((course) => {
+                    return (
+                      product.product_code === Number(course.product_code) &&
+                      Boolean(product?.gift)
+                    );
+                  });
 
                 return (
                   <CourseItem
