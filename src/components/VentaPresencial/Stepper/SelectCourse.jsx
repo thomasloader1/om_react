@@ -53,7 +53,7 @@ const SelectCourseStep = () => {
       (product) => product.product_code === courseId
     );
 
-    const { product_code, price, title } = courseSelected;
+    const { product_code, price, title, gift } = courseSelected;
 
     const courseIndex = selectedCourses.findIndex(
       (course) => course.product_code === courseId
@@ -64,6 +64,66 @@ const SelectCourseStep = () => {
       setSelectedCourses((prevState) => {
         const newState = [...prevState];
         newState.splice(courseIndex, 1).filter(Boolean);
+        console.log({ newState })
+
+        setAppEnv((prevState) => ({
+          ...prevState,
+          products: [...newState],
+        }));
+
+        formik.values.products = newState;
+
+        return newState;
+      });
+    } else {
+      setSelectedCourses((prevState) => {
+        const newState = [
+          ...prevState,
+          { product_code, price, title, quantity: 1, discount: 0, gift },
+        ];
+        console.log({ newState })
+
+        setAppEnv((prevState) => ({
+          ...prevState,
+          products: [...newState],
+        }));
+
+        formik.values.products = newState;
+
+        return newState;
+      });
+    }
+
+    // console.log({ courseIndex, courseId, FormikValues: formik.values, selectedCourses })
+
+
+    setAppEnv((prevState) => ({
+      ...prevState,
+    }));
+
+  };
+
+  const handleSelectCourseGift = (courseId) => {
+    const [courseSelected] = products.filter(
+      (product) => product.product_code === courseId
+    );
+
+    const { product_code, price, title } = courseSelected;
+
+    const courseIndex = selectedCourses.findIndex(
+      (course) => course.product_code === courseId
+    );
+
+
+    if (courseIndex !== -1) {
+      setSelectedCourses((prevState) => {
+        const newState = [...prevState];
+        newState.map(producto => {
+          if (producto.id === courseId) {
+            return { ...producto, price: 0, gift: !producto.gift };
+          }
+          return producto;
+        });
         console.log({ newState })
 
         setAppEnv((prevState) => ({
@@ -201,6 +261,10 @@ const SelectCourseStep = () => {
                   return product.product_code === Number(course.product_code);
                 });
 
+                const isGift = selectedCourses.filter(Boolean).some((course) => {
+                  return product.product_code === Number(course.product_code) && Boolean(product?.gift);
+                });
+
                 return (
                   <CourseItem
                     key={product.product_code}
@@ -211,7 +275,9 @@ const SelectCourseStep = () => {
                     title={product.title}
                     price={product.price}
                     onSelectedCourse={handleSelectCourse}
+                    onSelectedCourseGift={handleSelectCourseGift}
                     checked={isChecked}
+                    gift={isGift}
                     name="products"
                     id="products"
                   />

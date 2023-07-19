@@ -18,6 +18,7 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
   useEffect(() => {
     if (selectedCourses.length > 0) {
       if (appEnv.products != null && typeof appEnv.products !== 'undefined') {
+        console.log({ selectedCourses })
         const totalAmout = selectedCourses.filter(Boolean).reduce(
           (acc, current) => acc + Number(current.price),
           0
