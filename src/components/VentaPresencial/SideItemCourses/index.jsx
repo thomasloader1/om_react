@@ -5,7 +5,7 @@ import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 import { Box } from 'react-bulma-components';
 
 function SideItemCourses({ currentStep, label, status, onDelete, className }) {
-  const { selectedCourses, appEnv, stepNumberGlobal, expandSelectedCourses } =
+  const { selectedCourses, appEnv, stepNumberGlobal, expandSelectedCourses, discount, setDiscount } =
     useContext(AppContext);
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -15,25 +15,23 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
   useEffect(() => {
     if (selectedCourses.length > 0) {
       if (appEnv.products != null && typeof appEnv.products !== 'undefined') {
-        console.log({ selectedCourses });
 
         const totalAmout = selectedCourses
           .filter(Boolean)
           .reduce((acc, current) => acc + Number(current.price), 0);
 
-        setTotalPrice(totalAmout);
+        setTotalPrice(totalAmout - discount);
       } else {
         setTotalPrice(0);
       }
     }
-  }, [selectedCourses]);
+  }, [selectedCourses, discount]);
 
   return (
     <>
       <div
-        className={`side-item courses ${
-          selectionCourses ? 'selection' : ''
-        }  ${className}`}
+        className={`side-item courses ${selectionCourses ? 'selection' : ''
+          }  ${className}`}
       >
         <span className="side-item-info">
           <div className="numstep">{currentStep}</div>
@@ -58,12 +56,11 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
         </button>
       </div>
       <div
-        className={`side-item-courses ${
-          isMobile &&
+        className={`side-item-courses ${isMobile &&
           (expandSelectedCourses && selectedCourses.length > 0
             ? 'is-flex'
             : 'hidden')
-        } `}
+          } `}
       >
         <ul className="side-item-courses-list">
           {selectedCourses.filter(Boolean).map((course) =>
@@ -117,6 +114,10 @@ function SideItemCourses({ currentStep, label, status, onDelete, className }) {
             )
           )}
         </ul>
+        <div className='p-3'>
+          <h4 htmlFor="discount" className='is-4'>Descuento</h4>
+          <input max={totalPrice} type="number" name="discount" id="discount" className='input' placeholder='Ingrese el precio a descontarse' value={discount} onChange={(e) => setDiscount(e.target.value)} />
+        </div>
         <div className="side-item-courses-total">
           <span>COSTO TOTAL</span>
           <h3>

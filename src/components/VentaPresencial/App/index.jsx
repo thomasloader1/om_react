@@ -18,19 +18,15 @@ import SelectCourse from '../Stepper/SelectCourse';
 import SelectCountryStep from '../Stepper/SelectCountryStep';
 import ResumeStep from '../Stepper/Resume';
 import MotionSpinner from '../../PasarelaCobros/Spinner/MotionSpinner';
-import { AppContext } from '../../PasarelaCobros/Provider/StateProvider';
 
 const { NODE_ENV, REACT_APP_SPP } = process.env;
 
 const MultiStepLazy = lazy(() => import('../Stepper/MultiStep'));
 
 function VentaPresencialApp() {
-  //const { user, selectedCourses, tokenLogin, formikValues: ctxFV } = useContext(AppContext)
   const pasarelaContainerRef = useRef();
   const isMobile = useMediaQSmall();
-  /*   const setHeightMobile = () => {
-      pasarelaContainerRef.current.style.height = `${window.innerHeight}px`;
-    }; */
+
   const {
     setFormikValues,
     formikValues,
@@ -76,6 +72,7 @@ function VentaPresencialApp() {
     postal_code: '',
     street: '',
     locality: '',
+    discount: 0,
     products: [],
   };
 
@@ -87,12 +84,6 @@ function VentaPresencialApp() {
 
     return () => null;
   }, [creatingProgress, appEnv, formikValues]);
-
-  /*   useEffect(() => {
-      if (isMobile) {
-        setHeightMobile();
-      }
-    }, [isMobile]); */
 
   return (
     <>

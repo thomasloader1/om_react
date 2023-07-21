@@ -61,6 +61,9 @@ function StateProvider({ children }) {
     useToggle(false);
   const { expand: expandSelectedCourses, toggleState: toggleSelectedCourses } =
     useToggle(false);
+
+  const [discount, setDiscount] = useState(null);
+
   return (
     <AppContext.Provider
       value={{
@@ -101,7 +104,8 @@ function StateProvider({ children }) {
         expandSelectedCourses,
         toggleSelectedCourses,
         user, setUser,
-        sourceLead, setSourceLead
+        sourceLead, setSourceLead,
+        discount, setDiscount
       }}
     >
       {children}

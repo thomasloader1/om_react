@@ -61,6 +61,7 @@ export const useContract = () => {
         apiCreateSaleZohoCRM,
         {
           idPurchaseProgress: id,
+          discount: ctx.discount,
         },
         { headers: { Authorization: ctx.tokenLogin } }
       );
