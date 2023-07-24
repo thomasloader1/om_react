@@ -7,7 +7,7 @@ import { AppContext } from '../Provider/StateProvider';
 
 console.group('StepControl')
 function StepControl({ currentStep, setCurrentStep, validStep, currentFormikValues = null }) {
-  // // console.log({currentStep, setCurrentStep,state, sideItemOptions, validStep})
+  // // //console.log({currentStep, setCurrentStep,state, sideItemOptions, validStep})
 
   const { options, setOptions } = useContext(AppContext)
 

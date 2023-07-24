@@ -21,7 +21,7 @@ export function fireToast(title, icon = 'error', timer = 3000) {
   });
 }
 
-export function fireAlert(title, text = "", icon = 'error', timer = 3000) {
+export function fireAlert(title, text = '', icon = 'error', timer = 3000) {
   toast.fire({
     title: <p>{title}</p>,
     toast: false,
@@ -38,7 +38,7 @@ export function fireAlert(title, text = "", icon = 'error', timer = 3000) {
   });
 }
 
-export function fireModalAlert(title, html = "", icon = 'error') {
+export function fireModalAlert(title, html = '', icon = 'error') {
   toast.fire({
     title: <p>{title}</p>,
     toast: false,
@@ -46,6 +46,25 @@ export function fireModalAlert(title, html = "", icon = 'error') {
     icon,
     position: 'center-center',
     showConfirmButton: true,
-
   });
+}
+
+export async function fireModalAlertRedirect(title, html = '', payment) {
+  const toast = withReactContent(Swal);
+
+  const result = await toast.fire({
+    title: <p>{title}</p>,
+    toast: false,
+    html,
+    icon: 'warning',
+    position: 'center-center',
+    showConfirmButton: true,
+    confirmButtonText: 'Ver el estado del pago',
+  });
+
+  if (result.isConfirmed) {
+    window.location.href = `#/status/${payment.id}`;
+  } else {
+    window.location.href = `#/status/${payment.id}`;
+  }
 }

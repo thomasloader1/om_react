@@ -49,26 +49,16 @@ function ResumeTicket() {
   const isTraditional = formikValues.mod.includes('Tradicional');
 
   const totalMonths = isTraditional ? 1 : formikValues.quotes;
-  const payPerMonth = isTraditional ? sale?.Grand_Total : Math.round(sale?.Grand_Total / formikValues.quotes);
+  const payPerMonth = isTraditional
+    ? sale?.Grand_Total
+    : Math.floor(sale?.Grand_Total / formikValues.quotes);
   const formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(payPerMonth);
 
-  const firstQuoteDiscount = Math.round((sale?.Grand_Total / formikValues.quotes) / 2);
-  const remainingAmountToPay = Math.round(sale?.Grand_Total - firstQuoteDiscount);
+  const firstQuoteDiscount = Math.floor(sale?.Grand_Total / formikValues.quotes / 2);
+  const remainingAmountToPay = Math.floor(sale?.Grand_Total - firstQuoteDiscount);
 
-  const newQuotes = (formikValues.quotes - 1);
-  const payPerMonthAdvance = Math.round(remainingAmountToPay / newQuotes);
-
-  /* console.log('Datos del contrato: ', {
-    advance: {
-      isAdvanceSuscription,
-      remainingAmountToPay,
-      firstQuoteDiscount,
-      payPerMonthAdvance,
-      quotesAdvance: (formikValues.quotes - 1)
-    },
-    MONTO_A_PAGAR_POR_MES: formattedAmount,
-    MONTO_TOTAL_DEL_CONTRATO: sale.Grand_Total,
-  }); */
+  const newQuotes = formikValues.quotes - 1;
+  const payPerMonthAdvance = Math.floor(remainingAmountToPay / newQuotes);
 
   return (
     <>
@@ -104,7 +94,9 @@ function ResumeTicket() {
 
             {isAdvanceSuscription && (
               <div id='montoAnticipo_resume' className='column is-one-third finalResume-item'>
-                <label>{isAdvanceSuscription ? "Monto a pagar de anticipo" : "monto a pagar POR MES"}</label>
+                <label>
+                  {isAdvanceSuscription ? 'Monto a pagar de anticipo' : 'monto a pagar POR MES'}
+                </label>
                 <h4>{firstQuoteDiscount}</h4>
               </div>
             )}
@@ -118,7 +110,6 @@ function ResumeTicket() {
               <label>Estado del contrato</label>
               <h4>{sale.Status}</h4>
             </div>
-
           </div>
           <div className='is-divider'></div>
           <div className='columns is-multiline datos-tarjeta'>
@@ -144,14 +135,15 @@ function ResumeTicket() {
           <Columns className='finalResume-confirmation'>
             <Columns.Column>
               <ButtonField
-                className={`grid-payment_method-item button ${'Datos correctos' === stepFour.value && 'active'
-                  }`}
+                className={`grid-payment_method-item button ${
+                  'Datos correctos' === stepFour.value && 'active'
+                }`}
                 showText={true}
                 id='checkContract'
                 name='checkContract'
                 value='Datos correctos'
                 onClick={() => {
-                  // // console.log(userInfo)
+                  // // //console.log(userInfo)
                   const { sideItemOptions } = options;
 
                   sideItemOptions[3].value = 'Datos correctos';
@@ -177,8 +169,8 @@ function ResumeTicket() {
                       remainingAmountToPay,
                       firstQuoteDiscount,
                       payPerMonthAdvance,
-                      quotesAdvance: (formikValues.quotes - 1)
-                    }
+                      quotesAdvance: formikValues.quotes - 1,
+                    },
                   });
                 }}
               />
@@ -186,8 +178,9 @@ function ResumeTicket() {
 
             <Columns.Column>
               <ButtonField
-                className={`grid-payment_method-item button ${'Datos erroneos' === stepFour.value && 'active'
-                  }`}
+                className={`grid-payment_method-item button ${
+                  'Datos erroneos' === stepFour.value && 'active'
+                }`}
                 showText={true}
                 id='checkContract'
                 name='checkContract'

@@ -19,16 +19,15 @@ import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
 /* import { loadStripe } from '@stripe/stripe-js'; */
 
+//console.log(process.env)
+
 function PasarelaApp() {
-
   const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } = useContext(AppContext);
-
   const location = useLocation();
   const { id } = useParams();
   const needRunEffect = !location.pathname.includes('vp');
 
-  const { loading, data } = useContractZoho(id, needRunEffect);
-
+  const { loading } = useContractZoho(id, needRunEffect);
   const pasarelaContainerRef = useRef(null);
   const isMobile = useMediaQSmall();
 
@@ -36,9 +35,7 @@ function PasarelaApp() {
     pasarelaContainerRef.current.style.height = `90vh`;
   };
 
-  const { fetching: stripeFetch, pk } = useStripeEnv(data?.sale?.Pais);
-
-
+  // const { fetching: stripeFetch, pk } = useStripeEnv(data?.sale?.Pais);
   //const stripePromise = loadStripe(pk)
 
   const { progressId, getProgress } = useProgress();
@@ -49,8 +46,8 @@ function PasarelaApp() {
       .matches(/^[a-zA-Z]+\s+[a-zA-Z]+(?:\s+[a-zA-Z]+)?$/i, 'El campo debe contener solo letras'),
     phone: Yup.string()
       .required('❗ Ingresa un número de telefono')
-      .matches(/^(\+?\d{2})?(\d{2})?(\d{4})(\d{4})$/i, 'El campo debe contener solo numeros'),
-    address: Yup.string()
+      .matches(/^\+?\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,9}$/, 'El campo debe contener solo numeros'),
+    address: Yup.string().max(50, "La direccion no puede superar los 50 caracteres")
       .required('❗ Ingresa calle y número del titual de la tarjeta')
       .matches(/([A-Za-z0-9]+( [A-Za-z0-9]+)+)/i, 'El formato de la dirección es invalido'),
     dni: Yup.string()
@@ -61,31 +58,37 @@ function PasarelaApp() {
         otherwise: Yup.string().matches(/^[0-9]+$/i, 'El campo debe contener solo números')
       }),
     email: Yup.string().email('❗ Ingresa un email valido').required('❗ El email es requerido'),
+    zip: Yup.string().required('❗ El zip es requerido'),
   });
+
 
   useEffect(() => {
     if (location.pathname.includes('vp')) {
       getProgress();
     }
+
+    return () => console.log('Clean')
   }, [progressId]);
 
   useEffect(() => {
     setStepNumber(stepNumber);
 
-    return () => null;
+    return () => console.log('Clean App!');
   }, [stepNumber]);
 
   useEffect(() => {
-    console.log({ isMobile, pasarelaContainerRef });
+    //console.log({ isMobile, pasarelaContainerRef });
     if (isMobile && pasarelaContainerRef.current) {
       setHeightMobile();
     }
+    return () => console.log('Another Clean')
+
   }, [isMobile, pasarelaContainerRef.current]);
 
   return (
     <main ref={appRef}>
       <Header />
-      {stripeFetch ? (
+      {(loading) ? (
         <MotionSpinner text='Recuperando datos del Contrato' />
       ) : (
         /*  <Elements stripe={stripePromise}> */

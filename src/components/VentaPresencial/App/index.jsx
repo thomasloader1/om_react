@@ -53,7 +53,7 @@ function VentaPresencialApp() {
               const response = await axios.post(URL, body, requestConfig);
 
               setCheckoutLink(response.data.url);
-              // console.log({ response });
+              // //console.log({ response });
             }}
           >
             <SelectCountryStep
@@ -74,7 +74,7 @@ function VentaPresencialApp() {
                   ...values,
                 }));
 
-                // console.log('Step 2 submit', { values, formikValues });
+                // //console.log('Step 2 submit', { values, formikValues });
               }}
               validationSchema={Yup.object({
                 payment_method: Yup.string().required('El método de pago es requerido'),
@@ -87,7 +87,7 @@ function VentaPresencialApp() {
                   ...values,
                 }));
 
-                // console.log('Step 3 submit', { values, formikValues });
+                // //console.log('Step 3 submit', { values, formikValues });
               }}
               validationSchema={Yup.object({
                 contractId: Yup.string().required('Ingrese el ID del contrato es requerido'),
@@ -106,7 +106,7 @@ function VentaPresencialApp() {
                   ...values,
                 }));
 
-                // console.log('Step 4 submit', { values, formikValues });
+                // //console.log('Step 4 submit', { values, formikValues });
               }}
               validationSchema={Yup.object({
                 checkContract: Yup.string().required('El campo es requerido'),

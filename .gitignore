@@ -244,4 +244,5 @@ $RECYCLE.BIN/
 
 build
 old-build/*
+old-build
 package-lock.json

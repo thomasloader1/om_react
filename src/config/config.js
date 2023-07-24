@@ -148,7 +148,7 @@ export const paymentOptions = [
     className: 'button grid-payment_method-item tall',
     idInputElement: '',
     value: 'WebpayCL',
-    allowedCountries: ['chi'],
+    allowedCountries: [],
     disabledCountries: [],
   },
 ];
@@ -185,7 +185,6 @@ export const paymentModeOptions = [
     name: 'mod',
     value: 'Suscripción con anticipo',
     classLabel: 'half',
-    disabled: true
   },
 ];
 

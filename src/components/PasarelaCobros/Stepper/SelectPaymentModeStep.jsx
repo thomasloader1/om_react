@@ -13,19 +13,19 @@ function SelectPaymentModeStep() {
   const { stepOne, stepThree } = userInfo;
   const { id } = useParams();
   const location = useLocation();
-  const formik = useFormikContext();
-  const [contractId] = useState(formik.values.contractId)
-  //const contractIdValue = formik.values.contractId;
+  const { setFieldValue } = useFormikContext();
+  const [contractId, setContractId] = useState(0)
 
   useEffect(() => {
     if (!location.pathname.includes('vp')) {
-      formik.setFieldValue('contractId', id);
+      setFieldValue('contractId', id);
+      setContractId(id)
     }
   }, [id]);
 
   useEffect(() => {
     if (appEnv != null && appEnv?.contract.entity_id_crm) {
-      formik.setFieldValue('contractId', appEnv.contract.entity_id_crm);
+      setFieldValue('contractId', appEnv.contract.entity_id_crm);
     }
   }, [appEnv]);
 
@@ -71,7 +71,7 @@ function SelectPaymentModeStep() {
             readOnly
           />
 
-          {stepThree.value !== 'Tradicional' && stepThree.value !== '' && (
+          {stepThree.value.includes('Suscripción') && (
             <SelectQuote name='quotes' id='quotes' country={stepOne.value} />
           )}
         </div>

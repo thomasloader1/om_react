@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Raleway:wght@400;700&display=swap');
+
 main.grid-checkout {
     display: grid;
     grid-template-areas: "nav nav nav" "form form form";
@@ -17,6 +19,54 @@ section {
     grid-area: form;
     margin: 10px 0;
 }
+
+.msk-logo {
+    justify-content: center;
+}
+
+.invoice-text {
+    color: #6474A6 !important;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 140%;
+
+    strong {
+        color: #6474A6 !important;
+        font-weight: 900;
+    }
+}
+
+.title-type {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 42px;
+    display: flex;
+    align-items: center;
+
+    color: #374161;
+}
+
+.price-one {
+    color: #374161
+}
+
+.item-deail-text {
+    color: #374161;
+}
+
+.is-divider-dashed {
+    display: block;
+    position: relative;
+    border: 1px dashed #E4E4E4 !important;
+    height: 0.1rem;
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
 
 form#cardCheckout {
 
@@ -44,10 +94,22 @@ form#cardCheckout {
     }
 
     .card_checkout__title {
-        margin: 0;
+
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
         font-size: 24px;
-        text-align: center;
+        line-height: 28px;
+        display: flex;
+        align-items: center;
+
+        color: #374161;
+
     }
+
+
+
+
 
     .card_checkout__body {
         display: grid;
