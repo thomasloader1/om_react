@@ -1,0 +1,17 @@
+#payment_ctc {
+    display: grid;
+    gap: 1rem;
+    grid-template-areas: "tarjeta" "card_v";
+
+    #n_ro_de_tarjeta {
+        grid-area: tarjeta;
+    }
+
+    #card_v {
+        grid-area: card_v;
+    }
+
+    @media (min-width: 768px) {
+        grid-template-areas: "tarjeta tarjeta card_v";
+    }
+}

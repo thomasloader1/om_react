@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import * as Yup from 'yup';
 import { AppContext } from '../Provider/StateProvider';
 /* import { Elements } from '@stripe/react-stripe-js'; */
@@ -17,12 +17,37 @@ import { useProgress } from '../Hooks/useProgress';
 import { useLocation, useParams } from 'react-router';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
+import ExcelCTCPayment from '../Stepper/ExcelCTCPayment';
+import FolioCTCPayment from '../Stepper/FolioCTCPayment';
+import PlanCTCPayment from '../Stepper/PlanCTCPayment';
+import FolioCTCPlanPayment from '../Stepper/FolioCTCPlanPayment';
+import { useYupValidation } from '../Hooks/useYupValidation';
+import DataCardCTC from '../Stepper/DataCardCTC';
+import { makeCTCPaymentFile, makeCTCSuscriptionFile, updateZohoContract } from '../../../logic/ctc';
+import { fireToast } from '../Hooks/useSwal';
+import moment from 'moment';
+import { makePostUpdateZoho, makePostUpdateZohoCTC } from '../../../logic/zoho';
 /* import { loadStripe } from '@stripe/stripe-js'; */
 
-//console.log(process.env)
-
 function PasarelaApp() {
-  const { setFormikValues, checkoutLink, appRef, stepNumber, setStepNumber } = useContext(AppContext);
+  const { setFormikValues,
+    contractData,
+    appRef,
+    stepNumber,
+    setStepNumber,
+    userInfo,
+    formikValues,
+    setDownloadLinkCTCPayment, setOpenBlockLayer } = useContext(AppContext);
+
+  const { countryStepValidation,
+    selectPaymentMethodStepValidation,
+    selectPaymentModeStepValidation,
+    formClientDataStepValidation,
+    rebillPaymentStepValidation,
+    dataCardCTCStepValidation,
+    folioPaymentCTCStepValidation,
+    folioSuscriptionCTCStepValidation } = useYupValidation();
+
   const location = useLocation();
   const { id } = useParams();
   const needRunEffect = !location.pathname.includes('vp');
@@ -40,43 +65,20 @@ function PasarelaApp() {
 
   const { progressId, getProgress } = useProgress();
 
-  const validationSchemaFinalStep = Yup.object({
-    fullName: Yup.string()
-      .required('❗ Ingresa el nombre que figura en la tarjeta')
-      .matches(/^[a-zA-Z]+\s+[a-zA-Z]+(?:\s+[a-zA-Z]+)?$/i, 'El campo debe contener solo letras'),
-    phone: Yup.string()
-      .required('❗ Ingresa un número de telefono')
-      .matches(/^\+?\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,9}$/, 'El campo debe contener solo numeros'),
-    address: Yup.string().max(50, "La direccion no puede superar los 50 caracteres")
-      .required('❗ Ingresa calle y número del titual de la tarjeta')
-      .matches(/([A-Za-z0-9]+( [A-Za-z0-9]+)+)/i, 'El formato de la dirección es invalido'),
-    dni: Yup.string()
-      .required('❗ Ingresa el número de tu documento de identidad')
-      .test('rut-validation', 'El formato del documento es incorrecto', function (value) {
-        const pais = this.resolve(Yup.ref('country'));
-        if (pais === 'Chile') {
-          return /^([0-9]\d{7,8})-([A-Za-z]|\d{1})$/.test(value);
-        } else {
-          return /^[0-9]+$/.test(value);
-        }
-      }),
-    email: Yup.string().email('❗ Ingresa un email valido').required('❗ El email es requerido'),
-    zip: Yup.string().required('❗ El zip es requerido'),
-  });
-
+  const isCTCPayment = userInfo.stepTwo.value.includes('CTC');
 
   useEffect(() => {
     if (location.pathname.includes('vp')) {
       getProgress();
     }
 
-    return () => console.log('Clean')
+    return () => console.log('Progress Effect')
   }, [progressId]);
 
   useEffect(() => {
     setStepNumber(stepNumber);
 
-    return () => console.log('Clean App!');
+    return () => console.log('StepNumber Effect');
   }, [stepNumber]);
 
   useEffect(() => {
@@ -84,9 +86,10 @@ function PasarelaApp() {
     if (isMobile && pasarelaContainerRef.current) {
       setHeightMobile();
     }
-    return () => console.log('Another Clean')
+    return () => console.log('isMobile Effect')
 
   }, [isMobile, pasarelaContainerRef.current]);
+
 
   return (
     <main ref={appRef}>
@@ -111,8 +114,24 @@ function PasarelaApp() {
                 dni: '',
                 email: '',
                 mod: '',
+                n_ro_de_tarjeta: '',
+                card_v: '',
+                rfc: '',
+                folio_pago: '',
+                folio_suscripcion: '',
               }}
-              onSubmit={() => { }}
+              onSubmit={async () => {
+
+                if (formikValues.payment_method.includes("CTC")) {
+                  setOpenBlockLayer(true);
+                  console.log({ formikValues })
+                  const body = makePostUpdateZohoCTC(formikValues, contractData, userInfo);
+                  const res = await updateZohoContract(body)
+
+                  console.log({ body, res })
+                }
+
+              }}
             >
               <SelectCountryStep
                 onSubmit={(values) => {
@@ -121,9 +140,7 @@ function PasarelaApp() {
                     ...values,
                   }));
                 }}
-                validationSchema={Yup.object({
-                  country: Yup.string().required('❗ El pais es requerido'),
-                })}
+                validationSchema={countryStepValidation}
               />
               <SelectPaymentMethodStep
                 onSubmit={(values) => {
@@ -132,9 +149,7 @@ function PasarelaApp() {
                     ...values,
                   }));
                 }}
-                validationSchema={Yup.object({
-                  payment_method: Yup.string().required('❗ El método de pago es requerido'),
-                })}
+                validationSchema={selectPaymentMethodStepValidation}
               />
               <SelectPaymentModeStep
                 onSubmit={(values) => {
@@ -143,15 +158,7 @@ function PasarelaApp() {
                     ...values,
                   }));
                 }}
-                validationSchema={Yup.object({
-                  contractId: Yup.string('Coloque un id'),
-                  mod: Yup.string().required('❗ Selecciona un modo de pago'),
-                  quotes: Yup.string().when('mod', {
-                    is: (val) => !(val && val.includes('Tradicional')),
-                    then: (schema) => Yup.string().required('❗ Especifique las cuotas'),
-                    otherwise: (schema) => null,
-                  }),
-                })}
+                validationSchema={selectPaymentModeStepValidation}
               />
               <FormClientDataStep
                 onSubmit={(values) => {
@@ -160,15 +167,81 @@ function PasarelaApp() {
                     ...values,
                   }));
                 }}
-                validationSchema={Yup.object({
-                  checkContract: Yup.string().required('❗ El campo es requerido'),
-                })}
+                validationSchema={formClientDataStepValidation}
               />
 
-              <GeneratePaymentLinkStep
-                checkoutLink={checkoutLink}
-                validationSchema={validationSchemaFinalStep}
-              />
+
+              {isCTCPayment ? (
+                <DataCardCTC
+                  onSubmit={async (values) => {
+                    console.log({ values })
+                    const amountFirstPay = formikValues.amount / formikValues.quotes;
+
+                    const valuesCTCPaymentFile = {
+                      amount: formikValues.advanceSuscription.isAdvanceSuscription ? formikValues.advanceSuscription.firstQuoteDiscount : Math.floor(amountFirstPay),
+                      contact_name: contractData.contact.Full_Name,
+                      so_contract: contractData.sale.SO_Number,
+                      n_ro_de_tarjeta: values.n_ro_de_tarjeta,
+                      card_v: values.card_v
+                    }
+                    const { message, download_link } = await makeCTCPaymentFile(valuesCTCPaymentFile)
+
+                    setDownloadLinkCTCPayment(download_link);
+
+                    setFormikValues((prevFormikValues) => ({
+                      ...prevFormikValues,
+                      ...values
+                    }));
+
+                    // options.sideItemOptions[4].value = 'Completado'
+
+                    fireToast(message, 'success');
+                    //    setOptions(options)
+                  }}
+                  validationSchema={dataCardCTCStepValidation} />
+              ) :
+                <GeneratePaymentLinkStep
+                  validationSchema={rebillPaymentStepValidation}
+                />
+              }
+
+              {isCTCPayment && <ExcelCTCPayment />}
+              {isCTCPayment && <FolioCTCPayment
+                onSubmit={async (values) => {
+                  const amountFirstPay = formikValues.amount / formikValues.quotes;
+
+                  const valuesCTCSuscriptionFile = {
+                    amounts: formikValues.advanceSuscription.isAdvanceSuscription ? formikValues.advanceSuscription.payPerMonthAdvance : Math.floor(amountFirstPay),
+                    contact_name: contractData.contact.Full_Name,
+                    so_contract: contractData.sale.SO_Number,
+                    card_number: formikValues.n_ro_de_tarjeta,
+                    card_v: moment(contractData.sale.Fecha_Creaci_n).add(1, 'months').format('DD/MM/YYYY'),
+                    quotes: formikValues.quotes
+                  }
+                  const { message, download_link } = await makeCTCSuscriptionFile(valuesCTCSuscriptionFile)
+                  setDownloadLinkCTCPayment(download_link);
+
+                  setFormikValues((prevFormikValues) => ({
+                    ...prevFormikValues,
+                    ...values
+                  }));
+
+                  fireToast(message, 'success');
+                }}
+                validationSchema={folioPaymentCTCStepValidation}
+
+              />}
+              {isCTCPayment && <PlanCTCPayment />}
+              {isCTCPayment && <FolioCTCPlanPayment
+                onSubmit={async (values) => {
+                  setFormikValues((prevFormikValues) => ({
+                    ...prevFormikValues,
+                    ...values
+                  }));
+                }}
+                validationSchema={folioSuscriptionCTCStepValidation}
+              />}
+
             </MultiStep>
           </div>
           {/* <pre>{JSON.stringify(contractData, null, 2)}</pre> */}

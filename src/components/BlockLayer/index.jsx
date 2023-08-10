@@ -11,12 +11,12 @@ const URL = NODE_ENV === 'production' ? REACT_APP_URL_PRD : REACT_APP_URL_LOCAL
 const BlockLayer = () => {
     const { openBlockLayer, rebillFetching } = useContext(AppContext)
     const [cardTitle, setCardTitle] = useState('');
-    const { loading, ...rest } = rebillFetching
+    const [fetchBlock, setFetchBlock] = useState({ loading: true, type: 'CTC', ...rebillFetching });
 
     useEffect(() => {
-        const title = rebillFetching.type === 'paymentLink' ? 'Link Generado' : 'Pago Realizado';
+        const title = fetchBlock.type === 'paymentLink' ? 'Link Generado' : 'Pago Realizado';
         setCardTitle(title)
-    }, [rebillFetching.type])
+    }, [fetchBlock.type])
 
     const handleCopyLink = () => {
         const link = `${URL}/#/checkout/${rest.payment.contract_entity_id}`
@@ -31,9 +31,10 @@ const BlockLayer = () => {
             });
     };
 
+    const { loading, ...rest } = fetchBlock
     const content = () => {
 
-        if (rebillFetching.type === "paymentLink") {
+        if (fetchBlock.type === "paymentLink") {
             return (<div className='is-flex is-fullwidth'>
                 <button
                     className='button is-primary has-text-weight-bold'

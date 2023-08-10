@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  pasarela:
+    build:
+      context: .
+    ports:
+      - "3001:3000" # Puerto en el host: Puerto en el contenedor
+    restart: always # Opcional: reiniciar el contenedor automáticamente en caso de error

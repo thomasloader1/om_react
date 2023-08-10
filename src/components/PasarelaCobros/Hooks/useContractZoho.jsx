@@ -6,7 +6,7 @@ import { userFlow } from '../../../config/config';
 const {
   REACT_APP_OCEANO_URL,
   REACT_APP_OCEANO_OBTAINDATA,
-  REACT_APP_OCEANO_OBTAINDATA_TEST,
+  REACT_APP_API_PAYMENTS_PREFIX_PRD,
   NODE_ENV,
 } = process.env;
 
@@ -21,8 +21,8 @@ export const useContractZoho = (contractId, runEffect = true) => {
 
   const URL =
     NODE_ENV === 'production'
-      ? `${REACT_APP_OCEANO_URL}${REACT_APP_OCEANO_OBTAINDATA}`
-      : `${REACT_APP_OCEANO_OBTAINDATA_TEST}`;
+      ? `${REACT_APP_OCEANO_URL}${REACT_APP_API_PAYMENTS_PREFIX_PRD}${REACT_APP_OCEANO_OBTAINDATA}`
+      : `${REACT_APP_OCEANO_OBTAINDATA}`;
 
   useEffect(() => {
     const fetchData = async () => {
