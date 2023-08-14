@@ -127,9 +127,20 @@ function PasarelaApp() {
                   setOpenBlockLayer(true);
                   console.log({ formikValues })
                   const body = makePostUpdateZohoCTC(formikValues, contractData, userInfo);
-                  const res = await updateZohoContract(body)
+                  try {
+                    const res = await updateZohoContract(body)
+                    if (res.result === 'ok') {
+                      setOpenBlockLayer(true);
+                    } else {
+                      throw new Error(JSON.stringify(res));
+                    }
 
-                  console.log({ body, res })
+                  } catch (error) {
+                    console.log({ error })
+                    fireToast('Error al actualizar Contrato CTC')
+                  }
+
+                  //console.log({ body, res })
                 }
 
               }}
@@ -175,9 +186,10 @@ function PasarelaApp() {
               {isCTCPayment ? (
                 <DataCardCTC
                   onSubmit={async (values) => {
-                    console.log({ values })
+                    //console.log({ values })
                     const { quotes } = formikValues
-                    const amountFirstPay = contractData.sale.Grand_Total / quotes ? quotes : 1;
+                    const divideBy = quotes ? quotes : 1
+                    const amountFirstPay = contractData.sale.Grand_Total / divideBy;
 
                     const valuesCTCPaymentFile = {
                       amount: formikValues.advanceSuscription.isAdvanceSuscription ? formikValues.advanceSuscription.firstQuoteDiscount : Math.floor(amountFirstPay),

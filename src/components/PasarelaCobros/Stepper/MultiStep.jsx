@@ -42,7 +42,6 @@ const MultiStep = ({ children, initialValues, className, onSubmit, stepStateNumb
   };
 
   const handleSubmit = async (values, actions) => {
-    console.log({ values, actions })
     if (step.props.onSubmit) {
       await step.props.onSubmit(values);
     }

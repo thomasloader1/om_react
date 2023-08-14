@@ -9,7 +9,7 @@ const { NODE_ENV, REACT_APP_URL_PRD, REACT_APP_URL_LOCAL } = process.env
 const URL = NODE_ENV === 'production' ? REACT_APP_URL_PRD : REACT_APP_URL_LOCAL
 
 const BlockLayer = () => {
-    const { openBlockLayer, rebillFetching } = useContext(AppContext)
+    const { openBlockLayer, rebillFetching, CTCFetching } = useContext(AppContext)
     const [cardTitle, setCardTitle] = useState('');
     const [fetchBlock, setFetchBlock] = useState({ loading: true, type: 'CTC', ...rebillFetching });
 
@@ -79,7 +79,7 @@ const BlockLayer = () => {
                         transition={{ ease: 'easeOut', duration: 0.5 }}
                     ></motion.div>
 
-                    {!loading && (
+                    {loading && (
                         <motion.div
                             className='modal-generated-link'
                             animate={{ backgroundColor: '#f4f5f7', boxShadow: '5px 5px 2rem rgba(0,0,0, 0.3)' }}
