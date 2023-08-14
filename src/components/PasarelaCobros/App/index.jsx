@@ -113,6 +113,7 @@ function PasarelaApp() {
                 address: '',
                 dni: '',
                 email: '',
+                zip: '',
                 mod: '',
                 n_ro_de_tarjeta: '',
                 card_v: '',
@@ -175,7 +176,8 @@ function PasarelaApp() {
                 <DataCardCTC
                   onSubmit={async (values) => {
                     console.log({ values })
-                    const amountFirstPay = contractData.sale.Grand_Total / formikValues.quotes;
+                    const { quotes } = formikValues
+                    const amountFirstPay = contractData.sale.Grand_Total / quotes ? quotes : 1;
 
                     const valuesCTCPaymentFile = {
                       amount: formikValues.advanceSuscription.isAdvanceSuscription ? formikValues.advanceSuscription.firstQuoteDiscount : Math.floor(amountFirstPay),
