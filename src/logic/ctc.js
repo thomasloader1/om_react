@@ -1,7 +1,8 @@
 import axios from "axios"
 import { generateURL } from "../components/PasarelaCobros/Helpers/generateURL";
 
-const { REACT_APP_OCEANO_UPDATECONTRACT_CTC,
+const {
+    REACT_APP_OCEANO_UPDATECONTRACT_CTC,
     REACT_APP_API_EXPORT_EXCEL,
     REACT_APP_API_EXPORT_EXCEL_SUSCRIPTION } = process.env
 
@@ -27,8 +28,9 @@ export const updateZohoContract = async (values) => {
 }
 
 export const downloadResource = async (url) => {
+    console.log({ url })
     const link = document.createElement('a');
-    link.href = url;
+    link.href = url; // https://oceanomedicina.net/api-payments/public/api/.....
     link.setAttribute('download', 'archivo.xlsx');
     document.body.appendChild(link);
     link.click();
