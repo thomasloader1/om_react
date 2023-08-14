@@ -13,8 +13,14 @@ const URLS = {
 }
 
 export const makeCTCPaymentFile = async (values) => {
-    const { data } = await axios.post(URLS.PAYMENT, { ...values })
-    return data;
+    try {
+        console.log('makeCTCPaymentFile: ' + URLS.PAYMENT);
+        const { data } = await axios.post(URLS.PAYMENT, { ...values })
+        return data;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
 }
 
 export const makeCTCSuscriptionFile = async (values) => {
@@ -30,7 +36,9 @@ export const updateZohoContract = async (values) => {
 export const downloadResource = async (url) => {
     console.log({ url })
     const link = document.createElement('a');
-    link.href = url; // https://oceanomedicina.net/api-payments/public/api/.....
+    //todo: Setear el switcheo de local a production
+    // link.href = url; // https://oceanomedicina.net/api-payments/public/api/.....
+    link.href = `https://oceanomedicina.net/api-payments/public${url}`;
     link.setAttribute('download', 'archivo.xlsx');
     document.body.appendChild(link);
     link.click();
