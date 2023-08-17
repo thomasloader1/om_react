@@ -229,7 +229,7 @@ function PasarelaApp() {
                     contact_name: contractData.contact.Full_Name,
                     so_contract: contractData.sale.SO_Number,
                     card_number: formikValues.n_ro_de_tarjeta,
-                    card_v: moment(contractData.sale.Fecha_Creaci_n).add(1, 'months').format('DD/MM/YYYY'),
+                    card_v: values.card_v,
                     quotes: formikValues.quotes
                   }
                   const { message, download_link } = await makeCTCSuscriptionFile(valuesCTCSuscriptionFile)
