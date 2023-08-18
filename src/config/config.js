@@ -3,7 +3,7 @@ export const countryOptions = [
     idElement: 'pais_arg_input',
     img: 'argFlag',
     value: 'Argentina',
-    active: true,
+    active: false,
   },
   {
     idElement: 'pais_bol_input',
