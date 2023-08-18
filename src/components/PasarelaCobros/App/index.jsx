@@ -89,6 +89,30 @@ function PasarelaApp() {
     return () => console.log('isMobile Effect')
 
   }, [isMobile, pasarelaContainerRef.current]);
+  console.log({ userInfo })
+
+  const initialFromValues = userInfo?.stepTwo?.value && userInfo?.stepTwo?.value.includes('CTC') ? {
+    fullName: '',
+    phone: '',
+    address: '',
+    dni: '',
+    email: '',
+    zip: '',
+    mod: '',
+    n_ro_de_tarjeta: '',
+    card_v: '',
+    rfc: '',
+    folio_pago: '',
+    folio_suscripcion: '',
+  } : {
+    fullName: '',
+    phone: '',
+    address: '',
+    dni: '',
+    email: '',
+    zip: '',
+    mod: '',
+  }
 
 
   return (
@@ -107,20 +131,7 @@ function PasarelaApp() {
             <MultiStep
               stepStateNumber={{ stepNumber, setStepNumber }}
               className='pasarela-1 column seleccion-pais'
-              initialValues={{
-                fullName: '',
-                phone: '',
-                address: '',
-                dni: '',
-                email: '',
-                zip: '',
-                mod: '',
-                n_ro_de_tarjeta: '',
-                card_v: '',
-                rfc: '',
-                folio_pago: '',
-                folio_suscripcion: '',
-              }}
+              initialValues={initialFromValues}
               onSubmit={async () => {
 
                 if (formikValues.payment_method.includes("CTC")) {
