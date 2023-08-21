@@ -32,6 +32,9 @@ const BlockLayer = () => {
     };
 
     const { loading, ...rest } = fetchBlock
+    const isFinish = loading === false && rebillFetching?.payment.status === 'pending'
+    //console.log({ loading, isFinish, rebillFetching })
+
     const content = () => {
 
         if (fetchBlock.type === "paymentLink") {
@@ -59,7 +62,7 @@ const BlockLayer = () => {
 
     }
 
-    //console.log({ openBlockLayer, rebillFetching })
+    // console.log({ openBlockLayer, rebillFetching, fetchBlock })
     return (
         <>
             {openBlockLayer && (
@@ -79,7 +82,7 @@ const BlockLayer = () => {
                         transition={{ ease: 'easeOut', duration: 0.5 }}
                     ></motion.div>
 
-                    {loading && (
+                    {(loading || isFinish) && (
                         <motion.div
                             className='modal-generated-link'
                             animate={{ backgroundColor: '#f4f5f7', boxShadow: '5px 5px 2rem rgba(0,0,0, 0.3)' }}
