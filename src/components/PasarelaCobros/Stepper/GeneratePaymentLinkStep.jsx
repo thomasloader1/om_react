@@ -1,7 +1,7 @@
 import React from 'react';
 import RebillCheckoutForm from './RebillCheckoutForm';
 
-function GeneratePaymentLinkStep({ checkoutLink }) {
+function GeneratePaymentLinkStep() {
 
   return (<RebillCheckoutForm />)
 

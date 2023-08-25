@@ -16,7 +16,7 @@ const ButtonField = ({
 }) => {
   const [field, meta] = useField(props);
   const { value } = props;
-
+  const hasImageIcon = img !== '';
   const imageIcon = img && <Image src={IMAGES[img]} alt={value} size='small' />;
   const labelOfElement = showText ? value : '';
   return (
@@ -31,7 +31,7 @@ const ButtonField = ({
             className={className + ` ${meta.error && 'error'}`}
             value={value}
           >
-            {imageIcon}
+            {hasImageIcon ? imageIcon : <h4 className='text_option'>{shortName}</h4>}
             {showText && <h4 className='text_option'>{labelOfElement}</h4>}
           </Form.Radio>
         </Form.Control>

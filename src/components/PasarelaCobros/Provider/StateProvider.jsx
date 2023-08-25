@@ -31,7 +31,9 @@ function StateProvider({ children }) {
   const [stepNumber, setStepNumber] = useState(0);
   const [openBlockLayer, setOpenBlockLayer] = useState(false);
   const [rebillFetching, setRebillFetching] = useState(null);
-
+  const [CTCPayment, setCTCPayment] = useState(false);
+  const [downloadLinkCTCPayment, setDownloadLinkCTCPayment] = useState(null)
+  const [paymentConfig, setPaymentConfig] = useState(null)
   const appRef = useRef(null);
   const formRef = useRef(null);
 
@@ -56,7 +58,10 @@ function StateProvider({ children }) {
         setStepNumber,
         contractData, setContractData,
         openBlockLayer, setOpenBlockLayer,
-        rebillFetching, setRebillFetching
+        rebillFetching, setRebillFetching,
+        CTCPayment, setCTCPayment,
+        downloadLinkCTCPayment, setDownloadLinkCTCPayment,
+        paymentConfig, setPaymentConfig
       }}
     >
       {children}

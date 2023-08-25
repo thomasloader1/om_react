@@ -9,14 +9,14 @@ const { NODE_ENV, REACT_APP_URL_PRD, REACT_APP_URL_LOCAL } = process.env
 const URL = NODE_ENV === 'production' ? REACT_APP_URL_PRD : REACT_APP_URL_LOCAL
 
 const BlockLayer = () => {
-    const { openBlockLayer, rebillFetching } = useContext(AppContext)
+    const { openBlockLayer, rebillFetching, CTCFetching } = useContext(AppContext)
     const [cardTitle, setCardTitle] = useState('');
-    const { loading, ...rest } = rebillFetching
+    const [fetchBlock, setFetchBlock] = useState({ loading: true, type: 'CTC', ...rebillFetching });
 
     useEffect(() => {
-        const title = rebillFetching.type === 'paymentLink' ? 'Link Generado' : 'Pago Realizado';
+        const title = fetchBlock.type === 'paymentLink' ? 'Link Generado' : 'Pago Realizado';
         setCardTitle(title)
-    }, [rebillFetching.type])
+    }, [fetchBlock.type])
 
     const handleCopyLink = () => {
         const link = `${URL}/#/checkout/${rest.payment.contract_entity_id}`
@@ -31,9 +31,13 @@ const BlockLayer = () => {
             });
     };
 
+    const { loading, ...rest } = fetchBlock
+    const isFinish = loading === false && rebillFetching?.payment.status === 'pending'
+    //console.log({ loading, isFinish, rebillFetching })
+
     const content = () => {
 
-        if (rebillFetching.type === "paymentLink") {
+        if (fetchBlock.type === "paymentLink") {
             return (<div className='is-flex is-fullwidth'>
                 <button
                     className='button is-primary has-text-weight-bold'
@@ -58,7 +62,7 @@ const BlockLayer = () => {
 
     }
 
-    //console.log({ openBlockLayer, rebillFetching })
+    // console.log({ openBlockLayer, rebillFetching, fetchBlock })
     return (
         <>
             {openBlockLayer && (
@@ -78,7 +82,7 @@ const BlockLayer = () => {
                         transition={{ ease: 'easeOut', duration: 0.5 }}
                     ></motion.div>
 
-                    {!loading && (
+                    {(loading || isFinish) && (
                         <motion.div
                             className='modal-generated-link'
                             animate={{ backgroundColor: '#f4f5f7', boxShadow: '5px 5px 2rem rgba(0,0,0, 0.3)' }}

@@ -83,8 +83,7 @@ const RebillCheckoutForm = () => {
       const { data } = await axios.post(GENERATE_LINK, requestData);
       setOpenBlockLayer(true);
       setRebillFetching({ loading: false, ...data });
-
-      //console.log({ data });
+      console.log({ data });
       setGenerateLink(false);
     } catch (e) {
       fireModalAlert('Error al generar link', e);

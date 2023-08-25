@@ -17,19 +17,20 @@ const MultiStep = ({ children, initialValues, className, onSubmit, stepStateNumb
   const totalSteps = steps.length;
   const isLastStep = stepNumber === totalSteps - 1;
 
+  // console.log({ step, totalSteps, isLastStep })
+
   const next = (values) => {
     setSpanshot(values);
     const indexOfNextStep = stepNumber + 1;
     options.sideItemOptions[stepNumber].status = 'completed';
+
+    if (options.sideItemOptions[stepNumber].value === "") {
+      options.sideItemOptions[stepNumber].value = 'Completado'
+    };
+
     options.sideItemOptions[indexOfNextStep].status = 'current';
     setOptions({ ...options });
     setStepNumber(stepNumber + 1);
-    /*  // //console.log('next', {
-      stepNumber,
-      stepNumberGlobal,
-      formikValues,
-      formikInstance
-    });  */
   };
   const previous = (values) => {
     setSpanshot(values);
@@ -38,13 +39,6 @@ const MultiStep = ({ children, initialValues, className, onSubmit, stepStateNumb
     options.sideItemOptions[indexOfPrevStep].status = 'current';
     setOptions({ ...options });
     setStepNumber(stepNumber - 1);
-
-    /* // //console.log('previous', {
-      stepNumber,
-      stepNumberGlobal,
-      formikValues,
-      formikInstance
-    }); */
   };
 
   const handleSubmit = async (values, actions) => {
