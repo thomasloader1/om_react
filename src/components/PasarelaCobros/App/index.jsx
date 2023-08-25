@@ -23,10 +23,10 @@ import PlanCTCPayment from '../Stepper/PlanCTCPayment';
 import FolioCTCPlanPayment from '../Stepper/FolioCTCPlanPayment';
 import { useYupValidation } from '../Hooks/useYupValidation';
 import DataCardCTC from '../Stepper/DataCardCTC';
+import PlaceToPayPayment from '../Stepper/PlaceToPayPayment';
 import { makeCTCPaymentFile, makeCTCSuscriptionFile, updateZohoContract } from '../../../logic/ctc';
 import { fireToast } from '../Hooks/useSwal';
-import moment from 'moment';
-import { makePostUpdateZoho, makePostUpdateZohoCTC } from '../../../logic/zoho';
+import { makePostUpdateZohoCTC } from '../../../logic/zoho';
 /* import { loadStripe } from '@stripe/stripe-js'; */
 
 function PasarelaApp() {
@@ -66,6 +66,7 @@ function PasarelaApp() {
   const { progressId, getProgress } = useProgress();
 
   const isCTCPayment = userInfo.stepTwo.value.includes('CTC');
+  const isPTPPayment = userInfo.stepTwo.value.includes('PlaceToPay');
 
   useEffect(() => {
     if (location.pathname.includes('vp')) {
@@ -89,7 +90,6 @@ function PasarelaApp() {
     return () => console.log('isMobile Effect')
 
   }, [isMobile, pasarelaContainerRef.current]);
-  console.log({ userInfo })
 
   const initialFromValues = userInfo?.stepTwo?.value && userInfo?.stepTwo?.value.includes('CTC') ? {
     fullName: '',
@@ -225,7 +225,7 @@ function PasarelaApp() {
                   }}
                   validationSchema={dataCardCTCStepValidation} />
               ) :
-                <GeneratePaymentLinkStep
+                isPTPPayment ? <PlaceToPayPayment /> : <GeneratePaymentLinkStep
                   validationSchema={rebillPaymentStepValidation}
                 />
               }

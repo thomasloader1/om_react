@@ -24,6 +24,8 @@ import ba from './metPago/banorte.svg';
 import wp from './metPago/webpay.png';
 import logo from './msk-logo.svg';
 
+const ptp = "https://static.placetopay.com/placetopay-logo.svg"
+
 const IMAGES = {
   asesorComercial,
   asesorCobranzas,
@@ -50,6 +52,7 @@ const IMAGES = {
   pp,
   wp,
   logo,
+  ptp
 };
 
 export default IMAGES;

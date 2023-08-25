@@ -33,7 +33,7 @@ export const countryOptions = [
     idElement: 'pais_ecu_input',
     img: 'ecuFlag',
     value: 'Ecuador',
-    active: false,
+    active: true,
   },
   {
     idElement: 'pais_sal_input',
@@ -134,11 +134,11 @@ export const paymentOptions = [
     disabledCountries: [],
   },
   {
-    img: 'df',
-    shortName: 'df',
+    img: 'ptp',
+    shortName: 'ptp',
     className: 'button grid-payment_method-item tall',
     idInputElement: '',
-    value: 'Datafast',
+    value: 'PlaceToPay',
     allowedCountries: ['ecu'],
     disabledCountries: [],
   },
