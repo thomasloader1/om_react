@@ -64,7 +64,7 @@ export const useYupValidation = () => {
     }),
     rfc: Yup.string().when('country', (country, schema) => {
       if (country.trim() === 'México') {
-        return schema.matches(/^[A-ZÑ&]{3,4}(\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[A1-9\d][A\d]$/, "El RFC no es válido").required('❗ El Numero de Identificacion es requerido (RFC)');
+        return schema.min(12, '❗ RFC debe tener 12 caracteres').required('❗ El Numero de Identificacion es requerido (RFC)');
       }
       return schema;
     }),

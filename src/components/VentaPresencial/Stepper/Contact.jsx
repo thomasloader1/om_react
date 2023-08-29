@@ -34,27 +34,42 @@ const ContactStep = () => {
     }
   }, [appEnv, appEnv?.contact]);
 
+  const identificationInput = () => {
+    switch (appEnv.country) {
+      case 'Chile':
+        return (<InputField
+          label="Numero de Identificacion"
+          type="text"
+          placeholder="Ingresar Numero de Identificacion"
+          id="rut"
+          name="rut"
+        />)
+      case 'Argentina':
+        return (<InputField
+          label="Numero de Identificacion"
+          type="text"
+          placeholder="Ingresar Numero de Identificacion"
+          id="dni"
+          name="dni"
+        />)
+      default:
+        return (<InputField
+          label="Numero de Identificacion"
+          type="text"
+          placeholder="Ingresar Numero de Identificacion"
+          id="rfc"
+          name="rfc"
+        />)
+    }
+  }
+
   return (
     <>
       <FormStep stepNumber={3} stepName="Convertir a contacto">
         <div id="medModPago_grid" className="grid-conversion_contact">
-          {appEnv.country === 'Chile' ? (
-            <InputField
-              label="Numero de Identificacion"
-              type="text"
-              placeholder="Ingresar Numero de Identificacion"
-              id="rut"
-              name="rut"
-            />
-          ) : (
-            <InputField
-              label="Numero de Identificacion"
-              type="text"
-              placeholder="Ingresar Numero de Identificacion"
-              id="dni"
-              name="dni"
-            />
-          )}
+
+          {identificationInput()}
+
           <Select
             label="Sexo"
             options={[
