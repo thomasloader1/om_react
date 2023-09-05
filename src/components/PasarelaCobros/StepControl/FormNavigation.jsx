@@ -8,7 +8,7 @@ const FormNavigation = (props) => {
   const disabledButtonCTC = props.isLastStep === (formik.values.folio_suscripcion && formik.values.folio_pago);
 
   const disabledButton = formik.values?.payment_method?.includes("CTC") ? disabledButtonCTC : disabledButtonDefault
-  //console.log(props.isLastStep)
+  const showNextOrFinishButton = props.isLastStep && (formik.values?.payment_method?.includes("CTC") || formik.values?.payment_method?.includes("PlaceToPay"))
 
   return (
     <div className='controls'>
@@ -23,12 +23,13 @@ const FormNavigation = (props) => {
       )}
 
       <Button
-        className={`flex-grow-1 is-primary is-normal is-fullwidth`}
+        className={`flex-grow-1 is-primary is-normal is-fullwidth ${showNextOrFinishButton && 'is-hidden'}`}
         disabled={disabledButton}
         type='submit'
       >
         {props.isLastStep ? 'Finalizar' : 'Siguiente'}
       </Button>
+
 
     </div>
   );

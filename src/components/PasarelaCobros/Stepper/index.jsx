@@ -19,9 +19,9 @@ function Stepper() {
     country: Yup.string().required('Selecciona un pais'),
   });
 
-  console.group('Stepper');
+  //console.group('Stepper');
   // //console.log({ options })
-  console.groupEnd('Stepper');
+  //console.groupEnd();
 
   return (
     <section className='container is-max-widescreen'>

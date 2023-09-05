@@ -1,0 +1,52 @@
+#grid-ptp-payment {
+    display: grid;
+    gap: 1rem;
+    grid-template-areas: "docType" "nro_doc" "address" "email" "ptpSession" "ptpPayNow" "ptpLink";
+
+    @media (min-width: 768px) {
+        grid-template-areas: "docType nro_doc" "address email" "ptpSession ptpSession" "ptpPayNow ptpLink";
+    }
+
+    .select.is-link {
+        width: 100%;
+        height: 100%;
+
+        select {
+            width: 100%;
+        }
+
+        &::after {
+            margin: 4px 0;
+        }
+    }
+
+    #email {
+        grid-area: email;
+    }
+
+    #address {
+        grid-area: address;
+    }
+
+    #document_type {
+        grid-area: docType;
+    }
+
+    #dni {
+        grid-area: nro_doc;
+    }
+
+    #ptpSession {
+        grid-area: ptpSession;
+    }
+
+    #ptpPayNow {
+        grid-area: ptpPayNow;
+    }
+
+    #ptpLink {
+        grid-area: ptpLink;
+    }
+
+
+}

@@ -10,7 +10,7 @@ export const useYupValidation = () => {
     });
 
     const selectPaymentModeStepValidation = Yup.object({
-        contractId: Yup.string('Coloque un id'),
+        contractId: Yup.string(),
         mod: Yup.string().required('❗ Selecciona un modo de pago'),
         quotes: Yup.string().when('mod', {
             is: (val) => !(val && val.includes('Tradicional')),
@@ -48,6 +48,23 @@ export const useYupValidation = () => {
         zip: Yup.string().required('❗ El zip es requerido'),
     });
 
+    const ptpPaymentStepValidation = Yup.object({
+        address: Yup.string().max(50, "La direccion no puede superar los 50 caracteres")
+            .required('❗ Ingresa calle y número del titual de la tarjeta')
+            .matches(/([A-Za-z0-9]+( [A-Za-z0-9]+)+)/i, 'El formato de la dirección es invalido'),
+        document_type: Yup.string().required(),
+        dni: Yup.string()
+            .required('❗ Ingresa el número de tu documento de identidad')
+            .test('rut-validation', 'El formato del documento es incorrecto', function (value) {
+                const pais = this.resolve(Yup.ref('country'));
+                if (pais === 'Chile') {
+                    return /^([0-9]\d{7,8})-([A-Za-z]|\d{1})$/.test(value);
+                } else {
+                    return /^[0-9]+$/.test(value);
+                }
+            }),
+    });
+
     const dataCardCTCStepValidation = Yup.object({
         n_ro_de_tarjeta: Yup.string()
             .required('❗ Ingresa el número que figura en la tarjeta')
@@ -81,6 +98,7 @@ export const useYupValidation = () => {
         selectPaymentModeStepValidation,
         formClientDataStepValidation,
         rebillPaymentStepValidation,
+        ptpPaymentStepValidation,
         dataCardCTCStepValidation,
         folioPaymentCTCStepValidation,
         folioSuscriptionCTCStepValidation

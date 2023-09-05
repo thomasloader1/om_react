@@ -44,6 +44,7 @@ function PasarelaApp() {
     selectPaymentModeStepValidation,
     formClientDataStepValidation,
     rebillPaymentStepValidation,
+    ptpPaymentStepValidation,
     dataCardCTCStepValidation,
     folioPaymentCTCStepValidation,
     folioSuscriptionCTCStepValidation } = useYupValidation();
@@ -91,29 +92,40 @@ function PasarelaApp() {
 
   }, [isMobile, pasarelaContainerRef.current]);
 
-  const initialFromValues = userInfo?.stepTwo?.value && userInfo?.stepTwo?.value.includes('CTC') ? {
-    fullName: '',
-    phone: '',
-    address: '',
-    dni: '',
-    email: '',
-    zip: '',
-    mod: '',
-    n_ro_de_tarjeta: '',
-    card_v: '',
-    rfc: '',
-    folio_pago: '',
-    folio_suscripcion: '',
-  } : {
-    fullName: '',
-    phone: '',
-    address: '',
-    dni: '',
-    email: '',
-    zip: '',
-    mod: '',
+  const getInitialValuesByMethodPayment = (modPayment) => {
+    const commonAttributes = {
+      fullName: '',
+      phone: '',
+      address: '',
+      dni: '',
+      email: '',
+      zip: '',
+      mod: ''
+    }
+
+    switch (modPayment) {
+      case 'CTC':
+        return {
+          ...commonAttributes,
+          n_ro_de_tarjeta: '',
+          card_v: '',
+          rfc: '',
+          folio_pago: '',
+          folio_suscripcion: '',
+        }
+      case 'PlaceToPay':
+        return {
+          ...commonAttributes,
+          document_type: ''
+        }
+      default:
+        return {
+          ...commonAttributes
+        }
+    }
   }
 
+  const initialFromValues = getInitialValuesByMethodPayment(userInfo?.stepTwo?.value)
 
   return (
     <main ref={appRef}>
@@ -225,7 +237,9 @@ function PasarelaApp() {
                   }}
                   validationSchema={dataCardCTCStepValidation} />
               ) :
-                isPTPPayment ? <PlaceToPayPayment /> : <GeneratePaymentLinkStep
+                isPTPPayment ? <PlaceToPayPayment
+                  validationSchema={ptpPaymentStepValidation}
+                /> : <GeneratePaymentLinkStep
                   validationSchema={rebillPaymentStepValidation}
                 />
               }
