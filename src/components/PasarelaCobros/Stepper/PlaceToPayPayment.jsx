@@ -6,16 +6,19 @@ import { FormStep } from './MultiStep';
 import { useFormikContext } from 'formik';
 import SelectDocument from '../SelectDocument';
 import { fireToast } from '../Hooks/useSwal';
+import { parsePhoneNumber } from 'react-phone-number-input';
 
 const PlaceToPayPayment = () => {
   const { formikValues } = useContext(AppContext);
   const [processURL, setProcessURL] = useState(null);
-  const { values, handleChange, handleBlur, touched, errors } = useFormikContext();
+  const { values, handleChange, handleBlur, touched, errors, setFieldValue } = useFormikContext();
   const [statusRequestPayment, setStatusRequestPayment] = useState('');
   const STATUS_BTN = {
-    SESSION: statusRequestPayment.includes('PENDING'),
+    SESSION: statusRequestPayment.includes('PENDING') || Object.keys(errors).length > 0,
     INIT_PAYMENT: statusRequestPayment.includes('REJECTED'),
   };
+  const [phoneNumber, setPhoneNumber] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState('MX');
 
   useEffect(() => {
     const makeFirstPayment = async (requestId) => {
@@ -48,6 +51,22 @@ const PlaceToPayPayment = () => {
     };
   }, []);
 
+  const handlePhoneInputChange = (value) => {
+    setFieldValue('phone', value);
+    const numberText = value ? value : '';
+    const fullPhoneNumber = parsePhoneNumber(numberText);
+    //console.log(value, fullPhoneNumber)
+
+    if (fullPhoneNumber) {
+      const { country } = fullPhoneNumber;
+      const findCountry = country;
+      setPhoneNumber(fullPhoneNumber);
+      if (findCountry) {
+        setSelectedCountry(findCountry);
+      }
+    }
+  };
+
   const handlePaymentSession = async () => {
     const formValues = {
       ...formikValues,
@@ -58,16 +77,15 @@ const PlaceToPayPayment = () => {
       mobile: values.phone,
     };
 
-    console.log(formValues);
+    //console.log(formValues);
 
     try {
       const payment = await makePaymentSession(formValues);
+      console.log({ payment });
       setProcessURL(payment[0].processUrl);
       setStatusRequestPayment('PENDING');
 
       fireToast('Sesion creada', 'success');
-
-      console.log({ payment });
     } catch (e) {
       fireToast('Error al crear sesion');
 
@@ -116,16 +134,19 @@ const PlaceToPayPayment = () => {
           onBlur={handleBlur}
           error={touched.email && errors.email}
         />
-        {/*  <InputField
+        <InputField
           type='phone'
           id='phone'
           name='phone'
-          label='Numero de telefono'
+          label='Teléfono'
+          placeholder='Ingresar número de teléfono'
           value={values.phone}
-          onChange={handleChange}
+          onChange={handlePhoneInputChange}
           onBlur={handleBlur}
           error={touched.phone && errors.phone}
-        /> */}
+          country={selectedCountry}
+          defaultCountry='MX'
+        />
         <button
           id='ptpSession'
           className='button is-primary mt-3'
