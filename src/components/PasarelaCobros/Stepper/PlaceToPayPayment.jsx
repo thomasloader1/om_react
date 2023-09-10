@@ -18,6 +18,7 @@ const PlaceToPayPayment = () => {
     INIT_PAYMENT: statusRequestPayment.includes('REJECTED'),
   };
   const [phoneNumber, setPhoneNumber] = useState(null);
+  const [onRequest, setOnRequest] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState('MX');
 
   useEffect(() => {
@@ -39,7 +40,13 @@ const PlaceToPayPayment = () => {
 
       if (status.includes('APPROVED')) {
         const { requestId } = response;
-        makeFirstPayment({ requestId });
+
+        const body = {
+          requestId,
+          street: values.address,
+        };
+
+        makeFirstPayment(body);
         return;
       }
 
@@ -68,6 +75,7 @@ const PlaceToPayPayment = () => {
   };
 
   const handlePaymentSession = async () => {
+    setOnRequest(true);
     const formValues = {
       ...formikValues,
       dni: values.dni,
@@ -90,6 +98,8 @@ const PlaceToPayPayment = () => {
       fireToast('Error al crear sesion');
 
       console.log(e);
+    } finally {
+      setOnRequest(false);
     }
   };
 
@@ -145,11 +155,11 @@ const PlaceToPayPayment = () => {
           onBlur={handleBlur}
           error={touched.phone && errors.phone}
           country={selectedCountry}
-          defaultCountry='MX'
+          defaultCountry='EC'
         />
         <button
           id='ptpSession'
-          className='button is-primary mt-3'
+          className={`button is-primary mt-3 ${onRequest && 'is-loading'}`}
           type='button'
           disabled={STATUS_BTN.SESSION}
           onClick={handlePaymentSession}

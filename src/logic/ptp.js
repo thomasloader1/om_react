@@ -33,6 +33,7 @@ export const createSession = async (body) => {
 };
 
 export const makePaymentSession = async (formikValues) => {
+  console.log({formikValues})
   const type = formikValues.mod.includes('anticipo') ? 'Parcialidad' : formikValues.mod;
   const quotes = formikValues.quotes ? formikValues.quotes : 1;
   const rest_quotes = quotes - 1;
@@ -43,7 +44,7 @@ export const makePaymentSession = async (formikValues) => {
     email: formikValues.email,
     document: formikValues.dni,
     documentType: formikValues.documentType,
-    mobile: formikValues.phone,
+    mobile: formikValues.mobile,
     address: {
       street: formikValues.address,
     },
@@ -60,7 +61,8 @@ export const makePaymentSession = async (formikValues) => {
     payment.first_pay = formikValues.advanceSuscription.firstQuoteDiscount;
     payment.remaining_installments = formikValues.advanceSuscription.payPerMonthAdvance;
   } else {
-    payment.remaining_installments = payment.total / payment.quotes;
+    let paymentCalculate = payment.total / payment.quotes
+    payment.remaining_installments = paymentCalculate.toFixed(2);
   }
 
   try {
