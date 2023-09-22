@@ -6,16 +6,21 @@ const {
   REACT_APP_API_PTP_SESSION_SU_PAYMENT,
   REACT_APP_API_PTP_SESSION,
   REACT_APP_API_PTP_SESSION_SU,
+  REACT_APP_OCEANO_PTP_GENERATELINK,
+  REACT_APP_OCEANO_PTP_GETPAYMENTLINK,
 } = process.env;
 
-const URLS = {
+export const URLS = {
   SUSCRIPTION: generateURL(REACT_APP_API_PTP_SESSION_SU),
   PAYMENT: generateURL(REACT_APP_API_PTP_SESSION),
   DEBIT: generateURL(REACT_APP_API_PTP_SESSION_SU_PAYMENT),
+  GENERATE_LINK: generateURL(REACT_APP_OCEANO_PTP_GENERATELINK),
+  GET_PAYMENT_LINK: generateURL(REACT_APP_OCEANO_PTP_GETPAYMENTLINK),
+  UPDATE_CONTRACT: generateURL(REACT_APP_OCEANO_UPDATECONTRACT_PTP),
 };
 
 export const createSession = async (body) => {
-  const sessionUrl = body.payment.type.includes('Parcialidad') ? URLS.PAYMENT : URLS.SUSCRIPTION;
+  const sessionUrl = body.payment.type.includes('Tradicional') ? URLS.PAYMENT : URLS.SUSCRIPTION;
 
   try {
     const res = await axios.post(sessionUrl, { ...body });
@@ -87,4 +92,44 @@ export const debitFirstPayment = async (body) => {
     console.log(e);
     return e.response.data.message;
   }
+
 };
+
+export const generatePaymentLink = async (data) => {
+  //console.log({data})
+  const { country, mod, quotes, payment_method, contractId, sale, ptpSession} = data
+  const [statusSession, session] = ptpSession
+
+  const body = {
+      requestId: session.requestId,
+      gateway: payment_method,
+      type: mod,
+      contract_entity_id: contractId,
+      contract_so: sale.SO_Number,
+      status: 'pending',
+      quotes,
+      country
+  }
+
+  //console.log({body})
+
+  try {
+    const res = await axios.post(URLS.GENERATE_LINK, { ...body});
+    return res.data
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
+
+export const updateZohoContract = async (values) => {
+  try {
+    
+    const { data } = await axios.post(URLS.UPDATE_CONTRACT, { ...values })
+    return data;
+
+  } catch (error) {
+    console.log(error)
+    return error;
+  }
+}

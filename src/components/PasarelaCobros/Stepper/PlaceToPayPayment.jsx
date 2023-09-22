@@ -1,15 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { debitFirstPayment, makePaymentSession } from '../../../logic/ptp';
+import {
+  debitFirstPayment,
+  generatePaymentLink,
+  makePaymentSession,
+  updateZohoContract,
+} from '../../../logic/ptp';
 import { AppContext } from '../Provider/StateProvider';
 import InputField from '../InputField';
 import { FormStep } from './MultiStep';
 import { useFormikContext } from 'formik';
 import SelectDocument from '../SelectDocument';
-import { fireToast } from '../Hooks/useSwal';
+import { fireAlert, fireToast } from '../Hooks/useSwal';
 import { parsePhoneNumber } from 'react-phone-number-input';
+import { makePostUpdateZohoPTP } from '../../../logic/zoho';
 
 const PlaceToPayPayment = () => {
-  const { formikValues } = useContext(AppContext);
+  const { formikValues, setOpenBlockLayer, setPtpFetching } = useContext(AppContext);
+  const [ptpSession, setPtpSession] = useState(null);
   const [processURL, setProcessURL] = useState(null);
   const { values, handleChange, handleBlur, touched, errors, setFieldValue } = useFormikContext();
   const [statusRequestPayment, setStatusRequestPayment] = useState('');
@@ -25,8 +32,16 @@ const PlaceToPayPayment = () => {
     const makeFirstPayment = async (requestId) => {
       try {
         const res = await debitFirstPayment({ requestId });
-        console.log({ res });
+
         fireToast('Cobro existoso', 'success');
+        const data = {
+          requestId,
+          adjustment: 0,
+          contractId: values.contractId,
+          street: values.address,
+        };
+        const bodyZoho = makePostUpdateZohoPTP(data);
+        updateZohoContract(bodyZoho);
       } catch (e) {
         console.log({ e });
         fireToast('Error al cobrar');
@@ -46,7 +61,15 @@ const PlaceToPayPayment = () => {
           street: values.address,
         };
 
-        makeFirstPayment(body);
+        try {
+          makeFirstPayment(body);
+
+          setOpenBlockLayer(true);
+        } catch (error) {
+          console.log(error);
+          fireAlert('Error', error, 'error');
+        }
+
         return;
       }
 
@@ -90,6 +113,7 @@ const PlaceToPayPayment = () => {
     try {
       const payment = await makePaymentSession(formValues);
       console.log({ payment });
+      setPtpSession(payment);
       setProcessURL(payment[0].processUrl);
       setStatusRequestPayment('PENDING');
 
@@ -105,6 +129,29 @@ const PlaceToPayPayment = () => {
 
   const handleInitPayment = async () => {
     window.P.init(processURL);
+  };
+
+  const handleGenerateLink = async () => {
+    const data = {
+      ...formikValues,
+      dni: values.dni,
+      documentType: values.document_type,
+      email: values.email,
+      address: values.address,
+      mobile: values.phone,
+      ptpSession,
+    };
+
+    try {
+      const res = await generatePaymentLink(data);
+      console.log(res);
+      setOpenBlockLayer(true);
+      setPtpFetching({ generateLink: { ...res }, data });
+    } catch (e) {
+      console.error(e);
+      setOpenBlockLayer(false);
+      setPtpFetching(null);
+    }
   };
 
   return (
@@ -182,7 +229,7 @@ const PlaceToPayPayment = () => {
               id='ptpLink'
               className='button is-info'
               disabled={STATUS_BTN.INIT_PAYMENT}
-              onClick={handleInitPayment}
+              onClick={handleGenerateLink}
             >
               Generar Link
             </button>

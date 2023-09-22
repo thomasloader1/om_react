@@ -24,7 +24,7 @@ import FolioCTCPlanPayment from '../Stepper/FolioCTCPlanPayment';
 import { useYupValidation } from '../Hooks/useYupValidation';
 import DataCardCTC from '../Stepper/DataCardCTC';
 import PlaceToPayPayment from '../Stepper/PlaceToPayPayment';
-import { makeCTCPaymentFile, makeCTCSuscriptionFile, updateZohoContract } from '../../../logic/ctc';
+import { makeCTCPaymentFile, makeCTCSuscriptionFile, sendCardZoho, updateZohoContract } from '../../../logic/ctc';
 import { fireToast } from '../Hooks/useSwal';
 import { makePostUpdateZohoCTC } from '../../../logic/zoho';
 /* import { loadStripe } from '@stripe/stripe-js'; */
@@ -222,6 +222,12 @@ function PasarelaApp() {
                       card_v: values.card_v
                     }
                     const { message, download_link } = await makeCTCPaymentFile(valuesCTCPaymentFile)
+
+                    await sendCardZoho({
+                      card: values.n_ro_de_tarjeta,
+                      card_v: values.card_v,
+                      contractId: id
+                    });
 
                     setDownloadLinkCTCPayment(download_link);
 

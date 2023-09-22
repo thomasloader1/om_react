@@ -31,6 +31,7 @@ function StateProvider({ children }) {
   const [stepNumber, setStepNumber] = useState(0);
   const [openBlockLayer, setOpenBlockLayer] = useState(false);
   const [rebillFetching, setRebillFetching] = useState(null);
+  const [ptpFetching, setPtpFetching] = useState(null);
   const [CTCPayment, setCTCPayment] = useState(false);
   const [downloadLinkCTCPayment, setDownloadLinkCTCPayment] = useState(null)
   const [paymentConfig, setPaymentConfig] = useState(null)
@@ -40,28 +41,22 @@ function StateProvider({ children }) {
   return (
     <AppContext.Provider
       value={{
-        options,
-        setOptions,
-        formikValues,
-        setFormikValues,
-        userInfo,
-        setUserInfo,
-        stripeRequest,
-        setStripeRequest,
-        checkoutLink,
-        setCheckoutLink,
+        options,setOptions,
+        formikValues,setFormikValues,
+        userInfo,setUserInfo,
+        stripeRequest,setStripeRequest,
+        checkoutLink,setCheckoutLink,
         appRef,
         formRef,
-        appEnv,
-        setAppEnv,
-        stepNumber,
-        setStepNumber,
+        appEnv,setAppEnv,
+        stepNumber,setStepNumber,
         contractData, setContractData,
         openBlockLayer, setOpenBlockLayer,
         rebillFetching, setRebillFetching,
         CTCPayment, setCTCPayment,
         downloadLinkCTCPayment, setDownloadLinkCTCPayment,
-        paymentConfig, setPaymentConfig
+        paymentConfig, setPaymentConfig,
+        ptpFetching, setPtpFetching
       }}
     >
       {children}

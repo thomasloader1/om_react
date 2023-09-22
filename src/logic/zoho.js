@@ -193,3 +193,15 @@ export const makePostUpdateZohoCTC = (
     folio_pago: formikValues.folio_pago,
   };
 };
+
+export const makePostUpdateZohoPTP = (data) => {
+  const  { requestId, adjustment, contractId, street} = data
+
+  return {
+    requestId,
+    adjustment,
+    contractId,
+    street
+  }
+
+}

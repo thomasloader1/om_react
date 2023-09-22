@@ -8,7 +8,7 @@ const FormNavigation = (props) => {
   const disabledButtonCTC = props.isLastStep === (formik.values.folio_suscripcion && formik.values.folio_pago);
 
   const disabledButton = formik.values?.payment_method?.includes("CTC") ? disabledButtonCTC : disabledButtonDefault
-  const showNextOrFinishButton = props.isLastStep && (formik.values?.payment_method?.includes("CTC") || formik.values?.payment_method?.includes("PlaceToPay"))
+  const showNextOrFinishButton = props.isLastStep && formik.values?.payment_method?.includes("PlaceToPay")
 
   return (
     <div className='controls'>

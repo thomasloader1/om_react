@@ -9,17 +9,20 @@ const { NODE_ENV, REACT_APP_URL_PRD, REACT_APP_URL_LOCAL } = process.env
 const URL = NODE_ENV === 'production' ? REACT_APP_URL_PRD : REACT_APP_URL_LOCAL
 
 const BlockLayer = () => {
-    const { openBlockLayer, rebillFetching, CTCFetching } = useContext(AppContext)
+    const { openBlockLayer, rebillFetching, CTCFetching, ptpFetching } = useContext(AppContext)
     const [cardTitle, setCardTitle] = useState('');
-    const [fetchBlock, setFetchBlock] = useState({ loading: true, type: 'CTC', ...rebillFetching });
+    const [fetchBlock, setFetchBlock] = useState({ loading: true, type: ptpFetching?.generateLink?.type ?? 'CTC', ...rebillFetching });
 
     useEffect(() => {
         const title = fetchBlock.type === 'paymentLink' ? 'Link Generado' : 'Pago Realizado';
+        console.log({ptpFetching})
         setCardTitle(title)
     }, [fetchBlock.type])
 
     const handleCopyLink = () => {
-        const link = `${URL}/#/checkout/${rest.payment.contract_entity_id}`
+        const identificator = ptpFetching?.generateLink?.payment?.contract_entity_id ?? rest.payment.contract_entity_id
+
+        const link = ptpFetching?.generateLink?.payment ? `${URL}/#/checkout/ptp/${identificator}` :`${URL}/#/checkout/${identificator}`
 
         navigator.clipboard.writeText(link)
             .then(() => {
@@ -33,7 +36,6 @@ const BlockLayer = () => {
 
     const { loading, ...rest } = fetchBlock
     const isFinish = loading === false && rebillFetching?.payment.status === 'pending'
-    //console.log({ loading, isFinish, rebillFetching })
 
     const content = () => {
 

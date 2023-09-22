@@ -4,12 +4,15 @@ import { generateURL } from "../components/PasarelaCobros/Helpers/generateURL";
 const {
     REACT_APP_OCEANO_UPDATECONTRACT_CTC,
     REACT_APP_API_EXPORT_EXCEL,
-    REACT_APP_API_EXPORT_EXCEL_SUSCRIPTION } = process.env
+    REACT_APP_API_EXPORT_EXCEL_SUSCRIPTION,
+    REACT_APP_OCEANO_SAVECARD_CTC
+    } = process.env
 
 const URLS = {
     PAYMENT: generateURL(REACT_APP_API_EXPORT_EXCEL),
     SUSCRIPTION: generateURL(REACT_APP_API_EXPORT_EXCEL_SUSCRIPTION),
     UPDATE_CONTRACT: generateURL(REACT_APP_OCEANO_UPDATECONTRACT_CTC),
+    SAVE_CARD: generateURL(REACT_APP_OCEANO_SAVECARD_CTC),
 }
 
 export const makeCTCPaymentFile = async (values) => {
@@ -20,6 +23,16 @@ export const makeCTCPaymentFile = async (values) => {
     } catch (error) {
         console.log(error);
         return error;
+    }
+}
+
+export const sendCardZoho = async (body) => {
+    try {
+        const res = await axios.post(URLS.SAVE_CARD, body)
+        console.log({sendZoho: res})
+        
+    } catch (error) {
+        console.error({sendZoho: error})
     }
 }
 
