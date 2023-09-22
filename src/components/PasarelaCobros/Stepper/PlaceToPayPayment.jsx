@@ -20,10 +20,13 @@ const PlaceToPayPayment = () => {
   const [processURL, setProcessURL] = useState(null);
   const { values, handleChange, handleBlur, touched, errors, setFieldValue } = useFormikContext();
   const [statusRequestPayment, setStatusRequestPayment] = useState('');
+  const [ptpEffect, setPtpEffect] = useState(true);
+
   const STATUS_BTN = {
     SESSION: statusRequestPayment.includes('PENDING') || Object.keys(errors).length > 0,
     INIT_PAYMENT: statusRequestPayment.includes('REJECTED'),
   };
+
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [onRequest, setOnRequest] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState('MX');
@@ -32,49 +35,61 @@ const PlaceToPayPayment = () => {
     const makeFirstPayment = async (requestId) => {
       try {
         const res = await debitFirstPayment({ requestId });
+        console.log(res);
 
-        fireToast('Cobro existoso', 'success');
-        const data = {
-          requestId: requestId.requestId,
-          adjustment: 0,
-          contractId: values.contractId,
-          street: values.address,
-        };
-        const bodyZoho = makePostUpdateZohoPTP(data);
-        updateZohoContract(bodyZoho);
+        const responseOfServer = res?.data ?? res;
+        console.log({ responseOfServer });
+
+        if (responseOfServer.statusPayment.includes('APPROVED')) {
+          fireToast(res.result, 'success');
+          const data = {
+            requestId: requestId.requestId,
+            adjustment: 0,
+            contractId: values.contractId,
+            street: values.address,
+          };
+          const bodyZoho = makePostUpdateZohoPTP(data);
+          updateZohoContract(bodyZoho);
+
+          setOpenBlockLayer(true);
+        } else {
+          fireAlert('Error', responseOfServer.result, 'error');
+          setStatusRequestPayment(responseOfServer.statusPayment);
+        }
       } catch (e) {
         console.log({ e });
         fireToast('Error al cobrar');
       }
     };
+    if (ptpEffect) {
+      setPtpEffect(false);
 
-    window.P.on('response', function (response) {
-      console.log({ response });
-      const { status } = response.status;
-      setStatusRequestPayment(status);
+      window.P.on('response', function (response) {
+        console.log({ response });
+        const { status } = response.status;
+        setStatusRequestPayment(status);
 
-      if (status.includes('APPROVED')) {
-        const { requestId } = response;
+        if (status.includes('APPROVED')) {
+          const { requestId } = response;
 
-        const body = {
-          requestId,
-          street: values.address,
-        };
+          const body = {
+            requestId,
+            street: values.address,
+          };
 
-        try {
-          makeFirstPayment(body);
+          try {
+            makeFirstPayment(body);
+          } catch (error) {
+            console.log(error);
+            fireAlert('Error', error, 'error');
+          }
 
-          setOpenBlockLayer(true);
-        } catch (error) {
-          console.log(error);
-          fireAlert('Error', error, 'error');
+          return;
         }
 
-        return;
-      }
-
-      fireToast(`El estado de la sesion cambio a ${status}`, 'info');
-    });
+        fireToast(`El estado de la sesion cambio a ${status}`, 'info');
+      });
+    }
 
     return () => {
       console.log({ P: window.P });

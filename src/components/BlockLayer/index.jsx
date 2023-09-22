@@ -15,7 +15,7 @@ const BlockLayer = () => {
 
     useEffect(() => {
         const title = fetchBlock.type === 'paymentLink' ? 'Link Generado' : 'Pago Realizado';
-        console.log({ptpFetching})
+        //console.log({ptpFetching})
         setCardTitle(title)
     }, [fetchBlock.type])
 

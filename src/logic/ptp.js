@@ -86,11 +86,11 @@ export const makePaymentSession = async (formikValues) => {
 export const debitFirstPayment = async (body) => {
   try {
     const res = await axios.post(URLS.DEBIT, { ...body });
-    console.log({ res });
-    return res.data;
+    console.log({debitFirstPayment: res})
+    return res;
   } catch (e) {
     console.log(e);
-    return e.response.data.message;
+    return e.response;
   }
 
 };

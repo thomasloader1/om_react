@@ -201,7 +201,7 @@ const CheckoutPTP = () => {
         const res = await debitFirstPayment({ requestId });
         console.log({ res });
         fireToast('Cobro existoso', 'success');
-        const paymentData = JSON.parse(res.updateRequestSession.paymentData);
+        const paymentData = JSON.parse(res.data.updateRequestSession.paymentData);
         const street = paymentData.address.street;
         console.log(street);
         const data = {
@@ -336,9 +336,11 @@ const CheckoutPTP = () => {
                 <div className='mx-auto is-fullheight'>
                   {checkoutPayment?.status.includes('Pendiente') ||
                   checkoutPayment?.status.includes('Efectivo') ? (
-                    <div className='mt-5 is-flex is-justify-content-center is-align-items-center'>
-                      El estado de su pago es:{' '}
-                      <span className='price-one'>{checkoutPayment?.status}</span>
+                    <div className='my-5 is-flex is-justify-content-center is-align-items-center'>
+                      El estado de su pago es:{'  '}
+                      <span className='price-one ml-2'>
+                        <strong>{checkoutPayment?.status}</strong>
+                      </span>
                     </div>
                   ) : (
                     <div className='my-5 is-flex is-justify-content-center is-align-items-center'>
