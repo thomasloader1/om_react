@@ -35,7 +35,7 @@ const PlaceToPayPayment = () => {
 
         fireToast('Cobro existoso', 'success');
         const data = {
-          requestId,
+          requestId: requestId.requestId,
           adjustment: 0,
           contractId: values.contractId,
           street: values.address,

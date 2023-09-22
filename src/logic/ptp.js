@@ -63,7 +63,7 @@ export const makePaymentSession = async (formikValues) => {
   };
 
   if (type === 'Parcialidad') {
-    payment.first_pay = formikValues.advanceSuscription.firstQuoteDiscount;
+    payment.first_installment = formikValues.advanceSuscription.firstQuoteDiscount;
     payment.remaining_installments = formikValues.advanceSuscription.payPerMonthAdvance;
   } else {
     let paymentCalculate = payment.total / payment.quotes
@@ -123,13 +123,9 @@ export const generatePaymentLink = async (data) => {
 }
 
 export const updateZohoContract = async (values) => {
-  try {
     
     const { data } = await axios.post(URLS.UPDATE_CONTRACT, { ...values })
+    console.log({data})
     return data;
 
-  } catch (error) {
-    console.log(error)
-    return error;
-  }
 }

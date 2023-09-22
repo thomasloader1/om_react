@@ -164,7 +164,7 @@ const CheckoutPTP = () => {
       const { data } = await axios.get(`${GET_PAYMENT_LINK}/${so}`);
 
       setCheckoutPayment(data.checkout);
-      setCustomer(data.payer);
+      setCustomer(JSON.parse(data.payer));
       setSale(contractData.sale);
       setContact(contractData.contact);
       setProducts(contractData.products);
@@ -201,11 +201,14 @@ const CheckoutPTP = () => {
         const res = await debitFirstPayment({ requestId });
         console.log({ res });
         fireToast('Cobro existoso', 'success');
+        const paymentData = JSON.parse(res.updateRequestSession.paymentData);
+        const street = paymentData.address.street;
+        console.log(street);
         const data = {
-          requestId,
+          requestId: requestId.requestId,
           adjustment: 0,
           contractId: so,
-          //street: values.address,
+          street,
         };
         const bodyZoho = makePostUpdateZohoPTP(data);
         updateZohoContract(bodyZoho);
@@ -227,12 +230,13 @@ const CheckoutPTP = () => {
 
           const body = {
             requestId,
-            street: '-',
           };
 
           try {
             makeFirstPayment(body);
-          } catch (error) {}
+          } catch (error) {
+            console.log(error);
+          }
 
           return;
         }
