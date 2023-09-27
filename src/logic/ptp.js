@@ -1,5 +1,10 @@
 import axios from 'axios';
 import { generateURL } from '../components/PasarelaCobros/Helpers/generateURL';
+import availableCards from '../img/pasarelaCobros/imgpsh_fullsize_anim.png'
+
+export const ptpImages = {
+  availableCards
+}
 
 const {
   REACT_APP_OCEANO_UPDATECONTRACT_PTP,

@@ -131,7 +131,7 @@ export const paymentOptions = [
     idInputElement: '',
     value: 'Datafast',
     allowedCountries: ['ecu'],
-    disabledCountries: [],
+    disabledCountries: ['ecu'],
   },
   {
     img: 'ptp',

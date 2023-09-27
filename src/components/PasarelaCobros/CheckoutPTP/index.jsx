@@ -3,12 +3,14 @@ import IMAGES from '../../../img/pasarelaCobros/share';
 import { useLocation, useParams } from 'react-router';
 import axios from 'axios';
 import { fireToast, fireModalAlert, fireModalAlertRedirect } from '../Hooks/useSwal';
-import { URLS, debitFirstPayment, updateZohoContract } from '../../../logic/ptp';
+import { URLS, debitFirstPayment, ptpImages, updateZohoContract } from '../../../logic/ptp';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
 import { getCurrency } from '../../../logic/rebill';
 import InvoiceDetail from './InvoiceDetail';
 import { makePostUpdateZohoCheckout, makePostUpdateZohoPTP } from '../../../logic/zoho';
+import { check } from 'prettier';
+import PaymentElement from './PaymentElement';
 
 const { logo } = IMAGES;
 
@@ -36,6 +38,8 @@ const CheckoutPTP = () => {
 
   const needRunEffect = !pathname.includes('vp');
   const { loading, data: contractData } = useContractZoho(so, needRunEffect);
+
+  const isExpired = new Date(checkoutPayment?.transaction?.expiration_date) < new Date();
 
   const formatPrice = (iso, currencyOptions, price) =>
     new Intl.NumberFormat(iso, currencyOptions).format(Math.floor(price));
@@ -333,28 +337,6 @@ const CheckoutPTP = () => {
                 </div>
               </div>
               <div className='column'>
-                <div className='mx-auto is-fullheight'>
-                  {checkoutPayment?.status.includes('Pendiente') ||
-                  checkoutPayment?.status.includes('Efectivo') ? (
-                    <div className='my-5 is-flex is-justify-content-center is-align-items-center'>
-                      El estado de su pago es:{'  '}
-                      <span className='price-one ml-2'>
-                        <strong>{checkoutPayment?.status}</strong>
-                      </span>
-                    </div>
-                  ) : (
-                    <div className='my-5 is-flex is-justify-content-center is-align-items-center'>
-                      <button
-                        id='ptpPayNow'
-                        className='button is-success'
-                        onClick={handleInitPayment}
-                      >
-                        Iniciar Pago
-                      </button>
-                    </div>
-                  )}
-                </div>
-
                 <div className='is-flex is-justify-content-center is-align-items-center invoice-text'>
                   <span>Pagos procesados con</span>
                   <img
@@ -364,6 +346,48 @@ const CheckoutPTP = () => {
                     className='ml-2'
                   />
                 </div>
+                <img
+                  src={ptpImages.availableCards}
+                  alt='Tarjeta aceptadas'
+                  width='200px'
+                  className='mt-3 mx-auto is-block'
+                />
+                {!isExpired ? (
+                  <>
+                    <div class='notification is-info my-5 mx-3'>
+                      El tiempo para pagar la inscripcion fue superada,{' '}
+                      <strong>solicite un nuevo link</strong> para continuar con el pago
+                    </div>
+                  </>
+                ) : (
+                  <PaymentElement
+                    checkoutPayment={checkoutPayment}
+                    handleInitPayment={handleInitPayment}
+                  />
+                )}
+
+                <p className='invoice-text mt-5 mx-3 has-text-centered'>
+                  Si tiene dudas o consultas puedes visitar nuestro
+                  <a
+                    href='https://ayuda.msklatam.com/'
+                    target='_blank'
+                    rel='noreferrer'
+                    className='has-text-info'
+                  >
+                    {' '}
+                    centro de ayuda{' '}
+                  </a>
+                  o ver las
+                  <a
+                    href='https://ayuda.msklatam.com/portal/es/kb/articles/placetopay'
+                    target='_blank'
+                    rel='noreferrer'
+                    className='has-text-info'
+                  >
+                    {' '}
+                    preguntas frecuentes{' '}
+                  </a>
+                </p>
               </div>
             </div>
           </section>

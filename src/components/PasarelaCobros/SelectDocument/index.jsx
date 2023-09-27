@@ -4,7 +4,7 @@ import { getIsoCode } from '../../../utils/getIsoCode';
 import { getAvailableDocuments } from '../../../utils/getAvailableDocuments';
 
 const SelectDocument = ({
-  selectName = 'Seleccione el tipo de su documento',
+  selectName = 'Seleccione el tipo de identificacion',
   country,
   ...props
 }) => {

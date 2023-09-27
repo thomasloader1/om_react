@@ -54,7 +54,20 @@ export const useYupValidation = () => {
       .required('❗ Ingresa calle y número del titual de la tarjeta')
       .matches(/([A-Za-z0-9]+( [A-Za-z0-9]+)+)/i, 'El formato de la dirección es invalido'),
     document_type: Yup.string().required('❗ Seleccione un tipo de documento'),
-    dni: Yup.string().required('❗ Ingresa el número de tu documento de identidad'),
+    dni: Yup.string().required('❗ Ingresa el número de tu documento de identidad').test('doc-validation', '❗ El formato del documento es incorrecto', function (value) {
+        const docType = this.resolve(Yup.ref('document_type'));
+
+        switch(docType){
+          case 'CC':
+            return /^[1-9][0-9]{3,9}$/.test(value);
+          case 'CI':
+            return /^\d{10}$/.test(value);
+          case 'RUC':
+            return /^\d{13}$/.test(value);
+          case 'PPN':
+            return /^[a-zA-Z0-9_]{4,16}$/.test(value);
+        }
+      }),
     email: Yup.string().email('❗ Ingresa un email valido').required('❗ El email es requerido'),
     phone: Yup.string()
       .required('❗ Ingresa un número de telefono')
