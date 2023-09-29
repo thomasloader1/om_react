@@ -15,7 +15,7 @@ const SelectDocument = ({
   const options = getAvailableDocuments(countryCode);
 
   useEffect(() => {
-    formik.setFieldValue('document_type', 'CC');
+    formik.setFieldValue('document_type', 'RUC');
 
     return () => null;
   }, []);

@@ -10,7 +10,7 @@ import InputField from '../InputField';
 import { FormStep } from './MultiStep';
 import { useFormikContext } from 'formik';
 import SelectDocument from '../SelectDocument';
-import { fireAlert, fireToast } from '../Hooks/useSwal';
+import { fireAlert, fireModalAlert, fireToast } from '../Hooks/useSwal';
 import { parsePhoneNumber } from 'react-phone-number-input';
 import { makePostUpdateZohoPTP } from '../../../logic/zoho';
 
@@ -160,11 +160,17 @@ const PlaceToPayPayment = () => {
 
     try {
       const res = await generatePaymentLink(data);
+
+      if (res === '') {
+        throw new Error('Respuesta vacia desde el servidor, contactarse con sistemas.');
+      }
+
       console.log(res);
       setOpenBlockLayer(true);
       setPtpFetching({ generateLink: { ...res }, data });
     } catch (e) {
-      console.error(e);
+      console.error({ e });
+      fireModalAlert('Error al generar link', e.message);
       setOpenBlockLayer(false);
       setPtpFetching(null);
     }

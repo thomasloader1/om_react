@@ -124,12 +124,12 @@ function ResumeTicket() {
             </div>
             <div id='fechaVencimiento_resume' className='column is-one-third finalResume-item'>
               <label>Telefono</label>
-              <h4>{contact.Home_Phone}</h4>
+              <h4>{contact.Phone}</h4>
             </div>
 
             <div id='tipoNumDocumento_resume' className='column is-one-third finalResume-item'>
               <label>Tipo Y NÚMERO DE DOC</label>
-              <h4>DNI: {contact.DNI}</h4>
+              <h4>DNI: {contact.Identificacion}</h4>
             </div>
           </div>
           <Columns className='finalResume-confirmation'>

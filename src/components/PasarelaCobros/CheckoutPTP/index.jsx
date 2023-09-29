@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { useLocation, useParams } from 'react-router';
 import axios from 'axios';
-import { fireToast } from '../Hooks/useSwal';
+import { fireModalAlert, fireToast } from '../Hooks/useSwal';
 import {
   URLS,
   debitFirstPayment,
@@ -25,16 +25,11 @@ const CheckoutPTP = () => {
   const [processURL, setProcessURL] = useState(null);
 
   const [products, setProducts] = useState(null);
-  const [customer, setCustomer] = useState(null);
-  const [sale, setSale] = useState(null);
-  const [contact, setContact] = useState(null);
-  const [ticketData, setTicketData] = useState({});
   const [advancePayment, setAdvancePayment] = useState({});
   const [paymentAction, setPaymentAction] = useState(false);
-  const [fetchContent, setFetchContent] = useState(true);
   const [currencyOptions, setCurrencyOptions] = useState(ptpCurrencyOptions);
-  const [statusRequestPayment, setStatusRequestPayment] = useState('');
   const [ptpEffect, setPtpEffect] = useState(true);
+  const [invoiceDetail, setInvoiceDetail] = useState(null);
 
   const { so } = useParams();
   const { pathname } = useLocation();
@@ -107,9 +102,6 @@ const CheckoutPTP = () => {
     return detailValues;
   };
 
-  const { totalMonths, formattedFirstPay, formattedPayPerMonth, formattedAmount } =
-    handleCheckoutData(currencyOptions, checkoutPayment, advancePayment);
-
   useEffect(() => {
     if (!loading && !paymentAction) {
       fetchPaymentLink();
@@ -121,37 +113,54 @@ const CheckoutPTP = () => {
 
     async function fetchPaymentLink() {
       const { GET_PAYMENT_LINK } = URLS;
-      const { data } = await axios.get(`${GET_PAYMENT_LINK}/${so}`);
+      try {
+        const { data } = await axios.get(`${GET_PAYMENT_LINK}/${so}`);
 
-      setCheckoutPayment(data.checkout);
-      setCustomer(JSON.parse(data.payer));
-      setSale(contractData.sale);
-      setContact(contractData.contact);
-      setProducts(contractData.products);
-      setProcessURL(
-        `${data.checkout.transaction.requestId}/${data.checkout.transaction.processUrl}`,
-      );
+        const auxCheckoutPayment = { ...data.checkout, sale: contractData.sale };
 
-      const inscription = valuesAdvanceSuscription({
-        total: contractData.sale?.Grand_Total,
-        checkoutPayment: data.checkout,
-      });
+        console.log(data);
 
-      setAdvancePayment(inscription);
+        setCheckoutPayment(auxCheckoutPayment);
+        setProducts(contractData.products);
+        setProcessURL(
+          `${data.checkout.transaction.requestId}/${data.checkout.transaction.processUrl}`,
+        );
 
-      const mergedData = {
-        paymentLinkData: { ...data },
-        ZohoData: { ...contractData },
-        advanceSuscription: inscription,
-      };
+        const inscription = valuesAdvanceSuscription({
+          total: contractData.sale?.Grand_Total,
+          checkoutPayment: data.checkout,
+        });
 
-      const { currency } = getCurrency(data.checkout.country);
-      setCurrencyOptions((prevState) => ({ ...prevState, currency }));
+        setAdvancePayment(inscription);
 
-      setTicketData(mergedData);
-      setFetchContent(false);
+        const mergedData = {
+          paymentLinkData: { ...data },
+          ZohoData: { ...contractData },
+          advanceSuscription: inscription,
+        };
 
-      const regex = /(Rechazado|pending)/i;
+        const { currency } = getCurrency(data.checkout.country);
+        setCurrencyOptions((prevState) => ({ ...prevState, currency }));
+
+        setTicketData(mergedData);
+        setFetchContent(false);
+
+        const { totalMonths, formattedFirstPay, formattedPayPerMonth, formattedAmount } =
+          handleCheckoutData(currencyOptions, auxCheckoutPayment, inscription);
+
+        setInvoiceDetail({
+          advancePayment,
+          formattedFirstPay,
+          formattedPayPerMonth,
+          checkoutPayment,
+          totalMonths,
+          formattedAmount,
+        });
+
+        const regex = /(Rechazado|pending)/i;
+      } catch (error) {
+        fireModalAlert('Error', error.message);
+      }
     }
   }, [contractData, paymentAction]);
 
@@ -210,13 +219,6 @@ const CheckoutPTP = () => {
     };
   }, []);
 
-  const invoiceDetail = {
-    advancePayment,
-    formattedFirstPay,
-    formattedPayPerMonth,
-    checkoutPayment,
-  };
-
   const totalPrice = products?.reduce((total, p) => total + Math.floor(p.price * p.quantity), 0);
 
   const handleInitPayment = async () => {
@@ -251,18 +253,18 @@ const CheckoutPTP = () => {
                         : 'Finaliza tu inscripción'}
                     </h1>
 
-                    {checkoutPayment?.type.includes('Suscripción') ? (
+                    {checkoutPayment?.type?.includes('Suscripción') ? (
                       <InvoiceDetail invoiceDetail={invoiceDetail} />
                     ) : (
                       <div>
                         <p>
-                          {totalMonths}{' '}
+                          {invoiceDetail?.totalMonths}{' '}
                           {checkoutPayment?.type === 'Tradicional' ? 'pago unico de' : 'pagos de'}
                         </p>
                         <h3 className='title is-3'>
                           {checkoutPayment?.type === 'Suscripción con anticipo'
                             ? formattedFirstPay
-                            : formattedAmount}
+                            : invoiceDetail?.formattedAmount}
                         </h3>
                       </div>
                     )}
@@ -310,7 +312,7 @@ const CheckoutPTP = () => {
                 />
                 {!isExpired ? (
                   <>
-                    <div class='notification is-info my-5 mx-3'>
+                    <div className='notification is-info my-5 mx-3'>
                       El tiempo para pagar la inscripcion fue superada,{' '}
                       <strong>solicite un nuevo link</strong> para continuar con el pago
                     </div>

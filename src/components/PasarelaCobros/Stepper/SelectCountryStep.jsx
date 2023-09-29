@@ -14,14 +14,14 @@ function SelectCountryStep() {
   const { setFieldValue } = useFormikContext();
 
   const handleClick = (buttonFieldProps) => {
-    const { value, idElement } = buttonFieldProps
+    const { value, idElement } = buttonFieldProps;
 
-    if (contractData?.sale?.Pais !== value) {
+    if (contractData?.sale?.Pais_de_facturaci_n !== value) {
       fireModalAlert(
         'País Inválido',
-        `El país del Contrato es <b>${contractData?.sale?.Pais}</b>, si esto no debería ser así cambia el país desde el CRM y vuelva a cargar la página`,
+        `El país del Contrato es <b>${contractData?.sale?.Pais_de_facturaci_n}</b>, si esto no debería ser así cambia el país desde el CRM y vuelva a cargar la página`,
       );
-      return
+      return;
     }
 
     const { sideItemOptions } = options;
@@ -39,7 +39,7 @@ function SelectCountryStep() {
     setUserInfo({
       ...userInfo,
     });
-  }
+  };
 
   useEffect(() => {
     if (appEnv != null && typeof appEnv?.country !== 'undefined') {
@@ -77,7 +77,9 @@ function SelectCountryStep() {
             name='country'
             key={props.idElement}
             disabled={!active}
-            onClick={() => { handleClick(props) }}
+            onClick={() => {
+              handleClick(props);
+            }}
           />
         ))}
       </div>

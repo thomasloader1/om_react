@@ -27,6 +27,8 @@ const RebillCheckoutForm = () => {
 
   const { values, handleChange, handleBlur, setFieldValue, touched, errors } = useFormikContext();
 
+  console.log(contact);
+
   const handlePhoneInputChange = (value) => {
     setFieldValue('phone', value);
     const numberText = value ? value : '';
@@ -74,7 +76,7 @@ const RebillCheckoutForm = () => {
       type: userInfo.stepThree.value,
       contract_entity_id: id,
       contract_so: sale.SO_Number,
-      country: sale.Pais,
+      country: sale.Pais_de_facturaci_n,
       quotes: values.quotes !== undefined ? values.quotes : 1,
       status: 'pending',
     };
@@ -141,7 +143,7 @@ const RebillCheckoutForm = () => {
       name: contact.Full_Name,
       identification: {
         type,
-        value: `${formsValues.dni.replace("-", '')}`,
+        value: `${formsValues.dni.replace('-', '')}`,
       },
     });
 
@@ -238,11 +240,11 @@ const RebillCheckoutForm = () => {
           handleRequestGateway(postUpdateZoho, gateway);
 
           //Esto es para stripe, nose si funciona en mp
-          fireModalAlert('Pago Realizado', '', 'success');
+          /* fireModalAlert('Pago Realizado', '', 'success');
           setOpenBlockLayer(true);
           setRebillFetching({
             type: 'payment success',
-          });
+          }); */
         } catch (error) {
           //console.log("error", error);
           fireModalAlert('Pago Fallido', error);
@@ -387,8 +389,9 @@ const RebillCheckoutForm = () => {
               Pagar Aqui
             </button>
             <button
-              className={`button is-info ml-2 ${generateLink && 'is-loading'} ${showRebill && 'is-hidden'
-                }`}
+              className={`button is-info ml-2 ${generateLink && 'is-loading'} ${
+                showRebill && 'is-hidden'
+              }`}
               type='button'
               onClick={handleGenerateLink}
               disabled={!hasErrorInputs}

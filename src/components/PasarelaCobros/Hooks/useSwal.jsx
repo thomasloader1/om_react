@@ -46,6 +46,13 @@ export function fireModalAlert(title, html = '', icon = 'error') {
     icon,
     position: 'center-center',
     showConfirmButton: true,
+    preConfirm: () => {
+      // Verificar si estamos en la ruta /checkout/ptp
+      if (window.location.hash.includes('/checkout/ptp')) {
+        // Redireccionar a la página de inicio
+        window.location.href = '/';
+      }
+    },
   });
 }
 

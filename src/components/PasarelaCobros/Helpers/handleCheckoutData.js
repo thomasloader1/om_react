@@ -1,8 +1,8 @@
 export const formatPrice = (iso, currencyOptions, price) => new Intl.NumberFormat(iso, currencyOptions).format(Math.floor(price));
 
 export const handleCheckoutData = (currencyOptions,checkoutPayment, advanceSuscription, formSPP = true) => {
+  
     const { isAdvanceSuscription, isSuscription, isTraditional, info } = advanceSuscription;
-    const sale = formSPP && checkoutPayment.sale 
     const auxResume = {
       totalMonths: 0,
       firstPay: 0,
@@ -14,11 +14,12 @@ export const handleCheckoutData = (currencyOptions,checkoutPayment, advanceSuscr
       isSuscription,
     };
 
-    const isCheckoutLink = formSPP ? checkoutPayment : checkoutPayment
-
-    console.group('helpers/handleCheckoutData');
+   console.group('helpers/handleCheckoutData');
     console.log({ advanceSuscription, checkoutPayment, auxResume, formSPP });
     console.groupEnd();
+
+    const {sale} = checkoutPayment
+    
 
     if (auxResume.isAdvanceSuscription) {
       auxResume.totalMonths = Number(checkoutPayment?.quotes);

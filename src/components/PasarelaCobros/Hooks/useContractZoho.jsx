@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect, useContext } from 'react';
 import { AppContext } from '../Provider/StateProvider';
-import { fireModalAlert, fireToast } from '../Hooks/useSwal'
+import { fireModalAlert, fireToast } from '../Hooks/useSwal';
 import { userFlow } from '../../../config/config';
 const {
   REACT_APP_OCEANO_URL,
@@ -33,13 +33,13 @@ export const useContractZoho = (contractId, runEffect = true) => {
           },
         });
 
+        console.log({ response });
         setData(response.data);
         setContractData(response.data);
-        fireToast(`Contrato de ${response.data.sale.Pais} cargado`, 'info')
+        fireToast(`Contrato de ${response.data.sale.Pais_de_facturaci_n} cargado`, 'info');
         setLoading(false);
-
       } catch (e) {
-        fireModalAlert(e.response.data.detail)
+        fireModalAlert(e.response.data.detail);
         setError(e.response.data);
         setLoading(true);
       } finally {
@@ -50,13 +50,12 @@ export const useContractZoho = (contractId, runEffect = true) => {
       fetchData();
     } else {
       setLoading(false);
-
     }
 
     return () => {
-      console.log('useContractZoho')
+      console.log('useContractZoho');
       if (runEffect) {
-        setContractData(null)
+        setContractData(null);
         ctx.setFormikValues({});
         ctx.setUserInfo(userFlow);
         ctx.setStripeRequest(null);
@@ -66,7 +65,7 @@ export const useContractZoho = (contractId, runEffect = true) => {
         ctx.setOpenBlockLayer(false);
         ctx.setRebillFetching(null);
       }
-    }
+    };
   }, [contractId]);
 
   return { data, loading, error };

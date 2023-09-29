@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { generateURL } from '../components/PasarelaCobros/Helpers/generateURL';
-import availableCards from '../img/pasarelaCobros/imgpsh_fullsize_anim.png'
+import availableCards from '../img/pasarelaCobros/imgpsh_fullsize_anim.png';
 
 export const ptpImages = {
-  availableCards
-}
+  availableCards,
+};
 
 export const ptpCurrencyOptions = {
-    style: 'currency',
-    currency: 'USD',
-  };
+  style: 'currency',
+  currency: 'USD',
+};
 
 const {
   REACT_APP_OCEANO_UPDATECONTRACT_PTP,
@@ -48,7 +48,7 @@ export const createSession = async (body) => {
 };
 
 export const makePaymentSession = async (formikValues) => {
-  console.log({formikValues})
+  console.log({ formikValues });
   const type = formikValues.mod.includes('anticipo') ? 'Parcialidad' : formikValues.mod;
   const quotes = formikValues.quotes ? formikValues.quotes : 1;
   const rest_quotes = quotes - 1;
@@ -76,7 +76,7 @@ export const makePaymentSession = async (formikValues) => {
     payment.first_installment = formikValues.advanceSuscription.firstQuoteDiscount;
     payment.remaining_installments = formikValues.advanceSuscription.payPerMonthAdvance;
   } else {
-    let paymentCalculate = payment.total / payment.quotes
+    let paymentCalculate = payment.total / payment.quotes;
     payment.remaining_installments = paymentCalculate.toFixed(2);
   }
 
@@ -96,46 +96,44 @@ export const makePaymentSession = async (formikValues) => {
 export const debitFirstPayment = async (body) => {
   try {
     const res = await axios.post(URLS.DEBIT, { ...body });
-    console.log({debitFirstPayment: res})
+    console.log({ debitFirstPayment: res });
     return res;
   } catch (e) {
     console.log(e);
     return e.response;
   }
-
 };
 
 export const generatePaymentLink = async (data) => {
   //console.log({data})
-  const { country, mod, quotes, payment_method, contractId, sale, ptpSession} = data
-  const [statusSession, session] = ptpSession
+  const { country, mod, quotes, payment_method, contractId, sale, ptpSession } = data;
+  const [statusSession, session] = ptpSession;
 
   const body = {
-      requestId: session.requestId,
-      gateway: payment_method,
-      type: mod,
-      contract_entity_id: contractId,
-      contract_so: sale.SO_Number,
-      status: 'pending',
-      quotes,
-      country
-  }
+    requestId: session.requestId,
+    gateway: payment_method,
+    type: mod,
+    contract_entity_id: contractId,
+    contract_so: sale.SO_Number,
+    status: 'pending',
+    quotes,
+    country,
+  };
 
   //console.log({body})
 
   try {
-    const res = await axios.post(URLS.GENERATE_LINK, { ...body});
-    return res.data
+    const res = await axios.post(URLS.GENERATE_LINK, { ...body });
+
+    return res.data;
   } catch (error) {
-    console.log(error)
-    return error
+    console.log(error);
+    return error;
   }
-}
+};
 
 export const updateZohoContract = async (values) => {
-    
-    const { data } = await axios.post(URLS.UPDATE_CONTRACT, { ...values })
-    console.log({data})
-    return data;
-
-}
+  const { data } = await axios.post(URLS.UPDATE_CONTRACT, { ...values });
+  console.log({ data });
+  return data;
+};
