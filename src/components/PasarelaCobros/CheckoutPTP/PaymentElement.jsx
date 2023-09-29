@@ -5,8 +5,6 @@ const PaymentElement = ({checkoutPayment, handleInitPayment}) => {
 const [termsChecked, setTermsChecked] = useState(false);
   const [policyChecked, setPolicyChecked] = useState(false);
   const [showPaymentButton, setShowPaymentButton] = useState(false);
-
-
       const handleTermsChange = () => {
     setTermsChecked(!termsChecked);
   };

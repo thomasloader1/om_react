@@ -1,13 +1,17 @@
 
 import React from 'react'
 
+export const generateProp = (advancePayment,
+    formattedFirstPay,
+    formattedPayPerMonth) => ({
+    advancePayment,
+    formattedFirstPay,
+    formattedPayPerMonth
+})
+
 const InvoiceDetail = ({ invoiceDetail }) => {
     const { advancePayment, formattedFirstPay, formattedPayPerMonth } = invoiceDetail;
     const { info, isTraditional, isSuscription, isAdvanceSuscription } = advancePayment
-
-    /* console.group("InvoiceDetail Component")
-    console.log({ invoiceDetail })
-    console.groupEnd() */
 
     return (<>
         {isTraditional && (

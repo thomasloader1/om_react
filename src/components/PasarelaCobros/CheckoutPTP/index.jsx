@@ -2,15 +2,21 @@ import React, { useEffect, useState } from 'react';
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { useLocation, useParams } from 'react-router';
 import axios from 'axios';
-import { fireToast, fireModalAlert, fireModalAlertRedirect } from '../Hooks/useSwal';
-import { URLS, debitFirstPayment, ptpImages, updateZohoContract } from '../../../logic/ptp';
+import { fireToast } from '../Hooks/useSwal';
+import {
+  URLS,
+  debitFirstPayment,
+  ptpCurrencyOptions,
+  ptpImages,
+  updateZohoContract,
+} from '../../../logic/ptp';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
 import { getCurrency } from '../../../logic/rebill';
 import InvoiceDetail from './InvoiceDetail';
-import { makePostUpdateZohoCheckout, makePostUpdateZohoPTP } from '../../../logic/zoho';
-import { check } from 'prettier';
+import { makePostUpdateZohoPTP } from '../../../logic/zoho';
 import PaymentElement from './PaymentElement';
+import { handleCheckoutData } from '../Helpers/handleCheckoutData';
 
 const { logo } = IMAGES;
 
@@ -26,10 +32,7 @@ const CheckoutPTP = () => {
   const [advancePayment, setAdvancePayment] = useState({});
   const [paymentAction, setPaymentAction] = useState(false);
   const [fetchContent, setFetchContent] = useState(true);
-  const [currencyOptions, setCurrencyOptions] = useState({
-    style: 'currency',
-    currency: 'USD',
-  });
+  const [currencyOptions, setCurrencyOptions] = useState(ptpCurrencyOptions);
   const [statusRequestPayment, setStatusRequestPayment] = useState('');
   const [ptpEffect, setPtpEffect] = useState(true);
 
@@ -40,9 +43,6 @@ const CheckoutPTP = () => {
   const { loading, data: contractData } = useContractZoho(so, needRunEffect);
 
   const isExpired = new Date(checkoutPayment?.transaction?.expiration_date) < new Date();
-
-  const formatPrice = (iso, currencyOptions, price) =>
-    new Intl.NumberFormat(iso, currencyOptions).format(Math.floor(price));
 
   const valuesAdvanceSuscription = ({ total, checkoutPayment }) => {
     console.group('valuesAdvanceSuscription');
@@ -107,52 +107,8 @@ const CheckoutPTP = () => {
     return detailValues;
   };
 
-  const handleCheckoutData = (checkoutPayment, advanceSuscription) => {
-    const { isAdvanceSuscription, isSuscription, isTraditional, info } = advanceSuscription;
-
-    const auxResume = {
-      totalMonths: 0,
-      firstPay: 0,
-      payPerMonth: 0,
-      formattedFirstPay: 0,
-      formattedPayPerMonth: 0,
-      isTraditional,
-      isAdvanceSuscription,
-      isSuscription,
-    };
-
-    console.group('handleCheckoutData');
-    console.log({ advanceSuscription, checkoutPayment, auxResume });
-    console.groupEnd();
-
-    if (auxResume.isAdvanceSuscription) {
-      auxResume.totalMonths = Number(checkoutPayment?.quotes);
-      auxResume.firstPay = info.firstQuoteDiscount;
-      auxResume.payPerMonth = info.payPerMonthAdvance;
-
-      auxResume.formattedFirstPay = formatPrice('US', currencyOptions, auxResume.firstPay);
-      auxResume.formattedPayPerMonth = formatPrice('US', currencyOptions, auxResume.payPerMonth);
-    } else if (auxResume.isSuscription) {
-      auxResume.totalMonths = Number(checkoutPayment?.quotes);
-      auxResume.firstPay = Math.floor(sale?.Grand_Total / auxResume.totalMonths);
-
-      auxResume.formattedAmount = formatPrice('US', currencyOptions, auxResume.firstPay);
-      auxResume.formattedFirstPay = formatPrice('US', currencyOptions, auxResume.firstPay);
-      auxResume.formattedPayPerMonth = formatPrice('US', currencyOptions, auxResume.firstPay);
-    } else {
-      auxResume.totalMonths = 1;
-      auxResume.firstPay = sale?.Grand_Total;
-
-      auxResume.formattedAmount = formatPrice('US', currencyOptions, auxResume.firstPay);
-      auxResume.formattedFirstPay = formatPrice('US', currencyOptions, auxResume.firstPay);
-      auxResume.formattedPayPerMonth = formatPrice('US', currencyOptions, auxResume.firstPay);
-    }
-
-    return auxResume;
-  };
-
   const { totalMonths, formattedFirstPay, formattedPayPerMonth, formattedAmount } =
-    handleCheckoutData(checkoutPayment, advancePayment);
+    handleCheckoutData(currencyOptions, checkoutPayment, advancePayment);
 
   useEffect(() => {
     if (!loading && !paymentAction) {

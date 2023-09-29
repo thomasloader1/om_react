@@ -40,8 +40,6 @@ const Checkout = () => {
   const needRunEffect = !pathname.includes('vp');
   const { loading, data: contractData } = useContractZoho(so, needRunEffect);
 
-  const formatPrice = (iso, currencyOptions, price) =>
-    new Intl.NumberFormat(iso, currencyOptions).format(Math.floor(price));
 
   const valuesAdvanceSuscription = ({ total, checkoutPayment }) => {
     console.group('valuesAdvanceSuscription');
@@ -150,8 +148,7 @@ const Checkout = () => {
     return auxResume;
   };
 
-  const { totalMonths, formattedFirstPay, formattedPayPerMonth, formattedAmount } =
-    handleCheckoutData(checkoutPayment, advancePayment);
+  const { totalMonths, formattedFirstPay, formattedPayPerMonth, formattedAmount } = handleCheckoutData(checkoutPayment, advancePayment);
 
   const isStripe = checkoutPayment?.gateway?.includes('Stripe');
 

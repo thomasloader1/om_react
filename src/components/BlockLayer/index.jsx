@@ -3,15 +3,24 @@ import { motion } from 'framer-motion'
 import { AppContext } from '../PasarelaCobros/Provider/StateProvider'
 import { MdContentCopy } from 'react-icons/md'
 import { fireToast } from '../PasarelaCobros/Hooks/useSwal'
+import PaymentElement from '../PasarelaCobros/CheckoutPTP/PaymentElement'
+import InvoiceDetail, { generateProp } from '../PasarelaCobros/CheckoutPTP/InvoiceDetail'
+import { handleCheckoutData } from '../PasarelaCobros/Helpers/handleCheckoutData'
+import { ptpCurrencyOptions } from '../../logic/ptp'
 
 const { NODE_ENV, REACT_APP_URL_PRD, REACT_APP_URL_LOCAL } = process.env
 
 const URL = NODE_ENV === 'production' ? REACT_APP_URL_PRD : REACT_APP_URL_LOCAL
 
 const BlockLayer = () => {
-    const { openBlockLayer, rebillFetching, CTCFetching, ptpFetching } = useContext(AppContext)
+    const { openBlockLayer, rebillFetching, CTCFetching, ptpFetching, formikValues } = useContext(AppContext)
     const [cardTitle, setCardTitle] = useState('');
     const [fetchBlock, setFetchBlock] = useState({ loading: true, type: ptpFetching?.generateLink?.type ?? 'CTC', ...rebillFetching });
+    console.log({formikValues})
+
+    const {} =handleCheckoutData(ptpCurrencyOptions, formikValues,formikValues.advanceSuscription)
+
+    const invoiceDetail = generateProp()
 
     useEffect(() => {
         const title = fetchBlock.type === 'paymentLink' ? 'Link Generado' : 'Pago Realizado';
@@ -57,14 +66,14 @@ const BlockLayer = () => {
         }
 
         return (
-            <a href='https://crm.zoho.com/crm/org631172874/tab/SalesOrders' className='button is-success'>
+            <a href='https://crm.zoho.com/crm/org631172874/tab/SalesOrders' className='button is-success' >
                 Cobrar otro contrato
             </a>
         )
 
     }
 
-    // console.log({ openBlockLayer, rebillFetching, fetchBlock })
+    console.log({ ptpFetching })
     return (
         <>
             {openBlockLayer && (
@@ -93,6 +102,8 @@ const BlockLayer = () => {
                             <motion.h2 className='title is-2 has-text-success my-5'>
                                 {cardTitle}
                             </motion.h2>
+
+                            {ptpFetching?.statusPayment?.includes("APPROVED") && (<InvoiceDetail invoiceDetail={ptpFetching} />)}
 
                             {content()}
                         </motion.div>

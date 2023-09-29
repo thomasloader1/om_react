@@ -36,12 +36,13 @@ const PlaceToPayPayment = () => {
       try {
         const res = await debitFirstPayment({ requestId });
         console.log(res);
-
+        setPtpFetching(res.data);
         const responseOfServer = res?.data ?? res;
         console.log({ responseOfServer });
 
         if (responseOfServer.statusPayment.includes('APPROVED')) {
-          fireToast(res.result, 'success');
+          fireToast(res.data.result, 'success');
+
           const data = {
             requestId: requestId.requestId,
             adjustment: 0,

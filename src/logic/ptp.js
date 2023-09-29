@@ -6,6 +6,11 @@ export const ptpImages = {
   availableCards
 }
 
+export const ptpCurrencyOptions = {
+    style: 'currency',
+    currency: 'USD',
+  };
+
 const {
   REACT_APP_OCEANO_UPDATECONTRACT_PTP,
   REACT_APP_API_PTP_SESSION_SU_PAYMENT,
