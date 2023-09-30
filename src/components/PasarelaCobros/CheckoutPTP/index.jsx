@@ -30,6 +30,7 @@ const CheckoutPTP = () => {
   const [currencyOptions, setCurrencyOptions] = useState(ptpCurrencyOptions);
   const [ptpEffect, setPtpEffect] = useState(true);
   const [invoiceDetail, setInvoiceDetail] = useState(null);
+  const [statusRequestPayment, setStatusRequestPayment] = useState(null);
 
   const { so } = useParams();
   const { pathname } = useLocation();
@@ -142,8 +143,8 @@ const CheckoutPTP = () => {
         const { currency } = getCurrency(data.checkout.country);
         setCurrencyOptions((prevState) => ({ ...prevState, currency }));
 
-        setTicketData(mergedData);
-        setFetchContent(false);
+        // setTicketData(mergedData);
+        //  setFetchContent(false);
 
         const { totalMonths, formattedFirstPay, formattedPayPerMonth, formattedAmount } =
           handleCheckoutData(currencyOptions, auxCheckoutPayment, inscription);
@@ -263,7 +264,7 @@ const CheckoutPTP = () => {
                         </p>
                         <h3 className='title is-3'>
                           {checkoutPayment?.type === 'Suscripción con anticipo'
-                            ? formattedFirstPay
+                            ? invoiceDetail?.formattedFirstPay
                             : invoiceDetail?.formattedAmount}
                         </h3>
                       </div>
