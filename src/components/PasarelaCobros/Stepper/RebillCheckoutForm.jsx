@@ -240,11 +240,11 @@ const RebillCheckoutForm = () => {
           handleRequestGateway(postUpdateZoho, gateway);
 
           //Esto es para stripe, nose si funciona en mp
-          /* fireModalAlert('Pago Realizado', '', 'success');
+          fireModalAlert('Pago Realizado', '', 'success');
           setOpenBlockLayer(true);
           setRebillFetching({
             type: 'payment success',
-          }); */
+          });
         } catch (error) {
           //console.log("error", error);
           fireModalAlert('Pago Fallido', error);
