@@ -24,22 +24,36 @@ import FolioCTCPlanPayment from '../Stepper/FolioCTCPlanPayment';
 import { useYupValidation } from '../Hooks/useYupValidation';
 import DataCardCTC from '../Stepper/DataCardCTC';
 import PlaceToPayPayment from '../Stepper/PlaceToPayPayment';
-import { makeCTCPaymentFile, makeCTCSuscriptionFile, sendCardZoho, updateZohoContract } from '../../../logic/ctc';
+import {
+  makeCTCPaymentFile,
+  makeCTCSuscriptionFile,
+  sendCardZoho,
+  updateZohoContract,
+} from '../../../logic/ctc';
 import { fireToast } from '../Hooks/useSwal';
 import { makePostUpdateZohoCTC } from '../../../logic/zoho';
+import { makeCustomSideItemOptions } from '../../../config/config';
 /* import { loadStripe } from '@stripe/stripe-js'; */
 
 function PasarelaApp() {
-  const { setFormikValues,
+  const {
+    setFormikValues,
     contractData,
     appRef,
     stepNumber,
     setStepNumber,
     userInfo,
     formikValues,
-    setDownloadLinkCTCPayment, setOpenBlockLayer } = useContext(AppContext);
+    setDownloadLinkCTCPayment,
+    setOpenBlockLayer,
+    setUserInfo,
+    setOptions,
+    setRenewSession,
+    renewSession,
+  } = useContext(AppContext);
 
-  const { countryStepValidation,
+  const {
+    countryStepValidation,
     selectPaymentMethodStepValidation,
     selectPaymentModeStepValidation,
     formClientDataStepValidation,
@@ -47,11 +61,13 @@ function PasarelaApp() {
     ptpPaymentStepValidation,
     dataCardCTCStepValidation,
     folioPaymentCTCStepValidation,
-    folioSuscriptionCTCStepValidation } = useYupValidation();
+    folioSuscriptionCTCStepValidation,
+  } = useYupValidation();
 
   const location = useLocation();
   const { id } = useParams();
   const needRunEffect = !location.pathname.includes('vp');
+  const ptpRenewSession = location.pathname.includes('renew');
 
   const { loading } = useContractZoho(id, needRunEffect);
   const pasarelaContainerRef = useRef(null);
@@ -70,17 +86,79 @@ function PasarelaApp() {
   const isPTPPayment = userInfo.stepTwo.value.includes('PlaceToPay');
 
   useEffect(() => {
+    if (ptpRenewSession) {
+      const fetchSessionToRenew = async () => {
+        try {
+          const res = await fetch(`/api/placetopay/${id}/renew`);
+          if (res.ok) {
+            const data = await res.json();
+            console.log('Sesión renovada:', data);
+            setRenewSession(data.renewSession);
+            const sideItemsForPTP = makeCustomSideItemOptions(4, [
+              { value: 'Ecuador' },
+              { value: 'PlaceToPay' },
+              { value: 'Suscripción' },
+            ]);
+            setFormikValues((prevState) => ({
+              ...prevState,
+              mod: 'Suscripción',
+              country: 'Ecuador',
+              renewSuscription: true,
+              quotes: data.renewSession.subscriptions.length,
+            }));
+            setOptions((prevState) => ({
+              ...prevState,
+              sideItemOptions: [...sideItemsForPTP],
+            }));
+            setUserInfo((prevState) => ({
+              ...prevState,
+              stepOne: {
+                step: 1,
+                label: 'country',
+                value: 'Ecuador',
+                isoRef: 'ecu',
+              },
+              stepTwo: {
+                step: 2,
+                label: 'payment_method',
+                value: 'PlaceToPay',
+              },
+              stepThree: {
+                step: 3,
+                label: 'payment_mode',
+                value: 'Suscripción',
+              },
+              stepFour: {
+                step: 4,
+                label: 'customer_data',
+                value: 'Complete',
+              },
+            }));
+            setStepNumber(4);
+          } else {
+            console.error('Error al renovar la sesión');
+          }
+        } catch (error) {
+          console.error('Error en la solicitud:', error);
+        }
+      };
+
+      fetchSessionToRenew();
+    }
+  }, [id]);
+
+  useEffect(() => {
     if (location.pathname.includes('vp')) {
       getProgress();
     }
 
-    return () => console.log('Progress Effect')
+    //return () => console.log('Progress Effect');
   }, [progressId]);
 
   useEffect(() => {
     setStepNumber(stepNumber);
 
-    return () => console.log('StepNumber Effect');
+    //  return () => console.log('StepNumber Effect');
   }, [stepNumber]);
 
   useEffect(() => {
@@ -88,20 +166,20 @@ function PasarelaApp() {
     if (isMobile && pasarelaContainerRef.current) {
       setHeightMobile();
     }
-    return () => console.log('isMobile Effect')
-
+    //return () => console.log('isMobile Effect');
   }, [isMobile, pasarelaContainerRef.current]);
+  // console.log({ contractData });
 
   const getInitialValuesByMethodPayment = (modPayment) => {
     const commonAttributes = {
-      fullName: '',
-      phone: '',
-      address: '',
-      dni: '',
-      email: '',
-      zip: '',
-      mod: ''
-    }
+      fullName: contractData?.contact?.Full_Name ?? '',
+      phone: contractData?.contact?.Phone ?? '',
+      address: contractData?.sale?.Mailing_Street ?? '',
+      dni: contractData?.contact?.Identificacion ?? '',
+      email: contractData?.contact?.Email ?? '',
+      zip: contractData?.contact?.Mailing_Zip ?? '',
+      mod: '',
+    };
 
     switch (modPayment) {
       case 'CTC':
@@ -112,25 +190,28 @@ function PasarelaApp() {
           rfc: '',
           folio_pago: '',
           folio_suscripcion: '',
-        }
+        };
       case 'PlaceToPay':
         return {
           ...commonAttributes,
-          document_type: ''
-        }
+          document_type: contractData?.contact?.Tipo_de_Documento ?? false,
+          renewSuscription: renewSession?.reference ? true : false,
+          mod: renewSession?.reference ? 'Suscripción' : '',
+          quotes: renewSession?.subscriptions.length ?? '',
+        };
       default:
         return {
-          ...commonAttributes
-        }
+          ...commonAttributes,
+        };
     }
-  }
+  };
 
-  const initialFromValues = getInitialValuesByMethodPayment(userInfo?.stepTwo?.value)
+  const initialFromValues = getInitialValuesByMethodPayment(userInfo?.stepTwo?.value);
 
   return (
     <main ref={appRef}>
       <Header />
-      {(loading) ? (
+      {loading ? (
         <MotionSpinner text='Recuperando datos del Contrato' />
       ) : (
         /*  <Elements stripe={stripePromise}> */
@@ -145,27 +226,24 @@ function PasarelaApp() {
               className='pasarela-1 column seleccion-pais'
               initialValues={initialFromValues}
               onSubmit={async () => {
-
-                if (formikValues.payment_method.includes("CTC")) {
+                if (formikValues.payment_method.includes('CTC')) {
                   setOpenBlockLayer(true);
-                  console.log({ formikValues })
+                  console.log({ formikValues });
                   const body = makePostUpdateZohoCTC(formikValues, contractData, userInfo);
                   try {
-                    const res = await updateZohoContract(body)
+                    const res = await updateZohoContract(body);
                     if (res.result === 'ok') {
                       setOpenBlockLayer(true);
                     } else {
                       throw new Error(JSON.stringify(res));
                     }
-
                   } catch (error) {
-                    console.log({ error })
-                    fireToast('Error al actualizar Contrato CTC')
+                    console.log({ error });
+                    fireToast('Error al actualizar Contrato CTC');
                   }
 
                   //console.log({ body, res })
                 }
-
               }}
             >
               <SelectCountryStep
@@ -205,35 +283,38 @@ function PasarelaApp() {
                 validationSchema={formClientDataStepValidation}
               />
 
-
               {isCTCPayment ? (
                 <DataCardCTC
                   onSubmit={async (values) => {
                     //console.log({ values })
-                    const { quotes } = formikValues
-                    const divideBy = quotes ? quotes : 1
+                    const { quotes } = formikValues;
+                    const divideBy = quotes ? quotes : 1;
                     const amountFirstPay = contractData.sale.Grand_Total / divideBy;
 
                     const valuesCTCPaymentFile = {
-                      amount: formikValues.advanceSuscription.isAdvanceSuscription ? formikValues.advanceSuscription.firstQuoteDiscount : Math.floor(amountFirstPay),
+                      amount: formikValues.advanceSuscription.isAdvanceSuscription
+                        ? formikValues.advanceSuscription.firstQuoteDiscount
+                        : Math.floor(amountFirstPay),
                       contact_name: contractData.contact.Full_Name,
                       so_contract: contractData.sale.SO_Number,
                       n_ro_de_tarjeta: values.n_ro_de_tarjeta,
-                      card_v: values.card_v
-                    }
-                    const { message, download_link } = await makeCTCPaymentFile(valuesCTCPaymentFile)
+                      card_v: values.card_v,
+                    };
+                    const { message, download_link } = await makeCTCPaymentFile(
+                      valuesCTCPaymentFile,
+                    );
 
                     await sendCardZoho({
                       card: values.n_ro_de_tarjeta,
                       card_v: values.card_v,
-                      contractId: id
+                      contractId: id,
                     });
 
                     setDownloadLinkCTCPayment(download_link);
 
                     setFormikValues((prevFormikValues) => ({
                       ...prevFormikValues,
-                      ...values
+                      ...values,
                     }));
 
                     // options.sideItemOptions[4].value = 'Completado'
@@ -241,52 +322,57 @@ function PasarelaApp() {
                     fireToast(message, 'success');
                     //    setOptions(options)
                   }}
-                  validationSchema={dataCardCTCStepValidation} />
-              ) :
-                isPTPPayment ? <PlaceToPayPayment
-                  validationSchema={ptpPaymentStepValidation}
-                /> : <GeneratePaymentLinkStep
-                  validationSchema={rebillPaymentStepValidation}
+                  validationSchema={dataCardCTCStepValidation}
                 />
-              }
+              ) : isPTPPayment ? (
+                <PlaceToPayPayment validationSchema={ptpPaymentStepValidation} />
+              ) : (
+                <GeneratePaymentLinkStep validationSchema={rebillPaymentStepValidation} />
+              )}
 
               {isCTCPayment && <ExcelCTCPayment />}
-              {isCTCPayment && <FolioCTCPayment
-                onSubmit={async (values) => {
-                  const amountFirstPay = formikValues.amount / formikValues.quotes;
+              {isCTCPayment && (
+                <FolioCTCPayment
+                  onSubmit={async (values) => {
+                    const amountFirstPay = formikValues.amount / formikValues.quotes;
 
-                  const valuesCTCSuscriptionFile = {
-                    amounts: formikValues.advanceSuscription.isAdvanceSuscription ? formikValues.advanceSuscription.payPerMonthAdvance : Math.floor(amountFirstPay),
-                    contact_name: contractData.contact.Full_Name,
-                    so_contract: contractData.sale.SO_Number,
-                    card_number: formikValues.n_ro_de_tarjeta,
-                    card_v: values.card_v,
-                    quotes: formikValues.quotes
-                  }
-                  const { message, download_link } = await makeCTCSuscriptionFile(valuesCTCSuscriptionFile)
-                  setDownloadLinkCTCPayment(download_link);
+                    const valuesCTCSuscriptionFile = {
+                      amounts: formikValues.advanceSuscription.isAdvanceSuscription
+                        ? formikValues.advanceSuscription.payPerMonthAdvance
+                        : Math.floor(amountFirstPay),
+                      contact_name: contractData.contact.Full_Name,
+                      so_contract: contractData.sale.SO_Number,
+                      card_number: formikValues.n_ro_de_tarjeta,
+                      card_v: values.card_v,
+                      quotes: formikValues.quotes,
+                    };
+                    const { message, download_link } = await makeCTCSuscriptionFile(
+                      valuesCTCSuscriptionFile,
+                    );
+                    setDownloadLinkCTCPayment(download_link);
 
-                  setFormikValues((prevFormikValues) => ({
-                    ...prevFormikValues,
-                    ...values
-                  }));
+                    setFormikValues((prevFormikValues) => ({
+                      ...prevFormikValues,
+                      ...values,
+                    }));
 
-                  fireToast(message, 'success');
-                }}
-                validationSchema={folioPaymentCTCStepValidation}
-
-              />}
+                    fireToast(message, 'success');
+                  }}
+                  validationSchema={folioPaymentCTCStepValidation}
+                />
+              )}
               {isCTCPayment && <PlanCTCPayment />}
-              {isCTCPayment && <FolioCTCPlanPayment
-                onSubmit={async (values) => {
-                  setFormikValues((prevFormikValues) => ({
-                    ...prevFormikValues,
-                    ...values
-                  }));
-                }}
-                validationSchema={folioSuscriptionCTCStepValidation}
-              />}
-
+              {isCTCPayment && (
+                <FolioCTCPlanPayment
+                  onSubmit={async (values) => {
+                    setFormikValues((prevFormikValues) => ({
+                      ...prevFormikValues,
+                      ...values,
+                    }));
+                  }}
+                  validationSchema={folioSuscriptionCTCStepValidation}
+                />
+              )}
             </MultiStep>
           </div>
           {/* <pre>{JSON.stringify(contractData, null, 2)}</pre> */}
@@ -294,7 +380,6 @@ function PasarelaApp() {
         /* </Elements> */
       )}
     </main>
-
   );
 }
 

@@ -15,9 +15,12 @@ export const useContractZoho = (contractId, runEffect = true) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { setContractData, ...ctx } = useContext(AppContext);
+
+  const contractIdClean = contractId.replace(/^.*TEST_(.*?)_RT.*$/, '$1');
+
   const body = new FormData();
   body.append('key', '9j9fj0Do204==3fja134');
-  body.append('id', contractId);
+  body.append('id', contractIdClean);
 
   const URL =
     NODE_ENV === 'production'
@@ -33,12 +36,12 @@ export const useContractZoho = (contractId, runEffect = true) => {
           },
         });
 
-        //console.log({ response });
         setData(response.data);
         setContractData(response.data);
-        fireToast(`Contrato de ${response.data.sale.Pais_de_facturaci_n} cargado`, 'info');
+        fireToast(`Contrato de ${response?.data?.sale.Pais_de_facturaci_n} cargado`, 'info');
         setLoading(false);
       } catch (e) {
+        console.error({ e });
         fireModalAlert(e.response.data.detail);
         setError(e.response.data);
         setLoading(true);

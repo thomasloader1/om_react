@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import moment from 'moment';
 import { Block, Notification, Columns, Modal, Media, Content } from 'react-bulma-components';
 import { AppContext } from '../Provider/StateProvider';
@@ -9,7 +9,7 @@ import { useLocation, useParams } from 'react-router';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
 
-function ResumeTicket() {
+function ResumeTicket({ forPayment }) {
   const {
     formikValues,
     setFormikValues,
@@ -19,6 +19,7 @@ function ResumeTicket() {
     setUserInfo,
     appRef,
     contractData,
+    renewSession,
   } = useContext(AppContext);
   const location = useLocation();
   const needRunEffect = location.pathname.includes('vp');
@@ -27,6 +28,63 @@ function ResumeTicket() {
   const [openModal, setOpenModal] = useState(null);
 
   const { stepFour } = userInfo;
+  const [resumeData, setResumeData] = useState({
+    totalMonths: '',
+    payPerMonth: '',
+    formattedAmount: '',
+    firstQuoteDiscount: '',
+    remainingAmountToPay: '',
+    newQuotes: '',
+    payPerMonthAdvance: '',
+  });
+
+  useEffect(() => {
+    const isAdvanceSuscription = formikValues.mod.includes('Suscripción con anticipo');
+    const isTraditional = formikValues.mod.includes('Tradicional');
+
+    const totalMonths = isTraditional ? 1 : formikValues.quotes;
+    const payPerMonth = isTraditional
+      ? sale?.Grand_Total
+      : Math.floor(sale?.Grand_Total / formikValues.quotes);
+
+    const formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(payPerMonth);
+
+    const firstQuoteDiscount = Math.floor(sale?.Grand_Total / formikValues.quotes / 2);
+    const remainingAmountToPay = Math.floor(sale?.Grand_Total - firstQuoteDiscount);
+
+    const newQuotes = formikValues.quotes - 1;
+    const payPerMonthAdvance = Math.floor(remainingAmountToPay / newQuotes);
+
+    if (formikValues.renewSuscription) {
+      console.log({
+        renewSession,
+      });
+
+      setResumeData({
+        totalMonths: formikValues.quotes,
+        payPerMonth: renewSession.remaining_installments,
+        formattedAmount: new Intl.NumberFormat('MX', currencyOptions).format(
+          renewSession.remaining_installments,
+        ),
+        isAdvanceSuscription,
+      });
+
+      return;
+    }
+
+    setResumeData({
+      totalMonths,
+      payPerMonth,
+      formattedAmount,
+      firstQuoteDiscount,
+      remainingAmountToPay,
+      newQuotes,
+      payPerMonthAdvance,
+      isAdvanceSuscription,
+    });
+
+    return () => null;
+  }, [forPayment]);
 
   if (typeof data === 'string') {
     return (
@@ -45,20 +103,6 @@ function ResumeTicket() {
   };
 
   const { sale, contact, products } = contractData;
-  const isAdvanceSuscription = formikValues.mod.includes('Suscripción con anticipo');
-  const isTraditional = formikValues.mod.includes('Tradicional');
-
-  const totalMonths = isTraditional ? 1 : formikValues.quotes;
-  const payPerMonth = isTraditional
-    ? sale?.Grand_Total
-    : Math.floor(sale?.Grand_Total / formikValues.quotes);
-  const formattedAmount = new Intl.NumberFormat('MX', currencyOptions).format(payPerMonth);
-
-  const firstQuoteDiscount = Math.floor(sale?.Grand_Total / formikValues.quotes / 2);
-  const remainingAmountToPay = Math.floor(sale?.Grand_Total - firstQuoteDiscount);
-
-  const newQuotes = formikValues.quotes - 1;
-  const payPerMonthAdvance = Math.floor(remainingAmountToPay / newQuotes);
 
   return (
     <>
@@ -87,23 +131,35 @@ function ResumeTicket() {
               <label>MONTO TOTAL DEL CONTRATO</label>
               <h4>{sale.Grand_Total}</h4>
             </div>
+            {forPayment.includes('PlaceToPay') && (
+              <div id='mesesTotales_resume' className='column is-one-third finalResume-item'>
+                <label>COBRADOS MESES TOTALES</label>
+                <h4>{renewSession.installments_paid}</h4>
+              </div>
+            )}
             <div id='mesesTotales_resume' className='column is-one-third finalResume-item'>
               <label>MESES TOTALES</label>
-              <h4>{totalMonths}</h4>
+              <h4>{resumeData.totalMonths}</h4>
             </div>
 
-            {isAdvanceSuscription && (
+            {resumeData.isAdvanceSuscription && (
               <div id='montoAnticipo_resume' className='column is-one-third finalResume-item'>
                 <label>
-                  {isAdvanceSuscription ? 'Monto a pagar de anticipo' : 'monto a pagar POR MES'}
+                  {resumeData.isAdvanceSuscription
+                    ? 'Monto a pagar de anticipo'
+                    : 'monto a pagar POR MES'}
                 </label>
-                <h4>{firstQuoteDiscount}</h4>
+                <h4>{resumeData.firstQuoteDiscount}</h4>
               </div>
             )}
 
             <div id='montoCuotaMes_resume' className='column is-one-third finalResume-item'>
               <label>Monto a pagar por mes</label>
-              <h4>{isAdvanceSuscription ? payPerMonthAdvance : payPerMonth}</h4>
+              <h4>
+                {resumeData.isAdvanceSuscription
+                  ? resumeData.payPerMonthAdvance
+                  : resumeData.payPerMonth}
+              </h4>
             </div>
 
             <div id='monto_resume' className='column is-one-third finalResume-item'>
@@ -165,10 +221,10 @@ function ResumeTicket() {
                     contact,
                     products,
                     advanceSuscription: {
-                      isAdvanceSuscription,
-                      remainingAmountToPay,
-                      firstQuoteDiscount,
-                      payPerMonthAdvance,
+                      isAdvanceSuscription: resumeData.isAdvanceSuscription,
+                      remainingAmountToPay: resumeData.remainingAmountToPay,
+                      firstQuoteDiscount: resumeData.firstQuoteDiscount,
+                      payPerMonthAdvance: resumeData.payPerMonthAdvance,
                       quotesAdvance: formikValues.quotes - 1,
                     },
                   });

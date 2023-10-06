@@ -47,12 +47,31 @@ export const createSession = async (body) => {
   }
 };
 
+export const renewSession = async (body) => {
+  const sessionUrl = body.payment.type.includes('Tradicional') ? URLS.PAYMENT : URLS.SUSCRIPTION;
+
+  try {
+    const res = await axios.post(sessionUrl, { ...body });
+    //console.log({ res });
+
+    if (res.status === 500) {
+      throw new Error(res.statusText);
+    }
+
+    return res.data;
+  } catch (e) {
+    console.log(e);
+    return e.response.data.message;
+  }
+};
+
 export const makePaymentSession = async (formikValues) => {
   console.log({ formikValues });
   const type = formikValues.mod.includes('anticipo') ? 'Parcialidad' : formikValues.mod;
   const quotes = formikValues.quotes ? formikValues.quotes : 1;
   const rest_quotes = quotes - 1;
-  const reference = `TEST_${formikValues.sale.SO_Number}`;
+  const reference =
+    formikValues?.renewSubscription?.reference ?? `TEST_${formikValues.sale.SO_Number}`;
   const payer = {
     name: formikValues.contact.First_Name,
     surname: formikValues.contact.Last_Name,
@@ -76,11 +95,25 @@ export const makePaymentSession = async (formikValues) => {
     payment.first_installment = formikValues.advanceSuscription.firstQuoteDiscount;
     payment.remaining_installments = formikValues.advanceSuscription.payPerMonthAdvance;
   } else {
-    let paymentCalculate = payment.total / payment.quotes;
-    payment.remaining_installments = paymentCalculate.toFixed(2);
+    if (formikValues.renewSuscription) {
+      let paymentCalculate = Number(formikValues.renewSuscription.remaining_installments);
+      payment.remaining_installments = paymentCalculate.toFixed(2);
+    } else {
+      let paymentCalculate = payment.total / payment.quotes;
+      payment.remaining_installments = paymentCalculate.toFixed(2);
+    }
   }
 
   try {
+    if (formikValues.renewSubscription) {
+      const data = await renewSession({
+        so: reference,
+        payer,
+        payment,
+      });
+      return data;
+    }
+
     const data = await createSession({
       so: reference,
       payer,

@@ -41,14 +41,14 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
   /*   const stripe = useStripe();
     const elements = useElements(); */
   //  const [openBlockLayer, setOpenBlockLayer] = useState(false);
-  const [sideOptionsElements, setSideOptionsElements] = useState(null)
+  const [sideOptionsElements, setSideOptionsElements] = useState(null);
   const {
     stripeRequest,
     userInfo,
     openBlockLayer,
     setOptions,
     options: optionsGlobal,
-    CTCPayment
+    CTCPayment,
   } = useContext(AppContext);
 
   const formik = useFormikContext();
@@ -74,42 +74,35 @@ function Side({ options, sideTitle, stepStateNumber, formikInstance }) {
   useEffect(() => {
     //console.log({ CTCPayment })
 
-    const sideOptionsElementsMapping = options.map(({ step, label, status, value }) => {
+    const sideOptionsElementsMapping = options
+      .map(({ step, label, status, value }) => {
+        if (!CTCPayment && step > 5) {
+          return false;
+        }
 
-      if (!CTCPayment && step > 5) {
-        return false;
-      }
+        return (
+          <SideItem
+            key={step}
+            currentStep={step}
+            label={label}
+            status={status}
+            valueSelected={value}
+            stepStateNumber={stepStateNumber}
+            formikInstance={formikInstance}
+            disableEdit={!!stripeRequest}
+          />
+        );
+      })
+      .filter((item) => item !== false);
+    setSideOptionsElements(sideOptionsElementsMapping);
 
-      return (
-        <SideItem
-          key={step}
-          currentStep={step}
-          label={label}
-          status={status}
-          valueSelected={value}
-          stepStateNumber={stepStateNumber}
-          formikInstance={formikInstance}
-          disableEdit={!!stripeRequest}
-        />
-      )
-    }).filter(item => item !== false)
-    setSideOptionsElements(sideOptionsElementsMapping)
-
-    return () => console.log('Clear function OptionsGlobal')
-
-  }, [optionsGlobal])
-
+    //return () => console.log('Clear function OptionsGlobal')
+  }, [optionsGlobal]);
 
   return (
     <div className={`is-4 column side pl-6`}>
       <h2 className='title is-4'>{sideTitle}</h2>
-      <div className='side-body'>
-
-        {
-          sideOptionsElements
-        }
-
-      </div>
+      <div className='side-body'>{sideOptionsElements}</div>
       <motion.div id='background-side'></motion.div>
       {openBlockLayer && <BlockLayer />}
     </div>

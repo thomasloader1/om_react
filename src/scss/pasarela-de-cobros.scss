@@ -550,13 +550,12 @@ h2.title {
 
 .modal-generated-link {
   padding: 1.5rem 2rem;
-  width: 500px;
-  height: 300px;
+  max-height: 420px;
   position: absolute;
   top: 0;
   left: 5rem;
   bottom: 0;
-  z-index: 1;
+  z-index: 999999;
   background-color: white;
   margin: auto 0px;
   border-radius: 20px;

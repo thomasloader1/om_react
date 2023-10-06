@@ -18,6 +18,7 @@ import { makePostUpdateZoho } from '../../../logic/zoho';
 const RebillCheckoutForm = () => {
   const { contractData, formikValues, userInfo, setRebillFetching, setOpenBlockLayer } =
     useContext(AppContext);
+
   const { contact, sale } = contractData;
   const [selectedCountry, setSelectedCountry] = useState('MX');
   const [showRebill, setShowRebill] = useState(false);
@@ -26,8 +27,6 @@ const RebillCheckoutForm = () => {
   const [generateLink, setGenerateLink] = useState(false);
 
   const { values, handleChange, handleBlur, setFieldValue, touched, errors } = useFormikContext();
-
-  console.log(contact);
 
   const handlePhoneInputChange = (value) => {
     setFieldValue('phone', value);
@@ -53,10 +52,9 @@ const RebillCheckoutForm = () => {
     () => Object.values(values).every((v) => typeof v !== 'undefined' && v != null && v !== ''),
     [values],
   );
-  //console.log({ hasErrorInputs, completedInputs, values })
+
   useEffect(() => {
     return () => {
-      //console.log("clean");
       setShowRebill(false);
       setFieldValue('cardHolder', false);
     };

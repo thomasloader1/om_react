@@ -15,7 +15,7 @@ import { parsePhoneNumber } from 'react-phone-number-input';
 import { makePostUpdateZohoPTP } from '../../../logic/zoho';
 
 const PlaceToPayPayment = () => {
-  const { formikValues, setOpenBlockLayer, setPtpFetching } = useContext(AppContext);
+  const { formikValues, setOpenBlockLayer, setPtpFetching, renewSession } = useContext(AppContext);
   const [ptpSession, setPtpSession] = useState(null);
   const [processURL, setProcessURL] = useState(null);
   const { values, handleChange, handleBlur, touched, errors, setFieldValue } = useFormikContext();
@@ -62,9 +62,9 @@ const PlaceToPayPayment = () => {
         fireToast('Error al cobrar');
       }
     };
+
     if (ptpEffect) {
       setPtpEffect(false);
-
       window.P.on('response', function (response) {
         console.log({ response });
         const { status } = response.status;
@@ -122,6 +122,7 @@ const PlaceToPayPayment = () => {
       email: values.email,
       address: values.address,
       mobile: values.phone,
+      renewSession,
     };
 
     //console.log(formValues);

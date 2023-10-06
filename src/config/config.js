@@ -3,7 +3,7 @@ export const countryOptions = [
     idElement: 'pais_arg_input',
     img: 'argFlag',
     value: 'Argentina',
-    active: false,
+    active: true,
   },
   {
     idElement: 'pais_bol_input',
@@ -327,6 +327,22 @@ export const sideItemOptions = [
     status: '',
   },
 ];
+
+export const makeCustomSideItemOptions = (steps, data) => {
+  const sideItemOptionsAux = JSON.parse(JSON.stringify(sideItemOptions));
+
+  data.map((obj, index) => {
+    sideItemOptionsAux[index].value = obj.value;
+    sideItemOptionsAux[index].status = 'completed';
+
+    if (obj.step === steps) {
+      sideItemOptionsAux[index].value = 'Completa los datos';
+      sideItemOptionsAux[index].status = 'current';
+    }
+  });
+
+  return sideItemOptionsAux;
+};
 
 export const userFlow = {
   stepOne: {

@@ -22,7 +22,7 @@ function StateProvider({ children }) {
     sideItemOptions,
   });
 
-  const [contractData, setContractData] = useState({})
+  const [contractData, setContractData] = useState({});
   const [formikValues, setFormikValues] = useState({});
   const [userInfo, setUserInfo] = useState(userFlow);
   const [stripeRequest, setStripeRequest] = useState(null);
@@ -33,30 +33,47 @@ function StateProvider({ children }) {
   const [rebillFetching, setRebillFetching] = useState(null);
   const [ptpFetching, setPtpFetching] = useState(null);
   const [CTCPayment, setCTCPayment] = useState(false);
-  const [downloadLinkCTCPayment, setDownloadLinkCTCPayment] = useState(null)
-  const [paymentConfig, setPaymentConfig] = useState(null)
+  const [downloadLinkCTCPayment, setDownloadLinkCTCPayment] = useState(null);
+  const [paymentConfig, setPaymentConfig] = useState(null);
+  const [renewSession, setRenewSession] = useState(null);
   const appRef = useRef(null);
   const formRef = useRef(null);
 
   return (
     <AppContext.Provider
       value={{
-        options,setOptions,
-        formikValues,setFormikValues,
-        userInfo,setUserInfo,
-        stripeRequest,setStripeRequest,
-        checkoutLink,setCheckoutLink,
+        options,
+        setOptions,
+        formikValues,
+        setFormikValues,
+        userInfo,
+        setUserInfo,
+        stripeRequest,
+        setStripeRequest,
+        checkoutLink,
+        setCheckoutLink,
         appRef,
         formRef,
-        appEnv,setAppEnv,
-        stepNumber,setStepNumber,
-        contractData, setContractData,
-        openBlockLayer, setOpenBlockLayer,
-        rebillFetching, setRebillFetching,
-        CTCPayment, setCTCPayment,
-        downloadLinkCTCPayment, setDownloadLinkCTCPayment,
-        paymentConfig, setPaymentConfig,
-        ptpFetching, setPtpFetching
+        appEnv,
+        setAppEnv,
+        stepNumber,
+        setStepNumber,
+        contractData,
+        setContractData,
+        openBlockLayer,
+        setOpenBlockLayer,
+        rebillFetching,
+        setRebillFetching,
+        CTCPayment,
+        setCTCPayment,
+        downloadLinkCTCPayment,
+        setDownloadLinkCTCPayment,
+        paymentConfig,
+        setPaymentConfig,
+        ptpFetching,
+        setPtpFetching,
+        renewSession,
+        setRenewSession,
       }}
     >
       {children}

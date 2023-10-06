@@ -166,6 +166,8 @@ const Checkout = () => {
       const { GET_PAYMENT_LINK } = URLS;
       const { data } = await axios.get(`${GET_PAYMENT_LINK}/${so}`);
 
+      console.log(contractData);
+
       setCheckoutPayment(data.checkout);
       setCustomer(data.customer);
       setSale(contractData.sale);
@@ -466,7 +468,17 @@ const Checkout = () => {
                   </div>
                   <hr className='is-divider-dashed' />
 
-                  <div className='px-5 py-2 invoice-text is-flex is-justify-content-end'>
+                  <div className='px-5 py-2 invoice-text is-flex is-justify-content-end '>
+                    {contractData?.sale?.Discount > 0 && (
+                      <>
+                        <h4 className='is-4 invoice-text mb-2 mr-2'>Descuento</h4>
+                        <span className='has-text-weight-bold item-deail-text mr-2'>
+                          {new Intl.NumberFormat('MX', currencyOptions).format(
+                            contractData.sale.Discount,
+                          )}
+                        </span>
+                      </>
+                    )}
                     <h4 className='is-4 invoice-text mb-2 mr-2'>Total</h4>
                     <span className='has-text-weight-bold item-deail-text'>
                       {new Intl.NumberFormat('MX', currencyOptions).format(totalPrice)}

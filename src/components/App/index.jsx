@@ -11,6 +11,7 @@ function App() {
   return (
     <Routes>
       <Route path='/:id' element={<PasarelaApp />} />
+      <Route path='ptp/:id/renew' element={<PasarelaApp />} />
       <Route path='checkout/:so' element={<Checkout />} />
       <Route path='checkout/ptp/:so' element={<CheckoutPTP />} />
       <Route path='status/:payment_id' element={<Status />} />
@@ -23,7 +24,8 @@ function App() {
             <div>
               <Container>
                 <Notification color='danger'>
-                  No se pudo encontrar el proceso de compra o no tiene los pasos necesarios para avanzar con el pago.
+                  No se pudo encontrar el proceso de compra o no tiene los pasos necesarios para
+                  avanzar con el pago.
                 </Notification>
               </Container>
             </div>

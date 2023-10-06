@@ -14,12 +14,12 @@ function SelectPaymentModeStep() {
   const { id } = useParams();
   const location = useLocation();
   const { setFieldValue } = useFormikContext();
-  const [contractId, setContractId] = useState(0)
+  const [contractId, setContractId] = useState(0);
 
   useEffect(() => {
     if (!location.pathname.includes('vp')) {
-      setFieldValue('contractId', id);
-      setContractId(id)
+      setFieldValue('contractId', id.replace(/^.*TEST_(.*?)_RT.*$/, '$1'));
+      setContractId(id.replace(/^.*TEST_(.*?)_RT.*$/, '$1'));
     }
   }, [id]);
 
@@ -36,8 +36,9 @@ function SelectPaymentModeStep() {
           {options.paymentModeOptions.map(({ ...props }) => (
             <ButtonField
               {...props}
-              className={`grid-payment_method-item button ${props.value === stepThree.value && 'active'
-                }`}
+              className={`grid-payment_method-item button ${
+                props.value === stepThree.value && 'active'
+              }`}
               showText={true}
               id={props.idElement}
               name='mod'
