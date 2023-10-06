@@ -173,7 +173,7 @@ function PasarelaApp() {
   const getInitialValuesByMethodPayment = (modPayment) => {
     const commonAttributes = {
       fullName: contractData?.contact?.Full_Name ?? '',
-      phone: contractData?.contact?.Phone ?? '',
+      phone: '',
       address: contractData?.sale?.Mailing_Street ?? '',
       dni: contractData?.contact?.Identificacion ?? '',
       email: contractData?.contact?.Email ?? '',
