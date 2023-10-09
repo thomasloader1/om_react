@@ -174,7 +174,7 @@ function PasarelaApp() {
     const commonAttributes = {
       fullName: contractData?.contact?.Full_Name ?? '',
       phone: '',
-      address: contractData?.sale?.Mailing_Street ?? '',
+      address: contractData?.contact?.Mailing_Street ?? '',
       dni: contractData?.contact?.Identificacion ?? '',
       email: contractData?.contact?.Email ?? '',
       zip: contractData?.contact?.Mailing_Zip ?? '',
