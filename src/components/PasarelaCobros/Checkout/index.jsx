@@ -481,7 +481,9 @@ const Checkout = () => {
                     )}
                     <h4 className='is-4 invoice-text mb-2 mr-2'>Total</h4>
                     <span className='has-text-weight-bold item-deail-text'>
-                      {new Intl.NumberFormat('MX', currencyOptions).format(totalPrice)}
+                      {new Intl.NumberFormat('MX', currencyOptions).format(
+                        totalPrice - contractData.sale.Discount,
+                      )}
                     </span>
                   </div>
                 </div>
