@@ -140,7 +140,7 @@ export const paymentOptions = [
     idInputElement: '',
     value: 'PlaceToPay',
     allowedCountries: ['ecu'],
-    disabledCountries: ['ecu'],
+    disabledCountries: [],
   },
   {
     img: 'wp',

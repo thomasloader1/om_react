@@ -131,10 +131,10 @@ function ResumeTicket({ forPayment }) {
               <label>MONTO TOTAL DEL CONTRATO</label>
               <h4>{sale.Grand_Total}</h4>
             </div>
-            {forPayment.includes('PlaceToPay') && (
+            {forPayment.includes('PlaceToPay') && renewSession?.installments_paid && (
               <div id='mesesTotales_resume' className='column is-one-third finalResume-item'>
                 <label>COBRADOS MESES TOTALES</label>
-                <h4>{renewSession.installments_paid}</h4>
+                <h4>{renewSession?.installments_paid}</h4>
               </div>
             )}
             <div id='mesesTotales_resume' className='column is-one-third finalResume-item'>
