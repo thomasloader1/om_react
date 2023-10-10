@@ -105,8 +105,6 @@ function PasarelaApp() {
               country: 'Ecuador',
               renewSuscription: true,
               quotes: data.renewSession.subscriptions.length,
-              contact: contractData?.contact,
-              sale: contractData?.sale,
             }));
             setOptions((prevState) => ({
               ...prevState,
