@@ -16,12 +16,14 @@ const {
   REACT_APP_API_PTP_SESSION_SU_PAYMENT,
   REACT_APP_API_PTP_SESSION,
   REACT_APP_API_PTP_SESSION_SU,
+  REACT_APP_API_PTP_RENEW_SESSION_SU,
   REACT_APP_OCEANO_PTP_GENERATELINK,
   REACT_APP_OCEANO_PTP_GETPAYMENTLINK,
 } = process.env;
 
 export const URLS = {
   SUSCRIPTION: generateURL(REACT_APP_API_PTP_SESSION_SU),
+  RENEW_SUSCRIPTION: generateURL(REACT_APP_API_PTP_RENEW_SESSION_SU),
   PAYMENT: generateURL(REACT_APP_API_PTP_SESSION),
   DEBIT: generateURL(REACT_APP_API_PTP_SESSION_SU_PAYMENT),
   GENERATE_LINK: generateURL(REACT_APP_OCEANO_PTP_GENERATELINK),
@@ -48,7 +50,7 @@ export const createSession = async (body) => {
 };
 
 export const renewSession = async (body) => {
-  const sessionUrl = body.payment.type.includes('Tradicional') ? URLS.PAYMENT : URLS.SUSCRIPTION;
+  const sessionUrl = URLS.RENEW_SUSCRIPTION;
 
   try {
     const res = await axios.post(sessionUrl, { ...body });
