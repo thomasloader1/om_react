@@ -70,8 +70,8 @@ export const makePaymentSession = async (formikValues) => {
   const type = formikValues.mod.includes('anticipo') ? 'Parcialidad' : formikValues.mod;
   const quotes = formikValues.quotes ? formikValues.quotes : 1;
   const rest_quotes = quotes - 1;
-  const reference =
-    formikValues?.renewSubscription?.reference ?? `TEST_${formikValues.sale.SO_Number}`;
+
+  const reference = formikValues?.renewSession?.reference ?? `TEST_${formikValues.sale.SO_Number}`;
   const payer = {
     name: formikValues.contact.First_Name,
     surname: formikValues.contact.Last_Name,
@@ -85,7 +85,7 @@ export const makePaymentSession = async (formikValues) => {
   };
 
   const payment = {
-    total: formikValues.sale.Grand_Total,
+    total: formikValues?.renewSession?.total ?? formikValues.sale.Grand_Total,
     type,
     rest_quotes,
     quotes,
@@ -96,7 +96,7 @@ export const makePaymentSession = async (formikValues) => {
     payment.remaining_installments = formikValues.advanceSuscription.payPerMonthAdvance;
   } else {
     if (formikValues.renewSuscription) {
-      let paymentCalculate = Number(formikValues.renewSuscription.remaining_installments);
+      let paymentCalculate = Number(formikValues.renewSession.remaining_installments);
       payment.remaining_installments = paymentCalculate.toFixed(2);
     } else {
       let paymentCalculate = payment.total / payment.quotes;
