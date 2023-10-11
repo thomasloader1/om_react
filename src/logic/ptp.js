@@ -107,7 +107,7 @@ export const makePaymentSession = async (formikValues) => {
   }
 
   try {
-    if (formikValues.renewSubscription) {
+    if (formikValues.renewSuscription) {
       const data = await renewSession({
         so: reference,
         payer,
@@ -128,8 +128,20 @@ export const makePaymentSession = async (formikValues) => {
   }
 };
 
+export const rejectSession = async (body) => {
+  try {
+    const res = await axios.put(`/api/placetopay/${body.reference}`, { ...body });
+    console.log({ rejectSession: res });
+    return res;
+  } catch (e) {
+    console.log(e);
+    return e.response;
+  }
+};
+
 export const debitFirstPayment = async (body) => {
   try {
+    console.log({ body });
     const res = await axios.post(URLS.DEBIT, { ...body });
     console.log({ debitFirstPayment: res });
     return res;

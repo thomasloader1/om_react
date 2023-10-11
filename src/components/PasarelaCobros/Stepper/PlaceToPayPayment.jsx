@@ -3,6 +3,7 @@ import {
   debitFirstPayment,
   generatePaymentLink,
   makePaymentSession,
+  rejectSession,
   updateZohoContract,
 } from '../../../logic/ptp';
 import { AppContext } from '../Provider/StateProvider';
@@ -34,7 +35,7 @@ const PlaceToPayPayment = () => {
   useEffect(() => {
     const makeFirstPayment = async (requestId) => {
       try {
-        const res = await debitFirstPayment({ requestId });
+        const res = await debitFirstPayment({ ...requestId });
         console.log(res);
         setPtpFetching(res.data);
         const responseOfServer = res?.data ?? res;
@@ -76,17 +77,21 @@ const PlaceToPayPayment = () => {
           const body = {
             requestId,
             street: values.address,
+            renewSuscription: formikValues?.renewSuscription ?? false,
           };
 
           try {
             makeFirstPayment(body);
           } catch (error) {
             console.log(error);
+
             fireAlert('Error', error, 'error');
           }
 
           return;
         }
+
+        rejectSession(response);
 
         fireToast(`El estado de la sesion cambio a ${status}`, 'info');
       });
@@ -234,7 +239,7 @@ const PlaceToPayPayment = () => {
           disabled={STATUS_BTN.SESSION}
           onClick={handlePaymentSession}
         >
-          Nueva sesion de pago
+          {formikValues?.renewSuscription ? 'Activar sesion' : 'Nueva sesion de pago'}
         </button>
 
         {processURL && (
