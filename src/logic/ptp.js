@@ -112,6 +112,7 @@ export const makePaymentSession = async (formikValues) => {
         so: reference,
         payer,
         payment,
+        contractId: formikValues.contractId,
       });
       return data;
     }
@@ -120,6 +121,7 @@ export const makePaymentSession = async (formikValues) => {
       so: reference,
       payer,
       payment,
+      contractId: formikValues.contractId,
     });
 
     return data;
