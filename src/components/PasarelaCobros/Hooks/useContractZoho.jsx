@@ -35,6 +35,7 @@ export const useContractZoho = (contractId, runEffect = true) => {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
         });
+        console.log(response);
 
         setData(response.data);
         ctx.setFormikValues((prevState) => ({ ...prevState, ...response.data }));

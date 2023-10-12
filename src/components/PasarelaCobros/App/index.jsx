@@ -102,6 +102,7 @@ function PasarelaApp() {
             setFormikValues((prevState) => ({
               ...prevState,
               mod: 'Suscripción',
+              payment_method: 'PlaceToPay',
               country: 'Ecuador',
               renewSuscription: true,
               quotes: data.renewSession.subscriptions.length,

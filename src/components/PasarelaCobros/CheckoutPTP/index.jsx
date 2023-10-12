@@ -38,7 +38,7 @@ const CheckoutPTP = () => {
   const needRunEffect = !pathname.includes('vp');
   const { loading, data: contractData } = useContractZoho(so, needRunEffect);
 
-  const isExpired = new Date(checkoutPayment?.transaction?.expiration_date) < new Date();
+  const isExpired = new Date(checkoutPayment?.transaction?.expiration_date) > new Date();
 
   const valuesAdvanceSuscription = ({ total, checkoutPayment }) => {
     console.group('valuesAdvanceSuscription');
@@ -168,7 +168,7 @@ const CheckoutPTP = () => {
   useEffect(() => {
     const makeFirstPayment = async (requestId) => {
       try {
-        const res = await debitFirstPayment({ requestId });
+        const res = await debitFirstPayment({ ...requestId });
         console.log({ res });
         fireToast('Cobro existoso', 'success');
         const paymentData = JSON.parse(res.data.updateRequestSession.paymentData);
