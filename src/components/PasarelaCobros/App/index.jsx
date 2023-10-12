@@ -92,7 +92,7 @@ function PasarelaApp() {
           const res = await fetch(`/api/placetopay/${id}/renew`);
           if (res.ok) {
             const data = await res.json();
-            console.log('Sesión renovada:', data);
+            console.log('Sesión renovada:', data.renewSession.contract_id, data);
             setRenewSession(data.renewSession);
             const sideItemsForPTP = makeCustomSideItemOptions(4, [
               { value: 'Ecuador' },
@@ -105,6 +105,7 @@ function PasarelaApp() {
               country: 'Ecuador',
               renewSuscription: true,
               quotes: data.renewSession.subscriptions.length,
+              contractId: data.renewSession.contract_id,
             }));
             setOptions((prevState) => ({
               ...prevState,

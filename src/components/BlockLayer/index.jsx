@@ -23,9 +23,9 @@ const BlockLayer = () => {
   });
   // console.log({formikValues})
 
-  const {} = handleCheckoutData(ptpCurrencyOptions, formikValues, formikValues.advanceSuscription);
+  //const {} = handleCheckoutData(ptpCurrencyOptions, formikValues, formikValues.advanceSuscription);
 
-  const invoiceDetail = generateProp();
+  //const invoiceDetail = generateProp();
 
   useEffect(() => {
     const title = fetchBlock.type === 'paymentLink' ? 'Link Generado' : 'Pago Realizado';

@@ -47,7 +47,7 @@ const PlaceToPayPayment = () => {
           const data = {
             requestId: requestId.requestId,
             adjustment: 0,
-            contractId: values.contractId,
+            contractId: formikValues.contractId,
             street: values.address,
           };
           const bodyZoho = makePostUpdateZohoPTP(data);
