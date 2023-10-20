@@ -16,7 +16,7 @@ export const useContractZoho = (contractId, runEffect = true) => {
   const [error, setError] = useState(false);
   const { setContractData, ...ctx } = useContext(AppContext);
 
-  const contractIdClean = contractId.replace(/^.*TEST_(.*?)_RT.*$/, '$1');
+  const contractIdClean = contractId.replace(/^.*T_(.*?)_RT.*$/, '$1');
 
   const body = new FormData();
   body.append('key', '9j9fj0Do204==3fja134');

@@ -3,6 +3,7 @@ import {
   debitFirstPayment,
   generatePaymentLink,
   makePaymentSession,
+  ptpStates,
   rejectSession,
   updateZohoContract,
 } from '../../../logic/ptp';
@@ -24,8 +25,11 @@ const PlaceToPayPayment = () => {
   const [ptpEffect, setPtpEffect] = useState(true);
 
   const STATUS_BTN = {
-    SESSION: statusRequestPayment.includes('PENDING') || Object.keys(errors).length > 0,
-    INIT_PAYMENT: statusRequestPayment.includes('REJECTED'),
+    SESSION:
+      statusRequestPayment.includes(ptpStates.PENDING) ||
+      statusRequestPayment.includes(ptpStates.OK) ||
+      Object.keys(errors).length > 0,
+    INIT_PAYMENT: statusRequestPayment.includes(ptpStates.REJECT),
   };
 
   const [phoneNumber, setPhoneNumber] = useState(null);
@@ -41,7 +45,7 @@ const PlaceToPayPayment = () => {
         const responseOfServer = res?.data ?? res;
         console.log({ responseOfServer });
 
-        if (responseOfServer.statusPayment.includes('APPROVED')) {
+        if (responseOfServer.statusPayment.includes(ptpStates.OK)) {
           fireToast(res.data.result, 'success');
 
           const data = {
@@ -49,9 +53,16 @@ const PlaceToPayPayment = () => {
             adjustment: 0,
             contractId: formikValues.contractId,
             street: values.address,
+            is_suscri: !formikValues.mod.includes('Tradicional'),
           };
           const bodyZoho = makePostUpdateZohoPTP(data);
-          updateZohoContract(bodyZoho);
+          const zohoResponse = await updateZohoContract(bodyZoho);
+          if (zohoResponse.contact && zohoResponse.contract)
+            fireToast(
+              `Contacto ID: ${zohoResponse?.contact?.id} y Contrato id: ${zohoResponse?.contract?.id} se actualizados correctamente`,
+              'success',
+              50000,
+            );
 
           setOpenBlockLayer(true);
         } else {
@@ -71,7 +82,7 @@ const PlaceToPayPayment = () => {
         const { status } = response.status;
         setStatusRequestPayment(status);
 
-        if (status.includes('APPROVED')) {
+        if (status.includes(ptpStates.OK)) {
           const { requestId } = response;
 
           const body = {
@@ -137,7 +148,7 @@ const PlaceToPayPayment = () => {
       console.log({ payment });
       setPtpSession(payment);
       setProcessURL(payment[0].processUrl);
-      setStatusRequestPayment('PENDING');
+      setStatusRequestPayment(ptpStates.PENDING);
 
       fireToast('Sesion creada', 'success');
     } catch (e) {

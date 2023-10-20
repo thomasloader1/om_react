@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { generateURL } from '../components/PasarelaCobros/Helpers/generateURL';
 import availableCards from '../img/pasarelaCobros/imgpsh_fullsize_anim.png';
+import { generateReferencePTP } from '../components/PasarelaCobros/Helpers/generateReferencePTP';
 
 export const ptpImages = {
   availableCards,
@@ -9,6 +10,13 @@ export const ptpImages = {
 export const ptpCurrencyOptions = {
   style: 'currency',
   currency: 'USD',
+};
+
+export const ptpStates = {
+  OK: 'APPROVED',
+  PENDING: 'PENDING',
+  REJECT: 'REJECTED',
+  FAIL: 'FAILED',
 };
 
 const {
@@ -73,7 +81,8 @@ export const makePaymentSession = async (formikValues) => {
   const quotes = formikValues.quotes ? formikValues.quotes : 1;
   const rest_quotes = quotes - 1;
 
-  const reference = formikValues?.renewSession?.reference ?? `TEST_${formikValues.sale.SO_Number}`;
+  const reference =
+    formikValues?.renewSession?.reference ?? generateReferencePTP(formikValues.sale.SO_Number);
   const payer = {
     name: formikValues.contact.First_Name,
     surname: formikValues.contact.Last_Name,

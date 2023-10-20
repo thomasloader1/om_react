@@ -189,9 +189,10 @@ export const makePostUpdateZohoCTC = (formikValues, contractData, userInfo) => {
 };
 
 export const makePostUpdateZohoPTP = (data) => {
-  const { requestId, adjustment, contractId, street } = data;
+  const { requestId, adjustment, contractId, street, is_suscri } = data;
 
   return {
+    is_suscri,
     requestId,
     adjustment,
     contractId,
