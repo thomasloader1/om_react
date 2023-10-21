@@ -36,6 +36,7 @@ function StateProvider({ children }) {
   const [downloadLinkCTCPayment, setDownloadLinkCTCPayment] = useState(null);
   const [paymentConfig, setPaymentConfig] = useState(null);
   const [renewSession, setRenewSession] = useState(null);
+  const [rejectedSessionPTP, setRejectedSessionPTP] = useState(null);
   const appRef = useRef(null);
   const formRef = useRef(null);
 
@@ -74,6 +75,8 @@ function StateProvider({ children }) {
         setPtpFetching,
         renewSession,
         setRenewSession,
+        rejectedSessionPTP,
+        setRejectedSessionPTP,
       }}
     >
       {children}

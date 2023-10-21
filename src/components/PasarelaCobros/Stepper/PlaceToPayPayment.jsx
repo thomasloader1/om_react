@@ -17,7 +17,14 @@ import { parsePhoneNumber } from 'react-phone-number-input';
 import { makePostUpdateZohoPTP } from '../../../logic/zoho';
 
 const PlaceToPayPayment = () => {
-  const { formikValues, setOpenBlockLayer, setPtpFetching, renewSession } = useContext(AppContext);
+  const {
+    formikValues,
+    setOpenBlockLayer,
+    setPtpFetching,
+    renewSession,
+    rejectedSessionPTP,
+    setRejectedSessionPTP,
+  } = useContext(AppContext);
   const [ptpSession, setPtpSession] = useState(null);
   const [processURL, setProcessURL] = useState(null);
   const { values, handleChange, handleBlur, touched, errors, setFieldValue } = useFormikContext();
@@ -65,6 +72,14 @@ const PlaceToPayPayment = () => {
             );
 
           setOpenBlockLayer(true);
+        } else if (responseOfServer.statusPayment.includes(ptpStates.PENDING)) {
+          const redirectState = {
+            redirect: true,
+            redirectSuffix: responseOfServer?.payment?.pendingPayment?.requestId,
+          };
+
+          fireModalAlert('Pago Pendiente', responseOfServer.result, 'warning', redirectState);
+          setStatusRequestPayment(responseOfServer.statusPayment);
         } else {
           fireAlert('Error', responseOfServer.result, 'error');
           setStatusRequestPayment(responseOfServer.statusPayment);
@@ -89,6 +104,7 @@ const PlaceToPayPayment = () => {
             requestId,
             street: values.address,
             renewSuscription: formikValues?.renewSuscription ?? false,
+            is_suscri: !formikValues?.mod?.includes('Tradicional'),
           };
 
           try {
@@ -102,8 +118,13 @@ const PlaceToPayPayment = () => {
           return;
         }
 
-        rejectSession(response);
-
+        const isRejectedSession = rejectSession(response);
+        //la referencia, el valor y el estado de la transacción
+        setRejectedSessionPTP({
+          reference: isRejectedSession?.data?.reference,
+          status: isRejectedSession?.data?.ptpResponse.status.status,
+          fullName: formikValues.contact.Full_Name,
+        });
         fireToast(`El estado de la sesion cambio a ${status}`, 'info');
       });
     }
@@ -243,6 +264,12 @@ const PlaceToPayPayment = () => {
           country={selectedCountry}
           defaultCountry='EC'
         />
+        {rejectedSessionPTP != null && (
+          <p>
+            {rejectedSessionPTP?.status} {rejectedSessionPTP?.reference}{' '}
+            {rejectedSessionPTP?.fullName}
+          </p>
+        )}
         <button
           id='ptpSession'
           className={`button is-primary mt-3 ${onRequest && 'is-loading'}`}

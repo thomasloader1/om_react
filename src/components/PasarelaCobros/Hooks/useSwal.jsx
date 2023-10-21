@@ -38,7 +38,7 @@ export function fireAlert(title, text = '', icon = 'error', timer = 3000) {
   });
 }
 
-export function fireModalAlert(title, html = '', icon = 'error') {
+export function fireModalAlert(title, html = '', icon = 'error', state = null) {
   toast.fire({
     title: <p>{title}</p>,
     toast: false,
@@ -51,6 +51,10 @@ export function fireModalAlert(title, html = '', icon = 'error') {
       if (window.location.hash.includes('/checkout/ptp')) {
         // Redireccionar a la página de inicio
         window.location.href = '/';
+      }
+
+      if (state?.redirect) {
+        window.location.href = '/status/ptp/' + state.redirectSuffix;
       }
     },
   });

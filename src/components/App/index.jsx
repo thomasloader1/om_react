@@ -6,15 +6,18 @@ import VentaPresencialApp from '../VentaPresencial/App';
 import Checkout from '../PasarelaCobros/Checkout';
 import Status from '../PasarelaCobros/Status';
 import CheckoutPTP from '../PasarelaCobros/CheckoutPTP';
+import StatusPTP from '../PasarelaCobros/StatusPTP';
 
 function App() {
   return (
     <Routes>
       <Route path='/:id' element={<PasarelaApp />} />
       <Route path='ptp/:id/renew' element={<PasarelaApp />} />
+      <Route path='ptp/:id/pending' element={<PasarelaApp />} />
       <Route path='checkout/:so' element={<Checkout />} />
       <Route path='checkout/ptp/:so' element={<CheckoutPTP />} />
       <Route path='status/:payment_id' element={<Status />} />
+      <Route path='status/ptp/:requestId' element={<StatusPTP />} />
       <Route exact path='/vp/:id' element={<PasarelaApp />} />
       <Route path='/ventapresencial' element={<VentaPresencialApp />} />
       <Route
