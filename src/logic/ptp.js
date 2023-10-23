@@ -27,6 +27,7 @@ const {
   REACT_APP_API_PTP_RENEW_SESSION_SU,
   REACT_APP_OCEANO_PTP_GENERATELINK,
   REACT_APP_OCEANO_PTP_GETPAYMENTLINK,
+  REACT_APP_OCEANO_PTP_UPDATESESSION,
 } = process.env;
 
 export const URLS = {
@@ -37,6 +38,7 @@ export const URLS = {
   GENERATE_LINK: generateURL(REACT_APP_OCEANO_PTP_GENERATELINK),
   GET_PAYMENT_LINK: generateURL(REACT_APP_OCEANO_PTP_GETPAYMENTLINK),
   UPDATE_CONTRACT: generateURL(REACT_APP_OCEANO_UPDATECONTRACT_PTP),
+  UPDATE_SESSION: generateURL(REACT_APP_OCEANO_PTP_UPDATESESSION),
 };
 
 export const createSession = async (body) => {
@@ -141,7 +143,7 @@ export const makePaymentSession = async (formikValues) => {
 
 export const rejectSession = async (body) => {
   try {
-    const res = await axios.put(`/api/placetopay/${body.reference}`, { ...body });
+    const res = await axios.put(`${URLS.UPDATE_SESSION}/${body.reference}`, { ...body });
     console.log({ rejectSession: res });
     return res;
   } catch (e) {
