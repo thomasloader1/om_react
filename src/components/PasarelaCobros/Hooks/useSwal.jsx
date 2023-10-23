@@ -54,7 +54,7 @@ export function fireModalAlert(title, html = '', icon = 'error', state = null) {
       }
 
       if (state?.redirect) {
-        window.location.href = '/status/ptp/' + state.redirectSuffix;
+        window.location.href = '/#/status/ptp/' + state.redirectSuffix;
       }
     },
   });

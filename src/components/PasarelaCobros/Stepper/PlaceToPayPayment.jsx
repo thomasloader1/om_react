@@ -81,7 +81,7 @@ const PlaceToPayPayment = () => {
           fireModalAlert('Pago Pendiente', responseOfServer.result, 'warning', redirectState);
           setStatusRequestPayment(responseOfServer.statusPayment);
         } else {
-          fireAlert('Error', responseOfServer.result, 'error');
+          fireModalAlert('Pago Rechazado', responseOfServer.result, 'error');
           setStatusRequestPayment(responseOfServer.statusPayment);
         }
       } catch (e) {
@@ -92,7 +92,8 @@ const PlaceToPayPayment = () => {
 
     if (ptpEffect) {
       setPtpEffect(false);
-      window.P.on('response', function (response) {
+
+      window.P.on('response', async function (response) {
         console.log({ response });
         const { status } = response.status;
         setStatusRequestPayment(status);
@@ -111,20 +112,19 @@ const PlaceToPayPayment = () => {
             makeFirstPayment(body);
           } catch (error) {
             console.log(error);
-
             fireAlert('Error', error, 'error');
           }
-
-          return;
         }
 
-        const isRejectedSession = rejectSession(response);
+        const isRejectedSession = await rejectSession(response);
         //la referencia, el valor y el estado de la transacción
         setRejectedSessionPTP({
-          reference: isRejectedSession?.data?.reference,
-          status: isRejectedSession?.data?.ptpResponse.status.status,
+          reference: isRejectedSession.data.reference,
+          status: isRejectedSession.data.ptpResponse.status.status,
           fullName: formikValues.contact.Full_Name,
+          payment: isRejectedSession.data.payment,
         });
+
         fireToast(`El estado de la sesion cambio a ${status}`, 'info');
       });
     }
@@ -264,11 +264,13 @@ const PlaceToPayPayment = () => {
           country={selectedCountry}
           defaultCountry='EC'
         />
-        {rejectedSessionPTP != null && (
-          <p>
-            {rejectedSessionPTP?.status} {rejectedSessionPTP?.reference}{' '}
-            {rejectedSessionPTP?.fullName}
-          </p>
+        {rejectedSessionPTP && (
+          <div id="rejectedSessionPTP" className="notification is-danger">
+            <p><strong>Estado del pago:</strong> {rejectedSessionPTP.payment.status}</p>
+            <p><strong>Referencia de pago:</strong> {rejectedSessionPTP.payment.reference}</p>
+            <p><strong>Monto:</strong> {rejectedSessionPTP.payment.currency} {rejectedSessionPTP.payment.total}</p>
+            <p><strong>Nombre de usuario:</strong> {rejectedSessionPTP.fullName}</p>
+          </div>
         )}
         <button
           id='ptpSession'

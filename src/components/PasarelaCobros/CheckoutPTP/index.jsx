@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { useLocation, useParams } from 'react-router';
 import axios from 'axios';
@@ -8,7 +8,7 @@ import {
   debitFirstPayment,
   ptpCurrencyOptions,
   ptpImages,
-  updateZohoContract,
+  updateZohoContract, rejectSession,
 } from '../../../logic/ptp';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
@@ -17,10 +17,12 @@ import InvoiceDetail from './InvoiceDetail';
 import { makePostUpdateZohoPTP } from '../../../logic/zoho';
 import PaymentElement from './PaymentElement';
 import { handleCheckoutData } from '../Helpers/handleCheckoutData';
+import {AppContext} from "../Provider/StateProvider";
 
 const { logo } = IMAGES;
 
 const CheckoutPTP = () => {
+  const {rejectedSessionPTP,setRejectedSessionPTP} = useContext(AppContext);
   const [checkoutPayment, setCheckoutPayment] = useState(null);
   const [processURL, setProcessURL] = useState(null);
 
@@ -190,7 +192,7 @@ const CheckoutPTP = () => {
 
     if (ptpEffect) {
       setPtpEffect(false);
-      window.P.on('response', function (response) {
+      window.P.on('response', async function (response) {
         console.log({ response });
         const { status } = response.status;
         setStatusRequestPayment(status);
@@ -210,6 +212,15 @@ const CheckoutPTP = () => {
 
           return;
         }
+
+        const isRejectedSession = await rejectSession(response);
+        //la referencia, el valor y el estado de la transacción
+        setRejectedSessionPTP({
+          reference: isRejectedSession.data.reference,
+          status: isRejectedSession.data.ptpResponse.status.status,
+          fullName: contractData.contact.Full_Name,
+          payment: isRejectedSession.data.payment,
+        });
 
         fireToast(`El estado de la sesion cambio a ${status}`, 'info');
       });
@@ -323,6 +334,15 @@ const CheckoutPTP = () => {
                     checkoutPayment={checkoutPayment}
                     handleInitPayment={handleInitPayment}
                   />
+                )}
+
+                {rejectedSessionPTP && (
+                    <div id="rejectedSessionPTP" className="notification is-danger">
+                      <p><strong>Estado del pago:</strong> {rejectedSessionPTP.payment.status}</p>
+                      <p><strong>Referencia de pago:</strong> {rejectedSessionPTP.payment.reference}</p>
+                      <p><strong>Monto:</strong> {rejectedSessionPTP.payment.currency} {rejectedSessionPTP.payment.total}</p>
+                      <p><strong>Nombre de usuario:</strong> {rejectedSessionPTP.fullName}</p>
+                    </div>
                 )}
 
                 <p className='invoice-text mt-5 mx-3 has-text-centered'>
