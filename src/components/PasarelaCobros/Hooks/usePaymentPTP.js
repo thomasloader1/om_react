@@ -1,6 +1,12 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { fireModalAlert, fireToast } from '../Hooks/useSwal';
+import { generateURL } from '../Helpers/generateURL';
+
+const { REACT_APP_PTP_STATUS_PAYMENT } = process.env;
+const URLS = {
+  PTP_STATUS: generateURL(REACT_APP_PTP_STATUS_PAYMENT),
+};
 
 export const usePaymentPTP = (requestId, runEffect = true) => {
   const [data, setData] = useState({});
@@ -9,7 +15,7 @@ export const usePaymentPTP = (requestId, runEffect = true) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const URL = `/api/placetopay/getStatus/${requestId}`;
+      const URL = `${URLS.PTP_STATUS}/${requestId}`;
 
       try {
         const response = await axios.get(URL);

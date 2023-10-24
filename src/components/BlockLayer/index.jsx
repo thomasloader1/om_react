@@ -4,7 +4,7 @@ import { AppContext } from '../PasarelaCobros/Provider/StateProvider';
 import { MdContentCopy } from 'react-icons/md';
 import { fireToast } from '../PasarelaCobros/Hooks/useSwal';
 import PaymentElement from '../PasarelaCobros/CheckoutPTP/PaymentElement';
-import InvoiceDetail, { generateProp } from '../PasarelaCobros/CheckoutPTP/InvoiceDetail';
+import InvoiceDetail from '../PasarelaCobros/CheckoutPTP/InvoiceDetail';
 import { handleCheckoutData } from '../PasarelaCobros/Helpers/handleCheckoutData';
 import { ptpCurrencyOptions } from '../../logic/ptp';
 

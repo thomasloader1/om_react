@@ -137,9 +137,11 @@ export const getCurrency = (country) => {
     },
   };
 
-  console.group('getCurrency');
+  /*
+   console.group('getCurrency');
   console.log({ country }, countries[country]);
   console.groupEnd();
+   */
 
   if (country in countries) {
     return countries[country];

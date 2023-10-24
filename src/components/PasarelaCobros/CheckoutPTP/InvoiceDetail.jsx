@@ -8,15 +8,18 @@ export const generateProp = (advancePayment, formattedFirstPay, formattedPayPerM
 });
 
 const InvoiceDetail = ({ invoiceDetail }) => {
+  console.group("InvoiceDetail")
   const { advancePayment, formattedFirstPay, formattedPayPerMonth } = invoiceDetail;
   const { ptpFetching } = useContext(AppContext);
   const [info, setInfo] = useState({});
-  console.log({ advancePayment, ptpFetching });
+  console.log({hasAdvancedPayment: !advancePayment ,advancePayment, ptpFetching, invoiceDetail });
+
   useEffect(() => {
     if (advancePayment?.info) {
       setInfo(advancePayment.info);
     }
   }, []);
+
   if (!advancePayment) {
     const {
       status,
@@ -88,6 +91,8 @@ const InvoiceDetail = ({ invoiceDetail }) => {
       )}
     </>
   );
+  console.groupEnd()
+
 };
 
 export default InvoiceDetail;

@@ -11,6 +11,7 @@ const {
 } = process.env;
 
 export const useContractZoho = (contractId, runEffect = true) => {
+  console.group(`useContractZoho - run: ${runEffect}`)
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -35,7 +36,7 @@ export const useContractZoho = (contractId, runEffect = true) => {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
         });
-        console.log(response);
+        console.log({ response });
 
         setData(response.data);
         ctx.setFormikValues((prevState) => ({ ...prevState, ...response.data }));
@@ -44,13 +45,13 @@ export const useContractZoho = (contractId, runEffect = true) => {
         setLoading(false);
       } catch (e) {
         console.error({ e });
-        fireModalAlert(e.response.data.detail);
+        const errorMessage = e.response.data.detail ?? e.response.data.message
+        fireModalAlert(errorMessage);
         setError(e.response.data);
         setLoading(true);
-      } finally {
       }
     };
-    ////console.log({ runEffect })
+
     if (runEffect) {
       fetchData();
     } else {
@@ -72,6 +73,7 @@ export const useContractZoho = (contractId, runEffect = true) => {
       }
     };
   }, [contractId]);
+  console.groupEnd("useContractZoho")
 
   return { data, loading, error };
 };

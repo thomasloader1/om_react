@@ -1,37 +1,26 @@
 import React, {useContext, useEffect, useState} from 'react';
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { useLocation, useParams } from 'react-router';
-import axios from 'axios';
 import { fireModalAlert, fireToast } from '../Hooks/useSwal';
 import {
-  URLS,
   debitFirstPayment,
-  ptpCurrencyOptions,
   ptpImages,
-  updateZohoContract, rejectSession,
+  updateZohoContract, rejectSession, ptpStates,
 } from '../../../logic/ptp';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
-import { getCurrency } from '../../../logic/rebill';
 import InvoiceDetail from './InvoiceDetail';
 import { makePostUpdateZohoPTP } from '../../../logic/zoho';
-import PaymentElement from './PaymentElement';
-import { handleCheckoutData } from '../Helpers/handleCheckoutData';
 import {AppContext} from "../Provider/StateProvider";
+import {useFetchPaymentLink} from "../Hooks/useFetchPaymentLink";
+import PaymentStatusPTP from "../PaymentStatusPTP/PaymentStatusPTP";
 
 const { logo } = IMAGES;
+const { REACT_APP_PTP_CHECKOUT_URL } = process.env
 
 const CheckoutPTP = () => {
-  const {rejectedSessionPTP,setRejectedSessionPTP} = useContext(AppContext);
-  const [checkoutPayment, setCheckoutPayment] = useState(null);
-  const [processURL, setProcessURL] = useState(null);
-
-  const [products, setProducts] = useState(null);
-  const [advancePayment, setAdvancePayment] = useState({});
-  const [paymentAction, setPaymentAction] = useState(false);
-  const [currencyOptions, setCurrencyOptions] = useState(ptpCurrencyOptions);
+  const {rejectedSessionPTP, setRejectedSessionPTP} = useContext(AppContext);
   const [ptpEffect, setPtpEffect] = useState(true);
-  const [invoiceDetail, setInvoiceDetail] = useState(null);
   const [statusRequestPayment, setStatusRequestPayment] = useState(null);
 
   const { so } = useParams();
@@ -39,151 +28,62 @@ const CheckoutPTP = () => {
 
   const needRunEffect = !pathname.includes('vp');
   const { loading, data: contractData } = useContractZoho(so, needRunEffect);
+  const {
+    loading: loadingPL,
+    products,
+    checkoutPayment,
+    processURL,
+    advancePayment ,
+    invoiceDetail,
+    currencyOptions
+  } = useFetchPaymentLink(!loading, so,contractData);
 
-  const isExpired = new Date(checkoutPayment?.transaction?.expiration_date) > new Date();
-
-  const valuesAdvanceSuscription = ({ total, checkoutPayment }) => {
-    console.group('valuesAdvanceSuscription');
-    console.log({ total });
-    console.groupEnd();
-    const { quotes, type } = checkoutPayment;
-
-    const isAdvanceSuscription = type.includes('Suscripción con anticipo');
-    const isSuscription = type.includes('Suscripción') && !type.includes('anticipo');
-    const isTraditional = type.includes('Tradicional');
-
-    const detailValues = {
-      isAdvanceSuscription,
-      isSuscription,
-      isTraditional,
-      info: {},
-    };
-
-    if (isAdvanceSuscription) {
-      const quoteForMonth = Math.floor(total / quotes);
-      const remainingQuotes = quotes === 1 ? 1 : quotes - 1;
-
-      const firstQuoteDiscount = Math.floor(quoteForMonth / 2);
-      const remainingAmountToPay = total - firstQuoteDiscount;
-      const payPerMonthAdvance = Math.floor(remainingAmountToPay / remainingQuotes);
-      const adjustmentPayment = parseFloat(
-        (payPerMonthAdvance * remainingQuotes + firstQuoteDiscount - total).toFixed(2),
-      );
-
-      detailValues.info = {
-        remainingQuotes,
-        firstQuoteDiscount,
-        remainingAmountToPay,
-        payPerMonthAdvance,
-        adjustmentPayment,
-      };
-    } else if (isSuscription) {
-      const quoteForMonth = Math.floor(total / quotes);
-      const remainingQuotes = quotes === 1 ? 1 : quotes - 1;
-      const payPerMonthAdvance = quoteForMonth;
-      const adjustmentPayment = parseFloat((payPerMonthAdvance * quotes - total).toFixed(2));
-
-      detailValues.info = {
-        quoteForMonth,
-        remainingQuotes,
-        payPerMonthAdvance,
-        adjustmentPayment,
-      };
-    } else {
-      const quoteForMonth = Math.floor(total / 1);
-
-      const payPerMonthAdvance = quoteForMonth;
-      const adjustmentPayment = parseFloat((payPerMonthAdvance - total).toFixed(2));
-
-      detailValues.info = {
-        quoteForMonth,
-        payPerMonthAdvance,
-        adjustmentPayment,
-      };
-    }
-
-    return detailValues;
-  };
-
-  useEffect(() => {
-    if (!loading && !paymentAction) {
-      fetchPaymentLink();
-    }
-
-    if (paymentAction) {
-      fetchPaymentLink();
-    }
-
-    async function fetchPaymentLink() {
-      const { GET_PAYMENT_LINK } = URLS;
-      try {
-        const { data } = await axios.get(`${GET_PAYMENT_LINK}/${so}`);
-
-        const auxCheckoutPayment = { ...data.checkout, sale: contractData.sale };
-
-        console.log(data);
-
-        setCheckoutPayment(auxCheckoutPayment);
-        setProducts(contractData.products);
-        setProcessURL(
-          `${data.checkout.transaction.requestId}/${data.checkout.transaction.processUrl}`,
-        );
-
-        const inscription = valuesAdvanceSuscription({
-          total: contractData.sale?.Grand_Total,
-          checkoutPayment: data.checkout,
-        });
-
-        setAdvancePayment(inscription);
-
-        const mergedData = {
-          paymentLinkData: { ...data },
-          ZohoData: { ...contractData },
-          advanceSuscription: inscription,
-        };
-
-        const { currency } = getCurrency(data.checkout.country);
-        setCurrencyOptions((prevState) => ({ ...prevState, currency }));
-
-        // setTicketData(mergedData);
-        //  setFetchContent(false);
-
-        const { totalMonths, formattedFirstPay, formattedPayPerMonth, formattedAmount } =
-          handleCheckoutData(currencyOptions, auxCheckoutPayment, inscription);
-
-        setInvoiceDetail({
-          advancePayment,
-          formattedFirstPay,
-          formattedPayPerMonth,
-          checkoutPayment,
-          totalMonths,
-          formattedAmount,
-        });
-
-        const regex = /(Rechazado|pending)/i;
-      } catch (error) {
-        fireModalAlert('Error', error.message);
-      }
-    }
-  }, [contractData, paymentAction]);
 
   useEffect(() => {
     const makeFirstPayment = async (requestId) => {
       try {
         const res = await debitFirstPayment({ ...requestId });
+
         console.log({ res });
-        fireToast('Cobro existoso', 'success');
-        const paymentData = JSON.parse(res.data.updateRequestSession.paymentData);
-        const street = paymentData.address.street;
-        console.log(street);
-        const data = {
-          requestId: requestId.requestId,
-          adjustment: 0,
-          contractId: so,
-          street,
-        };
-        const bodyZoho = makePostUpdateZohoPTP(data);
-        updateZohoContract(bodyZoho);
+        const statusPaymentPTP = res.data.statusPayment;
+        const transactionPTP = checkoutPayment.transaction ?? res.data.updateRequestSession;
+
+        if (statusPaymentPTP.includes(ptpStates.OK)) {
+          fireToast(res.data.result, 'success');
+
+          const paymentUserData = JSON.parse(transactionPTP.paymentData)
+
+          const data = {
+            requestId: requestId.requestId,
+            adjustment: 0,
+            contractId: transactionPTP.contract_id,
+            street: paymentUserData.street,
+            is_suscri: !transactionPTP.type.includes('Tradicional'),
+          };
+          const bodyZoho = makePostUpdateZohoPTP(data);
+          const zohoResponse = await updateZohoContract(bodyZoho);
+
+          if (zohoResponse.contact && zohoResponse.contract)
+            fireToast(
+                `Contacto ID: ${zohoResponse?.contact?.id} y Contrato id: ${zohoResponse?.contract?.id} se actualizados correctamente`,
+                'success',
+                50000,
+            );
+
+          //setOpenBlockLayer(true);
+        } else if (statusPaymentPTP.includes(ptpStates.PENDING)) {
+          const redirectState = {
+            redirect: true,
+            redirectSuffix: res.data?.payment?.pendingPayment?.requestId,
+          };
+
+          fireModalAlert('Pago Pendiente', res.data.result, 'warning', redirectState);
+          setStatusRequestPayment(statusPaymentPTP);
+        } else {
+          fireModalAlert('Pago Rechazado', res.data.result, 'error');
+          setStatusRequestPayment(statusPaymentPTP);
+        }
+
       } catch (e) {
         console.log({ e });
         fireToast('Error al cobrar');
@@ -234,13 +134,14 @@ const CheckoutPTP = () => {
   const totalPrice = products?.reduce((total, p) => total + Math.floor(p.price * p.quantity), 0);
 
   const handleInitPayment = async () => {
-    window.P.init(`https://checkout-test.placetopay.ec/spa/session/${processURL}`);
+    window.P.init(`${REACT_APP_PTP_CHECKOUT_URL}/${processURL}`);
   };
 
+  const loadingMessage = loading ? "Recuperando datos del contrato" : loadingPL ? "Recuperando datos de pago" : null
   return (
     <>
-      {loading ? (
-        <MotionSpinner />
+      {loading || loadingPL ? (
+        <MotionSpinner text={loadingMessage} />
       ) : (
         <main className='grid-checkout container'>
           <header className={`is-max-widescreen py-5`}>
@@ -265,7 +166,7 @@ const CheckoutPTP = () => {
                         : 'Finaliza tu inscripción'}
                     </h1>
 
-                    {checkoutPayment?.type?.includes('Suscripción') ? (
+                    {!loadingPL && checkoutPayment?.type.includes('Suscripción') ? (
                       <InvoiceDetail invoiceDetail={invoiceDetail} />
                     ) : (
                       <div>
@@ -322,19 +223,8 @@ const CheckoutPTP = () => {
                   width='200px'
                   className='mt-3 mx-auto is-block'
                 />
-                {!isExpired ? (
-                  <>
-                    <div className='notification is-info my-5 mx-3'>
-                      El tiempo para pagar la inscripcion fue superada,{' '}
-                      <strong>solicite un nuevo link</strong> para continuar con el pago
-                    </div>
-                  </>
-                ) : (
-                  <PaymentElement
-                    checkoutPayment={checkoutPayment}
-                    handleInitPayment={handleInitPayment}
-                  />
-                )}
+
+                <PaymentStatusPTP checkoutPayment={checkoutPayment} handleInitPayment={handleInitPayment}/>
 
                 {rejectedSessionPTP && (
                     <div id="rejectedSessionPTP" className="notification is-danger">
