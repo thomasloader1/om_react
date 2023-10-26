@@ -1,25 +1,27 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import IMAGES from '../../../img/pasarelaCobros/share';
 import { useLocation, useParams } from 'react-router';
 import { fireModalAlert, fireToast } from '../Hooks/useSwal';
 import {
   debitFirstPayment,
   ptpImages,
-  updateZohoContract, rejectSession, ptpStates,
+  updateZohoContract,
+  rejectSession,
+  ptpStates,
 } from '../../../logic/ptp';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
 import InvoiceDetail from './InvoiceDetail';
 import { makePostUpdateZohoPTP } from '../../../logic/zoho';
-import {AppContext} from "../Provider/StateProvider";
-import {useFetchPaymentLink} from "../Hooks/useFetchPaymentLink";
-import PaymentStatusPTP from "../PaymentStatusPTP/PaymentStatusPTP";
+import { AppContext } from '../Provider/StateProvider';
+import { useFetchPaymentLink } from '../Hooks/useFetchPaymentLink';
+import PaymentStatusPTP from '../PaymentStatusPTP/PaymentStatusPTP';
 
 const { logo } = IMAGES;
-const { REACT_APP_PTP_CHECKOUT_URL } = process.env
+const { REACT_APP_PTP_CHECKOUT_URL } = process.env;
 
 const CheckoutPTP = () => {
-  const {rejectedSessionPTP, setRejectedSessionPTP} = useContext(AppContext);
+  const { rejectedSessionPTP, setRejectedSessionPTP } = useContext(AppContext);
   const [ptpEffect, setPtpEffect] = useState(true);
   const [statusRequestPayment, setStatusRequestPayment] = useState(null);
 
@@ -33,11 +35,10 @@ const CheckoutPTP = () => {
     products,
     checkoutPayment,
     processURL,
-    advancePayment ,
+    advancePayment,
     invoiceDetail,
-    currencyOptions
-  } = useFetchPaymentLink(!loading, so,contractData);
-
+    currencyOptions,
+  } = useFetchPaymentLink(!loading, so, contractData);
 
   useEffect(() => {
     const makeFirstPayment = async (requestId) => {
@@ -51,7 +52,7 @@ const CheckoutPTP = () => {
         if (statusPaymentPTP.includes(ptpStates.OK)) {
           fireToast(res.data.result, 'success');
 
-          const paymentUserData = JSON.parse(transactionPTP.paymentData)
+          const paymentUserData = JSON.parse(transactionPTP.paymentData);
 
           const data = {
             requestId: requestId.requestId,
@@ -65,9 +66,9 @@ const CheckoutPTP = () => {
 
           if (zohoResponse.contact && zohoResponse.contract)
             fireToast(
-                `Contacto ID: ${zohoResponse?.contact?.id} y Contrato id: ${zohoResponse?.contract?.id} se actualizados correctamente`,
-                'success',
-                50000,
+              `Contacto ID: ${zohoResponse?.contact?.id} y Contrato id: ${zohoResponse?.contract?.id} se actualizados correctamente`,
+              'success',
+              50000,
             );
 
           //setOpenBlockLayer(true);
@@ -83,7 +84,6 @@ const CheckoutPTP = () => {
           fireModalAlert('Pago Rechazado', res.data.result, 'error');
           setStatusRequestPayment(statusPaymentPTP);
         }
-
       } catch (e) {
         console.log({ e });
         fireToast('Error al cobrar');
@@ -95,11 +95,9 @@ const CheckoutPTP = () => {
       window.P.on('response', async function (response) {
         console.log({ response });
         const { status } = response.status;
-        setStatusRequestPayment(status);
 
         if (status.includes('APPROVED')) {
           const { requestId } = response;
-
           const body = {
             requestId,
           };
@@ -122,7 +120,8 @@ const CheckoutPTP = () => {
           payment: isRejectedSession.data.payment,
         });
 
-        fireToast(`El estado de la sesion cambio a ${status}`, 'info');
+        setStatusRequestPayment(isRejectedSession.data.payment);
+        fireToast(`El estado de la sesion cambio a ${isRejectedSession.data.payment}`, 'info');
       });
     }
 
@@ -137,7 +136,11 @@ const CheckoutPTP = () => {
     window.P.init(`${REACT_APP_PTP_CHECKOUT_URL}/${processURL}`);
   };
 
-  const loadingMessage = loading ? "Recuperando datos del contrato" : loadingPL ? "Recuperando datos de pago" : null
+  const loadingMessage = loading
+    ? 'Recuperando datos del contrato'
+    : loadingPL
+    ? 'Recuperando datos de pago'
+    : null;
   return (
     <>
       {loading || loadingPL ? (
@@ -224,15 +227,27 @@ const CheckoutPTP = () => {
                   className='mt-3 mx-auto is-block'
                 />
 
-                <PaymentStatusPTP checkoutPayment={checkoutPayment} handleInitPayment={handleInitPayment}/>
+                <PaymentStatusPTP
+                  checkoutPayment={checkoutPayment}
+                  handleInitPayment={handleInitPayment}
+                />
 
                 {rejectedSessionPTP && (
-                    <div id="rejectedSessionPTP" className="notification is-danger">
-                      <p><strong>Estado del pago:</strong> {rejectedSessionPTP.payment.status}</p>
-                      <p><strong>Referencia de pago:</strong> {rejectedSessionPTP.payment.reference}</p>
-                      <p><strong>Monto:</strong> {rejectedSessionPTP.payment.currency} {rejectedSessionPTP.payment.total}</p>
-                      <p><strong>Nombre de usuario:</strong> {rejectedSessionPTP.fullName}</p>
-                    </div>
+                  <div id='rejectedSessionPTP' className='notification is-danger'>
+                    <p>
+                      <strong>Estado del pago:</strong> {rejectedSessionPTP.payment.status}
+                    </p>
+                    <p>
+                      <strong>Referencia de pago:</strong> {rejectedSessionPTP.payment.reference}
+                    </p>
+                    <p>
+                      <strong>Monto:</strong> {rejectedSessionPTP.payment.currency}{' '}
+                      {rejectedSessionPTP.payment.total}
+                    </p>
+                    <p>
+                      <strong>Nombre de usuario:</strong> {rejectedSessionPTP.fullName}
+                    </p>
+                  </div>
                 )}
 
                 <p className='invoice-text mt-5 mx-3 has-text-centered'>

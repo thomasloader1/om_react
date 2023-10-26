@@ -15,6 +15,7 @@ import SelectDocument from '../SelectDocument';
 import { fireAlert, fireModalAlert, fireToast } from '../Hooks/useSwal';
 import { parsePhoneNumber } from 'react-phone-number-input';
 import { makePostUpdateZohoPTP } from '../../../logic/zoho';
+import RejectedSessionPTP from '../RejectedSessionPTP/RejectedSessionPTP';
 
 const PlaceToPayPayment = () => {
   const {
@@ -123,9 +124,10 @@ const PlaceToPayPayment = () => {
           status: isRejectedSession.data.ptpResponse.status.status,
           fullName: formikValues.contact.Full_Name,
           payment: isRejectedSession.data.payment,
+          paymentOfSession: isRejectedSession.data.paymentOfSession,
         });
 
-        fireToast(`El estado de la sesion cambio a ${status}`, 'info');
+        fireToast(`El estado de la sesion cambio a ${isRejectedSession.data.payment}`, 'info');
       });
     }
 
@@ -264,14 +266,9 @@ const PlaceToPayPayment = () => {
           country={selectedCountry}
           defaultCountry='EC'
         />
-        {rejectedSessionPTP && (
-          <div id="rejectedSessionPTP" className="notification is-danger">
-            <p><strong>Estado del pago:</strong> {rejectedSessionPTP.payment.status}</p>
-            <p><strong>Referencia de pago:</strong> {rejectedSessionPTP.payment.reference}</p>
-            <p><strong>Monto:</strong> {rejectedSessionPTP.payment.currency} {rejectedSessionPTP.payment.total}</p>
-            <p><strong>Nombre de usuario:</strong> {rejectedSessionPTP.fullName}</p>
-          </div>
-        )}
+
+        {rejectedSessionPTP && <RejectedSessionPTP rejectedSessionPTP={rejectedSessionPTP} />}
+
         <button
           id='ptpSession'
           className={`button is-primary mt-3 ${onRequest && 'is-loading'}`}

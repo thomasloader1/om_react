@@ -3,9 +3,9 @@ import React from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
-const toast = withReactContent(Swal);
-
 export function fireToast(title, icon = 'error', timer = 3000) {
+  const toast = withReactContent(Swal);
+
   toast.fire({
     title: <p>{title}</p>,
     toast: true,
@@ -22,7 +22,9 @@ export function fireToast(title, icon = 'error', timer = 3000) {
 }
 
 export function fireAlert(title, text = '', icon = 'error', timer = 3000) {
-  toast.fire({
+  const toastAlert = withReactContent(Swal);
+
+  toastAlert.fire({
     title: <p>{title}</p>,
     toast: false,
     text,
@@ -39,7 +41,9 @@ export function fireAlert(title, text = '', icon = 'error', timer = 3000) {
 }
 
 export function fireModalAlert(title, html = '', icon = 'error', state = null) {
-  toast.fire({
+  const toastAlert = withReactContent(Swal);
+
+  toastAlert.fire({
     title: <p>{title}</p>,
     toast: false,
     html,
@@ -62,7 +66,6 @@ export function fireModalAlert(title, html = '', icon = 'error', state = null) {
 
 export async function fireModalAlertRedirect(title, html = '', payment) {
   const toast = withReactContent(Swal);
-
   const result = await toast.fire({
     title: <p>{title}</p>,
     toast: false,
