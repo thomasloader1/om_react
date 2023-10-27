@@ -31,12 +31,10 @@ const PlaceToPayPayment = () => {
   const { values, handleChange, handleBlur, touched, errors, setFieldValue } = useFormikContext();
   const [statusRequestPayment, setStatusRequestPayment] = useState('');
   const [ptpEffect, setPtpEffect] = useState(true);
-
   const STATUS_BTN = {
-    SESSION:
-      statusRequestPayment.includes(ptpStates.PENDING) ||
+    SESSION: statusRequestPayment.includes(ptpStates.PENDING) ||
       statusRequestPayment.includes(ptpStates.OK) ||
-      Object.keys(errors).length > 0,
+      Object.keys(errors).length > 0 ,
     INIT_PAYMENT: statusRequestPayment.includes(ptpStates.REJECT),
   };
 
@@ -48,7 +46,6 @@ const PlaceToPayPayment = () => {
     const makeFirstPayment = async (requestId) => {
       try {
         const res = await debitFirstPayment({ ...requestId });
-        console.log(res);
         setPtpFetching(res.data);
         const responseOfServer = res?.data ?? res;
         console.log({ responseOfServer });
@@ -164,6 +161,8 @@ const PlaceToPayPayment = () => {
       renewSession,
     };
 
+    setRejectedSessionPTP(null)
+
     //console.log(formValues);
 
     try {
@@ -268,38 +267,43 @@ const PlaceToPayPayment = () => {
         />
 
         {rejectedSessionPTP && <RejectedSessionPTP rejectedSessionPTP={rejectedSessionPTP} />}
-
-        <button
-          id='ptpSession'
-          className={`button is-primary mt-3 ${onRequest && 'is-loading'}`}
-          type='button'
-          disabled={STATUS_BTN.SESSION}
-          onClick={handlePaymentSession}
-        >
-          {formikValues?.renewSuscription ? 'Activar sesion' : 'Nueva sesion de pago'}
-        </button>
+        {
+            rejectedSessionPTP === null && (
+                <>
+                <button
+                    id='ptpSession'
+                    className={`button is-primary mt-3 ${onRequest && 'is-loading'}`}
+                    type='button'
+                    disabled={ STATUS_BTN.SESSION}
+                    onClick={handlePaymentSession}
+                >
+                  {formikValues?.renewSuscription ? 'Activar sesion' : 'Nueva sesion de pago'}
+                </button>
 
         {processURL && (
           <>
-            <button
-              id='ptpPayNow'
-              className='button is-success'
-              disabled={STATUS_BTN.INIT_PAYMENT}
-              onClick={handleInitPayment}
-            >
-              Iniciar Pago
-            </button>
+          <button
+          id='ptpPayNow'
+          className='button is-success'
+          disabled={STATUS_BTN.INIT_PAYMENT}
+        onClick={handleInitPayment}
+      >
+        Iniciar Pago
+      </button>
 
-            <button
-              id='ptpLink'
-              className='button is-info'
-              disabled={STATUS_BTN.INIT_PAYMENT}
-              onClick={handleGenerateLink}
-            >
-              Generar Link
-            </button>
-          </>
-        )}
+      <button
+          id='ptpLink'
+          className='button is-info'
+          disabled={STATUS_BTN.INIT_PAYMENT}
+          onClick={handleGenerateLink}
+      >
+        Generar Link
+      </button>
+    </>
+  )}
+                </> )
+        }
+
       </div>
     </FormStep>
   );

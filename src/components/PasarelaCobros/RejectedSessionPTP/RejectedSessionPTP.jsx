@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
+import {ptpMessagesStates, ptpStates} from "../../../logic/ptp";
 
 function RejectedSessionPTP({ rejectedSessionPTP }) {
   const [status] = useState(rejectedSessionPTP.payment.status ?? rejectedSessionPTP.payment);
 
-  const classNameNotification = status.includes('PENDING') ? 'is-warning' : 'is-danger';
+  if (rejectedSessionPTP.paymentOfSession && status !== ptpStates.OK) {
+    const classNameNotification = status.includes(ptpStates.PENDING) ? 'is-warning' : 'is-danger';
 
-  if (rejectedSessionPTP.paymentOfSession) {
     return (
-      <div id='rejectedSessionPTP' className={'notification ' + classNameNotification}>
+      <div id='rejectedSessionPTP' className={'is-flex is-flex-direction-column notification ' + classNameNotification}>
         <p>
-          <strong>Estado del pago:</strong> {rejectedSessionPTP?.paymentOfSession?.status}
+          <strong>Estado del pago:</strong> {ptpMessagesStates[rejectedSessionPTP?.paymentOfSession?.status]}
         </p>
         <p>
           <strong>Referencia de pago:</strong> {rejectedSessionPTP?.paymentOfSession?.reference}
@@ -21,24 +22,23 @@ function RejectedSessionPTP({ rejectedSessionPTP }) {
         <p>
           <strong>Nombre de usuario:</strong> {rejectedSessionPTP.fullName}
         </p>
-        <a href={`/#/status/ptp/${rejectedSessionPTP?.paymentOfSession?.requestId}`}>
+        <a className={"button is-info mt-5"} target={"_blank"} href={`/#/status/ptp/${rejectedSessionPTP?.paymentOfSession?.requestId}`}>
           Ver detalles
         </a>
       </div>
     );
   }
 
+  //Cuando el usuario no desea continuar con el pago o es distinto de PENDING
+
+  const classNameNotification = status.includes(ptpStates.REJECT) ? 'is-danger' : 'is-success';
   return (
     <div id='rejectedSessionPTP' className={'notification ' + classNameNotification}>
       <p>
-        <strong>Estado del pago:</strong> {status}
+        <strong>Estado del pago:</strong> {ptpMessagesStates[status]}
       </p>
       <p>
-        <strong>Referencia de pago:</strong> {rejectedSessionPTP.payment.reference}
-      </p>
-      <p>
-        <strong>Monto:</strong> {rejectedSessionPTP.payment.currency}{' '}
-        {rejectedSessionPTP.payment.total}
+        <strong>Referencia de pago:</strong> {rejectedSessionPTP.reference}
       </p>
       <p>
         <strong>Nombre de usuario:</strong> {rejectedSessionPTP.fullName}

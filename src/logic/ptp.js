@@ -19,6 +19,14 @@ export const ptpStates = {
   FAIL: 'FAILED',
 };
 
+
+export const ptpMessagesStates = {
+  APPROVED: 'Aprobado',
+  PENDING: 'Pendiente',
+  REJECTED: 'Rechazado',
+  FAILED: 'Fallido',
+};
+
 const {
   REACT_APP_OCEANO_UPDATECONTRACT_PTP,
   REACT_APP_API_PTP_SESSION_SU_PAYMENT,
@@ -133,6 +141,7 @@ export const makePaymentSession = async (formikValues) => {
       payer,
       payment,
       contractId: formikValues.contractId,
+      contactId: formikValues.contact.id,
     });
 
     return data;
