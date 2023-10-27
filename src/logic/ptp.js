@@ -141,7 +141,7 @@ export const makePaymentSession = async (formikValues) => {
   }
 };
 
-export const rejectSession = async (body) => {
+export const updateSessionPTP = async (body) => {
   try {
     const res = await axios.put(`${URLS.UPDATE_SESSION}/${body.reference}`, { ...body });
     console.log({ rejectSession: res });
@@ -197,3 +197,26 @@ export const updateZohoContract = async (values) => {
   console.log({ data });
   return data;
 };
+
+export const getMessageStatus = (paymentStatus) => {
+  let response = {
+    message: "",
+    className: "",
+  }
+  switch (paymentStatus) {
+    case ptpStates.PENDING:
+      response.message = "El pago realizado está en estado pendiente.";
+      response.className = "is-warning";
+      break;
+    case ptpStates.REJECT:
+      response.message = "El pago realizado ha sido rechazado. Por favor, vuelva a comenzar.";
+      response.className = "is-danger";
+      break;
+    default:
+      response.message = "El pago realizado ha sido aprobado correctamente.";
+      response.className = "is-success";
+      break;
+  }
+
+  return response;
+}

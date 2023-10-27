@@ -6,7 +6,7 @@ export const handleCheckoutData = (
   advanceSuscription,
   formSPP = true,
 ) => {
-  console.group("handleCheckoutData")
+ // console.group("handleCheckoutData")
   const {
     isAdvanceSuscription,
     isSuscription,
@@ -50,7 +50,7 @@ export const handleCheckoutData = (
     auxResume.formattedFirstPay = formatPrice('US', currencyOptions, auxResume.firstPay);
     auxResume.formattedPayPerMonth = formatPrice('US', currencyOptions, auxResume.firstPay);
   }
-  console.groupEnd("handleCheckoutData")
+ // console.groupEnd("handleCheckoutData")
 
   return auxResume;
 };

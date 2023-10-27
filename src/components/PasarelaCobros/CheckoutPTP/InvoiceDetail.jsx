@@ -1,12 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../Provider/StateProvider';
 
-export const generateProp = (advancePayment, formattedFirstPay, formattedPayPerMonth) => ({
-  advancePayment,
-  formattedFirstPay,
-  formattedPayPerMonth,
-});
-
 const InvoiceDetail = ({ invoiceDetail }) => {
   console.group("InvoiceDetail")
   const { advancePayment, formattedFirstPay, formattedPayPerMonth } = invoiceDetail;
@@ -31,7 +25,7 @@ const InvoiceDetail = ({ invoiceDetail }) => {
       remaining_installments,
       paymentData,
       currency,
-    } = ptpFetching.updateRequestSession;
+    } = ptpFetching.transaction;
 
     const payer = JSON.parse(paymentData);
 

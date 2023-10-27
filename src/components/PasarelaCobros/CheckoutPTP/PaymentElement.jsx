@@ -35,14 +35,14 @@ const [termsChecked, setTermsChecked] = useState(false);
                       onChange={handleTermsChange}
                     />
                     <span className='invoice-text'>
-                      Acepto de{' '}
+                      Si acepto los{' '}
                       <a
                         href='https://msklatam.com/ec/condiciones-de-contratacion'
                         target='_blank'
                         rel='noreferrer'
                         className='has-text-info'
                       >
-                        terminos y condiciones
+                        términos y condiciones
                       </a>
                     </span>
                   </div>
@@ -55,14 +55,14 @@ const [termsChecked, setTermsChecked] = useState(false);
                       onChange={handlePolicyChange}
                     />
                     <span className='invoice-text'>
-                      Acepto de{' '}
+                      Si acepto las{' '}
                       <a
                         href='https://msklatam.com/ec/politica-de-privacidad'
                         target='_blank'
                         rel='noreferrer'
                         className='has-text-info'
                       >
-                        politicas de proteccion de datos
+                        políticas de protección de datos
                       </a>
                     </span>
                   </div>

@@ -4,7 +4,7 @@ import {
   generatePaymentLink,
   makePaymentSession,
   ptpStates,
-  rejectSession,
+  rejectSession, updateSessionPTP,
   updateZohoContract,
 } from '../../../logic/ptp';
 import { AppContext } from '../Provider/StateProvider';
@@ -117,7 +117,7 @@ const PlaceToPayPayment = () => {
           }
         }
 
-        const isRejectedSession = await rejectSession(response);
+        const isRejectedSession = await updateSessionPTP(response);
         //la referencia, el valor y el estado de la transacción
         setRejectedSessionPTP({
           reference: isRejectedSession.data.reference,

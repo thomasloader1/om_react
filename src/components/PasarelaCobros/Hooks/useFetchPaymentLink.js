@@ -61,11 +61,18 @@ console.group(`useFetchPayment - run: ${hasContractData}`)
 
         if(hasContractData){
             fetchPaymentLink();
-
         }
 
     }, [hasContractData]);
     console.groupEnd("useFetchPayment")
 
-    return {loading, currencyOptions, products, checkoutPayment, processURL, advancePayment, invoiceDetail}
+    return {
+        loading,
+        currencyOptions,
+        products,
+        checkoutPayment,
+        processURL,
+        advancePayment,
+        invoiceDetail
+    }
 }

@@ -54,7 +54,7 @@ export function fireModalAlert(title, html = '', icon = 'error', state = null) {
       // Verificar si estamos en la ruta /checkout/ptp
       if (window.location.hash.includes('/checkout/ptp') && state === null) {
         // Redireccionar a la página de inicio
-        window.location.href = '/';
+        window.location.reload(true);
       }
 
       if (state?.redirect) {

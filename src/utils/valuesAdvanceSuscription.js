@@ -1,6 +1,6 @@
 export const valuesAdvanceSuscription = ({ total, checkoutPayment }) => {
-    console.group('valuesAdvanceSuscription');
-    console.log({total, checkoutPayment})
+    //console.group('valuesAdvanceSuscription');
+    //console.log({total, checkoutPayment})
     const { quotes, type } = checkoutPayment;
 
     const isAdvanceSuscription = type.includes('Suscripción con anticipo');
@@ -56,7 +56,7 @@ export const valuesAdvanceSuscription = ({ total, checkoutPayment }) => {
             adjustmentPayment,
         };
     }
-    console.groupEnd();
+    //console.groupEnd();
 
     return detailValues;
 };
