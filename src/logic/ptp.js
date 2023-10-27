@@ -176,7 +176,7 @@ export const generatePaymentLink = async (data) => {
     contract_entity_id: contractId,
     contract_so: sale.SO_Number,
     status: 'pending',
-    quotes,
+    quotes: quotes ?? 1,
     country,
   };
 
