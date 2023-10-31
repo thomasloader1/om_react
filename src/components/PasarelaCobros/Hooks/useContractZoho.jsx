@@ -36,7 +36,7 @@ export const useContractZoho = (contractId, runEffect = true) => {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
         });
-        //console.log({ response });
+        // console.log({ response });
 
         setData(response.data);
         ctx.setFormikValues((prevState) => ({ ...prevState, ...response.data }));
@@ -45,7 +45,7 @@ export const useContractZoho = (contractId, runEffect = true) => {
         setLoading(false);
       } catch (e) {
         console.error({ e });
-        const errorMessage = e.response.data.detail ?? e.response.data.message
+        const errorMessage = e.response.data.detail ?? e.response.data.message;
         fireModalAlert(errorMessage);
         setError(e.response.data);
         setLoading(true);

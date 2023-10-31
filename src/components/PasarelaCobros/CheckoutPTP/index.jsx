@@ -6,7 +6,8 @@ import {
   debitFirstPayment,
   ptpImages,
   updateZohoContract,
-  ptpStates, updateSessionPTP,
+  ptpStates,
+  updateSessionPTP,
 } from '../../../logic/ptp';
 import { useContractZoho } from '../Hooks/useContractZoho';
 import MotionSpinner from '../Spinner/MotionSpinner';
@@ -15,12 +16,13 @@ import { makePostUpdateZohoPTP } from '../../../logic/zoho';
 import { AppContext } from '../Provider/StateProvider';
 import { useFetchPaymentLink } from '../Hooks/useFetchPaymentLink';
 import PaymentStatusPTP from '../PaymentStatusPTP/PaymentStatusPTP';
+import RejectedSessionPTP from '../RejectedSessionPTP/RejectedSessionPTP';
 
 const { logo } = IMAGES;
 const { REACT_APP_PTP_CHECKOUT_URL } = process.env;
 
 const CheckoutPTP = () => {
-  console.group("CheckoutPTP")
+  console.group('CheckoutPTP');
   const { rejectedSessionPTP, setRejectedSessionPTP } = useContext(AppContext);
   const [ptpEffect, setPtpEffect] = useState(true);
   const [statusRequestPayment, setStatusRequestPayment] = useState(null);
@@ -30,7 +32,7 @@ const CheckoutPTP = () => {
   const { pathname } = useLocation();
 
   const needRunEffect = !pathname.includes('vp');
-  const { loading, data: contractData } = useContractZoho(so, needRunEffect);
+  const { loading, data } = useContractZoho(so, needRunEffect);
   const {
     loading: loadingPL,
     products,
@@ -39,19 +41,21 @@ const CheckoutPTP = () => {
     advancePayment,
     invoiceDetail,
     currencyOptions,
-  } = useFetchPaymentLink(!loading, so, contractData);
+  } = useFetchPaymentLink(!loading, so, data);
 
-  console.log({loadingPL,
+  /*   console.log({
+    loadingPL,
     products,
     checkoutPayment,
     processURL,
     advancePayment,
     invoiceDetail,
-    currencyOptions})
+    currencyOptions,
+  }); */
 
   useEffect(() => {
     const makeFirstPayment = async (requestId) => {
-      console.group("makeFirstPayment")
+      console.group('makeFirstPayment');
       try {
         const res = await debitFirstPayment({ ...requestId });
 
@@ -105,7 +109,7 @@ const CheckoutPTP = () => {
     if (ptpEffect) {
       setPtpEffect(false);
       window.P.on('response', async function (response) {
-        console.group("window.P.on('response')")
+        console.group("window.P.on('response')");
         console.log({ response });
         const { status } = response.status;
 
@@ -117,24 +121,36 @@ const CheckoutPTP = () => {
 
           try {
             await makeFirstPayment(body);
-            window.localtion.reload(true);
+            window.location.reload();
           } catch (error) {
-            console.log({error})
+            console.log({ error });
           }
         }
 
         const isRejectedSession = await updateSessionPTP(response);
         //La referencia, el valor y el estado de la transacción (Puede ser rechazado o pendiente)
-        console.log({isRejectedSession})
-        setRejectedSessionPTP({
-          reference: isRejectedSession.data.reference,
-          status: isRejectedSession.data.ptpResponse.status.status,
-          fullName: contractData?.contact?.Full_Name,
-          payment: isRejectedSession.data.payment,
-        });
+        console.log({ isRejectedSession });
+        if (isRejectedSession.data.payment) {
+          setRejectedSessionPTP({
+            reference: isRejectedSession.data.reference,
+            status: isRejectedSession?.data?.ptpResponse?.status?.status,
+            fullName: data?.contact?.Full_Name,
+            payment: isRejectedSession.data.payment,
+          });
 
-        setStatusRequestPayment(isRejectedSession.data.payment);
-        fireToast(`El estado de la sesion cambio a ${isRejectedSession.data.payment}`, 'info');
+          setStatusRequestPayment(isRejectedSession.data.payment);
+          fireToast(`El estado de la sesion cambio a ${isRejectedSession.data.payment}`, 'info');
+        } else {
+          setRejectedSessionPTP({
+            reference: isRejectedSession.data.reference,
+            status: isRejectedSession?.data?.ptpResponse?.status?.status,
+            fullName: data?.contact?.Full_Name,
+            payment: { status: isRejectedSession.data.updateTo, total: 0 },
+          });
+
+          setStatusRequestPayment(isRejectedSession.data.updateTo);
+          fireToast(`El estado de la sesion cambio a ${isRejectedSession.data.updateTo}`, 'info');
+        }
 
         console.groupEnd();
       });
@@ -149,7 +165,7 @@ const CheckoutPTP = () => {
 
   const handleInitPayment = async () => {
     window.P.init(`${REACT_APP_PTP_CHECKOUT_URL}/${processURL}`);
-    setStartPayment(true)
+    setStartPayment(true);
   };
 
   const loadingMessage = loading
@@ -243,28 +259,14 @@ const CheckoutPTP = () => {
                   className='mt-3 mx-auto is-block'
                 />
 
-                 <PaymentStatusPTP
-                    checkoutPayment={checkoutPayment}
-                    handleInitPayment={handleInitPayment}
-                    startPayment={startPayment}
+                <PaymentStatusPTP
+                  checkoutPayment={checkoutPayment}
+                  handleInitPayment={handleInitPayment}
+                  startPayment={startPayment}
                 />
 
                 {rejectedSessionPTP && (
-                  <div id='rejectedSessionPTP' className='notification is-danger'>
-                    <p>
-                      <strong>Estado del pago:</strong> {rejectedSessionPTP.payment.status}
-                    </p>
-                    <p>
-                      <strong>Referencia de pago:</strong> {rejectedSessionPTP.payment.reference}
-                    </p>
-                    <p>
-                      <strong>Monto:</strong> {rejectedSessionPTP.payment.currency}{' '}
-                      {rejectedSessionPTP.payment.total}
-                    </p>
-                    <p>
-                      <strong>Nombre de usuario:</strong> {rejectedSessionPTP.fullName}
-                    </p>
-                  </div>
+                  <RejectedSessionPTP rejectedSessionPTP={rejectedSessionPTP} />
                 )}
 
                 <p className='invoice-text mt-5 mx-3 has-text-centered'>
@@ -296,8 +298,7 @@ const CheckoutPTP = () => {
       )}
     </>
   );
-  console.groupEnd("CheckoutPTP")
-
+  console.groupEnd('CheckoutPTP');
 };
 
 export default CheckoutPTP;
