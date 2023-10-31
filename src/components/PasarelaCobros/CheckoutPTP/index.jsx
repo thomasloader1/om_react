@@ -137,6 +137,7 @@ const CheckoutPTP = () => {
             fullName: data?.contact?.Full_Name,
             payment: isRejectedSession.data.payment,
           });
+          window.location.reload();
 
           setStatusRequestPayment(isRejectedSession.data.payment);
           fireToast(`El estado de la sesion cambio a ${isRejectedSession.data.payment}`, 'info');
@@ -147,6 +148,7 @@ const CheckoutPTP = () => {
             fullName: data?.contact?.Full_Name,
             payment: { status: isRejectedSession.data.updateTo, total: 0 },
           });
+          window.location.reload();
 
           setStatusRequestPayment(isRejectedSession.data.updateTo);
           fireToast(`El estado de la sesion cambio a ${isRejectedSession.data.updateTo}`, 'info');
