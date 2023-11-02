@@ -4,7 +4,7 @@
   grid-template-areas: 'docType' 'nro_doc' 'address' 'email' 'phone' 'rejectedSessionPTP' 'ptpSession' 'ptpPayNow' 'ptpLink';
 
   @media (min-width: 768px) {
-    grid-template-areas: 'docType nro_doc' 'address email' 'phone phone' 'rejectedSessionPTP rejectedSessionPTP' 'ptpSession ptpSession' 'ptpPayNow ptpLink';
+    grid-template-areas: 'docType nro_doc' 'address email' 'phone phone' 'rejectedSessionPTP rejectedSessionPTP' 'ptpSession ptpSession' 'ptpLink ptpLink';
   }
 
   .select.is-link {
