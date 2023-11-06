@@ -15,6 +15,7 @@ export const useFetchPaymentLink = (hasContractData, so, contractData) => {
   const [advancePayment, setAdvancePayment] = useState({});
   const [invoiceDetail, setInvoiceDetail] = useState(null);
   const [currencyOptions, setCurrencyOptions] = useState(ptpCurrencyOptions);
+  const [hasPrevPayment, setHasPrevPayment] = useState(null);
 
   useEffect(() => {
     async function fetchPaymentLink() {
@@ -28,7 +29,7 @@ export const useFetchPaymentLink = (hasContractData, so, contractData) => {
         };
 
         //  console.log({data});
-
+        setHasPrevPayment(data.previusPayment);
         setCheckoutPayment(auxCheckoutPayment);
         setProducts(contractData.products);
         setProcessURL(
@@ -77,5 +78,6 @@ export const useFetchPaymentLink = (hasContractData, so, contractData) => {
     processURL,
     advancePayment,
     invoiceDetail,
+    hasPrevPayment,
   };
 };

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ptpMessagesStates, ptpStates } from '../../../logic/ptp';
+import MotionSpinner from '../Spinner/MotionSpinner';
 
 function RejectedSessionPTP({ rejectedSessionPTP }) {
   const [status] = useState(rejectedSessionPTP.payment.status ?? rejectedSessionPTP.payment);
@@ -17,6 +18,8 @@ function RejectedSessionPTP({ rejectedSessionPTP }) {
         id='rejectedSessionPTP'
         className={'mt-3 is-flex is-flex-direction-column notification ' + classNameNotification}
       >
+        <MotionSpinner text={'Procesando pago 1'} viewHeight={'200px'} />
+
         <p>
           <strong>Estado del pago:</strong>{' '}
           {ptpMessagesStates[rejectedSessionPTP?.paymentOfSession?.status]}
@@ -47,6 +50,8 @@ function RejectedSessionPTP({ rejectedSessionPTP }) {
   const classNameNotification = status.includes(ptpStates.REJECT) ? 'is-danger' : 'is-success';
   return (
     <div id='rejectedSessionPTP' className={'mt-3 notification ' + classNameNotification}>
+      <MotionSpinner text={'Procesando pago 2'} viewHeight={'200px'} />
+
       <p>
         <strong>Estado del pago:</strong> {ptpMessagesStates[status]}
       </p>

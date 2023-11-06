@@ -2,6 +2,7 @@ import React from 'react';
 import PaymentElement from '../CheckoutPTP/PaymentElement';
 
 import PaymentNotificationPTP from '../PaymentNotificationPTP/PaymentNotificationPTP';
+import MotionSpinner from '../Spinner/MotionSpinner';
 const PaymentStatusPTP = ({ checkoutPayment, handleInitPayment, startPayment }) => {
   const isExpired = new Date(checkoutPayment?.transaction?.expiration_date) < new Date();
   const hasPaymentInformation = checkoutPayment.payment;
@@ -21,6 +22,8 @@ const PaymentStatusPTP = ({ checkoutPayment, handleInitPayment, startPayment }) 
       return (
         <PaymentElement checkoutPayment={checkoutPayment} handleInitPayment={handleInitPayment} />
       );
+    } else if (startPayment && !hasPaymentInformation) {
+      return <MotionSpinner text={'Procesando pago'} viewHeight={'200px'} />;
     }
   };
 

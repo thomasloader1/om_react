@@ -17,6 +17,7 @@ import { AppContext } from '../Provider/StateProvider';
 import { useFetchPaymentLink } from '../Hooks/useFetchPaymentLink';
 import PaymentStatusPTP from '../PaymentStatusPTP/PaymentStatusPTP';
 import RejectedSessionPTP from '../RejectedSessionPTP/RejectedSessionPTP';
+import PreviusPaymentPTP from '../PreviusPaymentPTP/PreviusPaymentPTP';
 
 const { logo } = IMAGES;
 const { REACT_APP_PTP_CHECKOUT_URL } = process.env;
@@ -41,6 +42,7 @@ const CheckoutPTP = () => {
     advancePayment,
     invoiceDetail,
     currencyOptions,
+    hasPrevPayment,
   } = useFetchPaymentLink(!loading, so, data);
 
   /*   console.log({
@@ -270,6 +272,8 @@ const CheckoutPTP = () => {
                 {rejectedSessionPTP && (
                   <RejectedSessionPTP rejectedSessionPTP={rejectedSessionPTP} />
                 )}
+
+                {hasPrevPayment && <PreviusPaymentPTP prevPayment={hasPrevPayment[0]} />}
 
                 <p className='invoice-text mt-5 mx-3 has-text-centered'>
                   Si tiene dudas o consultas puedes visitar nuestro
